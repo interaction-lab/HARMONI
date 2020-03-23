@@ -1,0 +1,19 @@
+<!-- This is an example launch file for how a ROS application could use a cordial_behavior -->
+<launch>
+	
+	<arg name="use_manager" default="true"/>
+	<arg name = "first_story" default = "story1"/>
+	<arg name = "second_story" default = "story2"/>
+	<arg name = "third_story" default = "story3"/>
+  	
+
+	<group if="$(arg use_manager)">
+		<node pkg="cordial_manager" type="decision_manager.py" name="decision_manager" output="screen">
+			<param name="first_story" value="$(arg first_story)" />
+   	 		<param name="second_story" value="$(arg second_story)" />
+    		<param name="third_story" value="$(arg third_story)" />
+		</node>
+  	</group>
+
+
+</launch>

@@ -1,0 +1,31 @@
+<package>
+  <name>cordial_dialogue</name>
+  <version>0.1.2</version>
+  <description >
+
+     Interface to use CoRDial with Amazon Lex Services
+
+  </description>
+  <author>Elaine Short</author>
+  <maintainer email="prmehta24@gmail.com">Micol Spitale</maintainer>
+  <license>GPL</license>
+  <url>http://ros.org/wiki/cordial_dialogue</url>
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>aws_common</build_depend>
+  <build_depend>aws_ros1_common</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>actionlib</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>message_generation</build_depend>
+  <run_depend>message_generation</run_depend>
+  <run_depend>message_runtime</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>actionlib</run_depend>
+  <run_depend>aws_common</run_depend>
+  <run_depend>aws_ros1_common</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>std_msgs</run_depend>
+</package>
+
+

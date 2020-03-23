@@ -1,0 +1,12 @@
+<!-- This is an example launch file for how a ROS application could use a cordial_behavior -->
+
+<launch>
+	
+   	
+	<arg name="use_detector" default="true"/>
+  	<group if="$(arg use_detector)">
+    		<node pkg="cordial_detector" type="detector.py" name="detector" output="screen"/>
+  	</group>
+
+
+</launch>

@@ -1,0 +1,3 @@
+<launch>
+  <node name="launch_face_server" pkg="cordial_face" type="server_to_start_face_on_pi.py" output="screen" respawn="true"/>
+</launch>
