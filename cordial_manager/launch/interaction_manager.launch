@@ -1,0 +1,10 @@
+<!-- This is an example launch file for how a ROS application could use a cordial_behavior -->
+<launch>
+	
+	<arg name="use_manager" default="true"/>
+  	<group if="$(arg use_manager)">
+		<node pkg="cordial_manager" type="interaction_manager.py" name="interaction_manager" output="screen"/>
+  	</group>
+
+
+</launch>

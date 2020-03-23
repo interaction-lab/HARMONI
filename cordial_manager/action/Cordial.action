@@ -1,0 +1,15 @@
+# goal definition
+# name of the behavior
+string action
+string optional_data
+
+---
+# result definition
+string action
+bool do_continue
+string message
+
+---
+# feedback
+string action
+string state

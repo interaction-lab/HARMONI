@@ -1,0 +1,11 @@
+<!-- This is an example launch file for how a ROS application could use a cordial_lex -->
+<launch>
+   
+
+   	<arg name="config_file" default="$(find cordial_dialogue)/config/configuration.yaml"/>
+  	<arg name="use_lex" default="true"/>
+  	<group if="$(arg use_lex)">
+	    <node pkg="cordial_dialogue" type="dialogue.py" name="dialogue" output="screen"/>
+ 	</group>
+
+</launch>
