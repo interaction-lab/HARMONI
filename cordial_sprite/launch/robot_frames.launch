@@ -1,9 +1,0 @@
-<launch>
-  <arg name="robot_name"/>
-  <node pkg="tf" type="static_transform_publisher" name="center_to_base_broadcaster" args="0.065 0 -.22 0 0 0 /CoRDial/$(arg robot_name)/base_center_front /CoRDial/$(arg robot_name)/platform_zero  100" ns="$(arg robot_name)"/>
-  <node pkg="tf" type="static_transform_publisher" name="center_to_face_broadcaster" args="0.055 0 0.045 0 0 0 /CoRDial/$(arg robot_name)/platform_center /CoRDial/$(arg robot_name)/face_center 100" ns="$(arg robot_name)"/>
-
-  <node pkg="tf" type="static_transform_publisher" name="face_to_lookat_broadcaster" args="0 0 0 1.5708 0 1.5708 /CoRDial/$(arg robot_name)/face_center /CoRDial/$(arg robot_name)/lookat_frame 100" ns="$(arg robot_name)"/>
-
-  <node pkg="tf" type="static_transform_publisher" name="default_lookat_broadcaster" args="0.355 0 -0.05 0 0 0 /CoRDial/$(arg robot_name)/platform_zero /CoRDial/$(arg robot_name)/default_lookat 100" ns="$(arg robot_name)"/>
-</launch>

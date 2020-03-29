@@ -1,9 +1,0 @@
-# Define the goal
-string behavior
-string[] args
----
-# Define the result
-float64[] final_pose
----
-# Define a feedback message
-float64[] pose

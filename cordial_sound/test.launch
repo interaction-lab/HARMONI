@@ -1,9 +1,0 @@
-<!-- 
-This launch file runs the sound_play node and a test script that excersises
-most of its functionality.
--->
-
-<launch>
-  <node name="cordial_sound" pkg="cordial_sound" type="soundplay_node.py"/>
-  <node name="sound_test" pkg="cordial_sound" type="test.py"/>
-</launch>
