@@ -7,16 +7,17 @@ from action_server import ActionServer
 
 
 class HardwareControl():
-    
+
     def __init__(self, input_data):
         # Initialize variables
         self.input_data = input_data
         # Initialize server
         self.server = ActionServer()
-        
+
     def setup(self, child):
         self.server.setup_server(child)
         return
+
 
 class ExternalService():
 
@@ -25,10 +26,11 @@ class ExternalService():
         self.input_data = input_data
         # Initialize server
         self.server = ActionServer()
-        
+
     def setup(self, child):
         self.server.setup_server(child)
         return
+
 
 class InternalService():
 
@@ -40,10 +42,11 @@ class InternalService():
         self.topic_pub = topic_pub
         # Initialize server
         self.server = ActionServer()
-        
+
     def setup(self, child):
         self.server.setup_server(child)
         return
+
 
 class HarwareReading():
 
@@ -53,7 +56,7 @@ class HarwareReading():
         self.topic = topic
         # Initialize server
         self.server = ActionServer()
-        
+
     def setup(self, child):
         self.server.setup_server(child)
         return
