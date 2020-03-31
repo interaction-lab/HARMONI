@@ -7,22 +7,28 @@ import actionlib
 from harmoni_common_msgs.msg import harmoniAction, harmoniFeedback, harmoniResult
 
 
-class ActionServer():
+class HarmoniActionServer():
+    """
+    Most nodes (both controllers and children) are servers.
+    This class provides basic server functionality which controllers and children extend,
+    including basic type checking, warnings, interrupts, etc.
+
+    """
 
     def __init__(self):
         self.init_check_variables()
 
     def init_check_variables(self):
-        # Initizalization or Reset of check variables
+        """Reset initialized variables"""
         self.goal_received = False
         return
 
     def setup_server(self, action_topic):
-        # Setup the server
+        """You must know the action name to set up a server"""
         self.__feedback = harmoniFeedback()
         self.__result = harmoniResult()
         self.action_topic = action_topic
-        self.action = actionlib.SimpleActionServer(self.action_topic, harmoniAction, self.goal_received_callback, False)
+        self.action = actionlib.SimpleActionServer(self.action_topic, harmoniAction, self.goal_received_callback, auto_start=False)
         self.action.start()
         return
 
@@ -37,7 +43,7 @@ class ActionServer():
         self.goal_received = True
         return
 
-    def check_if_preempt(self):
+    def preemption_status(self):
         if self.action_goal.is_preempt_requested():
             rospy.loginfo(self.action_goal + " Action Preemepted")
             self.action_goal.set_preempted()
@@ -52,8 +58,8 @@ class ActionServer():
         rospy.loginfo("The goal has been received:" + str(received))
         return received
 
-    def get_request_data(self):
-        # Get the data of the action request, when the goal has been received successfully
+    def request_data(self):
+        """Return Request Data"""
         request_data = {}
         request_data["optional_data"] = self.optional_data
         request_data["child"] = self.child
