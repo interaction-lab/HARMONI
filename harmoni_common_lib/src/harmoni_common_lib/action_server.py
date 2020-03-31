@@ -11,12 +11,12 @@ class ActionServer():
 
     def __init__(self):
         self.init_check_variables()
-    
-     def init_check_variables(self):
+
+    def init_check_variables(self):
         # Initizalization or Reset of check variables
         self.goal_received = False
         return
-        
+
     def setup_server(self, action_topic):
         # Setup the server
         self.__feedback = harmoniFeedback()
@@ -28,22 +28,21 @@ class ActionServer():
 
     def goal_received_callback(self, goal):
         # Initialize request body variables
-        self.action_goal = goal.action ## action request
-        self.optional_data = goal.optional_data ## input data for the module
-        self.child = goal.child ## external module that will accomplish the task 
-        self.condition = goal.condition ## event condition to wait before starting the action
+        self.action_goal = goal.action  # action request
+        self.optional_data = goal.optional_data  # input data for the module
+        self.child = goal.child  # external module that will accomplish the task
+        self.condition = goal.condition  # event condition to wait before starting the action
         # Set goal received
-        rospy.loginfo("The goal is: "+ goal.action)
+        rospy.loginfo("The goal is: " + goal.action)
         self.goal_received = True
         return
 
     def check_if_preempt(self):
         if self.action_goal.is_preempt_requested():
-            rospy.loginfo(self.action_goal+" Action Preemepted")
+            rospy.loginfo(self.action_goal + " Action Preemepted")
             self.action_goal.set_preempted()
             preempted = True
         return preempted
-
 
     def check_if_goal_received(self):
         if self.goal_received:
@@ -68,12 +67,12 @@ class ActionServer():
         self.action_goal.publish_feedback(self.__feedback)
         rospy.loginfo("The feedback is:" + self.__feedback.state)
         return
-        
+
     def send_result(self, do_continue, message):
         self.__result.action = self.action_goal
         self.__result.do_continue = do_continue
         self.__result.message = message
         # Action set to succeded
         self.action_goal.set_succeeded(self.__result)
-        rospy.loginfo("The action "+self.__result.action+ " have been set to succeded")
+        rospy.loginfo("The action " + self.__result.action + " have been set to succeded")
         return

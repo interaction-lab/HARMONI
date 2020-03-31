@@ -6,12 +6,13 @@ import roslib
 import actionlib
 from harmoni_common_msgs.msg import harmoniGoal, harmoniAction
 
+
 class ActionClient():
 
     def __init__(self):
         # Initialization of the variables
         self.init_check_variables()
-       
+
     def init_check_variables(self):
         # Initizalization or Reset of check variables
         self.result_received = False
@@ -24,10 +25,10 @@ class ActionClient():
         self.action_feedback = {}
         self.action_result = {
             "do_continue": False,
-            "message": ""}
+            "message": ""
         }
         self.action_feedback = {
-            "state":""
+            "state": ""
         }
 
     def setup_client(self, action_goal):
@@ -45,7 +46,6 @@ class ActionClient():
         self.action_result["message"] = result.message
         self.result_received = True
         return
-        
 
     def goal_feedback_callback(self, feedback):
         # Save the action feedback
@@ -56,39 +56,33 @@ class ActionClient():
 
     def check_if_feedback_received(self):
         # Check if feedback received
-        if self.feedback_received = True:
+        if self.feedback_received:
             feedback = True
             self.feedback_received = False
         else:
             feedback = False
-        return feedback  
+        return feedback
 
     def check_if_result_received(self):
         # Check if result received
-        if self.result_received = True:
+        if self.result_received:
             result = True
         else:
             result = False
         return result
 
     def get_feedback_data(self):
-        return(self.action_feedback) 
+        return(self.action_feedback)
 
     def get_result_data(self):
-        return(self.action_result) 
+        return(self.action_result)
 
     def send_goal(self, action_goal, optional_data, child, condition, time_out):
         # Reset of check variables
         self.result_received = False
         self.feedback_received = False
-        # Send goal and the time_out 
-        goal = harmoniGoal(action = action_goal, optional_data= optional_data, child = child, condition = condition)
-        self.action_client.send_goal(goal, done_cb = self.goal_result_callback, feedback_cb = self.goal_feedback_callback)
+        # Send goal and the time_out
+        goal = harmoniGoal(action=action_goal, optional_data=optional_data, child=child, condition=condition)
+        self.action_client.send_goal(goal, done_cb=self.goal_result_callback, feedback_cb=self.goal_feedback_callback)
         self.action_client.wait_for_result(time_out)
         return
-
-        
-
-
-
-    
