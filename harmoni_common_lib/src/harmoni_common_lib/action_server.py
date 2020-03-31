@@ -29,6 +29,7 @@ class ActionServer():
         self.condition = goal.condition ## event condition to wait before starting the action
         # Set goal received
         self.goal_received = True
+        return
         
     def check_if_goal_received(self):
         if self.goal_received:
