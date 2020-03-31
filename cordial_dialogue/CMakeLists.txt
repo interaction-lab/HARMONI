@@ -20,7 +20,7 @@ generate_messages(
 )
 
 catkin_package(
-  INCLUDE_DIRS include
+  #INCLUDE_DIRS include
   LIBRARIES cordial_dialogue
   CATKIN_DEPENDS aws_ros1_common roscpp std_msgs
   #DEPENDS system_lib
