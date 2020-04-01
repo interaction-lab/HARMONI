@@ -7,8 +7,10 @@ from action_server import HarmoniActionServer
 
 
 class HardwareControlServer(HarmoniActionServer):
-    """A hardware control provider receives some data which it will formulate
-    into an action for the hardware"""
+    """
+    A hardware control provider receives some data which it will formulate
+    into an action for the hardware
+    """
 
     def __init__(self, name, service_manager):
         """
@@ -39,7 +41,7 @@ class HardwareControlServer(HarmoniActionServer):
         """"""
         super().goal_received_callback(goal)
 
-        self.service_manager.do(goal.optional_data)  # status is in response_recieved, result in return_msg
+        self.service_manager.do(goal.optional_data)  # status is in response_received, result in return_msg
         self.send_feedback("Doing action")
 
         while not self.service_manager.action_completed:
@@ -55,8 +57,10 @@ class HardwareControlServer(HarmoniActionServer):
 
 
 class ExternalServiceServer(HarmoniActionServer):
-    """An external service provider receives some data which it will formulate
-    into an API request of some cloud provider"""
+    """
+    An external service provider receives some data which it will formulate
+    into an API request of some cloud provider
+    """
 
     def __init__(self, name, service_manager):
         """
@@ -104,8 +108,10 @@ class ExternalServiceServer(HarmoniActionServer):
 
 
 class InternalServiceServer(HarmoniActionServer):
-    """An Internal Service controls the behavior of a class that processes some
-    data from a topic(s) and publishes it to a topic"""
+    """
+    An Internal Service controls the behavior of a class that processes some
+    data from a topic(s) and publishes it to a topic
+    """
 
     def __init__(self, name, service_manager):
         """
@@ -152,8 +158,10 @@ class InternalServiceServer(HarmoniActionServer):
 
 
 class HarwareReadingServer(HarmoniActionServer):
-    """An hardware reading class controls the behavior of a class that processes some
-    data from a sensor and publishes it to a topic"""
+    """
+    An hardware reading class controls the behavior of a class that processes some
+    data from a sensor and publishes it to a topic
+    """
 
     def __init__(self, name, service_manager):
         """
