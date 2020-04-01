@@ -22,8 +22,8 @@ class HarmoniController(ActionClient, ActionServer):
     def setup_actions(self):
         """ Setup clients of each subclass and the server of the controller"""
         for i in range(0, len(self.subclasses_array)):
-            super().setup_client(self.subclasses_array[i])
-        super().setup_server(self.controller)
+            self.setup_client(self.subclasses_array[i])
+        self.setup_server(self.controller)
         return
 
     def setup_conditional_startup(self, condition_event, checked_event):
@@ -34,16 +34,6 @@ class HarmoniController(ActionClient, ActionServer):
         rospy.loginfo("Conditional event ended successfully")
         return
 
-    def send_state(self, state):
-        """ Send feedback """
-        super().send_feedback(state)
-        return
-
-    def send_result(self, do_continue, message):
-        """ Send result """
-        super().send_result(do_continue, message)
-        return
-
     def handle_controller(self, time_out, checked_event):
         """ 
         Receiving the request (server role)
@@ -52,34 +42,34 @@ class HarmoniController(ActionClient, ActionServer):
         Check if setting up a conditional startup or not
         Sending the goal request to the server (client role)
         """
-        while not super()s.check_if_goal_received():
+        while not self.check_if_goal_received():
             rospy.loginfo("Waiting for receiving a request goal")
             rospy.Rate(1)
-        request_data = super().request_data()
+        request_data = self.request_data()
         rospy.loginfo("The request data are:" + str(request_data))
         if request_data.condition != "uncondition":  # check if the action is conditioned by another event or not
             self.setup_conditional_startup(request_data.condition, checked_event)
 
         rospy.loginfo("Start a goal request to the child")
-        super().send_goal(action_goal=request_data.child, optional_data=request_data.optional_data, condition="", time_out=time_out)
+        self.send_goal(action_goal=request_data.child, optional_data=request_data.optional_data, condition="", time_out=time_out)
         return
 
     def handle_state(self, handle_function):
         """ Check the feedback state received. Get the data and reset the variables"""
-        if super().check_if_feedback_received():
+        if self.check_if_feedback_received():
             rospy.loginfo("Received state feedback")
-            feedback_data = super().feedback_data()
-            super().init_check_variables_client()
+            feedback_data = self.feedback_data()
+            self.init_check_variables_client()
             handle_function()
         else:
             return False
 
     def handle_response(self, handle_function):
         """ Check the response received. Get the data and reset the variables """
-        if super().check_if_result_received():
+        if self.check_if_result_received():
             rospy.loginfo("Received result")
-            result_data = super().result_data()
-            super().init_check_variables_client()
+            result_data = self.result_data()
+            self.init_check_variables_client()
             handle_function()
         else:
             return False
