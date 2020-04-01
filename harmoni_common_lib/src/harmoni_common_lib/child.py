@@ -27,6 +27,7 @@ class HardwareControlServer(HarmoniActionServer):
             service_manager.cont = Bool # Used IF logic can dictate control flow
             service_manager.result_msg = String # 
         """
+
         self.name = name
         self.service_manager = service_manager
 
