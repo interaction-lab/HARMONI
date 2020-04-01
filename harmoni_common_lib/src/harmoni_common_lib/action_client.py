@@ -7,13 +7,18 @@ import actionlib
 from harmoni_common_msgs.msg import harmoniGoal, harmoniAction
 
 
-class ActionClient():
+class HarmoniActionClient():
+    """
+    Controllers and manager are clients.
+    This class provides basic client functionality which controller and manager extend,
+    including basic type checking, warnings, interrupts, etc.
 
+    """
     def __init__(self):
         # Initialization of the variables
-        self.init_check_variables()
+        self.init_check_variables_client()
 
-    def init_check_variables(self):
+    def init_check_variables_client(self):
         # Initizalization or Reset of check variables
         self.result_received = False
         self.feedback_received = False
@@ -71,10 +76,12 @@ class ActionClient():
             result = False
         return result
 
-    def get_feedback_data(self):
+    def feedback_data(self):
+        """Return Feedback Data"""
         return(self.action_feedback)
 
-    def get_result_data(self):
+    def result_data(self):
+        """Return Result Data"""
         return(self.action_result)
 
     def send_goal(self, action_goal, optional_data, child, condition, time_out):

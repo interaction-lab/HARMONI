@@ -16,9 +16,9 @@ class HarmoniActionServer():
     """
 
     def __init__(self):
-        self.init_check_variables()
+        self.init_check_variables_server()
 
-    def init_check_variables(self):
+    def init_check_variables_server(self):
         """Reset initialized variables"""
         self.goal_received = False
         return
