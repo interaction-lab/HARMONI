@@ -3,6 +3,7 @@
 # Importing the libraries
 import rospy
 import roslib
+from std_msgs.msg import String, Bool
 from action_server import HarmoniActionServer
 
 
@@ -18,7 +19,7 @@ class HardwareControlServer(HarmoniActionServer):
         Can optionally test connctivity and availability of the hardware
         @name: the name of the hardware element, will be the name of the server
         @service_manager: service managers should have the following fuctionality:
-            service_manger.test() # sends default or example action
+            service_manager.test() # sends default or example action
             service_manager.do(data) # processes data and does action
             service_manager.reset_init() # Resets hardware variables to initial state
 
@@ -34,13 +35,13 @@ class HardwareControlServer(HarmoniActionServer):
             rospy.loginfo("{name} has been successfully set up")
         else:
             rospy.logwarn("{name} has not been started")
-
         self.setup_server(name)
 
     def goal_received_callback(self, goal):
         """"""
-        super().goal_received_callback(goal)
-
+        super().goal_received_callback(goal) # TODO: this function is not evoked automatically in the ActionServer class?
+        # Here should we check if the goal has been received instead of calling the callback function directly?
+        
         self.service_manager.do(goal.optional_data)  # status is in response_received, result in return_msg
         self.send_feedback("Doing action")
 
@@ -68,7 +69,7 @@ class ExternalServiceServer(HarmoniActionServer):
         Can optionally test connctivity with web services
         @name: the name of the external service, will be the name of the server
         @service_manager: service managers should have the following fuctionality:
-            service_manger.test() # sends default message to server
+            service_manager.test() # sends default message to server
             service_manager.request(data) # processes data and sends through API
             service_manager.reset_init() # Resets server to initial state
 
@@ -88,7 +89,9 @@ class ExternalServiceServer(HarmoniActionServer):
         self.setup_server(name)
 
     def goal_received_callback(self, goal):
-        """Currently not supporting sending data to external service except through optional_data"""
+        """
+        Currently not supporting sending data to external service except through optional_data
+        """
         super().goal_received_callback(goal)
 
         self.service_manager.request(goal.optional_data)  # status is in response_recieved, result in return_msg
@@ -107,6 +110,7 @@ class ExternalServiceServer(HarmoniActionServer):
         return
 
 
+
 class InternalServiceServer(HarmoniActionServer):
     """
     An Internal Service controls the behavior of a class that processes some
@@ -118,7 +122,7 @@ class InternalServiceServer(HarmoniActionServer):
         Initialize, control flow of information through processing class
         @name: the name of the external service, will be the name of the server
         @service_manager: service managers should have the following fuctionality:
-            service_manger.test() # sends default message to server
+            service_manager.test() # sends default message to server
             service_manager.reset_init() # Resets server to initial state
             service_manager.start(rate) # Rate is communicated in optional data
             service_manager.stop()
@@ -138,6 +142,7 @@ class InternalServiceServer(HarmoniActionServer):
         while not rospy.is_shutdown:
             self.send_feedback(self.service_manager.status)
             rospy.Rate(.2)
+        
 
     def goal_received_callback(self, goal):
         """Control flow through internal processing class"""
@@ -168,7 +173,7 @@ class HarwareReadingServer(HarmoniActionServer):
         Initialize, control flow of information through sensor class
         @name: the name of the external service, will be the name of the server
         @service_manager: service managers should have the following fuctionality:
-            service_manger.test() # sends default message to server
+            service_manager.test() # sends default message to server
             service_manager.reset_init() # Resets server to initial state
             service_manager.start(rate) # Rate is communicated in optional data
             service_manager.stop()

@@ -33,12 +33,11 @@ class HarmoniActionServer():
         return
 
     def goal_received_callback(self, goal):
-        # Initialize request body variables
+        """ Callback function, initialize the variables and set the goal to received"""
         self.action_goal = goal.action  # action request
         self.optional_data = goal.optional_data  # input data for the module
         self.child = goal.child  # external module that will accomplish the task
         self.condition = goal.condition  # event condition to wait before starting the action
-        # Set goal received
         rospy.loginfo("The goal is: " + goal.action)
         self.goal_received = True
         return
@@ -67,18 +66,18 @@ class HarmoniActionServer():
         return(request_data)
 
     def send_feedback(self, state):
+        """ Send the feedback"""
         self.__feedback.action = self.action_goal
         self.__feedback.state = state
-        # Send the feedback
         self.action_goal.publish_feedback(self.__feedback)
         rospy.loginfo("The feedback is:" + self.__feedback.state)
         return
 
     def send_result(self, do_continue, message):
+        """Send the result and action set to succeded"""
         self.__result.action = self.action_goal
         self.__result.do_continue = do_continue
         self.__result.message = message
-        # Action set to succeded
         self.action_goal.set_succeeded(self.__result)
         rospy.loginfo("The action " + self.__result.action + " have been set to succeded")
         return
