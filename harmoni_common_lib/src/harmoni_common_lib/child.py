@@ -20,7 +20,7 @@ class HardwareControl():
 
 
 class ExternalService(HarmoniActionServer):
-    """An external service provider recieves some data which it will formulate 
+    """An external service provider recieves some data which it will formulate
     into an API request of some cloud provider"""
 
     def __init__(self, name, service_manager):
@@ -31,12 +31,11 @@ class ExternalService(HarmoniActionServer):
         @service_manager: service managers should have the following fuctionality:
             service_manger.test() # sends default message to server
             service_manager.request(data) # processes data and sends through API
-            service_manager.reset() # Resets to inital conditions
             service_manager.reset_init() # Resets server to initial state
 
-            service_manager.response_received = Bool # 
-            service_manager.cont = Bool # Used if logic can dictate 
-            service_manager.msg = String
+            service_manager.response_received = Bool # True if API returned a response
+            service_manager.cont = Bool # Used if logic can dictate control flow
+            service_manager.result_msg = String # 
         """
         self.name = name
         self.service_manager = service_manager
@@ -70,18 +69,50 @@ class ExternalService(HarmoniActionServer):
 
 
 class InternalService():
+    """An Internal Service controls the behavior of a class that processes some
+    data from a topic(s) and publishes it to a topic"""
 
-    def __init__(self, data_type_sub, data_type_pub, topic_sub, topic_pub):
-        # Initialization of subscriber and publisher info
-        self.data_type_sub = data_type_sub
-        self.topic_sub = topic_sub
-        self.data_type_pub = data_type_pub
-        self.topic_pub = topic_pub
-        # Initialize server
-        self.server = ActionServer()
+    def __init__(self, name, service_manager):
+        """
+        Initialize, control flow of information through processing class
+        @name: the name of the external service, will be the name of the server
+        @service_manager: service managers should have the following fuctionality:
+            service_manger.test() # sends default message to server
+            service_manager.reset_init() # Resets server to initial state
+            service_manager.start(rate) # Rate is communicated in optional data
+            service_manager.stop()
 
-    def setup(self, child):
-        self.server.setup_server(child)
+            service_manager.status = Int # TODO Set up status class
+        """
+        self.name = name
+        self.service_manager = service_manager
+
+        success = self.service_manager.test()
+        if success:
+            rospy.loginfo("{name} has been successfully set up")
+        else:
+            rospy.logwarn("{name} has not been started")
+
+        self.setup_server(name)
+        while not rospy.is_shutdown:
+            self.send_feedback(self.service_manager.status)
+            rospy.Rate(.2)
+
+    def goal_received_callback(self, goal):
+        """Control flow through internal processing class"""
+        super().goal_received_callback(goal)
+
+        # TODO better case management here
+        if goal.action_goal == "start_{self.name}":
+            if goal.optional_data != "":
+                self.service_manager.start(int(goal.optional_data))
+            else:
+                self.service_manager.start()
+        elif goal.action_goal == "pause_{self.name}":
+            self.service_manager.stop()
+        elif goal.action_goal == "stop_{self.name}":
+            self.service_manager.stop()
+            self.service_manager.reset_init
         return
 
 
