@@ -3,7 +3,6 @@
 # Importing the libraries
 import rospy
 import roslib
-from action_client import HarmoniActionClient
 from action_server import HarmoniActionServer
 
 TIMEOUT_FOR_RESULT = 10
@@ -16,19 +15,18 @@ class HarmoniController(HarmoniActionServer):
     This class provides basic controller functionality which the subclasses of controller can exploit
     """
 
-    def __init__(self, controller, subclasses, last_event):
+    def __init__(self, controller, child_name, client, last_event):
         """ Initialization of the variables """
         self.timeout_for_result = TIMEOUT_FOR_RESULT
         self.timeout_for_server = TIMEOUT_FOR_SERVER
         self.last_event = last_event
-        self.client = HarmoniActionClient()
+        self.client = client
         self.controller_name = controller
-        self.subclass_names_array = subclasses  # array of the subclasses of the single controller
+        self.child_name = child_name  
 
     def setup_actions(self, execute_goal_result_callback, execute_goal_feedback_callback):
         """ Setup clients of each subclass and the server of the controller"""
-        for i in range(0, len(self.subclass_names_array)):
-            self.client.setup_client(self.subclass_names_array[i], self.timeout_for_server, execute_goal_result_callback, execute_goal_feedback_callback)
+        self.client.setup_client(self.child_name, self.timeout_for_server, execute_goal_result_callback, execute_goal_feedback_callback)
         self.setup_server(self.controller_name, self.execute_goal_received_callback)
         return
 
