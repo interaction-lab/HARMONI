@@ -3,9 +3,7 @@
 # Importing the libraries
 import rospy
 import roslib
-from std_msgs.msg import String, Bool
 from action_server import HarmoniActionServer
-
 
 class HardwareControlServer(HarmoniActionServer):
     """
