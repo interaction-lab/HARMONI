@@ -84,7 +84,11 @@ class HarmoniActionClient():
         """Return Result Data"""
         return(self.action_result)
 
+<<<<<<< HEAD
     def send_goal(self, action_goal, optional_data, child, condition, timeout):
+=======
+    def send_goal(self, action_goal, optional_data, child="", condition="", time_out=600):
+>>>>>>> add defaults to send goal
         """ Reset of check variables. Send goal and set the time out """
         self.set_com_flag_variables()
         goal = harmoniGoal(action=action_goal, optional_data=optional_data, child=child, condition=condition)
