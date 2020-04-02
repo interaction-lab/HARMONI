@@ -141,9 +141,8 @@ class InternalServiceServer(HarmoniActionServer):
         
 
     def execute_goal_received_callback(self, goal):
-        """Control flow through internal processing class""")
-
-        # TODO better case management here
+        """Control flow through internal processing class"""
+        # TODO better case management
         if goal.action_goal == "start_{self.name}":
             if goal.optional_data != "":
                 self.service_manager.start(int(goal.optional_data))
