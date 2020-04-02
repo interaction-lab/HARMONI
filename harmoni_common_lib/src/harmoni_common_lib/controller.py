@@ -4,6 +4,8 @@
 import rospy
 import roslib
 from action_server import HarmoniActionServer
+from action_client import HarmoniActionClient
+from collections import defaultdict
 
 TIMEOUT_FOR_RESULT = 10
 TIMEOUT_FOR_SERVER = 10
@@ -15,18 +17,21 @@ class HarmoniController(HarmoniActionServer):
     This class provides basic controller functionality which the subclasses of controller can exploit
     """
 
-    def __init__(self, controller, child_name, client, last_event):
+    def __init__(self, controller_name, child_names, last_event):
         """ Initialization of the variables """
         self.timeout_for_result = TIMEOUT_FOR_RESULT
         self.timeout_for_server = TIMEOUT_FOR_SERVER
         self.last_event = last_event
-        self.client = client
-        self.controller_name = controller
-        self.child_name = child_name  
+        self.children_clients = defaultdict(HarmoniActionClient())
+        for child in child_names:
+            self.children_clients[child] = HarmoniActionClient()
+        self.controller_name = controller_name
 
     def setup_actions(self, execute_goal_result_callback, execute_goal_feedback_callback):
         """ Setup clients of each subclass and the server of the controller"""
-        self.client.setup_client(self.child_name, self.timeout_for_server, execute_goal_result_callback, execute_goal_feedback_callback)
+        for child, client in self.children_clients:
+            client.setup_client(child, execute_goal_result_callback, execute_goal_feedback_callback)
+
         self.setup_server(self.controller_name, self.execute_goal_received_callback)
         return
 
@@ -49,5 +54,5 @@ class HarmoniController(HarmoniActionServer):
             self.setup_conditional_startup(goal.condition, self.last_event)
 
         rospy.loginfo("Start a goal request to the child")
-        self.client.send_goal(action_goal=goal.child, optional_data=goal.optional_data, condition="", timeout=self.timeout)
+        self.children_clients[goal.child].send_goal(action_goal=goal.child, optional_data=goal.optional_data, condition="", timeout=self.timeout)
         return
