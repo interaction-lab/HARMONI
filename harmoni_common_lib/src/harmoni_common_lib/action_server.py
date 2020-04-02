@@ -18,18 +18,15 @@ class HarmoniActionServer():
     def __init__(self):
         self.init_check_variables_server()
 
-    def init_check_variables_server(self):
-        """Reset initialized variables"""
-        self.goal_received = False
-        return
-
-    def setup_server(self, action_topic):
+    def setup_server(self, action_topic, execute_goal_received_callback):
         """You must know the action name to set up a server"""
         self.__feedback = harmoniFeedback()
         self.__result = harmoniResult()
         self.action_topic = action_topic
         self.action = actionlib.SimpleActionServer(self.action_topic, harmoniAction, self.goal_received_callback, auto_start=False)
         self.action.start()
+        rospy.loginfo("Server starts")
+        self.execute_goal_received_callback = execute_goal_received_callback
         return
 
     def goal_received_callback(self, goal):
@@ -38,8 +35,10 @@ class HarmoniActionServer():
         self.optional_data = goal.optional_data  # input data for the module
         self.child = goal.child  # external module that will accomplish the task
         self.condition = goal.condition  # event condition to wait before starting the action
+        print(goal)
         rospy.loginfo("The goal is: " + goal.action)
         self.goal_received = True
+        self.execute_goal_received_callback(goal)
         return
 
     def preemption_status(self):
@@ -48,14 +47,6 @@ class HarmoniActionServer():
             self.action_goal.set_preempted()
             preempted = True
         return preempted
-
-    def check_if_goal_received(self):
-        if self.goal_received:
-            received = True
-        else:
-            received = False
-        rospy.loginfo("The goal has been received:" + str(received))
-        return received
 
     def request_data(self):
         """Return Request Data"""
