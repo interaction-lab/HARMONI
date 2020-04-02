@@ -13,9 +13,12 @@
 
 # Usage of class
 List of classes:
-```
+
 - Controller
 ```
+    4. Check
+    5. Get
+    6. Send
 from controller import Controller
 
 controller = Controller()

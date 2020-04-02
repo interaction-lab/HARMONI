@@ -36,13 +36,12 @@ class HardwareControlServer(HarmoniActionServer):
             rospy.loginfo("{name} has been successfully set up")
         else:
             rospy.logwarn("{name} has not been started")
-        self.setup_server(name)
+        self.setup_server(name, self.execute_goal_received_callback)
 
-    def goal_received_callback(self, goal):
-        """"""
-        super().goal_received_callback(goal) # TODO: this function is not evoked automatically in the ActionServer class?
-        # Here should we check if the goal has been received instead of calling the callback function directly?
-        
+    def execute_goal_received_callback(self, goal):
+        """
+        Handle function execute in the goal reiceved callback
+        """
         self.service_manager.do(goal.optional_data)  # status is in response_received, result in return_msg
         self.send_feedback("Doing action")
 
@@ -87,14 +86,12 @@ class ExternalServiceServer(HarmoniActionServer):
         else:
             rospy.logwarn("{name} has not been started")
 
-        self.setup_server(name)
+        self.setup_server(name, self.execute_goal_received_callback)
 
-    def goal_received_callback(self, goal):
+    def execute_goal_received_callback(self, goal):
         """
         Currently not supporting sending data to external service except through optional_data
         """
-        super().goal_received_callback(goal)
-
         self.service_manager.request(goal.optional_data)  # status is in response_recieved, result in return_msg
         self.send_feedback("Processing")
 
@@ -139,15 +136,14 @@ class InternalServiceServer(HarmoniActionServer):
         else:
             rospy.logwarn("{name} has not been started")
 
-        self.setup_server(name)
+        self.setup_server(name, self.execute_goal_received_callback)
         while not rospy.is_shutdown:
             self.send_feedback(self.service_manager.status)
             rospy.Rate(.2)
         
 
-    def goal_received_callback(self, goal):
-        """Control flow through internal processing class"""
-        super().goal_received_callback(goal)
+    def execute_goal_received_callback(self, goal):
+        """Control flow through internal processing class""")
 
         # TODO better case management here
         if goal.action_goal == "start_{self.name}":
@@ -190,14 +186,13 @@ class HarwareReadingServer(HarmoniActionServer):
         else:
             rospy.logwarn("{name} has not been started")
 
-        self.setup_server(name)
+        self.setup_server(name, self.execute_goal_received_callback)
         while not rospy.is_shutdown:
             self.send_feedback(self.service_manager.status)
             rospy.Rate(.2)
 
-    def goal_received_callback(self, goal):
+    def execute_goal_received_callback(self, goal):
         """Control flow through internal processing class"""
-        super().goal_received_callback(goal)
 
         # TODO better case management here
         if goal.action_goal == "start_{self.name}":

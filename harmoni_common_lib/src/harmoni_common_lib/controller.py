@@ -3,27 +3,33 @@
 # Importing the libraries
 import rospy
 import roslib
-from action_client import ActionClient
-from action_server import ActionServer
+from action_client import HarmoniActionClient
+from action_server import HarmoniActionServer
 
+TIMEOUT_FOR_RESULT = 10
+TIMEOUT_FOR_SERVER = 10
 
-class HarmoniController(ActionClient, ActionServer):
+class HarmoniController(HarmoniActionServer):
     """
     A control provider receives some request from the manager and send the corresponding 
     request action to the child.
     This class provides basic controller functionality which the subclasses of controller can exploit
     """
 
-    def __init__(self, controller, subclasses):
+    def __init__(self, controller, subclasses, last_event):
         """ Initialization of the variables """
-        self.controller = controller
-        self.subclasses_array = subclasses  # array of the subclasses of the single controller
+        self.timeout_for_result = TIMEOUT_FOR_RESULT
+        self.timeout_for_server = TIMEOUT_FOR_SERVER
+        self.last_event = last_event
+        self.client = HarmoniActionClient()
+        self.controller_name = controller
+        self.subclass_names_array = subclasses  # array of the subclasses of the single controller
 
-    def setup_actions(self):
+    def setup_actions(self, execute_goal_result_callback, execute_goal_feedback_callback):
         """ Setup clients of each subclass and the server of the controller"""
-        for i in range(0, len(self.subclasses_array)):
-            self.setup_client(self.subclasses_array[i])
-        self.setup_server(self.controller)
+        for i in range(0, len(self.subclass_names_array)):
+            self.client.setup_client(self.subclass_names_array[i], self.timeout_for_server, execute_goal_result_callback, execute_goal_feedback_callback)
+        self.setup_server(self.controller_name, self.execute_goal_received_callback)
         return
 
     def setup_conditional_startup(self, condition_event, checked_event):
@@ -34,42 +40,16 @@ class HarmoniController(ActionClient, ActionServer):
         rospy.loginfo("Conditional event ended successfully")
         return
 
-    def handle_controller(self, time_out, checked_event):
+    def execute_goal_received_callback(self, goal):
         """ 
         Receiving the request (server role)
-        Check if the goal has been received, if the server received the request
-        Get the data from the parent request
         Check if setting up a conditional startup or not
         Sending the goal request to the server (client role)
         """
-        while not self.check_if_goal_received():
-            rospy.loginfo("Waiting for receiving a request goal")
-            rospy.Rate(1)
-        request_data = self.request_data()
-        rospy.loginfo("The request data are:" + str(request_data))
-        if request_data.condition != "uncondition":  # check if the action is conditioned by another event or not
-            self.setup_conditional_startup(request_data.condition, checked_event)
+        rospy.loginfo("The request data are:" + str(goal))
+        if goal.condition != "uncondition":  # check if the action is conditioned by another event or not
+            self.setup_conditional_startup(goal.condition, self.last_event)
 
         rospy.loginfo("Start a goal request to the child")
-        self.send_goal(action_goal=request_data.child, optional_data=request_data.optional_data, condition="", time_out=time_out)
+        self.client.send_goal(action_goal=goal.child, optional_data=goal.optional_data, condition="", timeout=self.timeout)
         return
-
-    def handle_state(self, handle_function):
-        """ Check the feedback state received. Get the data and reset the variables"""
-        if self.check_if_feedback_received():
-            rospy.loginfo("Received state feedback")
-            feedback_data = self.feedback_data()
-            self.init_check_variables_client()
-            handle_function()
-        else:
-            return False
-
-    def handle_response(self, handle_function):
-        """ Check the response received. Get the data and reset the variables """
-        if self.check_if_result_received():
-            rospy.loginfo("Received result")
-            result_data = self.result_data()
-            self.init_check_variables_client()
-            handle_function()
-        else:
-            return False
