@@ -35,7 +35,6 @@ class HarmoniActionServer():
         self.optional_data = goal.optional_data  # input data for the module
         self.child = goal.child  # external module that will accomplish the task
         self.condition = goal.condition  # event condition to wait before starting the action
-        print(goal)
         rospy.loginfo("The goal is: " + goal.action)
         self.goal_received = True
         self.execute_goal_received_callback(goal)
