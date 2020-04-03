@@ -30,7 +30,7 @@ class HarmoniServiceManager():
         return
 
 
-class HarmoniDirectServiceManager():
+class HarmoniExternalServiceManager():
     """
     Service manager for the harware control and external service servers.
     Individual service managers overwrite the parent public functions.
