@@ -10,8 +10,10 @@ project(harmoni_common_lib)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
-  actionlib_msgs
   message_generation
+  genmsg 
+  actionlib_msgs
+  std_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -69,11 +71,11 @@ catkin_python_setup()
 # )
 
 ## Generate added messages and services with any dependencies listed here
- generate_messages(
-   DEPENDENCIES
-   std_msgs  # Or other packages containing msgs
-   actionlib_msgs
- )
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+  actionlib_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -186,6 +188,10 @@ include_directories(
 #   # myfile2
 #   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 # )
+
+install(DIRECTORY scripts src
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
 
 #############
 ## Testing ##

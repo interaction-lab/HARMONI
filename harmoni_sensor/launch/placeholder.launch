@@ -1,9 +1,10 @@
 <!-- This is an example launch file for how a ROS application could use a node -->
 <launch>
    
-	<arg name="use_EXAMPLE" default="true"/>
-  	<group if="$(arg use_EXAMPLE)">
-    		<node pkg="harmoni_EXAMPLE" type="EXAMPLEs.py" name="EXAMPLE_node" output="screen"/>
+	<arg name="use_sensor" default="true"/>
+  	<group if="$(arg use_sensor)">
+			<rosparam file="$(find harmoni_decision)/config/configuration.yaml"/>
+			<node pkg="harmoni_sensor" type="sensor_controller.py" name="sensor_controller_node" output="screen"/>
   	</group>
 
 
