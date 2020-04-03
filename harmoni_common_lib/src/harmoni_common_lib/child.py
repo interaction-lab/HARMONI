@@ -55,7 +55,7 @@ class HardwareControlServer(HarmoniActionServer):
         return
 
 
-class ExternalServiceServer(HarmoniActionServer):
+class WebServiceServer(HarmoniActionServer):
     """
     An external service provider receives some data which it will formulate
     into an API request of some cloud provider
