@@ -13,11 +13,11 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
 )
 
-generate_messages(
-  DEPENDENCIES
-  std_msgs
-  actionlib_msgs
-)
+# generate_messages(
+#   DEPENDENCIES
+#   std_msgs
+#   actionlib_msgs
+# )
 
 catkin_package(
   #INCLUDE_DIRS include
