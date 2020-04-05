@@ -3,18 +3,17 @@
 # Importing the libraries
 import rospy
 import roslib
-from harmoni_common_lib import HarmoniController 
+from harmoni_common_lib.controller import HarmoniController
 
-def HarmoniSensorController(HarmoniController):
+
+class HarmoniSensorController(HarmoniController):
     """
     The sensor controller aims to handle the sensing of the environment, interfacing with hardwares
     """
 
-    def __init__(self, last_event):
+    def __init__(self, controller_name, sensor_child_names, last_event):
         """ Init controller"""
-        controller_name = "sensor" # TODO: Do we want to get the controller name from the config file as well??
-        sensor_child_names = rospy.get_param("use_sensor/sensor_controller")
-        self.__init__(controller_name, sensor_child_names, last_event)
+        super(HarmoniSensorController, self).__init__(controller_name, sensor_child_names, last_event)
 
     def setup_controller(self):
         self.setup_actions(self.execute_result_callback, self.execute_feedback_callback)
@@ -31,11 +30,16 @@ def HarmoniSensorController(HarmoniController):
         rospy.loginfo("Execute feedback callback")
         return
 
+
 if __name__ == "__main__":
     rospy.init_node("sensor_controller_node")
-    last_event = "" # TODO: How to get information about last_event from behavior controller?
-    hsc = HarmoniSensorController(last_event)
+    last_event = ""  # TODO: How to get information about last_event from behavior controller?
+    controller_name = "sensor"  # TODO: Do we want to get the controller name from the config file as well??
+    # sensor_child_names = rospy.get_param("use_sensor/sensor_controller")
+    sensor_child_names = ['microphone', 'camera']
+    # I am not 100% sure but I think you need to pass the same set of args to a parent init
+    # Or possible use *args, *kwargs
+    hsc = HarmoniSensorController(controller_name, sensor_child_names, last_event)
     hsc.setup_controller()
     rospy.spin()
     pass
-
