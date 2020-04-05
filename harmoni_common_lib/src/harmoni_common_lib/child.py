@@ -5,6 +5,7 @@ import rospy
 import roslib
 from action_server import HarmoniActionServer
 
+
 class HardwareControlServer(HarmoniActionServer):
     """
     A hardware control provider receives some data which it will formulate
@@ -106,7 +107,6 @@ class WebServiceServer(HarmoniActionServer):
         return
 
 
-
 class InternalServiceServer(HarmoniActionServer):
     """
     An Internal Service controls the behavior of a class that processes some
@@ -138,7 +138,6 @@ class InternalServiceServer(HarmoniActionServer):
         while not rospy.is_shutdown:
             self.send_feedback(self.service_manager.status)
             rospy.Rate(.2)
-        
 
     def execute_goal_received_callback(self, goal):
         """Control flow through internal processing class"""
