@@ -7,7 +7,7 @@ import actionlib
 from harmoni_common_msgs.msg import harmoniAction, harmoniFeedback, harmoniResult
 
 
-class HarmoniActionServer():
+class HarmoniActionServer(object):
     """
     Most nodes (both controllers and children) are servers.
     This class provides basic server functionality which controllers and children extend,
