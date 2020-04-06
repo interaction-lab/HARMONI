@@ -15,13 +15,8 @@ class HarmoniActionClient():
     """
     def __init__(self):
         """ Initialization of the variables """
-        self.set_com_flag_variables()
+        self.init_action_variables()
 
-    def set_com_flag_variables(self):
-        """ Initizalize or reset of communication flag variables """
-        self.result_received = False
-        self.feedback_received = False
-        return
 
     def init_action_variables(self):
         """ Initizalize or reset action msg variables """
@@ -40,6 +35,7 @@ class HarmoniActionClient():
         self.init_action_variables()
         self.action_client = actionlib.SimpleActionClient(action_type_name, harmoniAction)
         if wait:
+            rospy.loginfo("Wait for server")
             self.action_client.wait_for_server()
         self.execute_goal_result_callback = execute_goal_result_callback
         self.execute_goal_feedback_callback = execute_goal_feedback_callback
@@ -60,27 +56,12 @@ class HarmoniActionClient():
         self.execute_goal_feedback_callback(self.action_feedback)
         return
 
-    def feedback_received(self):
-        """ Check if feedback received """
-        if self.feedback_received:
-            self.feedback_received = False
-            return True
-        else:
-            return False
 
-    def result_received(self):
-        """ Check if result received """
-        if self.result_received:
-            result = True
-        else:
-            result = False
-        return result
-
-    def feedback_data(self):
+    def get_feedback_data(self):
         """Return Feedback Data"""
         return(self.action_feedback)
 
-    def result_data(self):
+    def get_result_data(self):
         """Return Result Data"""
         return(self.action_result)
 

@@ -16,7 +16,7 @@ class HarmoniActionServer(object):
     """
 
     def __init__(self):
-        self.init_check_variables_server()
+        """Initialization"""
 
     def setup_server(self, action_topic, execute_goal_received_callback):
         """You must know the action name to set up a server"""
