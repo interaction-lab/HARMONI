@@ -32,11 +32,10 @@ class HarmoniSensorController(HarmoniController):
 
 
 if __name__ == "__main__":
-    rospy.init_node("sensor_controller_node")
+    controller_name = "sensor"
+    rospy.init_node(router_name + "_node")
     last_event = ""  # TODO: How to get information about last_event from behavior controller?
-    controller_name = "sensor"  # TODO: Do we want to get the controller name from the config file as well??
-    # sensor_child_names = rospy.get_param("use_sensor/sensor_controller")
-    sensor_child_names = ['microphone', 'camera']
+    sensor_child_names = rospy.get_param("/sensor_controller")
     # I am not 100% sure but I think you need to pass the same set of args to a parent init
     # Or possible use *args, *kwargs
     hsc = HarmoniSensorController(controller_name, sensor_child_names, last_event)
