@@ -31,14 +31,20 @@ class HarmoniActuatorRouter(HarmoniRouter):
         return
 
 
+def main():
+    try: 
+        router_name = "actuator"
+        rospy.init_node(router_name + "_node")
+        last_event = ""  # TODO: How to get information about last_event from behavior controller?
+        child_names = rospy.get_param("/"+router_name+"_router")
+        # I am not 100% sure but I think you need to pass the same set of args to a parent init
+        # Or possible use *args, *kwargs
+        hr = HarmoniActuatorRouter(router_name, child_names, last_event)
+        hr.setup_router()
+        rospy.spin()
+    except rospy.ROSInterruptException:
+        pass
+
+
 if __name__ == "__main__":
-    router_name = "actuator"
-    rospy.init_node(router_name + "_node")
-    last_event = ""  # TODO: How to get information about last_event from behavior controller?
-    child_names = rospy.get_param("/"+router_name+"_router")
-    # I am not 100% sure but I think you need to pass the same set of args to a parent init
-    # Or possible use *args, *kwargs
-    hr = HarmoniActuatorRouter(router_name, child_names, last_event)
-    hr.setup_router()
-    rospy.spin()
-    pass
+    main()
