@@ -4,7 +4,7 @@
 import rospy
 import roslib
 
-class HarmoniServiceManager():
+class HarmoniServiceManager(object):
     """
     Service manager for the harware reading and internal service servers.
     Individual service managers overwrite the parent public functions.
@@ -30,7 +30,7 @@ class HarmoniServiceManager():
         return
 
 
-class HarmoniExternalServiceManager():
+class HarmoniExternalServiceManager(object):
     """
     Service manager for the harware control and external service servers.
     Individual service managers overwrite the parent public functions.
