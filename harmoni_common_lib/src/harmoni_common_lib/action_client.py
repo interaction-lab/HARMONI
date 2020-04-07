@@ -17,6 +17,10 @@ class HarmoniActionClient():
         """ Initialization of the variables """
         self.init_action_variables()
 
+    def set_com_flag_variables(self):
+        self.feedback_received = False
+        self.result_received = False
+        return
 
     def init_action_variables(self):
         """ Initizalize or reset action msg variables """
@@ -47,6 +51,7 @@ class HarmoniActionClient():
         self.action_result["do_continue"] = result.do_continue
         self.action_result["message"] = result.message
         self.execute_goal_result_callback(self.action_result)
+        self.result_received = True
         return
 
     def action_feedback_callback(self, feedback):
@@ -54,6 +59,7 @@ class HarmoniActionClient():
         rospy.loginfo("Heard back feedback from: " + feedback.action)
         self.action_feedback["state"] = feedback.state
         self.execute_goal_feedback_callback(self.action_feedback)
+        self.feedback_received = True
         return
 
 

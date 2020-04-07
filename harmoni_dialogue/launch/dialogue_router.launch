@@ -1,0 +1,11 @@
+<!-- This is an example launch file for how a ROS application could use a node -->
+<launch>
+   
+	<arg name="use_dialogue" default="true"/>
+  	<group if="$(arg use_dialogue)">
+			<rosparam file="$(find harmoni_decision)/config/configuration.yaml"/>
+			<node pkg="harmoni_dialogue" type="dialogue_router.py" name="harmoni_dialogue" output="screen"/>
+  	</group>
+
+
+</launch>
