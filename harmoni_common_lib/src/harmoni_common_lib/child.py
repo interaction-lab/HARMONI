@@ -174,13 +174,14 @@ class HarwareReadingServer(HarmoniActionServer, object):
             service_manager.status = Int # TODO Set up status class
         """
         self.name = name
+        rospy.loginfo("The service name is %s" %self.name)
         self.service_manager = service_manager
 
         success = self.service_manager.test()
         if success:
-            rospy.loginfo("{name} has been successfully set up")
+            rospy.loginfo("%s has been successfully set up" %self.name)
         else:
-            rospy.logwarn("{name} has not been started")
+            rospy.logwarn("%s has not been started" %self.name)
 
         self.setup_server(name, self.execute_goal_received_callback)
         while not rospy.is_shutdown:
