@@ -6,7 +6,7 @@ import roslib
 from action_server import HarmoniActionServer
 
 
-class HardwareControlServer(HarmoniActionServer):
+class HardwareControlServer(HarmoniActionServer, object):
     """
     A hardware control provider receives some data which it will formulate
     into an action for the hardware
@@ -56,7 +56,7 @@ class HardwareControlServer(HarmoniActionServer):
         return
 
 
-class WebServiceServer(HarmoniActionServer):
+class WebServiceServer(HarmoniActionServer, object):
     """
     An external service provider receives some data which it will formulate
     into an API request of some cloud provider
@@ -107,7 +107,7 @@ class WebServiceServer(HarmoniActionServer):
         return
 
 
-class InternalServiceServer(HarmoniActionServer):
+class InternalServiceServer(HarmoniActionServer, object):
     """
     An Internal Service controls the behavior of a class that processes some
     data from a topic(s) and publishes it to a topic
@@ -155,7 +155,7 @@ class InternalServiceServer(HarmoniActionServer):
         return
 
 
-class HarwareReadingServer(HarmoniActionServer):
+class HarwareReadingServer(HarmoniActionServer, object):
     """
     An hardware reading class controls the behavior of a class that processes some
     data from a sensor and publishes it to a topic
