@@ -6,18 +6,18 @@ import roslib
 from harmoni_common_lib.router import HarmoniRouter
 
 
-class HarmoniActuatorRouter(HarmoniRouter):
+class HarmoniDetectorRouter(HarmoniRouter):
     """
-    The actuator router aims to control the actuators of the platform, interfacing with hardwares
+    The detector router aims to handle the processing of the input data
     """
 
     def __init__(self, router_name, child_names, last_event):
         """ Init router"""
-        super(HarmoniActuatorRouter, self).__init__(router_name, child_names, last_event)
+        super(HarmoniDetectorRouter, self).__init__(router_name, child_names, last_event)
 
     def setup_router(self):
         self.setup_actions(self.execute_result_callback, self.execute_feedback_callback)
-        rospy.loginfo("Actuator router actions have been set up")
+        rospy.loginfo("Detector router actions have been set up")
         return
 
     def execute_result_callback(self):
@@ -32,13 +32,13 @@ class HarmoniActuatorRouter(HarmoniRouter):
 
 
 if __name__ == "__main__":
-    router_name = "actuator"
+    router_name = "detector"
     rospy.init_node(router_name + "_node")
     last_event = ""  # TODO: How to get information about last_event from behavior controller?
     child_names = rospy.get_param("/"+router_name+"_router")
     # I am not 100% sure but I think you need to pass the same set of args to a parent init
     # Or possible use *args, *kwargs
-    hr = HarmoniActuatorRouter(router_name, child_names, last_event)
+    hr = HarmoniDetectorRouter(router_name, child_names, last_event)
     hr.setup_router()
     rospy.spin()
     pass

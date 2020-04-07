@@ -38,7 +38,7 @@ if __name__ == "__main__":
     child_names = rospy.get_param("/"+router_name+"_router")
     # I am not 100% sure but I think you need to pass the same set of args to a parent init
     # Or possible use *args, *kwargs
-    hsc = HarmoniDialogueRouter(router_name, child_names, last_event)
-    hsc.setup_router()
+    hr = HarmoniDialogueRouter(router_name, child_names, last_event)
+    hr.setup_router()
     rospy.spin()
     pass
