@@ -1,9 +1,9 @@
 # This is a configuration file describing the names of the chil of each controller
 
 
-sensor_controller: ["microphone", "rgbd_camera", "chest_camera"]
-dialogue_controller: ["lex", "dialogflow", "meena"]
-detector_controller: ["skeleton", "object", "stt", "face"]
-action_controller: ["tts", "speaker", "head_pose", "gesture", "gaze", "screen_face"]
+sensor_router: ["microphone", "rgbd_camera", "chest_camera"]
+dialogue_router: ["lex", "dialogflow", "meena"]
+detector_router: ["skeleton", "object", "stt", "face"]
+action_router: ["tts", "speaker", "head_pose", "gesture", "gaze", "screen_face"]
 
 # This is the configuration setting for the behavior controller, where the behavior patterns are listed

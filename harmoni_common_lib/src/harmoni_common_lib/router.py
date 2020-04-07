@@ -11,30 +11,30 @@ TIMEOUT_FOR_RESULT = 10
 TIMEOUT_FOR_SERVER = 10
 
 
-class HarmoniController(HarmoniActionServer, object):
+class HarmoniRouter(HarmoniActionServer, object):
     """
     A control provider receives some request from the manager and send the correspondings
     request action to the child.
-    This class provides basic controller functionality which the subclasses of controller can exploit
+    This class provides basic router functionality which the subclasses of router can exploit
     """
 
-    def __init__(self, controller_name, child_names, last_event):
+    def __init__(self, router_name, child_names, last_event):
         """ Initialization of the variables """
-        rospy.loginfo("Initializing HarmoniController")
+        rospy.loginfo("Initializing HarmoniRouter")
         self.timeout_for_result = TIMEOUT_FOR_RESULT
         self.timeout_for_server = TIMEOUT_FOR_SERVER
         self.last_event = last_event
         self.children_clients = defaultdict(HarmoniActionClient)
         for child in child_names:
             self.children_clients[child] = HarmoniActionClient()
-        self.controller_name = controller_name
+        self.router_name = router_name
 
     def setup_actions(self, execute_goal_result_callback, execute_goal_feedback_callback):
-        """ Setup clients of each subclass and the server of the controller"""
+        """ Setup clients of each subclass and the server of the router"""
         for child, client in self.children_clients.items():
             client.setup_client(child, execute_goal_result_callback, execute_goal_feedback_callback)
             rospy.loginfo("Set up client for "+ child)
-        self.setup_server(self.controller_name, self.execute_goal_received_callback)
+        self.setup_server(self.router_name, self.execute_goal_received_callback)
         return
 
     def setup_conditional_startup(self, condition_event, checked_event):
