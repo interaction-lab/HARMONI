@@ -36,7 +36,7 @@ def main():
         router_name = "detector"
         rospy.init_node(router_name + "_node")
         last_event = ""  # TODO: How to get information about last_event from behavior controller?
-        child_names = rospy.get_param("/" + router_name + "_router")
+        child_names = rospy.get_param("/routers/"+router_name)
         # I am not 100% sure but I think you need to pass the same set of args to a parent init
         # Or possible use *args, *kwargs
         hr = HarmoniDetectorRouter(router_name, child_names, last_event)
