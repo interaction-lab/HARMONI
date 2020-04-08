@@ -174,14 +174,14 @@ class HarwareReadingServer(HarmoniActionServer, object):
             service_manager.status = Int # TODO Set up status class
         """
         self.name = name
-        rospy.loginfo("The service name is %s" %self.name)
+        rospy.loginfo("The service name is %s" % self.name)
         self.service_manager = service_manager
 
         success = self.service_manager.test()
         if success:
-            rospy.loginfo("%s has been successfully set up" %self.name)
+            rospy.loginfo("%s has been successfully set up" % self.name)
         else:
-            rospy.logwarn("%s has not been started" %self.name)
+            rospy.logwarn("%s has not been started" % self.name)
 
         self.setup_server(name, self.execute_goal_received_callback)
         while not rospy.is_shutdown:
@@ -192,14 +192,14 @@ class HarwareReadingServer(HarmoniActionServer, object):
         """Control flow through internal processing class"""
 
         # TODO better case management here
-        if goal.action_goal == "start_{self.name}":
+        if goal.action_goal == "start_%s" % self.name:
             if goal.optional_data != "":
                 self.service_manager.start(int(goal.optional_data))
             else:
                 self.service_manager.start()
-        elif goal.action_goal == "pause_{self.name}":
+        elif goal.action_goal == "pause_%s" % self.name:
             self.service_manager.stop()
-        elif goal.action_goal == "stop_{self.name}":
+        elif goal.action_goal == "stop_%s" % self.name:
             self.service_manager.stop()
             self.service_manager.reset_init
         return
