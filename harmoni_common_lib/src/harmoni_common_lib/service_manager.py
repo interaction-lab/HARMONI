@@ -17,7 +17,6 @@ class HarmoniServiceManager(object):
 
     def test(self):
         """ Test the hardware, sending default action """
-        rospy.loginfo("Test placeholder")
         return
 
     def start(self, rate):

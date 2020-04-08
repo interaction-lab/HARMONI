@@ -1,0 +1,11 @@
+<!-- This is an example launch file for how a ROS application could use a node -->
+<launch>
+   
+	<arg name="use_decision" default="true"/>
+  	<group if="$(arg use_decision)">
+			<rosparam file="(find harmoni_decision)/config/configuration.yaml"/>
+			<node pkg="harmoni_decision" type="behavior_interface.py" name="harmoni_decision" output="screen"/>
+  	</group>
+
+
+</launch>

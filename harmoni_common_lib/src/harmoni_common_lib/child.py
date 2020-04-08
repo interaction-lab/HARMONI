@@ -142,14 +142,14 @@ class InternalServiceServer(HarmoniActionServer, object):
     def execute_goal_received_callback(self, goal):
         """Control flow through internal processing class"""
         # TODO better case management
-        if goal.action_goal == "start_{self.name}":
+        if goal.action == "start_{self.name}":
             if goal.optional_data != "":
                 self.service_manager.start(int(goal.optional_data))
             else:
                 self.service_manager.start()
-        elif goal.action_goal == "pause_{self.name}":
+        elif goal.action == "pause_{self.name}":
             self.service_manager.stop()
-        elif goal.action_goal == "stop_{self.name}":
+        elif goal.action == "stop_{self.name}":
             self.service_manager.stop()
             self.service_manager.reset_init
         return
@@ -192,14 +192,14 @@ class HarwareReadingServer(HarmoniActionServer, object):
         """Control flow through internal processing class"""
 
         # TODO better case management here
-        if goal.action_goal == "start_%s" % self.name:
+        if goal.action == "start_%s" % self.name:
             if goal.optional_data != "":
                 self.service_manager.start(int(goal.optional_data))
             else:
                 self.service_manager.start()
-        elif goal.action_goal == "pause_%s" % self.name:
+        elif goal.action == "pause_%s" % self.name:
             self.service_manager.stop()
-        elif goal.action_goal == "stop_%s" % self.name:
+        elif goal.action == "stop_%s" % self.name:
             self.service_manager.stop()
             self.service_manager.reset_init
         return
