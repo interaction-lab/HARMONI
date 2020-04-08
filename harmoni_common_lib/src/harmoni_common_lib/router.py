@@ -7,7 +7,7 @@ from action_server import HarmoniActionServer
 from action_client import HarmoniActionClient
 from collections import defaultdict
 
-TIMEOUT_FOR_RESULT = 10
+TIMEOUT_FOR_RESULT = 600
 TIMEOUT_FOR_SERVER = 10
 
 
@@ -52,9 +52,9 @@ class HarmoniRouter(HarmoniActionServer, object):
         Sending the goal request to the server (client role)
         """
         rospy.loginfo("The request data are:" + str(goal))
-        if goal.condition != "uncondition":  # check if the action is conditioned by another event or not
-            self.setup_conditional_startup(goal.condition, self.last_event)
+        #if goal.condition != "uncondition":  # check if the action is conditioned by another event or not
+            #self.setup_conditional_startup(goal.condition, self.last_event)
 
         rospy.loginfo("Start a goal request to the child")
-        self.children_clients[goal.child].send_goal(action_goal=goal.child, optional_data=goal.optional_data, condition="", timeout=self.timeout)
+        self.children_clients[goal.child].send_goal(action_goal="start_"+goal.child, optional_data=goal.optional_data, condition="", time_out=self.timeout_for_result)
         return

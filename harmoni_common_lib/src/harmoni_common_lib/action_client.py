@@ -7,7 +7,7 @@ import actionlib
 from harmoni_common_msgs.msg import harmoniGoal, harmoniAction
 
 
-class HarmoniActionClient():
+class HarmoniActionClient(object):
     """
     Controllers and manager are clients.
     This class provides basic client functionality which controller and manager extend,
@@ -16,6 +16,7 @@ class HarmoniActionClient():
     def __init__(self):
         """ Initialization of the variables """
         self.init_action_variables()
+        self.set_com_flag_variables()
 
     def set_com_flag_variables(self):
         self.feedback_received = False

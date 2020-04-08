@@ -1,7 +1,8 @@
 # This is a configuration file describing the names of the chil of each controller
 
 
-sensor_router: ["microphone", "rgbd_camera", "chest_camera"]
+#sensor_router: ["microphone", "rgbd_camera", "chest_camera"]
+sensor_router: ["microphone"]
 dialogue_router: ["lex", "dialogflow", "meena"]
 detector_router: ["skeleton", "object", "stt", "face"]
 actuator_router: ["tts", "speaker", "head_pose", "gesture", "gaze", "screen_face"]
