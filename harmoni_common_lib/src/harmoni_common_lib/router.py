@@ -33,7 +33,7 @@ class HarmoniRouter(HarmoniActionServer, object):
         """ Setup clients of each subclass and the server of the router"""
         for child, client in self.children_clients.items():
             client.setup_client(child, execute_goal_result_callback, execute_goal_feedback_callback)
-            rospy.loginfo("Set up client for "+ child)
+            rospy.loginfo("Set up client for " + child)
         self.setup_server(self.router_name, self.execute_goal_received_callback)
         return
 
