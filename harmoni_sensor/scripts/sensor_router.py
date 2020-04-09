@@ -5,6 +5,11 @@ import rospy
 import roslib
 from harmoni_common_lib.router import HarmoniRouter
 
+class Status():
+    INIT = 0
+    START = 1 # start() of HarmoniServiceManager
+    PAUSE = 2 # pause() of HarmoniServiceManager
+    STOP = 3 # stop() of HarmoniServiceManager
 
 class HarmoniSensorRouter(HarmoniRouter):
     """
@@ -14,6 +19,7 @@ class HarmoniSensorRouter(HarmoniRouter):
     def __init__(self, router_name, child_names, last_event):
         """ Init router"""
         super(HarmoniSensorRouter, self).__init__(router_name, child_names, last_event)
+        self.status = Status.INIT
 
     def setup_router(self):
         self.setup_actions(self.execute_result_callback, self.execute_feedback_callback)
@@ -26,8 +32,9 @@ class HarmoniSensorRouter(HarmoniRouter):
         return
 
     def execute_feedback_callback(self, feedback):
-        """ Do something when feedback has been received """
+        """ Send the feedback to the behavior interface as well """
         rospy.loginfo("The feedback received is %s" %feedback)
+        self.send_feedback(feedback["state"])
         return
 
 

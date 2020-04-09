@@ -40,14 +40,14 @@ class HarmoniBehaviorInterface():
         # Implement a setup_subscriber as well
         return
 
-    def execute_result_callback(self):
+    def execute_result_callback(self, result):
         """ Do something when result has been received """
         rospy.loginfo("Execute result callback")
         return
 
-    def execute_feedback_callback(self):
-        """ Do something when feedback has been received """
-        rospy.loginfo("Execute feedback callback")
+    def execute_feedback_callback(self, feedback):
+        """ Send the feedback state to the Behavior Pattern tree to decide what to do next """
+        rospy.loginfo("The feedback is %s" %feedback)
         return
 
     def send_goal(self, action_goal, child, router):
