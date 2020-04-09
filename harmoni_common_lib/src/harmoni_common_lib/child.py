@@ -51,7 +51,7 @@ class HardwareControlServer(HarmoniActionServer, object):
 
         if success:
             self.send_result(
-                do_continue=self.service_manager.cont,
+                do_action=self.service_manager.cont,
                 message=self.service_manager.return_msg)
         return
 
@@ -81,29 +81,45 @@ class WebServiceServer(HarmoniActionServer, object):
 
         success = self.service_manager.test()
         if success:
-            rospy.loginfo("{name} has been successfully set up")
+            rospy.loginfo("%s has been successfully set up" %name)
         else:
-            rospy.logwarn("{name} has not been started")
-
+            rospy.logwarn("%s has not been started"%name)
         self.setup_server(name, self.execute_goal_received_callback)
+
+    def update_feedback(self):
+        """Update the feedback message """
+        rospy.loginfo("Start updating the feedback")
+        while not rospy.is_shutdown():
+            if self.service_manager.status != 3:
+                if self.service_manager.status != 0:
+                    self.send_feedback(self.service_manager.status)
+                rospy.Rate(.2)
+            else:
+                break
+        return
 
     def execute_goal_received_callback(self, goal):
         """
         Currently not supporting sending data to external service except through optional_data
         """
         self.service_manager.request(goal.optional_data)  # status is in response_recieved, result in return_msg
-        self.send_feedback("Processing")
-
+        success = True
         while not self.service_manager.response_received:
             if self.preemption_status():
                 success = False
                 rospy.Rate(10)
-
         if success:
-            self.send_result(
-                do_continue=self.service_manager.cont,
-                message=self.service_manager.return_msg)
-            self.service_manager.reset_init()
+            if self.service_manager.status == 2:
+                self.send_result(
+                    do_action=True,
+                    message=self.service_manager.result_msg)
+                self.service_manager.reset_init()
+            elif self.service_manager.status == 3: #not able to send the request
+                self.send_result(
+                    do_action=False,
+                    message=self.service_manager.result_msg)
+                self.service_manager.reset_init()
+
         return
 
 
@@ -136,10 +152,19 @@ class InternalServiceServer(HarmoniActionServer, object):
         self.setup_server(name, self.execute_goal_received_callback)
         while not rospy.is_shutdown():
             self.send_feedback(self.service_manager.status)
-            rospy.loginfo("The microphone service status is %i" %self.service_manager.status)
             rospy.Rate(.2)
 
-
+    def update_feedback(self):
+        """Update the feedback message """
+        rospy.loginfo("Start updating the feedback")
+        while not rospy.is_shutdown():
+            if self.service_manager.status != 3:
+                if self.service_manager.status != 0:
+                    self.send_feedback(self.service_manager.status)
+                rospy.Rate(.2)
+            else:
+                break
+        return
 
     def execute_goal_received_callback(self, goal):
         """Control flow through internal processing class"""

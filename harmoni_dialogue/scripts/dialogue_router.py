@@ -5,6 +5,12 @@ import rospy
 import roslib
 from harmoni_common_lib.router import HarmoniRouter
 
+class Status():
+    INIT = 0
+    START = 1 # request() of HarmoniExternalServiceManager
+    FAILED = 2 # pause() of HarmoniExternalServiceManager
+    STOP = 3 # stop() of HarmoniExternalServiceManager
+
 
 class HarmoniDialogueRouter(HarmoniRouter):
     """
@@ -20,15 +26,18 @@ class HarmoniDialogueRouter(HarmoniRouter):
         rospy.loginfo("Dialogue router actions have been set up")
         return
 
-    def execute_result_callback(self):
+    def execute_result_callback(self, result):
         """ Do something when result has been received """
-        rospy.loginfo("Execute result callback")
+        rospy.loginfo("The result received is %s" %result)
+        self.send_result(result["do_action"], result["message"])
         return
 
-    def execute_feedback_callback(self):
-        """ Do something when feedback has been received """
-        rospy.loginfo("Execute feedback callback")
+    def execute_feedback_callback(self, feedback):
+        """ Send the feedback backward when feedback has been received """
+        rospy.logdebug("The feedback received is %s" %feedback)
+        self.send_feedback(feedback["state"])
         return
+
 
 def main():
     try: 

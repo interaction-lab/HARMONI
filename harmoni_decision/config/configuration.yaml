@@ -2,6 +2,7 @@
 
 routers:
   sensor: ["microphone"]
+  dialogue: ["lex"]
   #sensor: ["microphone", "rgbd_camera", "chest_camera"]
   #dialogue: ["lex", "dialogflow", "meena"]
   #detector: ["skeleton", "object", "stt", "face"]
