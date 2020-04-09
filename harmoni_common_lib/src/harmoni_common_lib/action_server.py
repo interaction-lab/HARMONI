@@ -68,7 +68,7 @@ class HarmoniActionServer(object):
         self.__feedback.action = self.action_goal
         self.__feedback.state = state
         self.__action_server.publish_feedback(self.__feedback)
-        rospy.loginfo("The feedback is:" + self.__feedback.state)
+        rospy.loginfo("The feedback is " + str(self.__feedback.state))
         return
 
     def send_result(self, do_continue, message):

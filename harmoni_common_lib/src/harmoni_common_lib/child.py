@@ -133,11 +133,13 @@ class InternalServiceServer(HarmoniActionServer, object):
             rospy.loginfo("{name} has been successfully set up")
         else:
             rospy.logwarn("{name} has not been started")
-
         self.setup_server(name, self.execute_goal_received_callback)
-        while not rospy.is_shutdown:
+        while not rospy.is_shutdown():
             self.send_feedback(self.service_manager.status)
+            rospy.loginfo("The microphone service status is %i" %self.service_manager.status)
             rospy.Rate(.2)
+
+
 
     def execute_goal_received_callback(self, goal):
         """Control flow through internal processing class"""
@@ -182,15 +184,22 @@ class HarwareReadingServer(HarmoniActionServer, object):
             rospy.loginfo("%s has been successfully set up" % self.name)
         else:
             rospy.logwarn("%s has not been started" % self.name)
-
         self.setup_server(name, self.execute_goal_received_callback)
-        while not rospy.is_shutdown:
-            self.send_feedback(self.service_manager.status)
-            rospy.Rate(.2)
+ 
+    def update_feedback(self):
+        """Update the feedback message """
+        rospy.loginfo("Start updating the feedback")
+        while not rospy.is_shutdown():
+            if self.service_manager.status != 3:
+                if self.service_manager.status != 0:
+                    self.send_feedback(self.service_manager.status)
+                rospy.Rate(.2)
+            else:
+                break
+        return
 
     def execute_goal_received_callback(self, goal):
         """Control flow through internal processing class"""
-
         # TODO better case management here
         if goal.action == "start_%s" % self.name:
             if goal.optional_data != "":
@@ -198,7 +207,7 @@ class HarwareReadingServer(HarmoniActionServer, object):
             else:
                 self.service_manager.start()
         elif goal.action == "pause_%s" % self.name:
-            self.service_manager.stop()
+            self.service_manager.pause()
         elif goal.action == "stop_%s" % self.name:
             self.service_manager.stop()
             self.service_manager.reset_init

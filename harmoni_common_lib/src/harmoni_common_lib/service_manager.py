@@ -12,8 +12,13 @@ class HarmoniServiceManager(object):
     """
 
     def __init__(self, status):
-        rospy.loginfo("Init the service manager")
+        rospy.loginfo("Init the service manager status")
         self.status = status
+
+    def update(self, status):
+        self.status = status
+        rospy.loginfo("Update the status to %i" %status)
+        return
 
     def test(self):
         """ Test the hardware, sending default action """
@@ -21,6 +26,10 @@ class HarmoniServiceManager(object):
 
     def start(self, rate):
         """ Start reading or processing data """
+        return
+
+    def pause(self):
+        """ Pause reading or processing data """
         return
 
     def stop(self):
