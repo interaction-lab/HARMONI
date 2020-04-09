@@ -8,8 +8,8 @@ from harmoni_common_lib.router import HarmoniRouter
 class Status():
     INIT = 0
     START = 1 # start() of HarmoniServiceManager
-    PAUSE = 2 # pause() of HarmoniServiceManager
-    STOP = 3 # stop() of HarmoniServiceManager
+    SUCCESS = 2 # success to listen to the voice or pause() of HarmoniServiceManager
+    FAILURE = 3 # failed in listening or stop() of HarmoniServiceManager
 
 class HarmoniSensorRouter(HarmoniRouter):
     """

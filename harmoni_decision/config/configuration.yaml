@@ -1,8 +1,9 @@
 # This is a configuration file describing the names of the child of each controller
 
 routers:
-  sensor: ["microphone"]
-  dialogue: ["lex"]
+  #sensor: ["microphone"]
+  #dialogue: ["lex"]
+  actuator: ["speaker"]
   #sensor: ["microphone", "rgbd_camera", "chest_camera"]
   #dialogue: ["lex", "dialogflow", "meena"]
   #detector: ["skeleton", "object", "stt", "face"]

@@ -41,6 +41,7 @@ class HarmoniActionServer(object):
         return
 
     def get_preemption_status(self):
+        preempted = False
         if self.__action_server.is_preempt_requested():
             rospy.loginfo(self.action_goal + " Action Preemepted")
             self.__action_server.set_preempted()

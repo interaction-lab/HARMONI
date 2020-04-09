@@ -50,6 +50,7 @@ class HarmoniExternalServiceManager(object):
     def __init__(self, status):
         rospy.loginfo("Init the direct service manager")
         self.response_received = False
+        self.actuation_completed = False
         self.result_msg = ""
         self.status = status
 
@@ -57,19 +58,20 @@ class HarmoniExternalServiceManager(object):
         """ Test the hardware, sending default action """
         return
 
-    def update(self, response_received, status, result_msg):
+    def update(self, status, actuation_completed="", response_received="", result_msg=""):
         self.response_received = response_received  # True if action completed
         self.status = status  # Used IF logic can dictate control flow
         self.result_msg = result_msg  # String
+        self.actuation_completed = actuation_completed
         return
 
     def request(self, rate):
         """ Do a request """
         return
 
-    def do(self):
+    def do(self, data):
         """ Do an action """
-        return
+        return data
 
     def reset_init(self):
         """ Reset harware variables to initial state """

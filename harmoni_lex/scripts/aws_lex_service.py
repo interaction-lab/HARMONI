@@ -21,7 +21,7 @@ class AWSLexService(HarmoniExternalServiceManager):
     """
 
     def __init__(self, name, param):
-        """ Initialization of variables and microphone parameters """
+        """ Initialization of variables and lex parameters """
         rospy.loginfo("AWS Lex initializing")
         self.name = name
         self.user_id = param["user_id"]
