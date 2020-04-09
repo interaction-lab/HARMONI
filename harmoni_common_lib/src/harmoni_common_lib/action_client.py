@@ -46,7 +46,7 @@ class HarmoniActionClient(object):
         self.execute_goal_feedback_callback = execute_goal_feedback_callback
         return
 
-    def action_result_callback(self, terminal_stale, result):
+    def action_result_callback(self, terminal_state, result):
         """ Save the action result """
         rospy.loginfo("Heard back result from: " + result.action)
         self.action_result["do_continue"] = result.do_continue

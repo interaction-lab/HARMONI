@@ -14,4 +14,4 @@ string message
 ---
 # feedback
 string action
-string state
+int8 state

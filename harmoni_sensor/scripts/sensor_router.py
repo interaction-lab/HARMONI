@@ -20,14 +20,14 @@ class HarmoniSensorRouter(HarmoniRouter):
         rospy.loginfo("Sensor router actions have been set up")
         return
 
-    def execute_result_callback(self):
+    def execute_result_callback(self, result):
         """ Do something when result has been received """
-        rospy.loginfo("Execute result callback")
+        rospy.loginfo("The result received is %s" %result)
         return
 
-    def execute_feedback_callback(self):
+    def execute_feedback_callback(self, feedback):
         """ Do something when feedback has been received """
-        rospy.loginfo("Execute feedback callback")
+        rospy.loginfo("The feedback received is %s" %feedback)
         return
 
 
