@@ -28,7 +28,7 @@ class HarmoniActionClient(object):
         self.action_result = {}
         self.action_feedback = {}
         self.action_result = {
-            "do_continue": False,
+            "do_action": False,
             "message": ""
         }
         self.action_feedback = {
@@ -49,7 +49,7 @@ class HarmoniActionClient(object):
     def action_result_callback(self, terminal_state, result):
         """ Save the action result """
         rospy.loginfo("Heard back result from: " + result.action)
-        self.action_result["do_continue"] = result.do_continue
+        self.action_result["do_action"] = result.do_action
         self.action_result["message"] = result.message
         self.execute_goal_result_callback(self.action_result)
         self.result_received = True

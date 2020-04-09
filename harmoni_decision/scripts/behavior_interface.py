@@ -42,16 +42,26 @@ class HarmoniBehaviorInterface():
 
     def execute_result_callback(self, result):
         """ Do something when result has been received """
-        rospy.loginfo("Execute result callback")
+        rospy.loginfo("The result is %s" %result)
         return
 
     def execute_feedback_callback(self, feedback):
         """ Send the feedback state to the Behavior Pattern tree to decide what to do next """
-        rospy.loginfo("The feedback is %s" %feedback)
+        rospy.logdebug("The feedback is %s" %feedback)
         return
 
-    def send_goal(self, action_goal, child, router):
-        self.router_clients[router].send_goal(action_goal=action_goal, child=child)
+    def send_goal(self, action_goal, child, router, optional_data):
+        self.router_clients[router].send_goal(action_goal=action_goal, optional_data=optional_data, child=child)
+        return
+
+    
+def test(service, hi):
+        if service == "microphone":
+            rospy.loginfo("Send the goal listening to the SensorRouter")
+            hi.send_goal(action_goal="listening", child="microphone", router="sensor")
+        elif service == "lex":
+            rospy.loginfo("Send the goal dialoging to the DialogueRouter")
+            hi.send_goal(action_goal="dialoging", child="lex", router="dialogue", optional_data="Hey")
         return
 
 def main():
@@ -60,13 +70,13 @@ def main():
         rospy.init_node(interface_name + "_node")
         router_names = rospy.get_param("/routers/")
         subscriber_names = rospy.get_param("/subscribers/")
-        hr = HarmoniBehaviorInterface(router_names, subscriber_names)
+        hi = HarmoniBehaviorInterface(router_names, subscriber_names)
         rospy.loginfo("Set up the %s" %interface_name)
         """
         For testing the vertical implementation
         """
-        rospy.loginfo("Send the goal listening to the SensorRouter")
-        hr.send_goal(action_goal="listening", child="microphone", router="sensor")
+        service = "lex"
+        test(service, hi)
         rospy.spin()
     except rospy.ROSInterruptException:
         pass

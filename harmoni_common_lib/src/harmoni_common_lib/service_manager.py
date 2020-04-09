@@ -47,14 +47,20 @@ class HarmoniExternalServiceManager(object):
     Individual service managers overwrite the parent public functions.
     """
 
-    def __init__(self, response_received, cont, result_msg):
+    def __init__(self, status):
         rospy.loginfo("Init the direct service manager")
-        self.response_received = response_received  # True if action completed
-        self.cont = cont  # Used IF logic can dictate control flow
-        self.result_msg = result_msg  # String
+        self.response_received = False
+        self.result_msg = ""
+        self.status = status
 
     def test(self):
         """ Test the hardware, sending default action """
+        return
+
+    def update(self, response_received, status, result_msg):
+        self.response_received = response_received  # True if action completed
+        self.status = status  # Used IF logic can dictate control flow
+        self.result_msg = result_msg  # String
         return
 
     def request(self, rate):
@@ -67,4 +73,6 @@ class HarmoniExternalServiceManager(object):
 
     def reset_init(self):
         """ Reset harware variables to initial state """
+        self.response_received = False
+        self.result_msg = ""
         return
