@@ -16,15 +16,6 @@ class HardwareControlServer(HarmoniActionServer, object):
         """
         Initialize hardware control, logical defaults, and publishers/subscribers
         Can optionally test connctivity and availability of the hardware
-        @name: the name of the hardware element, will be the name of the server
-        @service_manager: service managers should have the following fuctionality:
-            service_manager.test() # sends default or example action
-            service_manager.do(data) # processes data and does action
-            service_manager.reset_init() # Resets hardware variables to initial state
-
-            service_manager.action_completed# True if action completed
-            service_manager.cont = Bool # Used IF logic can dictate control flow
-            service_manager.result_msg = String # 
         """
 
         self.name = name
@@ -32,27 +23,47 @@ class HardwareControlServer(HarmoniActionServer, object):
 
         success = self.service_manager.test()
         if success:
-            rospy.loginfo("{name} has been successfully set up")
+            rospy.loginfo("%s has been successfully set up" %name)
         else:
-            rospy.logwarn("{name} has not been started")
+            rospy.logwarn("%s has not been started" %name)
         self.setup_server(name, self.execute_goal_received_callback)
+
+    def update_feedback(self):
+        """Update the feedback message """
+        rospy.loginfo("Start updating the feedback")
+        while not rospy.is_shutdown():
+            if self.service_manager.status != 3:
+                if self.service_manager.status != 0:
+                    self.send_feedback(self.service_manager.status)
+                rospy.Rate(.2)
+            else:
+                break
+        return
 
     def execute_goal_received_callback(self, goal):
         """
         Handle function execute in the goal reiceved callback
         """
-        self.service_manager.do(goal.optional_data)  # status is in response_received, result in return_msg
-        self.send_feedback("Doing action")
-
-        while not self.service_manager.action_completed:
-            if self.preemption_status():
+        success = True
+        self.service_manager.do(goal.optional_data)
+        while not self.service_manager.actuation_completed:
+            if self.get_preemption_status():
                 success = False
                 rospy.Rate(10)
 
         if success:
-            self.send_result(
-                do_action=self.service_manager.cont,
-                message=self.service_manager.return_msg)
+            if self.service_manager.status == 2: # Success
+                rospy.loginfo("Result success")
+                self.send_result(
+                    do_action=True,
+                    message=self.service_manager.result_msg)
+                self.service_manager.reset_init()
+            elif self.service_manager.status == 3: # Failure
+                rospy.loginfo("Result failure")
+                self.send_result(
+                    do_action=False,
+                    message=self.service_manager.result_msg)
+                self.service_manager.reset_init()
         return
 
 
@@ -66,15 +77,6 @@ class WebServiceServer(HarmoniActionServer, object):
         """
         Initialize web client, logical defaults, and publishers/subscribers
         Can optionally test connctivity with web services
-        @name: the name of the external service, will be the name of the server
-        @service_manager: service managers should have the following fuctionality:
-            service_manager.test() # sends default message to server
-            service_manager.request(data) # processes data and sends through API
-            service_manager.reset_init() # Resets server to initial state
-
-            service_manager.response_received = Bool # True if API returned a response
-            service_manager.cont = Bool # Used if logic can dictate control flow
-            service_manager.result_msg = String # 
         """
         self.name = name
         self.service_manager = service_manager
@@ -105,16 +107,18 @@ class WebServiceServer(HarmoniActionServer, object):
         self.service_manager.request(goal.optional_data)  # status is in response_recieved, result in return_msg
         success = True
         while not self.service_manager.response_received:
-            if self.preemption_status():
+            if self.get_preemption_status():
+                rospy.loginfo("Check prempt")
                 success = False
                 rospy.Rate(10)
         if success:
-            if self.service_manager.status == 2:
+            rospy.loginfo("Send result")
+            if self.service_manager.status == 2: # Success
                 self.send_result(
                     do_action=True,
                     message=self.service_manager.result_msg)
                 self.service_manager.reset_init()
-            elif self.service_manager.status == 3: #not able to send the request
+            elif self.service_manager.status == 3: # Failure
                 self.send_result(
                     do_action=False,
                     message=self.service_manager.result_msg)
@@ -132,14 +136,6 @@ class InternalServiceServer(HarmoniActionServer, object):
     def __init__(self, name, service_manager):
         """
         Initialize, control flow of information through processing class
-        @name: the name of the external service, will be the name of the server
-        @service_manager: service managers should have the following fuctionality:
-            service_manager.test() # sends default message to server
-            service_manager.reset_init() # Resets server to initial state
-            service_manager.start(rate) # Rate is communicated in optional data
-            service_manager.stop()
-
-            service_manager.status = Int # TODO Set up status class
         """
         self.name = name
         self.service_manager = service_manager
@@ -191,14 +187,6 @@ class HarwareReadingServer(HarmoniActionServer, object):
     def __init__(self, name, service_manager):
         """
         Initialize, control flow of information through sensor class
-        @name: the name of the external service, will be the name of the server
-        @service_manager: service managers should have the following fuctionality:
-            service_manager.test() # sends default message to server
-            service_manager.reset_init() # Resets server to initial state
-            service_manager.start(rate) # Rate is communicated in optional data
-            service_manager.stop()
-
-            service_manager.status = Int # TODO Set up status class
         """
         self.name = name
         rospy.loginfo("The service name is %s" % self.name)
