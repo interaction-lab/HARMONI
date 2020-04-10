@@ -3,7 +3,7 @@
 routers:
   #sensor: ["microphone"]
   #dialogue: ["lex"]
-  actuator: ["speaker"]
+  actuator: ["tts"]
   #sensor: ["microphone", "rgbd_camera", "chest_camera"]
   #dialogue: ["lex", "dialogflow", "meena"]
   #detector: ["skeleton", "object", "stt", "face"]
