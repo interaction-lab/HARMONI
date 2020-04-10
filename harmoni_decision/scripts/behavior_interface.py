@@ -65,6 +65,9 @@ def test(service, hi):
     elif service == "speaker":
         rospy.loginfo("Send the goal speaking to the ActuatorRouter")
         hi.send_goal(action_goal="speaking", child="speaker", router="actuator", optional_data="")
+    elif service == "tts":
+        rospy.loginfo("Send the goal tts to the ActuatorRouter")
+        hi.send_goal(action_goal="synthetizing", child="tts", router="actuator", optional_data="My name is Micol.")
     return
 
 def main():
@@ -78,7 +81,7 @@ def main():
         """
         For testing the vertical implementation
         """
-        service = "speaker"
+        service = "tts"
         test(service, hi)
         rospy.spin()
     except rospy.ROSInterruptException:
