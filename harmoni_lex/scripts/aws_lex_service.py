@@ -40,7 +40,7 @@ class AWSLexService(HarmoniExternalServiceManager):
         return
 
     def response_update(self, response_received, status, result_msg):
-        super(AWSLexService, self).update(response_received, status, result_msg)
+        super(AWSLexService, self).update(response_received=response_received, status = status, result_msg=result_msg)
         return
 
     def test(self):
