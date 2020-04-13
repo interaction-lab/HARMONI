@@ -113,6 +113,7 @@ class WebServiceServer(HarmoniActionServer, object):
                 rospy.Rate(10)
         if success:
             rospy.loginfo("Send result")
+            rospy.loginfo("The status is %i" %self.service_manager.status)
             if self.service_manager.status == 2: # Success
                 self.send_result(
                     do_action=True,

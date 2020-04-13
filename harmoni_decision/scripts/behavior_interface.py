@@ -42,7 +42,7 @@ class HarmoniBehaviorInterface():
 
     def execute_result_callback(self, result):
         """ Do something when result has been received """
-        rospy.loginfo("The result is %s" %result)
+        rospy.loginfo("The result has been received")
         return
 
     def execute_feedback_callback(self, feedback):

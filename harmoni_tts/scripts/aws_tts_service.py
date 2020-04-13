@@ -136,18 +136,16 @@ class AWSTtsService(HarmoniExternalServiceManager):
 
     def get_audio(self, response):
         """Get audio data from AWS Polly """
-        outdir_path = self.outdir
-        print(response)
         data={}
-        data["file"] = outdir_path+"/tts.ogg"
+        data["file"] = self.outdir + "/tts.ogg"
         if "AudioStream" in response:
             with closing(response["AudioStream"]) as stream:
                 output = data["file"]
-            try:
-                with open(output, "wb") as file:
-                    file.write(stream.read())
-            except IOError as error:
-                    print(error)
+                try:
+                    with open(output, "wb") as file:
+                        file.write(stream.read())
+                except IOError as error:
+                        print(error)
         else:
             print("Could not stream audio")
         return data
@@ -170,7 +168,7 @@ class AWSTtsService(HarmoniExternalServiceManager):
         return str(response)
 
     def response_update(self, response_received, status, result_msg):
-        super(AWSTtsService, self).update(response_received, status, result_msg)
+        super(AWSTtsService, self).update(response_received=response_received, status=status, result_msg=result_msg)
         return
 
     def test(self):
@@ -193,7 +191,7 @@ class AWSTtsService(HarmoniExternalServiceManager):
             audio_data = self.get_audio(ogg_response)
             tts_response = self.get_response(behavior_data, audio_data)
             self.status = Status.RESPONSE_RECEIVED
-            self.response_update(response_received=True, status=self.status, result_msg=tts_response["message"])
+            self.response_update(response_received=True, status=self.status, result_msg=tts_response)
         except (BotoCoreError, ClientError) as error:
             rospy.logerr("The erros is " + str(error))
             self.start = Status.REQUEST_FAILED

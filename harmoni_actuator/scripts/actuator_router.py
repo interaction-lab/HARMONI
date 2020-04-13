@@ -27,7 +27,7 @@ class HarmoniActuatorRouter(HarmoniRouter):
 
     def execute_result_callback(self, result):
         """ Do something when result has been received """
-        rospy.loginfo("The result received is %s" %result)
+        rospy.loginfo("The result has been received")
         self.send_result(result["do_action"], result["message"])
         return
 
