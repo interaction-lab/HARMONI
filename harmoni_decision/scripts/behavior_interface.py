@@ -66,8 +66,11 @@ def test(service, hi):
         rospy.loginfo("Send the goal speaking to the ActuatorRouter")
         hi.send_goal(action_goal="speaking", child="speaker", router="actuator", optional_data="")
     elif service == "tts":
-        rospy.loginfo("Send the goal tts to the ActuatorRouter")
+        rospy.loginfo("Send the goal synthetizing to the ActuatorRouter")
         hi.send_goal(action_goal="synthetizing", child="tts", router="actuator", optional_data="My name is Micol.")
+    elif service == "tts":
+        rospy.loginfo("Send the goal expressing to the ActuatorRouter")
+        hi.send_goal(action_goal="expressing", child="face", router="actuator", optional_data="[{'start': 0.075, 'time': 2,'type': 'action', 'id': 'QT/point_front'}, {'start': 0.075,'time': 2, 'type': 'viseme', 'id': 'POSTALVEOLAR'},{'start': 0.006, 'time': 2,  'type': 'action', 'id': 'happy_face'}]")
     return
 
 def main():

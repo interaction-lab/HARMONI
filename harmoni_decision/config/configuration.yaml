@@ -3,11 +3,11 @@
 routers:
   #sensor: ["microphone"]
   #dialogue: ["lex"]
-  actuator: ["tts"]
+  actuator: ["face"]
   #sensor: ["microphone", "rgbd_camera", "chest_camera"]
   #dialogue: ["lex", "dialogflow", "meena"]
   #detector: ["skeleton", "object", "stt", "face"]
-  #actuator: ["tts", "speaker", "head_pose", "gesture", "gaze", "screen_face"]
+  #actuator: ["tts", "speaker", "head_pose", "gesture", "gaze", "face"]
 
 # This is the configuration setting for the behavior interface
 # Here are listed the module it could subscribe to
