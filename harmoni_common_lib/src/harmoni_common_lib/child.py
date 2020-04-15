@@ -32,9 +32,9 @@ class HardwareControlServer(HarmoniActionServer, object):
         """Update the feedback message """
         rospy.loginfo("Start updating the feedback")
         while not rospy.is_shutdown():
-            if self.service_manager.status != 3:
-                if self.service_manager.status != 0:
-                    self.send_feedback(self.service_manager.status)
+            if self.service_manager.state != 3:
+                if self.service_manager.state != 0:
+                    self.send_feedback(self.service_manager.state)
                 rospy.Rate(.2)
             else:
                 break
@@ -47,18 +47,18 @@ class HardwareControlServer(HarmoniActionServer, object):
         success = True
         self.service_manager.do(goal.optional_data)
         while not self.service_manager.actuation_completed:
-            if self.get_preemption_status():
+            if self.get_preemption_state():
                 success = False
                 rospy.Rate(10)
 
         if success:
-            if self.service_manager.status == 2: # Success
+            if self.service_manager.state == 2: # Success
                 rospy.loginfo("Result success")
                 self.send_result(
                     do_action=True,
                     message=self.service_manager.result_msg)
                 self.service_manager.reset_init()
-            elif self.service_manager.status == 3: # Failure
+            elif self.service_manager.state == 3: # Failure
                 rospy.loginfo("Result failure")
                 self.send_result(
                     do_action=False,
@@ -92,9 +92,9 @@ class WebServiceServer(HarmoniActionServer, object):
         """Update the feedback message """
         rospy.loginfo("Start updating the feedback")
         while not rospy.is_shutdown():
-            if self.service_manager.status != 3:
-                if self.service_manager.status != 0:
-                    self.send_feedback(self.service_manager.status)
+            if self.service_manager.state != 3:
+                if self.service_manager.state != 0:
+                    self.send_feedback(self.service_manager.state)
                 rospy.Rate(.2)
             else:
                 break
@@ -104,22 +104,22 @@ class WebServiceServer(HarmoniActionServer, object):
         """
         Currently not supporting sending data to external service except through optional_data
         """
-        self.service_manager.request(goal.optional_data)  # status is in response_recieved, result in return_msg
+        self.service_manager.request(goal.optional_data)  # state is in response_recieved, result in return_msg
         success = True
         while not self.service_manager.response_received:
-            if self.get_preemption_status():
+            if self.get_preemption_state():
                 rospy.loginfo("Check prempt")
                 success = False
                 rospy.Rate(10)
         if success:
             rospy.loginfo("Send result")
-            rospy.loginfo("The status is %i" %self.service_manager.status)
-            if self.service_manager.status == 2: # Success
+            rospy.loginfo("The state is %i" %self.service_manager.state)
+            if self.service_manager.state == 2: # Success
                 self.send_result(
                     do_action=True,
                     message=self.service_manager.result_msg)
                 self.service_manager.reset_init()
-            elif self.service_manager.status == 3: # Failure
+            elif self.service_manager.state == 3: # Failure
                 self.send_result(
                     do_action=False,
                     message=self.service_manager.result_msg)
@@ -148,16 +148,16 @@ class InternalServiceServer(HarmoniActionServer, object):
             rospy.logwarn("{name} has not been started")
         self.setup_server(name, self.execute_goal_received_callback)
         while not rospy.is_shutdown():
-            self.send_feedback(self.service_manager.status)
+            self.send_feedback(self.service_manager.state)
             rospy.Rate(.2)
 
     def update_feedback(self):
         """Update the feedback message """
         rospy.loginfo("Start updating the feedback")
         while not rospy.is_shutdown():
-            if self.service_manager.status != 3:
-                if self.service_manager.status != 0:
-                    self.send_feedback(self.service_manager.status)
+            if self.service_manager.state != 3:
+                if self.service_manager.state != 0:
+                    self.send_feedback(self.service_manager.state)
                 rospy.Rate(.2)
             else:
                 break
@@ -204,9 +204,9 @@ class HarwareReadingServer(HarmoniActionServer, object):
         """Update the feedback message """
         rospy.loginfo("Start updating the feedback")
         while not rospy.is_shutdown():
-            if self.service_manager.status != 3:
-                if self.service_manager.status != 0:
-                    self.send_feedback(self.service_manager.status)
+            if self.service_manager.state != 3:
+                if self.service_manager.state != 0:
+                    self.send_feedback(self.service_manager.state)
                 rospy.Rate(.2)
             else:
                 break

@@ -5,12 +5,6 @@ import rospy
 import roslib
 from harmoni_common_lib.router import HarmoniRouter
 
-class Status():
-    INIT = 0
-    START = 1 # do() of HarmoniExternalServiceManager
-    SUCCESS = 2 # the do succeded
-    FAILURE = 3 # the do failed
-
 class HarmoniActuatorRouter(HarmoniRouter):
     """
     The actuator router aims to control the actuators of the platform, interfacing with hardwares

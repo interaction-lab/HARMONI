@@ -17,6 +17,11 @@ class HarmoniRouter(HarmoniActionServer, object):
     request action to the child.
     This class provides basic router functionality which the subclasses of router can exploit
     """
+    class State:
+        INIT = 0
+        START = 1
+        SUCCESS = 2
+        FAILURE = 3
 
     def __init__(self, router_name, child_names, last_event):
         """ Initialization of the variables """

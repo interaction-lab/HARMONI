@@ -5,12 +5,6 @@ import rospy
 import roslib
 from harmoni_common_lib.router import HarmoniRouter
 
-class Status():
-    INIT = 0
-    START = 1 # start() of HarmoniServiceManager
-    SUCCESS = 2 # success to listen to the voice or pause() of HarmoniServiceManager
-    FAILURE = 3 # failed in listening or stop() of HarmoniServiceManager
-
 class HarmoniSensorRouter(HarmoniRouter):
     """
     The sensor router aims to handle the sensing of the environment, interfacing with hardwares
@@ -19,7 +13,7 @@ class HarmoniSensorRouter(HarmoniRouter):
     def __init__(self, router_name, child_names, last_event):
         """ Init router"""
         super(HarmoniSensorRouter, self).__init__(router_name, child_names, last_event)
-        self.status = Status.INIT
+        
 
     def setup_router(self):
         self.setup_actions(self.execute_result_callback, self.execute_feedback_callback)

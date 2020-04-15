@@ -5,13 +5,6 @@ import rospy
 import roslib
 from harmoni_common_lib.router import HarmoniRouter
 
-class Status():
-    INIT = 0
-    START = 1 # request() of HarmoniExternalServiceManager
-    SUCCESS = 2 # the request succeded
-    FAILURE = 3 # the request failed
-
-
 class HarmoniDialogueRouter(HarmoniRouter):
     """
     The dialogue router aims to handle the dialogue, interfacing with external or internal services
