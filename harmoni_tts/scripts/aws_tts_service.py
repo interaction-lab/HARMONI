@@ -13,14 +13,6 @@ from contextlib import closing
 from harmoni_common_lib.child import WebServiceServer
 from harmoni_common_lib.service_manager import HarmoniExternalServiceManager
 
-class Status():
-    """ Status of the tts service """
-    INIT = 0 # init the service
-    REQUEST_START = 1 # start the request
-    RESPONSE_RECEIVED = 2 # receive the response
-    REQUEST_FAILED = 3  # terminate the service
-
-
 class AWSTtsService(HarmoniExternalServiceManager):
     """
     Amazon tts service
@@ -38,8 +30,8 @@ class AWSTtsService(HarmoniExternalServiceManager):
         """ Setup the tts request """
         self.setup_aws_tts()
         """Setup the tts service as server """
-        self.status = Status.INIT 
-        super(AWSTtsService, self).__init__(self.status)
+        self.state = self.State.INIT 
+        super(AWSTtsService, self).__init__(self.state)
         return
 
     def setup_aws_tts(self):
@@ -167,8 +159,8 @@ class AWSTtsService(HarmoniExternalServiceManager):
         }
         return str(response)
 
-    def response_update(self, response_received, status, result_msg):
-        super(AWSTtsService, self).update(response_received=response_received, status=status, result_msg=result_msg)
+    def response_update(self, response_received, state, result_msg):
+        super(AWSTtsService, self).update(response_received=response_received, state=state, result_msg=result_msg)
         return
 
     def test(self):
@@ -179,6 +171,7 @@ class AWSTtsService(HarmoniExternalServiceManager):
 
     def request(self, input_text):
         rospy.loginfo("Start the %s request" % self.name)
+        self.state = self.State.DO_REQUEST
         rate = "" #TODO: TBD
         super(AWSTtsService, self).request(rate)
         text = input_text
@@ -190,12 +183,12 @@ class AWSTtsService(HarmoniExternalServiceManager):
             ogg_response = self.tts.synthesize_speech(Text=text, TextType='ssml', OutputFormat="ogg_vorbis", VoiceId=self.voice)
             audio_data = self.get_audio(ogg_response)
             tts_response = self.get_response(behavior_data, audio_data)
-            self.status = Status.RESPONSE_RECEIVED
-            self.response_update(response_received=True, status=self.status, result_msg=tts_response)
+            self.state = self.State.COMPLETE_RESPONSE
+            self.response_update(response_received=True, state=self.state, result_msg=tts_response)
         except (BotoCoreError, ClientError) as error:
             rospy.logerr("The erros is " + str(error))
-            self.start = Status.REQUEST_FAILED
-            self.response_update(response_received=True, status=self.status, result_msg="")
+            self.start = self.State.END
+            self.response_update(response_received=True, state=self.state, result_msg="")
         return
 
 
