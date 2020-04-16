@@ -3,7 +3,7 @@
 # Importing the libraries
 import rospy
 import roslib
-from action_server import HarmoniActionServer
+from harmoni_common_lib.action_server import HarmoniActionServer
 
 
 class HardwareControlServer(HarmoniActionServer, object):

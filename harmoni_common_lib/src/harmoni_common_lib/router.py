@@ -3,8 +3,8 @@
 # Importing the libraries
 import rospy
 import roslib
-from action_server import HarmoniActionServer
-from action_client import HarmoniActionClient
+from harmoni_common_lib.action_server import HarmoniActionServer
+from harmoni_common_lib.action_client import HarmoniActionClient
 from collections import defaultdict
 
 TIMEOUT_FOR_RESULT = 600
