@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Importing the libraries
 import rospy
@@ -24,7 +24,7 @@ class AWSLexService(HarmoniExternalServiceManager):
         self.setup_aws_lex()
         """Setup the lex service as server """
         self.state = self.State.INIT 
-        super(AWSLexService, self).__init__(self.state)
+        super().__init__(self.state)
         return
 
     def setup_aws_lex(self):
@@ -32,11 +32,11 @@ class AWSLexService(HarmoniExternalServiceManager):
         return
 
     def response_update(self, response_received, state, result_msg):
-        super(AWSLexService, self).update(response_received=response_received, state = state, result_msg=result_msg)
+        super().update(response_received=response_received, state = state, result_msg=result_msg)
         return
 
     def test(self):
-        super(AWSLexService, self).test()
+        super().test()
         rospy.loginfo("Test the %s service" % self.name)
         success = True
         return success
@@ -45,7 +45,7 @@ class AWSLexService(HarmoniExternalServiceManager):
         rospy.loginfo("Start the %s request" % self.name)
         self.state = self.State.DO_REQUEST
         rate = "" #TODO: TBD
-        super(AWSLexService, self).request(rate)
+        super().request(rate)
         textdata = input_text
         try:
             lex_response = self.lex_client.post_content(botName = self.bot_name,
@@ -56,9 +56,9 @@ class AWSLexService(HarmoniExternalServiceManager):
 														inputStream = textdata)
             self.state = self.State.COMPLETE_RESPONSE
             self.response_update(response_received=True, state=self.state, result_msg=lex_response["message"])
-        except rospy.ServiceException, e:
+        except rospy.ServiceException:
             self.start = self.State.END
-            print "Service call failed: %s" %e
+            rospy.loginfo("Service call failed")
             self.response_update(response_received=True, state=self.state, result_msg="")
         return
 

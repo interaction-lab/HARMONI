@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Importing the libraries
 import rospy
@@ -31,7 +31,7 @@ class AWSTtsService(HarmoniExternalServiceManager):
         self.setup_aws_tts()
         """Setup the tts service as server """
         self.state = self.State.INIT 
-        super(AWSTtsService, self).__init__(self.state)
+        super().__init__(self.state)
         return
 
     def setup_aws_tts(self):
@@ -160,11 +160,11 @@ class AWSTtsService(HarmoniExternalServiceManager):
         return str(response)
 
     def response_update(self, response_received, state, result_msg):
-        super(AWSTtsService, self).update(response_received=response_received, state=state, result_msg=result_msg)
+        super().update(response_received=response_received, state=state, result_msg=result_msg)
         return
 
     def test(self):
-        super(AWSTtsService, self).test()
+        super().test()
         rospy.loginfo("Test the %s service" % self.name)
         success = True
         return success
@@ -173,7 +173,7 @@ class AWSTtsService(HarmoniExternalServiceManager):
         rospy.loginfo("Start the %s request" % self.name)
         self.state = self.State.DO_REQUEST
         rate = "" #TODO: TBD
-        super(AWSTtsService, self).request(rate)
+        super().request(rate)
         text = input_text
         [text, actions] = self.get_text_and_actions(text)
         try:
