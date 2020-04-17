@@ -20,7 +20,21 @@ $ ln -s /usr/bin/nodejs /usr/bin/node
 $ sudo apt-get install ros-kinetic-rosbridge-server vorbis-tools python3-scipy python3-numpy python3-empy
 ~~~~
 
-4. Set up AWS account following these steps (or request access to the lab account from a PhD): 
+4. Set up ROS with Python3:
+    - Basic setup: execute the scripts with the shebang:
+       ~~~~
+       #!/usr/bin/env python3
+       ~~~~
+        If you get an error about some missing yaml library run in a terminal the following commands:
+        ~~~~
+        $ sudo apt-get install python3-pip python3-yaml
+        $ sudo pip3 install rospkg catkin_pkg
+        ~~~~
+    - For additional setup, follow the instructions reported here:
+        https://medium.com/@beta_b0t/how-to-setup-ros-with-python-3-44a69ca36674
+
+
+5. Set up AWS account following these steps (or request access to the lab account from a PhD): 
 
     Create an Amazon Web Services account. AWS has a 1 year free trial that includes a limited number of Polly usages.
     Keep this in mind so you do not get charged money at the end of the year.
@@ -40,18 +54,18 @@ $ sudo apt-get install ros-kinetic-rosbridge-server vorbis-tools python3-scipy p
     # Enter the IAM user access and secret keys here.
     ~~~~
 
-5. Clone the repository in <your_catkin_workspace>/src
+6. Clone the repository in <your_catkin_workspace>/src
 
 ~~~~
 $ git clone https://github.com/interaction-lab/HARMONI.git 
 ~~~~
 
-6. Install packages:
+7. Install packages:
 ~~~~
 $ sudo apt-get install ros-kinetic-audio-common-msgs
 ~~~~
 
-7. Make everything:
+8. Make everything:
 
 ~~~~
 $ cd ..
