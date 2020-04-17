@@ -12,13 +12,13 @@ Controller code for Human And Robot Modular OpeN Interactions
     http://wiki.ros.org/kinetic/Installation/Ubuntu
 
 3. Install Prerequisites
-~~~~
-$ sudo apt-get install nodejs
-$ sudo apt-get install npm
-$ sudo npm install http-server -g
-$ ln -s /usr/bin/nodejs /usr/bin/node
-$ sudo apt-get install ros-kinetic-rosbridge-server vorbis-tools python3-scipy python3-numpy python3-empy
-~~~~
+    ~~~~
+    $ sudo apt-get install nodejs
+    $ sudo apt-get install npm
+    $ sudo npm install http-server -g
+    $ ln -s /usr/bin/nodejs /usr/bin/node
+    $ sudo apt-get install ros-kinetic-rosbridge-server vorbis-tools python3-scipy python3-numpy python3-empy
+    ~~~~
 
 4. Set up ROS with Python3:
     - Basic setup: execute the scripts with the shebang:
@@ -56,54 +56,55 @@ $ sudo apt-get install ros-kinetic-rosbridge-server vorbis-tools python3-scipy p
 
 6. Clone the repository in <your_catkin_workspace>/src
 
-~~~~
-$ git clone https://github.com/interaction-lab/HARMONI.git 
-~~~~
+    ~~~~
+    $ git clone https://github.com/interaction-lab/HARMONI.git 
+    ~~~~
 
 7. Install packages:
-~~~~
-$ sudo apt-get install ros-kinetic-audio-common-msgs
-~~~~
+    ~~~~
+    $ sudo apt-get install ros-kinetic-audio-common-msgs
+    ~~~~
 
 8. Make everything:
 
-~~~~
-$ cd ..
-$ catkin init 
-$ catkin config -DPYTHON_EXECUTABLE:=/usr/bin/python3
-$ catkin build 
-~~~~
+    ~~~~
+    $ cd ..
+    $ catkin init 
+    $ catkin config -DPYTHON_EXECUTABLE:=/usr/bin/python3
+    $ catkin build 
+    ~~~~
 
 ## Test instructions (with HARMONI_PC)
 Before testing these packages, you should follow the HARMONI_PC setup instructions.
-### Test wrapper
-Open the terminal and launch the test:
-~~~~
-$ roslaunch harmoni_decision test.launch test_service:="service_to_test"
-~~~~
+Follow these steps for testing each service of HARMONI.
+1. Choose which service ("service_to_test") you want to test among the following:
+    - microphone
+    - speaker
+    - face
+    - tts
+    - lex
+2. Choose if you prefer to launch all together (a) or test separetely the warppers (b)
+3.  a) Open the terminal and launch the test (single wrapper) :
+    ~~~~
+    $ roslaunch harmoni_decision test.launch test_service:="service_to_test"
+    ~~~~
 
-### Test separately wrappers (suggested)
-Open 4 terminals:
-1. Terminal 1:
-~~~~
-$ roscore
-~~~~
-2. Terminal 2:
-~~~~
-$ roslaunch harmoni_decision router.launch
-~~~~
-3. Terminal 3
-~~~~
-$ roslaunch harmoni_decision services.launch
-~~~~
-4. Terminal 4
-~~~~
-$ roslaunch harmoni_decision behavior_interface.launch test_service:= "service_to_test"
-~~~~
+    b) Open 4 terminals:
+    ~~~~
+    $ roscore
+    ~~~~
+    ~~~~
+    $ roslaunch harmoni_decision router.launch
+    ~~~~
+    ~~~~
+    $ roslaunch harmoni_decision services.launch
+    ~~~~
+    ~~~~
+    $ roslaunch harmoni_decision behavior_interface.launch test_service:= "service_to_test"
+    ~~~~
+2. Open the  webpage:
+    localhost:8080/index.html 
+3. Refresh the page for successfully setting up the face server (it will be automatically handle autostart file)
+4. Verify if the goal has been successfully received
 
-The "service_to_test" for HARMONI and HARMONI_PC are the following:
-- microphone
-- speaker
-- face
-- tts
-- lex
+
