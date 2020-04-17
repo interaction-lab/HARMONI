@@ -94,11 +94,12 @@ Follow these steps for testing each service of HARMONI.
     $ roscore
     ~~~~
     ~~~~
-    $ roslaunch harmoni_decision router.launch
+    $ roslaunch harmoni_decision routers.launch
     ~~~~
     ~~~~
     $ roslaunch harmoni_decision services.launch
     ~~~~
+    (all the services listed above are launched)
     ~~~~
     $ roslaunch harmoni_decision behavior_interface.launch test_service:= "service_to_test"
     ~~~~
