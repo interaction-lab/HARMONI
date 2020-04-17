@@ -6,6 +6,7 @@ import roslib
 import boto3
 import re
 import json
+import ast
 import soundfile as sf
 import numpy as np
 from botocore.exceptions import BotoCoreError, ClientError
@@ -74,12 +75,12 @@ class AWSTtsService(HarmoniExternalServiceManager):
     def get_text_and_actions(self, sentence):
         """Get text and actions from the sentence """
         tokens = re.split("(\*[^\*\*]*\*)", sentence)
-        phrase = ''.join(filter(lambda s: "*" not in s, tokens))
+        phrase = ''.join(list(filter(lambda s: "*" not in s, tokens)))
         rospy.loginfo("Processing the phrase: %s" %phrase)
-        tokens = map(lambda s: self.split_behaviors(s), tokens)
+        tokens = list(map(lambda s: self.split_behaviors(s), tokens))
         words = []
         for t in tokens:
-            words += filter(lambda s: len(s) > 0, t)
+            words += list(filter(lambda s: len(s) > 0, t))
         actions = []
         i = 0
         for w in words:
@@ -96,12 +97,13 @@ class AWSTtsService(HarmoniExternalServiceManager):
         xSheet = []
         if "AudioStream" in response:
             with closing(response["AudioStream"]) as stream:
-                    data = stream.read()
-                    xSheet = data.split('\n')
-                    xSheet = [json.loads(line) for line in xSheet if line != '']
+                data = stream.read()
+                xSheet = data.split(b'\n')
+                xSheet = [line.decode("utf-8") for line in xSheet if line != '']
+                xSheet = [json.loads(line) for line in xSheet if line != '']
         else:
             print("Could not stream audio")
-        word_times = filter(lambda l: l["type"]=="word", xSheet)
+        word_times = list(filter(lambda l: l["type"]=="word", xSheet))
         data=[]
         for w in word_times:
             data.append({"character":float(w["start"]) / 1000.,  # convert ms to seconds
@@ -119,7 +121,7 @@ class AWSTtsService(HarmoniExternalServiceManager):
                          "type":"action",
                          "args":args,
                          "id": a[1]}) # End edits
-        visemes = map(lambda l: [l["time"],self.vis_transl[l["value"]]], filter(lambda l: l["type"]=="viseme",xSheet))
+        visemes = list(map(lambda l: [l["time"],self.vis_transl[l["value"]]], filter(lambda l: l["type"]=="viseme",xSheet)))
         for v in visemes:
                 data.append({"start":float(v[0]) / 1000.,  # convert ms to seconds
                              "type":"viseme",
@@ -144,7 +146,7 @@ class AWSTtsService(HarmoniExternalServiceManager):
 
     def get_response(self, behavior_data, audio_data):
         """ Get final response """
-        behaviours = sorted(behavior_data, key = lambda i: i['start'])
+        behaviours = list(sorted(behavior_data, key = lambda i: i['start']))
         data, samplerate = sf.read(self.outdir + '/tts.ogg')
         sf.write(self.outdir + '/tts.wav', data, samplerate)
         file_handle = self.outdir + '/tts.wav'

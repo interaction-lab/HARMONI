@@ -27,7 +27,7 @@ class HarmoniSensorRouter(HarmoniRouter):
 
     def execute_feedback_callback(self, feedback):
         """ Send the feedback to the behavior interface as well """
-        rospy.loginfo("The feedback received is %s" %feedback)
+        rospy.logdebug("The feedback received is %s" %feedback)
         self.send_feedback(feedback["state"])
         return
 

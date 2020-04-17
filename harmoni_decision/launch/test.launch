@@ -1,0 +1,9 @@
+<!-- This is an example launch file for how a ROS application could use a node -->
+<launch>
+	<arg name="test_service" default=""/>
+	<include file="$(find harmoni_decision)/launch/behavior_interface.launch">
+		<arg name="test_service" value="$(arg test_service)"/>
+	</include>
+	<include file="$(find harmoni_decision)/launch/routers.launch" />
+	<include file="$(find harmoni_decision)/launch/services.launch" />
+</launch>

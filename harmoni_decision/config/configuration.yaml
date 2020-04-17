@@ -1,18 +1,14 @@
-# This is a configuration file describing the names of the child of each controller
-
+# This is a configuration file describing the names of the child of each router
 routers:
-  #sensor: ["microphone"]
-  #dialogue: ["lex"]
-  actuator: ["face"]
-  #sensor: ["microphone", "rgbd_camera", "chest_camera"]
-  #dialogue: ["lex", "dialogflow", "meena"]
+  sensor: ["microphone"]
+  dialogue: ["lex"]
+  actuator: ["face", "speaker", "tts"]
   #detector: ["skeleton", "object", "stt", "face"]
-  #actuator: ["tts", "speaker", "head_pose", "gesture", "gaze", "face"]
 
-# This is the configuration setting for the behavior interface
 # Here are listed the module it could subscribe to
 subscribers: 
   skeleton: point3d,
   stt: string,
   object: point3d,
   face: point3d
+
