@@ -58,7 +58,7 @@ class HarmoniBehaviorInterface():
 def test(service, hi):
     if service == "microphone":
         rospy.loginfo("Send the goal listening to the SensorRouter")
-        hi.send_goal(action_goal="listening", child="microphone", router="sensor")
+        hi.send_goal(action_goal="listening", child="microphone", router="sensor", optional_data="")
     elif service == "lex":
         rospy.loginfo("Send the goal dialoging to the DialogueRouter")
         hi.send_goal(action_goal="dialoging", child="lex", router="dialogue", optional_data="Hey")
@@ -79,13 +79,12 @@ def main():
         rospy.init_node(interface_name + "_node")
         router_names = rospy.get_param("/routers/")
         subscriber_names = rospy.get_param("/subscribers/")
-        hi = HarmoniBehaviorInterface(router_names, subscriber_names)
         rospy.loginfo("Set up the %s" %interface_name)
-        """
-        For testing the vertical implementation
-        """
-        service = "face"
-        test(service, hi)
+        test_service = rospy.get_param("/test_service/")
+        hi = HarmoniBehaviorInterface(router_names, subscriber_names)
+        if test_service != "":
+            rospy.loginfo("The service to be tested is %s" %test_service)
+            test(test_service, hi)
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
