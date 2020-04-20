@@ -8,23 +8,26 @@ from harmoni_common_msgs.msg import harmoniAction, harmoniFeedback, harmoniResul
 
 
 class HarmoniActionServer(object):
-    """
+    """A wrapper around SimpleActionServer that is structured for HARMONI architecture.
+
     Most nodes (both controllers and children) are servers.
     This class provides basic server functionality which controllers and children extend,
-    including basic type checking, warnings, interrupts, etc.
+    including basic type checking, warnings, interrupts, etc.py
+    
+    TODO: Implement priority handling for received goals instead of preempting current goals.
 
     """
 
-    def __init__(self):
+    def _init_(self):
         """Initialization"""
 
     def setup_server(self, action_topic, execute_goal_received_callback):
         """You must know the action name to set up a server"""
-        self.__feedback = harmoniFeedback()
-        self.__result = harmoniResult()
+        self._feedback = harmoniFeedback()
+        self._result = harmoniResult()
         self.action_topic = action_topic
-        self.__action_server = actionlib.SimpleActionServer(self.action_topic, harmoniAction, self.goal_received_callback, auto_start=False)
-        self.__action_server.start()
+        self._action_server = actionlib.SimpleActionServer(self.action_topic, harmoniAction, self.goal_received_callback, auto_start=False)
+        self._action_server.start()
         rospy.loginfo("Server starts")
         self.execute_goal_received_callback = execute_goal_received_callback
         return
@@ -42,9 +45,9 @@ class HarmoniActionServer(object):
 
     def get_preemption_status(self):
         preempted = False
-        if self.__action_server.is_preempt_requested():
+        if self._action_server.is_preempt_requested():
             rospy.loginfo(self.action_goal + " Action Preemepted")
-            self.__action_server.set_preempted()
+            self._action_server.set_preempted()
             preempted = True
         return preempted
 
@@ -66,17 +69,17 @@ class HarmoniActionServer(object):
 
     def send_feedback(self, state):
         """ Send the feedback"""
-        self.__feedback.action = self.action_goal
-        self.__feedback.state = state
-        self.__action_server.publish_feedback(self.__feedback)
-        rospy.logdebug("The feedback is " + str(self.__feedback.state))
+        self._feedback.action = self.action_goal
+        self._feedback.state = state
+        self._action_server.publish_feedback(self._feedback)
+        rospy.logdebug("The feedback is " + str(self._feedback.state))
         return
 
     def send_result(self, do_action, message):
         """Send the result and action set to succeded"""
-        self.__result.action = self.action_goal
-        self.__result.do_action = do_action
-        self.__result.message = message
-        self.__action_server.set_succeeded(self.__result)
-        rospy.loginfo("The action " + self.__result.action + " have been set to succeded")
+        self._result.action = self.action_goal
+        self._result.do_action = do_action
+        self._result.message = message
+        self._action_server.set_succeeded(self._result)
+        rospy.loginfo("The action " + self._result.action + " have been set to succeded")
         return
