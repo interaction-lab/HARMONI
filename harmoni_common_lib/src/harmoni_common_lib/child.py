@@ -26,7 +26,7 @@ class HardwareControlServer(HarmoniActionServer, object):
             rospy.loginfo("%s has been successfully set up" %name)
         else:
             rospy.logwarn("%s has not been started" %name)
-        self.setup_server(name, self.execute_goal_received_callback)
+        self.setup_server(name, self._execute_goal_received_callback)
 
     def update_feedback(self):
         """Update the feedback message """
@@ -40,7 +40,7 @@ class HardwareControlServer(HarmoniActionServer, object):
                 break
         return
 
-    def execute_goal_received_callback(self, goal):
+    def _execute_goal_received_callback(self, goal):
         """
         Handle function execute in the goal reiceved callback
         """
@@ -86,7 +86,7 @@ class WebServiceServer(HarmoniActionServer, object):
             rospy.loginfo("%s has been successfully set up" %name)
         else:
             rospy.logwarn("%s has not been started"%name)
-        self.setup_server(name, self.execute_goal_received_callback)
+        self.setup_server(name, self._execute_goal_received_callback)
 
     def update_feedback(self):
         """Update the feedback message """
@@ -100,7 +100,7 @@ class WebServiceServer(HarmoniActionServer, object):
                 break
         return
 
-    def execute_goal_received_callback(self, goal):
+    def _execute_goal_received_callback(self, goal):
         """
         Currently not supporting sending data to external service except through optional_data
         """
@@ -146,7 +146,7 @@ class InternalServiceServer(HarmoniActionServer, object):
             rospy.loginfo("{name} has been successfully set up")
         else:
             rospy.logwarn("{name} has not been started")
-        self.setup_server(name, self.execute_goal_received_callback)
+        self.setup_server(name, self._execute_goal_received_callback)
         while not rospy.is_shutdown():
             self.send_feedback(self.service_manager.state)
             rospy.Rate(.2)
@@ -163,7 +163,7 @@ class InternalServiceServer(HarmoniActionServer, object):
                 break
         return
 
-    def execute_goal_received_callback(self, goal):
+    def _execute_goal_received_callback(self, goal):
         """Control flow through internal processing class"""
         # TODO better case management
         if goal.action == "start_{self.name}":
@@ -198,7 +198,7 @@ class HarwareReadingServer(HarmoniActionServer, object):
             rospy.loginfo("%s has been successfully set up" % self.name)
         else:
             rospy.logwarn("%s has not been started" % self.name)
-        self.setup_server(name, self.execute_goal_received_callback)
+        self.setup_server(name, self._execute_goal_received_callback)
  
     def update_feedback(self):
         """Update the feedback message """
@@ -212,7 +212,7 @@ class HarwareReadingServer(HarmoniActionServer, object):
                 break
         return
 
-    def execute_goal_received_callback(self, goal):
+    def _execute_goal_received_callback(self, goal):
         """Control flow through internal processing class"""
         # TODO better case management here
         if goal.action == "start_%s" % self.name:

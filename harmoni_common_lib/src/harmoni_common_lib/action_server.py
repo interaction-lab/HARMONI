@@ -26,17 +26,17 @@ class HarmoniActionServer(object):
         self._feedback = harmoniFeedback()
         self._result = harmoniResult()
         self.action_topic = action_topic
-        self._action_server = actionlib.SimpleActionServer(self.action_topic, harmoniAction, self.goal_received_callback, auto_start=False)
+        self._action_server = actionlib.SimpleActionServer(self.action_topic, harmoniAction, self._goal_received_callback, auto_start=False)
         self._action_server.start()
         rospy.loginfo("Server starts")
         self.execute_goal_received_callback = execute_goal_received_callback
         return
 
-    def goal_received_callback(self, goal):
+    def _goal_received_callback(self, goal):
         """ Callback function, initialize the variables and set the goal to received"""
         self.action_goal = goal.action  # action request
         self.optional_data = goal.optional_data  # input data for the module
-        self.child = goal.child  # external module that will accomplish the task
+        self.child = goal.child_server  # external module that will accomplish the task
         self.condition = goal.condition  # event condition to wait before starting the action
         rospy.loginfo("The goal is: " + goal.action)
         self.goal_received = True
@@ -63,7 +63,7 @@ class HarmoniActionServer(object):
         """Return Request Data"""
         request_data = {}
         request_data["optional_data"] = self.optional_data
-        request_data["child"] = self.child
+        request_data["child_server"] = self.child
         request_data["condition"] = self.condition
         return(request_data)
 
