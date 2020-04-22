@@ -91,7 +91,7 @@ class HarmoniActionClient(object):
         """
         return(self.action_result)
 
-    def send_goal(self, action_goal, optional_data="", child="", condition="", time_out=600):
+    def send_goal(self, action_goal, optional_data="", child_server="", condition="", time_out=600):
         """Sends a goal to the action server tied to this client.
         
         Args:
@@ -100,7 +100,7 @@ class HarmoniActionClient(object):
         Reset of check variables. Send goal and set the time out 
         """
         self._set_com_flag_variables()
-        goal = harmoniGoal(action=action_goal, optional_data=optional_data, child=child, condition=condition)
+        goal = harmoniGoal(action=action_goal, optional_data=optional_data, child_server=child_server, condition=condition)
         self.action_client.send_goal(goal, done_cb=self._result_callback, feedback_cb=self._feedback_callback)
         self.action_client.wait_for_result(rospy.Duration.from_sec(time_out))
         return
