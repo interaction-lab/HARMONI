@@ -160,6 +160,8 @@ class InternalServiceServer(HarmoniActionServer, object):
                     self.send_feedback(self.service_manager.state)
                 rospy.Rate(.2)
             else:
+                self.send_result(do_action=False,
+                    message=self.service_manager.state)
                 break
         return
 
@@ -209,6 +211,8 @@ class HarwareReadingServer(HarmoniActionServer, object):
                     self.send_feedback(self.service_manager.state)
                 rospy.Rate(.2)
             else:
+                 self.send_result(do_action=False,
+                    message=self.service_manager.state)
                 break
         return
 
