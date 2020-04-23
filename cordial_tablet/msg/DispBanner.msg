@@ -1,2 +1,0 @@
-string s
-string action

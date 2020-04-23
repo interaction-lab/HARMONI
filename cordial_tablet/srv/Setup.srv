@@ -1,7 +1,0 @@
-float64 window_w
-float64 window_h
-string id
----
-cordial_tablet/ChangeToken[] tokens
-cordial_tablet/AddRemoveArea[] areas
-string background
