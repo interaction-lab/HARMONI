@@ -1,29 +1,17 @@
 # goal definition
 
-uint8 action
-uint8 START = 0
-uint8 STOP = 1
-uint8 REQUEST = 2
-
-string optional_data #usually used for requests
-string child_server #specfic action server to use
+uint8 action_type # the type of action. Enums defined in harmoni_common_lib
+string optional_data # usually used for requests
+string child_server # specfic action server to use
 string condition #TODO-future: convert to enum
 
 ---
 # result definition
-uint8 action
-uint8 START = 0
-uint8 STOP = 1
-uint8 REQUEST = 2
-
-bool do_action
+uint8 action_type # the type of action. Enums defined in harmoni_common_lib
+bool do_action # whether the action succeeded
 string message
 
 ---
 # feedback
-uint8 action
-uint8 START = 0
-uint8 STOP = 1
-uint8 REQUEST = 2
-
-int8 state
+uint8 action_type # the type of action. Enums defined in harmoni_common_lib
+int8 state # state of action server. Enums defined in harmoni_common_lib
