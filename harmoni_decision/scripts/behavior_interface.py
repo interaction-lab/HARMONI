@@ -4,6 +4,7 @@
 import rospy
 import roslib
 from collections import defaultdict
+from harmoni_common_lib.constants import ActionType
 from harmoni_common_lib.action_client import HarmoniActionClient
 
 
@@ -50,27 +51,27 @@ class HarmoniBehaviorInterface():
         rospy.logdebug("The feedback is %s" %feedback)
         return
 
-    def send_goal(self, action_goal, child, router, optional_data):
-        self.router_clients[router].send_goal(action_goal=action_goal, optional_data=optional_data, child_server=child)
+    def send_goal(self, action_goal, child_server, router, optional_data):
+        self.router_clients[router].send_goal(action_goal=action_goal, optional_data=optional_data, child_server=child_server)
         return
 
     
 def test(service, hi):
     if service == "microphone":
         rospy.loginfo("Send the goal listening to the SensorRouter")
-        hi.send_goal(action_goal="listening", child_server="microphone", router="sensor", optional_data="")
+        hi.send_goal(action_goal=ActionType.ON, child_server=service, router="sensor", optional_data="")
     elif service == "lex":
         rospy.loginfo("Send the goal dialoging to the DialogueRouter")
-        hi.send_goal(action_goal="dialoging", child_server="lex", router="dialogue", optional_data="Hey")
+        hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="dialogue", optional_data="Hey")
     elif service == "speaker":
         rospy.loginfo("Send the goal speaking to the ActuatorRouter")
-        hi.send_goal(action_goal="speaking", child_server="speaker", router="actuator", optional_data="")
+        hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="actuator", optional_data="")
     elif service == "tts":
         rospy.loginfo("Send the goal synthetizing to the ActuatorRouter")
-        hi.send_goal(action_goal="synthetizing", child_server="tts", router="actuator", optional_data="My name is Micol.")
+        hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="actuator", optional_data="My name is Micol.")
     elif service == "face":
         rospy.loginfo("Send the goal expressing to the ActuatorRouter")
-        hi.send_goal(action_goal="expressing", child_server="face", router="actuator", optional_data="[{'start': 0.075, 'time': 2,'type': 'action', 'id': 'QT/point_front'}, {'start': 0.075,'time': 2, 'type': 'viseme', 'id': 'POSTALVEOLAR'},{'start': 0.006, 'time': 2,  'type': 'action', 'id': 'happy_face'}]")
+        hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="actuator", optional_data="[{'start': 0.075, 'time': 2,'type': 'action', 'id': 'QT/point_front'}, {'start': 0.075,'time': 2, 'type': 'viseme', 'id': 'POSTALVEOLAR'},{'start': 0.006, 'time': 2,  'type': 'action', 'id': 'happy_face'}]")
     return
 
 def main():

@@ -186,11 +186,11 @@ class AWSTtsService(HarmoniExternalServiceManager):
             ogg_response = self.tts.synthesize_speech(Text=text, TextType='ssml', OutputFormat="ogg_vorbis", VoiceId=self.voice)
             audio_data = self.get_audio(ogg_response)
             tts_response = self.get_response(behavior_data, audio_data)
-            self.state = State.RESPONSE
+            self.state = State.SUCCESS
             self.response_update(response_received=True, state=self.state, result_msg=tts_response)
         except (BotoCoreError, ClientError) as error:
             rospy.logerr("The erros is " + str(error))
-            self.start = State.END
+            self.start = State.FAILED
             self.response_update(response_received=True, state=self.state, result_msg="")
         return
 
