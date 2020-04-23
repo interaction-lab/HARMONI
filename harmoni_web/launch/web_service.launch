@@ -1,0 +1,11 @@
+<!-- This is an example launch file for how a ROS application could use a node -->
+<launch>
+   
+	<arg name="use_web" default="true"/>
+  	<group if="$(arg use_web)">
+			<rosparam file="$(find harmoni_web)/config/configuration.yaml"/>
+			<node pkg="harmoni_web" type="web_service.py" name="harmoni_web" output="screen"/>
+  	</group>
+
+
+</launch>
