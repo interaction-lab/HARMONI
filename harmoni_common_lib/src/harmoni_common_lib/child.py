@@ -3,6 +3,8 @@
 # Importing the libraries
 import rospy
 import roslib
+from harmoni_common_lib.constants import State
+from harmoni_common_lib.constants import ActionType
 from harmoni_common_lib.action_server import HarmoniActionServer
 
 
@@ -32,8 +34,8 @@ class HardwareControlServer(HarmoniActionServer, object):
         """Update the feedback message """
         rospy.loginfo("Start updating the feedback")
         while not rospy.is_shutdown():
-            if self.service_manager.state != 3:
-                if self.service_manager.state != 0:
+            if self.service_manager.state != State.FAILED:
+                if self.service_manager.state != State.INIT:
                     self.send_feedback(self.service_manager.state)
                 rospy.Rate(.2)
             else:
@@ -52,13 +54,13 @@ class HardwareControlServer(HarmoniActionServer, object):
                 rospy.Rate(10)
 
         if success:
-            if self.service_manager.state == 2: # Success
+            if self.service_manager.state == State.SUCCESS: # Success
                 rospy.loginfo("Result success")
                 self.send_result(
                     do_action=True,
                     message=self.service_manager.result_msg)
                 self.service_manager.reset_init()
-            elif self.service_manager.state == 3: # Failure
+            elif self.service_manager.state == State.FAILED: # Failure
                 rospy.loginfo("Result failure")
                 self.send_result(
                     do_action=False,
@@ -92,8 +94,8 @@ class WebServiceServer(HarmoniActionServer, object):
         """Update the feedback message """
         rospy.loginfo("Start updating the feedback")
         while not rospy.is_shutdown():
-            if self.service_manager.state != 3:
-                if self.service_manager.state != 0:
+            if self.service_manager.state != State.FAILED:
+                if self.service_manager.state != State.INIT:
                     self.send_feedback(self.service_manager.state)
                 rospy.Rate(.2)
             else:
@@ -114,12 +116,12 @@ class WebServiceServer(HarmoniActionServer, object):
         if success:
             rospy.loginfo("Send result")
             rospy.loginfo("The state is %i" %self.service_manager.state)
-            if self.service_manager.state == 2: # Success
+            if self.service_manager.state == State.SUCCESS: # Success
                 self.send_result(
                     do_action=True,
                     message=self.service_manager.result_msg)
                 self.service_manager.reset_init()
-            elif self.service_manager.state == 3: # Failure
+            elif self.service_manager.state == State.FAILED: # Failure
                 self.send_result(
                     do_action=False,
                     message=self.service_manager.result_msg)
@@ -155,8 +157,8 @@ class InternalServiceServer(HarmoniActionServer, object):
         """Update the feedback message """
         rospy.loginfo("Start updating the feedback")
         while not rospy.is_shutdown():
-            if self.service_manager.state != 3:
-                if self.service_manager.state != 0:
+            if self.service_manager.state != State.FAILED:
+                if self.service_manager.state != State.INIT:
                     self.send_feedback(self.service_manager.state)
                 rospy.Rate(.2)
             else:
@@ -168,14 +170,14 @@ class InternalServiceServer(HarmoniActionServer, object):
     def _execute_goal_received_callback(self, goal):
         """Control flow through internal processing class"""
         # TODO better case management
-        if goal.action == "start_{self.name}":
+        if goal.action_type == ActionType.ON:
             if goal.optional_data != "":
                 self.service_manager.start(int(goal.optional_data))
             else:
                 self.service_manager.start()
-        elif goal.action == "pause_{self.name}":
+        elif goal.action_type == ActionType.PAUSE:
             self.service_manager.stop()
-        elif goal.action == "stop_{self.name}":
+        elif goal.action_type == ActionType.OFF:
             self.service_manager.stop()
             self.service_manager.reset_init
         return
@@ -206,27 +208,26 @@ class HarwareReadingServer(HarmoniActionServer, object):
         """Update the feedback message """
         rospy.loginfo("Start updating the feedback")
         while not rospy.is_shutdown():
-            if self.service_manager.state != 3:
-                if self.service_manager.state != 0:
+            if self.service_manager.state != State.FAILED:
+                if self.service_manager.state != State.INIT:
                     self.send_feedback(self.service_manager.state)
                 rospy.Rate(.2)
             else:
-                 self.send_result(do_action=False,
-                    message=self.service_manager.state)
+                self.send_result(do_action=False, message=self.service_manager.state)
                 break
         return
 
     def _execute_goal_received_callback(self, goal):
         """Control flow through internal processing class"""
         # TODO better case management here
-        if goal.action == "start_%s" % self.name:
+        if goal.action_type == ActionType.ON:
             if goal.optional_data != "":
                 self.service_manager.start(int(goal.optional_data))
             else:
                 self.service_manager.start()
-        elif goal.action == "pause_%s" % self.name:
+        elif goal.action_type == ActionType.PAUSE:
             self.service_manager.pause()
-        elif goal.action == "stop_%s" % self.name:
+        elif goal.action_type == ActionType.OFF:
             self.service_manager.stop()
             self.service_manager.reset_init
         return

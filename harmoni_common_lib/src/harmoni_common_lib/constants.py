@@ -6,14 +6,12 @@ from enum import IntEnum
 class ActionType(IntEnum):
     ON = 1
     OFF = 2
-    REQUEST = 3
+    PAUSE = 3
+    REQUEST = 4
 
 class State(IntEnum):
     INIT = 0
-    END = 1
-    START = 2
-    STOP = 3
-    REQUEST = 4
-    RESPONSE = 5
-    SUCCESS = 6
-    FAILED = 7
+    START = 1
+    REQUEST = 2
+    SUCCESS = 3
+    FAILED = 4

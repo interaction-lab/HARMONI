@@ -55,10 +55,10 @@ class AWSLexService(HarmoniExternalServiceManager):
 														contentType = 'text/plain; charset=utf-8',
 														accept = 'text/plain; charset=utf-8',
 														inputStream = textdata)
-            self.state = State.RESPONSE
+            self.state = State.SUCCESS
             self.response_update(response_received=True, state=self.state, result_msg=lex_response["message"])
         except rospy.ServiceException:
-            self.start = State.END
+            self.start = State.FAILED
             rospy.loginfo("Service call failed")
             self.response_update(response_received=True, state=self.state, result_msg="")
         return

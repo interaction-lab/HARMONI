@@ -56,5 +56,5 @@ class HarmoniRouter(HarmoniActionServer, object):
         #if goal.condition != "uncondition":  # check if the action is conditioned by another event or not
             #self.setup_conditional_startup(goal.condition, self.last_event)
         rospy.loginfo("Start a goal request to the child")
-        self.children_clients[goal.child_server].send_goal(action_goal="start_"+goal.child_server, optional_data=goal.optional_data, condition="", time_out=self.timeout_for_result)
+        self.children_clients[goal.child_server].send_goal(action_goal= goal.action_type, child_server=goal.child_server, optional_data=goal.optional_data, condition="", time_out=self.timeout_for_result)
         return
