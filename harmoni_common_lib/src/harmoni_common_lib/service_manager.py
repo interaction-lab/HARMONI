@@ -11,12 +11,6 @@ class HarmoniServiceManager(object):
     Service manager for the harware reading and internal service servers.
     Individual service managers overwrite the parent public functions.
     """
-    class State:
-        INIT = 0
-        START = 1
-        STOP = 2
-        END = 3
-
     def __init__(self, state):
         rospy.loginfo("Init the service manager state")
         self.state = state
@@ -52,11 +46,6 @@ class HarmoniExternalServiceManager(object):
     Service manager for the harware control and external service servers.
     Individual service managers overwrite the parent public functions.
     """
-    class State:
-        INIT = 0
-        DO_REQUEST = 1
-        COMPLETE_RESPONSE = 2
-        END = 3
 
     def __init__(self, state):
         rospy.loginfo("Init the direct service manager")

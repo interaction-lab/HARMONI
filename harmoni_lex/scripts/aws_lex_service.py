@@ -4,6 +4,7 @@
 import rospy
 import roslib
 import boto3
+from harmoni_common_lib.constants import State
 from harmoni_common_lib.child import WebServiceServer
 from harmoni_common_lib.service_manager import HarmoniExternalServiceManager
 
@@ -23,7 +24,7 @@ class AWSLexService(HarmoniExternalServiceManager):
         """ Setup the lex request """
         self.setup_aws_lex()
         """Setup the lex service as server """
-        self.state = self.State.INIT 
+        self.state = State.INIT 
         super().__init__(self.state)
         return
 
@@ -43,7 +44,7 @@ class AWSLexService(HarmoniExternalServiceManager):
 
     def request(self, input_text):
         rospy.loginfo("Start the %s request" % self.name)
-        self.state = self.State.DO_REQUEST
+        self.state = State.REQUEST
         rate = "" #TODO: TBD
         super().request(rate)
         textdata = input_text
@@ -54,10 +55,10 @@ class AWSLexService(HarmoniExternalServiceManager):
 														contentType = 'text/plain; charset=utf-8',
 														accept = 'text/plain; charset=utf-8',
 														inputStream = textdata)
-            self.state = self.State.COMPLETE_RESPONSE
+            self.state = State.RESPONSE
             self.response_update(response_received=True, state=self.state, result_msg=lex_response["message"])
         except rospy.ServiceException:
-            self.start = self.State.END
+            self.start = State.END
             rospy.loginfo("Service call failed")
             self.response_update(response_received=True, state=self.state, result_msg="")
         return

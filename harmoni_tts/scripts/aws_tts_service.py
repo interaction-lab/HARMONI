@@ -11,6 +11,7 @@ import soundfile as sf
 import numpy as np
 from botocore.exceptions import BotoCoreError, ClientError
 from contextlib import closing
+from harmoni_common_lib.constants import State
 from harmoni_common_lib.child import WebServiceServer
 from harmoni_common_lib.service_manager import HarmoniExternalServiceManager
 
@@ -31,7 +32,7 @@ class AWSTtsService(HarmoniExternalServiceManager):
         """ Setup the tts request """
         self.setup_aws_tts()
         """Setup the tts service as server """
-        self.state = self.State.INIT 
+        self.state = State.INIT 
         super().__init__(self.state)
         return
 
@@ -173,7 +174,7 @@ class AWSTtsService(HarmoniExternalServiceManager):
 
     def request(self, input_text):
         rospy.loginfo("Start the %s request" % self.name)
-        self.state = self.State.DO_REQUEST
+        self.state = State.REQUEST
         rate = "" #TODO: TBD
         super().request(rate)
         text = input_text
@@ -185,11 +186,11 @@ class AWSTtsService(HarmoniExternalServiceManager):
             ogg_response = self.tts.synthesize_speech(Text=text, TextType='ssml', OutputFormat="ogg_vorbis", VoiceId=self.voice)
             audio_data = self.get_audio(ogg_response)
             tts_response = self.get_response(behavior_data, audio_data)
-            self.state = self.State.COMPLETE_RESPONSE
+            self.state = State.RESPONSE
             self.response_update(response_received=True, state=self.state, result_msg=tts_response)
         except (BotoCoreError, ClientError) as error:
             rospy.logerr("The erros is " + str(error))
-            self.start = self.State.END
+            self.start = State.END
             self.response_update(response_received=True, state=self.state, result_msg="")
         return
 
