@@ -2,9 +2,11 @@
 <launch>
 	<arg name="use_decision" default="true"/>
 	<arg name="test_service" default=""/>
+	<arg name="wav_file" default="/home/micol/catkin_ws/src/HARMONI/harmoni_tts/temp_data/tts.wav"/>
   	<group if="$(arg use_decision)">
 			<rosparam file="$(find harmoni_decision)/config/configuration.yaml"/>
 			<param name="test_service" value="$(arg test_service)"/>
+			<param name="wav_file" value="$(arg wav_file)"/>
 			<node pkg="harmoni_decision" type="behavior_interface.py" name="harmoni_decision" output="screen"/>
   	</group>
 

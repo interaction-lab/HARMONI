@@ -3,6 +3,7 @@
 # Importing the libraries
 import rospy
 import roslib
+import numpy as np
 from collections import defaultdict
 from harmoni_common_lib.constants import ActionType
 from harmoni_common_lib.action_client import HarmoniActionClient
@@ -56,7 +57,7 @@ class HarmoniBehaviorInterface():
         return
 
     
-def test(service, hi):
+def test(service, hi, wav_file):
     if service == "microphone":
         rospy.loginfo("Send the goal listening to the SensorRouter")
         hi.send_goal(action_goal=ActionType.ON, child_server=service, router="sensor", optional_data="")
@@ -64,8 +65,11 @@ def test(service, hi):
         rospy.loginfo("Send the goal dialoging to the DialogueRouter")
         hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="dialogue", optional_data="Hey")
     elif service == "speaker":
+        file_handle = wav_file
+        data = np.fromfile(file_handle, np.uint8)[24:] #Loading wav file
+        data = data.astype(np.uint8).tostring()
         rospy.loginfo("Send the goal speaking to the ActuatorRouter")
-        hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="actuator", optional_data="")
+        hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="actuator", optional_data=str(data))
     elif service == "tts":
         rospy.loginfo("Send the goal synthetizing to the ActuatorRouter")
         hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="actuator", optional_data="My name is Micol.")
@@ -82,10 +86,11 @@ def main():
         subscriber_names = rospy.get_param("/subscribers/")
         rospy.loginfo("Set up the %s" %interface_name)
         test_service = rospy.get_param("/test_service/")
+        wav_file = rospy.get_param("/wav_file/")
         hi = HarmoniBehaviorInterface(router_names, subscriber_names)
         if test_service != "":
             rospy.loginfo("The service to be tested is %s" %test_service)
-            test(test_service, hi)
+            test(test_service, hi, wav_file)
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
