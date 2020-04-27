@@ -1,0 +1,44 @@
+version: '3.4'
+
+services:
+  w2l_ros_dev:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile-W2L-Inf-Ros-Dev
+      network: host
+    image: w2l-dev:latest
+    environment:
+      DISPLAY: $DISPLAY
+      QT_GRAPHICSSYSTEM: native
+      ROS_DISTRO: kinetic
+      ROS_MASTER_URI: $ROS_MASTER_URI
+      IS_DOCKER_ENV: "true"
+    privileged: true
+    network_mode: host
+    devices: 
+      - /dev/dri:/dev/dri
+      - /dev/snd:/dev/snd
+      - /dev/video0:/dev/video0
+    volumes:
+      - ../audio:/root/audio
+      - ../kenlm:/root/kenlm
+      - ../model:/root/model
+      - ../wav2letter:/root/wav2letter
+      - pycharm_config:/root/.PyCharmCE2019.3/
+      - visual_code_config:/root/.visual_code/
+      - ~/.vscode/:/root/.vscode/
+      - ./config/setup_script.sh:/root/.setup_script.sh
+      - ./config/dev_setup_script.sh:/root/.dev_setup_script.sh
+      - ./shared/:/root/shared/
+      - ~/.gitconfig/:/root/.gitconfig/:ro
+      - ~/.vimrc:/root/.vimrc:ro
+      - ~/.vim/:/root/.vim/:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    working_dir: /root/wav2letter/
+    command: bash -c "terminator -ue \"echo 'Entering Docker Container...' && bash\""
+
+volumes:
+  pycharm_config:
+  visual_code_config:
+  aws_config:
