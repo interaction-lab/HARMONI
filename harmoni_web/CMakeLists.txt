@@ -9,6 +9,7 @@ project(harmoni_web)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   rospy
+  std_msgs
 )
 
 ## System dependencies are found with CMake's conventions
