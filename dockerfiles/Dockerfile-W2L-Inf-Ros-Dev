@@ -11,6 +11,11 @@
 
 FROM ros-dev:latest
 
+# install ros packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ros-$ROS_DISTRO-audio-common \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
@@ -68,6 +73,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         tqdm \
         numpy \
         pyaudio \
+        rospkg \
+        pyaml \
         torch==1.2.0 \
         packaging==19.1 && \
 # ==================================================================

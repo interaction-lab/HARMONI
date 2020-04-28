@@ -59,7 +59,8 @@ services:
         volumes:
             - audio:/root/audio
             - ../../../../w2l/model:/root/model
-            - wav2letter:/root/wav2letter
+            - ../../:/root/ws/harmoni_catkin_ws
+            - wav2letter:/root/wav2lettesr
             # Configuration
             - ./dockerfiles/config/setup_script.sh:/root/.setup_script.sh
             - ./dockerfiles/config/dev_setup_script.sh:/root/.dev_setup_script.sh
