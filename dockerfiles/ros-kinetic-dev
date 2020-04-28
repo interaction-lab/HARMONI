@@ -4,6 +4,9 @@ FROM docker-dev:latest
 RUN apt-get update && apt-get install -q -y --no-install-recommends \
     dirmngr \
     gnupg2 \
+    # pyaudio
+    portaudio19-dev libportaudio2 libportaudiocpp0 \
+    ffmpeg libav-tools \
     && rm -rf /var/lib/apt/lists/*
 
 
@@ -16,7 +19,8 @@ RUN \
         empy \
 		rospkg \
 		catkin_pkg \
-		catkin_tools
+		catkin_tools \
+        pyaudio
 
 # setup keys
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
@@ -57,8 +61,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ros-$ROS_DISTRO-audio-common \
     && rm -rf /var/lib/apt/lists/*
 
+# setup for running with python 3
 run catkin config -DPYTHON_EXECUTABLE=/usr/bin/python3.6 -DPYTHON_INCLUDE_DIR=/usr/include/python3.6m -DPYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.6m.so
-    && catkin config --install
 
 # For convenience add a source script to bashrc and update without clearing
 RUN \

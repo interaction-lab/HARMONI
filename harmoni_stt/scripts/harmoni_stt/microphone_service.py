@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3.6
 
 # Importing the libraries
 import rospy
@@ -12,11 +12,12 @@ from collections import deque
 # from harmoni_common_lib.service_manager import HarmoniServiceManager
 from audio_common_msgs.msg import AudioData
 
+
 class Status():
     """ Status of the microphone service """
-    INIT = 0 # init the service
-    LISTENING = 1 # start listen to the voice
-    NOT_LISTENING = 2 # stop listen to the voice
+    INIT = 0  # init the service
+    LISTENING = 1  # start listen to the voice
+    NOT_LISTENING = 2  # stop listen to the voice
     END = 3  # terminate the service
 
 
@@ -48,10 +49,10 @@ class MicrophoneService():
         self.stream = None
         self.setup_microphone()
         """Init the publisher """
-        self.mic_pub = rospy.Publisher("/harmoni/sensing/listening/microphone", AudioData, queue_size=1) # Publishing the voice data
-        self.mic_raw_pub = rospy.Publisher("/harmoni/sensing/microphone", AudioData, queue_size=1) # Publishing raw_data
+        self.mic_pub = rospy.Publisher("/harmoni/sensing/listening/microphone", AudioData, queue_size=1)  # Publishing the voice data
+        self.mic_raw_pub = rospy.Publisher("/harmoni/sensing/microphone", AudioData, queue_size=1)  # Publishing raw_data
         """Setup the microphone service as server """
-        self.status = Status.INIT 
+        self.status = Status.INIT
         # #super(MicrophoneService, self).__init__(self.status)
         return
 
@@ -73,13 +74,13 @@ class MicrophoneService():
             # self.status_update()
             try:
                 self.open_stream()
-                self.listen() # Start the microphone service at the INIT
+                self.listen()  # Start the microphone service at the INIT
             except:
                 self.status = Status.END
         else:
             self.status = Status.LISTENING
         # self.status_update()
-        #self.listen()
+        # self.listen()
 
     def stop(self):
         rospy.loginfo("Stop the %s service" % self.name)
@@ -132,19 +133,19 @@ class MicrophoneService():
             if self.status != Status.END:
                 # rospy.loginfo("Not end:")
                 # Grab audio
-                latest_audio_data = self.stream.read(self.chunk_size,exception_on_overflow=False)
+                latest_audio_data = self.stream.read(self.chunk_size, exception_on_overflow=False)
                 # rospy.loginfo("Stuck A?")
                 raw_audio_bitstream = np.fromstring(latest_audio_data, np.uint8)
                 # rospy.loginfo("Stuck B?")
                 raw_audio = raw_audio_bitstream.tolist()
                 # rospy.loginfo("Stuck C?")
-                self.mic_raw_pub.publish(raw_audio) # Publishing raw AudioData
+                self.mic_raw_pub.publish(raw_audio)  # Publishing raw AudioData
                 # rospy.loginfo("Stuck D?")
 
                 if self.status == Status.LISTENING:
                     # Check magnitude of audio
                     sliding_window.append(math.sqrt(abs(audioop.avg(latest_audio_data, self.audio_format_width))))
-                    print_window = str([round(x,1) for x in sliding_window])
+                    print_window = str([round(x, 1) for x in sliding_window])
                     maximum = round(max(sliding_window), 2)
                     # rospy.loginfo("Noises" + print_window + str(maximum))
 
@@ -203,11 +204,11 @@ class MicrophoneService():
             self.open_stream()
 
             values = [math.sqrt(abs(audioop.avg(
-                                        self.stream.read(self.chunk_size), 
-                                        self.audio_format_width))) \
-                                for _ in range(self.total_silence_samples)]
+                self.stream.read(self.chunk_size),
+                self.audio_format_width)))
+                for _ in range(self.total_silence_samples)]
 
-            values = sorted(values, reverse=True) # Only take the loudest values in the silence 
+            values = sorted(values, reverse=True)  # Only take the loudest values in the silence
             print(values)
 
             total_samples_in_cohort = int(self.total_silence_samples * loudest_sound_cohort_perc)
@@ -230,7 +231,7 @@ def main():
     try:
         service_name = "microphone"
         rospy.init_node(service_name + "_node")
-        param = rospy.get_param("/"+service_name+"_param/")
+        param = rospy.get_param("/" + service_name + "_param/")
         s = MicrophoneService(service_name, param)
         s.open_stream()
         s.start()

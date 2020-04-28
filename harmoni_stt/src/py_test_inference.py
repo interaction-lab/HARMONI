@@ -33,8 +33,9 @@ class SpeechToText(object):
         return
 
     def callback(self, data):
-        # print(data.data, type(data.data))
+        #print(data.data, type(data.data))
         # hexdata = ''.join([chr(item) for item in data.data])
+        #print('audio recieved')
         self.transcribe_bytes(data.data)
         return
 
@@ -43,10 +44,9 @@ class SpeechToText(object):
             wav_contents = wav_file.read()
         self.transcribe_bytes(wav_contents)
 
-
     def transcribe_bytes(self, b_string):
         outs, errs = self.w2l_process.communicate(input=b_string, timeout=15)
-        # print(outs)
+        #print(outs)
         text_list = self.fix_text(outs)
         if not any(text_list):
             self.set_w2l_proc()
@@ -59,17 +59,15 @@ class SpeechToText(object):
         output_by_sec = ' '.join(re.split(r'[,\s]', text.decode("utf-8"))[95:-13]).split('  ')
         output_by_sec = [' '.join(sec.split(' ')[2:]) for sec in output_by_sec]
         final_output = []
-        for sec in output_by_sec: # Exclude some bad outputs
-            if len(sec)>0:
-                if (sec[0] == 'h' and len(sec) == 1) :
+        for sec in output_by_sec:  # Exclude some bad outputs
+            if len(sec) > 0:
+                if (sec[0] == 'h' and len(sec) == 1):
                     sec = ''
-            if len(sec)>1:
+            if len(sec) > 1:
                 if sec[:2] == 'h ':
                     sec = ''
             final_output.append(sec)
         return(final_output)
-
-
 
 
 def main():
