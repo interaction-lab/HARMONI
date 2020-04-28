@@ -3,6 +3,7 @@
 # Importing the libraries
 import rospy
 import roslib
+import numpy as np
 from collections import defaultdict
 from harmoni_common_lib.constants import ActionType
 from harmoni_common_lib.action_client import HarmoniActionClient
@@ -56,22 +57,25 @@ class HarmoniBehaviorInterface():
         return
 
     
-def test(service, hi):
+def test(service, hi, wav_file, tts_input, dialogue_input, face_input):
     if service == "microphone":
         rospy.loginfo("Send the goal listening to the SensorRouter")
         hi.send_goal(action_goal=ActionType.ON, child_server=service, router="sensor", optional_data="")
     elif service == "lex":
         rospy.loginfo("Send the goal dialoging to the DialogueRouter")
-        hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="dialogue", optional_data="Hey")
+        hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="dialogue", optional_data=dialogue_input)
     elif service == "speaker":
+        file_handle = wav_file
+        data = np.fromfile(file_handle, np.uint8)[24:] #Loading wav file
+        data = data.astype(np.uint8).tostring()
         rospy.loginfo("Send the goal speaking to the ActuatorRouter")
-        hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="actuator", optional_data="")
+        hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="actuator", optional_data=str(data))
     elif service == "tts":
         rospy.loginfo("Send the goal synthetizing to the ActuatorRouter")
-        hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="actuator", optional_data="My name is Micol.")
+        hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="actuator", optional_data=tts_input)
     elif service == "face":
         rospy.loginfo("Send the goal expressing to the ActuatorRouter")
-        hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="actuator", optional_data="[{'start': 0.075, 'time': 2,'type': 'action', 'id': 'QT/point_front'}, {'start': 0.075,'time': 2, 'type': 'viseme', 'id': 'POSTALVEOLAR'},{'start': 0.006, 'time': 2,  'type': 'action', 'id': 'happy_face'}]")
+        hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="actuator", optional_data=face_input)
     return
 
 def main():
@@ -82,10 +86,14 @@ def main():
         subscriber_names = rospy.get_param("/subscribers/")
         rospy.loginfo("Set up the %s" %interface_name)
         test_service = rospy.get_param("/test_service/")
+        wav_file = rospy.get_param("/wav_file/")
+        tts_input = rospy.get_param("/tts_input_text/")
+        dialogue_input = rospy.get_param("/dialogue_input_text/")
+        face_input = rospy.get_param("/face_input/")
         hi = HarmoniBehaviorInterface(router_names, subscriber_names)
         if test_service != "":
             rospy.loginfo("The service to be tested is %s" %test_service)
-            test(test_service, hi)
+            test(test_service, hi, wav_file, tts_input, dialogue_input, face_input)
         rospy.spin()
     except rospy.ROSInterruptException:
         pass

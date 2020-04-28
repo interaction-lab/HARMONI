@@ -1,3 +1,0 @@
-uint8 percentage_width_x
-uint8 percentage_height_y
-bool is_click
