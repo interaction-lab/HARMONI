@@ -22,6 +22,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         vim \
         emacs \
         nano \
+		terminator \
         htop \
         g++ \
         cmake \
@@ -37,7 +38,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         # gflags
         libgflags-dev libgflags2v5 \
         # pyaudio
-        portaudio19-dev libportaudio2 libportaudiocpp0\
+        portaudio19-dev libportaudio2 libportaudiocpp0 \
         ffmpeg libav-tools \
         # for receipts data processing
         sox && \
