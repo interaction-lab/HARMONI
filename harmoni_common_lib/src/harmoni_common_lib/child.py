@@ -49,7 +49,7 @@ class HardwareControlServer(HarmoniActionServer, object):
         success = True
         self.service_manager.do(goal.optional_data)
         while not self.service_manager.actuation_completed:
-            if self.get_preemption_state():
+            if self.get_preemption_status():
                 success = False
                 rospy.Rate(10)
 
@@ -109,7 +109,7 @@ class WebServiceServer(HarmoniActionServer, object):
         self.service_manager.request(goal.optional_data)  # state is in response_recieved, result in return_msg
         success = True
         while not self.service_manager.response_received:
-            if self.get_preemption_state():
+            if self.get_preemption_status():
                 rospy.loginfo("Check prempt")
                 success = False
                 rospy.Rate(10)

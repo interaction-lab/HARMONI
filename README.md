@@ -78,11 +78,12 @@ Controller code for Human And Robot Modular OpeN Interactions
 Before testing these packages, you should follow the HARMONI_PC setup instructions.
 Follow these steps for testing each service of HARMONI.
 1. Choose which service ("service_to_test") you want to test among the following:
-    - microphone
-    - speaker
-    - face
+    - microphone (HARMONI-PC)
+    - speaker (HARMONI-PC)
+    - face (HARMONI-PC)
     - tts
     - lex
+    - web
 2. Choose if you prefer to launch all together (a) or test separetely the warppers (b)
 3.  a) Open the terminal and launch the test (single wrapper) :
     ~~~~

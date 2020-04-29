@@ -32,7 +32,7 @@ class WebService(HarmoniExternalServiceManager):
 
     def setup_web(self):
         rospy.loginfo("Setting up the %s" % self.name)
-        rospy.loginfo("Checking that face is connected to ROS websocket")
+        rospy.loginfo("Checking that web is connected to ROS websocket")
         rospy.wait_for_service("/harmoni/web/is_connected")
         rospy.loginfo("Done, web is connected to ROS websocket")
         return
@@ -94,7 +94,7 @@ class WebService(HarmoniExternalServiceManager):
         rospy.loginfo("Received an event from the webpage")
         if self.state == State.REQUEST and self.is_request:
             self.state = State.SUCCESS
-            self.response_update(response_received=True, state=self.state, result_msg=event)
+            self.response_update(response_received=True, state=self.state, result_msg=event.data)
         return
 
 
@@ -107,7 +107,7 @@ def main():
         s = WebService(service_name, param)
         web_service_server = WebServiceServer(name=service_name, service_manager=s)
         web_service_server.update_feedback()
-        web_service_server_actuator = HardwareControlServer(name=service_name, service_manager=s)
+        web_service_server_actuator = HardwareControlServer(name=service_name+"_display", service_manager=s)
         web_service_server_actuator.update_feedback()
         rospy.spin()
     except rospy.ROSInterruptException:

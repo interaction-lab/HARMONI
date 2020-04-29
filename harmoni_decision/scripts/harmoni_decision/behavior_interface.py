@@ -57,7 +57,7 @@ class HarmoniBehaviorInterface():
         return
 
     
-def test(service, hi, wav_file, tts_input, dialogue_input, face_input):
+def test(service, hi, wav_file, tts_input, dialogue_input, face_input, display_input):
     if service == "microphone":
         rospy.loginfo("Send the goal listening to the SensorRouter")
         hi.send_goal(action_goal=ActionType.ON, child_server=service, router="sensor", optional_data="")
@@ -76,6 +76,12 @@ def test(service, hi, wav_file, tts_input, dialogue_input, face_input):
     elif service == "face":
         rospy.loginfo("Send the goal expressing to the ActuatorRouter")
         hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="actuator", optional_data=face_input)
+    elif service == "web_display":
+        rospy.loginfo("Send the goal expressing to the ActuatorRouter")
+        hi.send_goal(action_goal=ActionType.REQUEST, child_server="web", router="actuator", optional_data=display_input)
+    elif service == "web":
+        rospy.loginfo("Send the goal expressing to the DialogueRouter")
+        hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="dialogue", optional_data=display_input)
     return
 
 def main():
@@ -90,10 +96,11 @@ def main():
         tts_input = rospy.get_param("/tts_input_text/")
         dialogue_input = rospy.get_param("/dialogue_input_text/")
         face_input = rospy.get_param("/face_input/")
+        display_input = rospy.get_param("/display_input/")
         hi = HarmoniBehaviorInterface(router_names, subscriber_names)
         if test_service != "":
             rospy.loginfo("The service to be tested is %s" %test_service)
-            test(test_service, hi, wav_file, tts_input, dialogue_input, face_input)
+            test(test_service, hi, wav_file, tts_input, dialogue_input, face_input, display_input)
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
