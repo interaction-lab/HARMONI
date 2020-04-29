@@ -1,5 +1,5 @@
 var page = "pageContent2";
-var view = "container_1";
+//var view = "container_1";
 
 $(document).ready(function () {
 
@@ -19,7 +19,7 @@ $(document).ready(function () {
             });
         })
         .done(function () {
-            $("#"+view).show();
+            //$("#"+view).show();
             $("button").on("click", function () {
                 clickListener(this);
             });
@@ -27,19 +27,14 @@ $(document).ready(function () {
                 clickListener(this);
             });
         });
-
-
 });
 
-function viewListener(view){
-    //Waiting for the view request from the ROS package
-    $("#"+view).show();
-};
 
 
 function clickListener(clicked_component) {
     var selected_item = clicked_component.id;
     console.log("Clicked")
+    user_response_publisher.publish(clicked_component)
     // Send the event clicked to the ROS package
 }
 
