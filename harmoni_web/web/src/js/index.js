@@ -29,12 +29,16 @@ $(document).ready(function () {
         });
 });
 
-
+function viewListener(view){
+    //Waiting for the view request from the ROS package
+    console.log(view)
+    $("#"+view.data).show();
+};
 
 function clickListener(clicked_component) {
     var selected_item = clicked_component.id;
     console.log("Clicked")
-    user_response_publisher.publish(clicked_component)
+    user_response_publisher.publish({ data: selected_item })
     // Send the event clicked to the ROS package
 }
 

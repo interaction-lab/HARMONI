@@ -67,8 +67,3 @@ function setupRosNetwork() {
     });
 }
 
-
-function viewListener(view){
-    //Waiting for the view request from the ROS package
-    $("#"+view).show();
-};

@@ -1,8 +1,8 @@
 # This is a configuration file describing the names of the child of each router
 routers:
   sensor: ["microphone"]
-  dialogue: ["lex"]
-  actuator: ["face", "speaker", "tts"]
+  dialogue: ["lex", "web"]
+  actuator: ["face", "speaker", "tts", "web"]
   #detector: ["skeleton", "object", "stt", "face"]
 
 # Here are listed the module it could subscribe to
