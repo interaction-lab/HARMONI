@@ -31,7 +31,7 @@ $(document).ready(function () {
 
 function viewListener(view){
     //Waiting for the view request from the ROS package
-    console.log(view)
+    console.log(view.data)
     $("#"+view.data).show();
 };
 
