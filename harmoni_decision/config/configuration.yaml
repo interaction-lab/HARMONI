@@ -5,6 +5,9 @@ routers:
   actuator: ["face", "speaker", "tts", "web"]
   #detector: ["skeleton", "object", "stt", "face"]
 
+recording:
+  audio_data: ["microphone"]
+
 # Here are listed the module it could subscribe to
 subscribers: 
   skeleton: point3d,
