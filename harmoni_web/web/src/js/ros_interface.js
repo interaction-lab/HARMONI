@@ -41,7 +41,7 @@ function setupRosNetwork() {
 
     display_view_listener = new ROSLIB.Topic({
         ros: ros,
-        name: 'harmoni/web/display_view',
+        name: 'harmoni/web/set_view',
         messageType: 'std_msgs/String'
     });
     display_view_listener.subscribe(viewListener);
@@ -62,7 +62,7 @@ function setupRosNetwork() {
     is_connected_client.advertise(function(_, response) {
         console.log('is_connected_client received service request');
         response['success'] = true;
-        response['message'] = 'GUI is connected';
+        response['message'] = 'Harmoni Web is connected';
         return true;
     });
 }
