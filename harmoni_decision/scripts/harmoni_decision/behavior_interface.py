@@ -76,12 +76,9 @@ def test(service, hi, wav_file, tts_input, dialogue_input, face_input, display_i
     elif service == "face":
         rospy.loginfo("Send the goal expressing to the ActuatorRouter")
         hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="actuator", optional_data=face_input)
-    elif service == "web_display":
+    elif service == "web":
         rospy.loginfo("Send the goal expressing to the ActuatorRouter")
         hi.send_goal(action_goal=ActionType.REQUEST, child_server="web", router="actuator", optional_data=display_input)
-    elif service == "web":
-        rospy.loginfo("Send the goal expressing to the DialogueRouter")
-        hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="dialogue", optional_data=display_input)
     return
 
 def main():

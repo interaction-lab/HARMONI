@@ -1,7 +1,7 @@
 # This is a configuration file describing the names of the child of each router
 routers:
   sensor: ["microphone"]
-  dialogue: ["lex", "web"]
+  dialogue: ["lex"]
   actuator: ["face", "speaker", "tts", "web"]
   #detector: ["skeleton", "object", "stt", "face"]
 
@@ -11,4 +11,5 @@ subscribers:
   stt: string,
   object: point3d,
   face: point3d
+  web_listener: string 
 
