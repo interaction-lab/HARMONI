@@ -32,7 +32,13 @@ $(document).ready(function () {
 function viewListener(view){
     //Waiting for the view request from the ROS package
     console.log(view.data)
-    $("#"+view.data).show();
+    var json_data = JSON.parse(view.data)
+    var component = json_data.component_id
+    var content = json_data.set_content
+    if(content!= ""){
+        $("#"+component).html(content)
+    }
+    $("#"+component).show();
 };
 
 function clickListener(clicked_component) {
