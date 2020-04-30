@@ -32,7 +32,8 @@ $(document).ready(function () {
 function viewListener(view){
     //Waiting for the view request from the ROS package
     console.log(view.data)
-    var json_data = JSON.parse(view.data)
+    var data = view.data.replace(/'/g, '"')
+    var json_data = JSON.parse(data)
     var component = json_data.component_id
     var content = json_data.set_content
     if(content!= ""){
