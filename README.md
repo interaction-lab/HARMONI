@@ -106,4 +106,37 @@ Follow these steps for testing each service of HARMONI.
 4. Refresh the page for successfully setting up the face and web servers (it will be automatically handle autostart file)
 5. Verify if the goal has been successfully received
 
+### Test custom messages
+The above instructions enables to run some default messages of each service. If you want to test some customized messages, check this documentation for the message format:
+
+| Service              | Argument name | Message format | Default |
+|----------------------|---------------|----------------|---------|
+|microphone            |None          |None        | None|
+|speaker                 | wav_file           | string: path of file to save     | "/home/username/catkin_ws/src/HARMONI/harmoni_tts/temp_data/tts.wav"/|
+|face              |   face_input         | string: [{start: int, time: int, type: string (i.e.,action, viseme, or word), id: string}]     | "[{'start': 0.075, 'time': 2,'type': 'action', 'id': 'QT/point_front'}, {'start': 0.075,'time': 2, 'type': 'viseme', 'id': 'POSTALVEOLAR'},{'start': 0.006, 'time': 2,  'type': 'action', 'id': 'happy_face'}]"|
+|tts                |   tts_input_text         |     string   |"My name is HARMONI"|
+|lex      |  dialogue_input_text          |     string   |"Hey"|
+|web      |  display_input          |     string:{component_id : string, set_content: string}   |"{'component_id' : 'container_1', 'set_content': ' ' }"|
+
+Here an example with the instruction for testing custom message:
+
+1. Open 4 terminals:
+    ~~~~
+    $ roscore
+    ~~~~
+    ~~~~
+    $ roslaunch harmoni_decision routers.launch
+    ~~~~
+    ~~~~
+    $ roslaunch harmoni_decision services.launch
+    ~~~~
+    (all the services listed above are launched)
+    ~~~~
+    $ roslaunch harmoni_decision behavior_interface.launch test_service:= "tts" tts_input_text:="Hi, nice to meet you"
+    ~~~~
+2. Open the webpages:
+    127.0.0.1:8080/index.html (face port) 
+    127.0.0.1:8081/index.html (web port)
+3. Refresh the page for successfully setting up the face and web servers (it will be automatically handle autostart file)
+
 
