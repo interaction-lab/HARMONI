@@ -58,13 +58,16 @@ class HarmoniBehaviorInterface():
 
     
 def test(service, hi, wav_file, tts_input, dialogue_input, face_input, display_input):
-    if service == "microphone":
+    if service == "pc_microphone":
+        rospy.loginfo("Send the goal listening to the SensorRouter")
+        hi.send_goal(action_goal=ActionType.ON, child_server=service, router="sensor", optional_data="")
+    elif service == "pc_camera":
         rospy.loginfo("Send the goal listening to the SensorRouter")
         hi.send_goal(action_goal=ActionType.ON, child_server=service, router="sensor", optional_data="")
     elif service == "lex":
         rospy.loginfo("Send the goal dialoging to the DialogueRouter")
         hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="dialogue", optional_data=dialogue_input)
-    elif service == "speaker":
+    elif service == "pc_speaker":
         file_handle = wav_file
         data = np.fromfile(file_handle, np.uint8)[24:] #Loading wav file
         data = data.astype(np.uint8).tostring()
@@ -73,12 +76,12 @@ def test(service, hi, wav_file, tts_input, dialogue_input, face_input, display_i
     elif service == "tts":
         rospy.loginfo("Send the goal synthetizing to the ActuatorRouter")
         hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="actuator", optional_data=tts_input)
-    elif service == "face":
+    elif service == "pc_face":
         rospy.loginfo("Send the goal expressing to the ActuatorRouter")
         hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="actuator", optional_data=face_input)
     elif service == "web":
         rospy.loginfo("Send the goal expressing to the ActuatorRouter")
-        hi.send_goal(action_goal=ActionType.REQUEST, child_server="web", router="actuator", optional_data=display_input)
+        hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="actuator", optional_data=display_input)
     return
 
 def main():
