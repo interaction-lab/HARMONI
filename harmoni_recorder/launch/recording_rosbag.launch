@@ -1,0 +1,13 @@
+<launch>
+  <arg name="record_cameras" default="true" />
+  <arg name="record_microphones" default="true" />
+  <rosparam file="$(find harmoni_recorder)/config/configuration.yaml"/>
+
+<node pkg="rosbag" type="record" name="rosbag_record_cam"
+       args="record -o path /harmoni/sensing/watching/"
+       if="$(arg record_cameras)" />
+
+<node pkg="rosbag" type="record" name="rosbag_record_mic"
+       args="record -o path /harmoni/sensing/listening/"
+       if="$(arg record_microphones)" />
+</launch>
