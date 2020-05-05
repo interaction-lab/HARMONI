@@ -17,7 +17,7 @@ Controller code for Human And Robot Modular OpeN Interactions
     $ sudo apt-get install npm
     $ sudo npm install http-server -g
     $ ln -s /usr/bin/nodejs /usr/bin/node
-    $ sudo apt-get install python-catkin-tools ros-kinetic-rosbridge-server vorbis-tools python3-scipy python3-numpy python3-empy python3-pyaudio python3-soundfile portaudio19-dev 
+    $ sudo apt-get install python-catkin-tools ros-kinetic-rosbridge-server portaudio19-dev vorbis-tools python3-scipy python3-numpy python3-empy python3-soundfile ffmpeg python3-opencv python3-pyaudio 
     ~~~~
 
 4. Set up ROS with Python3:

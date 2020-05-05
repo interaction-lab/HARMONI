@@ -3,7 +3,15 @@
 # Importing the libraries
 import rospy
 import roslib
+import pyaudio
+import wave
+from datetime import datetime
+import cv2
+from cv_bridge import CvBridge, CvBridgeError
+import ffmpeg
 from audio_common_msgs.msg import AudioData
+from sensor_msgs.msg import Image
+
 
 class HarmoniRecordingManager():
     """
@@ -13,19 +21,100 @@ class HarmoniRecordingManager():
     def __init__(self, manager_name,child_names):
         """ Init recording manager"""
         rospy.loginfo("Init recording the data from the sensors")
+        self.outdir = child_names["outdir"]
         self.audio_child = child_names["audio_data"]
+        self.video_child = child_names["video_data"]
+        self.merge_child = child_names["audio_video_data"] #it returns an array: [0]: audio child, [1]: video child
+        self.audio_children = {}
+        self.video_children = {}
+        format_size = pyaudio.paInt16
+        self.cv_bridge = CvBridge()
         """ Init subscribers"""
         for child in self.audio_child:
-            rospy.Subscriber("/harmoni/sensing/listening/"+child, AudioData, self._audio_data_callback)
+            param = rospy.get_param(child+"_param")
+            self.audio_children[child] = {"first_frame": True, "channels" : param["total_channels"], "chunk_size":param["chunk_size"], "sample_rate":param["audio_rate"], "format_size": format_size}
+            if child == self.merge_child[0]:
+                rospy.Subscriber("/harmoni/sensing/listening/"+child, AudioData, self._audio_merge_data_callback, child, queue_size=1)
+            else:
+                rospy.Subscriber("/harmoni/sensing/listening/"+child, AudioData, self._audio_data_callback, child, queue_size=1)
+        for child in self.video_child:
+            param = rospy.get_param(child+"_param")
+            self.video_children[child] = {"first_frame": True, "video_format" : param["video_format"], "fps": param["fps"]}
+            if child == self.merge_child[1]:
+                rospy.Subscriber("/harmoni/sensing/watching/"+child, Image, self._video_merge_data_callback, child, queue_size=1)
+            else:
+                rospy.Subscriber("/harmoni/sensing/watching/"+child, Image, self._video_data_callback, child, queue_size=1)
 
-    def _audio_data_callback(self, data):
+    def _record_audio(self, data, child):
+        """Record audio file"""
+        if self.audio_children[child].first_frame:
+            file_name_date = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+            p = pyaudio.PyAudio()  
+            file_name = "audio_" + file_name_date
+            path_audio = self.outdir + file_name + ".wav"
+            wf = wave.open(path_audio, 'wb')
+            wf.setnchannels(self.audio_children[child].channels)
+            wf.setsampwidth(p.get_sample_size(self.audio_children[child].format_size))
+            wf.setframerate(self.audio_children[child].sample_rate)
+            wf.setnframes(self.audio_children[child].chunk_size)
+            wf.writeframes(b''.join(data.data))
+            self.audio_children[child].first_frame = False
+        else:
+            wf.writeframes(b''.join(data.data))
+        return path_audio
+
+    def _record_video(self, data, child):
+        """Record video file"""
+        if self.video_children[child].first_frame:
+            file_name_date = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+            fourcc = cv2.VideoWriter_fourcc(*'MJPG')
+            file_name = "video_" + file_name_date
+            path_video = self.outdir + file_name + ".avi"
+            video_data = cv2.VideoWriter(path_video, fourcc , self.video_children[child].fps, (data.width, data.height), True)
+            self.video_children[child].first_frame = False
+        else:
+            frame = self.cv_bridge.imgmsg_to_cv2(data, self.video_children[child].video_format)
+        try:
+            video_data.write(frame)
+        except:
+            print("Not writing!!")
+        return path_video
+        
+
+    def _audio_data_callback(self, data, child):
         """ Do something when audio data has been received """
-        rospy.loginfo("The audio data received is %s" %data)
+        rospy.loginfo("The audio data received from %s" %child)
+        self._record_audio(data, child)
         return
 
-    def _video_data_callback(self, data):
+    def _video_data_callback(self, data, child):
         """ Do something when video data has been received """
-        rospy.logdebug("The video data received is %s" %data)
+        rospy.logdebug("The video data received from %s" %child)
+        self._record_video(data, child)
+        return
+
+    def _audio_merge_data_callback(self, data, child):
+        """ Do something when audio data has been received """
+        rospy.loginfo("The audio data received from %s" %child)
+        self.path_audio = self._record_audio(data, child)
+        return
+
+    def _video_merge_data_callback(self, data, child):
+        """ Do something when video data has been received """
+        rospy.logdebug("The video data received from %s" %child)
+        self.path_video = self._record_video(data, child)
+        return
+
+    def _merge_audio_video(self):
+        """Merges audio and video in a single file"""
+        input_video = ffmpeg.input(self.path_video)
+        added_audio = ffmpeg.input(self.path_audio)
+        (
+            ffmpeg
+            .concat(input_video, added_audio, v=1, a=1)
+            .output(self.outdir + "mix_delayed_audio.mp4")
+            .run(overwrite_output=True)
+        )
         return
 
 
