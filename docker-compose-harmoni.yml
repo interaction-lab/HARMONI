@@ -1,0 +1,153 @@
+version: '3.4'
+
+
+services:
+    harmoni_core:
+        build:
+            context: .
+            dockerfile: dockerfiles/ros-kinetic_harmoni
+            #network: host
+        image: harmoni/ros-kinetic_harmoni:latest
+        environment:
+            DISPLAY: $DISPLAY
+            QT_GRAPHICSSYSTEM: native
+            ROS_DISTRO: kinetic
+            ROS_IP: 172.19.0.100
+            ROS_MASTER_URI: http://harmoni_core:11311            
+            IS_DOCKER_ENV: "true"
+            CATKIN_WS: harmoni_catkin_ws
+        privileged: true
+        networks:
+            ros_net:
+                ipv4_address: 172.19.0.100
+                aliases: 
+                    - harmoni_core
+        hostname: harmoni_core
+        ports:
+            - "11311:11311"
+            - "33690:33690"
+        devices: 
+          - /dev/dri:/dev/dri
+          - /dev/snd:/dev/snd
+          - /dev/video0:/dev/video0
+        volumes:
+            - harmoni_catkin_ws:/root/harmoni_catkin_ws
+            # Configuration
+            - ./config/setup_script.sh:/root/.setup_script.sh
+            - ./config/dev_setup_script.sh:/root/.dev_setup_script.sh
+            # Other
+            - /tmp/.X11-unix:/tmp/.X11-unix
+            - ~/.config/terminator/config:/root/.config/terminator/config
+            - ~/.gitconfig/:/root/.gitconfig/:ro
+            - ~/.vimrc:/root/.vimrc:ro
+            - ~/.vim/:/root/.vim/:ro
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
+        working_dir: /root/harmoni_catkin_ws/src/HARMONI
+        command: bash -c "
+            terminator -ue \"echo 'Entering harmoni_core Container...' &&
+                            source /root/harmoni_catkin_ws/devel/setup.bash &&
+                            echo 'roslaunch harmoni_decision test.launch test_service:=\"service_to_test\"' &&
+                            bash\""
+    harmoni_pc:
+        build:
+            context: .
+            dockerfile: dockerfiles/ros-kinetic_harmoni-pc
+            network: host
+        image: harmoni/ros-kinetic_harmoni-pc:latest
+        environment:
+            DISPLAY: $DISPLAY
+            QT_GRAPHICSSYSTEM: native
+            ROS_DISTRO: kinetic
+            IS_DOCKER_ENV: "true"
+            CATKIN_WS: harmoni_catkin_ws
+            ROS_IP: 172.19.0.101
+            ROS_MASTER_URI: http://harmoni_core:11311
+        privileged: true
+        networks:
+            ros_net:
+                ipv4_address: 172.19.0.101
+        hostname: harmoni_pc
+        devices: 
+            - /dev/dri:/dev/dri
+            - /dev/snd:/dev/snd
+            - /dev/video0:/dev/video0
+        volumes:
+            - harmoni_catkin_ws:/root/harmoni_catkin_ws
+            # Configuration
+            - ./config/setup_script.sh:/root/.setup_script.sh
+            - ./config/dev_setup_script.sh:/root/.dev_setup_script.sh
+            # Other
+            - /tmp/.X11-unix:/tmp/.X11-unix
+            - ~/.config/terminator/config:/root/.config/terminator/config
+            - ~/.gitconfig/:/root/.gitconfig/:ro
+            - ~/.vimrc:/root/.vimrc:ro
+            - ~/.vim/:/root/.vim/:ro
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
+        working_dir: /root/
+        command: bash -c "
+            terminator -ue \"echo 'Entering harmoni_w2l Container...' &&
+            bash\" &&
+            source /root/harmoni_catkin_ws/devel/setup.bash"
+
+
+    harmoni_w2l:
+        build:
+            context: .
+            dockerfile: dockerfiles/ros-kinetic_harmoni_w2l-inf
+            network: host
+        image: harmoni/ros-kinetic_harmoni_w2l-inf:latest
+        environment:
+            DISPLAY: $DISPLAY
+            QT_GRAPHICSSYSTEM: native
+            ROS_DISTRO: kinetic
+            IS_DOCKER_ENV: "true"
+            CATKIN_WS: harmoni_catkin_ws
+            ROS_IP: 172.19.0.102
+            ROS_MASTER_URI: http://harmoni_core:11311
+        privileged: true
+        networks:
+            ros_net:
+                ipv4_address: 172.19.0.102
+        hostname: harmoni_w2l
+        devices: 
+            - /dev/dri:/dev/dri
+            - /dev/snd:/dev/snd
+            - /dev/video0:/dev/video0
+        volumes:
+            - ~/coding/w2l/model/:/root/model/
+            - wav2letter:/root/wav2letter
+            # Configuration
+            - ./config/setup_script.sh:/root/.setup_script.sh
+            - ./config/dev_setup_script.sh:/root/.dev_setup_script.sh
+            # Other
+            - /tmp/.X11-unix:/tmp/.X11-unix
+            - ~/.config/terminator/config:/root/.config/terminator/config
+            - ~/.gitconfig/:/root/.gitconfig/:ro
+            - ~/.vimrc:/root/.vimrc:ro
+            - ~/.vim/:/root/.vim/:ro
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
+        working_dir: /root/
+        command: bash -c "
+            terminator -ue \"echo 'Entering harmoni_w2l Container...' &&
+            bash\" &&
+            source /root/harmoni_catkin_ws/devel/setup.bash"
+    
+networks:
+    ros_net:
+        driver: bridge
+            # bridge on a single host and overlay on a Swarm
+        ipam:
+            driver: default
+            config:
+            -   subnet: 172.19.0.0/24
+                #gateway: 172.19.0.1
+
+volumes:
+    harmoni_catkin_ws:
+    wav2letter:
+    aws_config:
+    pycharm_config:
+    visual_code_config:
