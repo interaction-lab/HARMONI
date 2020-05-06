@@ -5,11 +5,7 @@ To launch the complete harmoni setup in docker:
     xhost +local:
 
 2. Use docker compose to launch the complete system (will build if necessary, use --build to force)\
-    docker-compose -f docker-compose-ros-dev.yml up
-
-3. Build the workspace \
-    catkin build (in catkin_workspace)\
-    source devel/setup.bash
+    docker-compose -f docker-compose-harmoni-dev.yml up
 
 4. Launch the desired packages and run the desired scripts in the respective docker containers
 
@@ -22,12 +18,16 @@ To launch the complete harmoni setup in docker:
 
 # Still todo:
 
-[] single launch bash script \
-[] separate the rest of the continers (below)\
-[] modularize containers and organize dependencies\
-[] update readme\
-[] setup cloning harmoni repo and building
-[] setup cloning harmoni-[external] repo and building
+- [X] make harmoni public
+- [X] separate the rest of the continers (below)
+- [X] modularize containers and organize dependencies
+- [X] setup cloning harmoni repo and building
+- [X] setup cloning harmoni-[external] repo and building
+- [ ] single launch bash script 
+- [ ] push images to dockerhub
+- [ ] update readme
+
+
 
 # Docker and Harmoni Organization
 
@@ -52,3 +52,32 @@ The children of the routers will each be containers
 - Harmoni Detectors (N Containers)
 
 - Harmoni [External] (1 Container in individual repo, e.g. Harmoni-PC)
+
+
+
+
+# Docker Containers
+
+
+Base containers:
+    osrf/ros:kinetic-desktop (ros_kinetic_base)
+    ubuntu:xenial (ubuntu16_base)
+Dev containers: base containers with extra tools
+    ubuntu16_dev
+    ros_kinetic_dev
+
+Tier 1:
+    ros_kinetic_harmoni
+        # includes kinetic audio-common, numpy, pyaudio
+        # built on python 3.6
+        # with a built harmoni installed
+    ros_kinetic_harmoni_w2l-inf
+    ros_kinetic_harmoni_harmoni-pc
+
+
+# Building Harmoni
+docker build -f dockerfiles/ros-kinetic_harmoni --tag harmoni/ros-kinetic_harmoni:latest --squash .
+
+docker build -f dockerfiles/ros-kinetic_harmoni_harmoni-pc --tag harmoni/ros-kinetic_harmoni_harmoni-pc:latest --squash .
+
+docker build -f dockerfiles/ros-kinetic_harmoni_w2l-inf --tag harmoni/ros-kinetic_harmoni_w2l-inf:latest --squash .

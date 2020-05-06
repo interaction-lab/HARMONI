@@ -3,7 +3,7 @@
 echo 'Hello, rosmaster'
 
 source /opt/ros/$ROS_DISTRO/setup.bash 
-source /root/ws/$PROJECT/devel/setup.bash
+source /root/harmoni_catkin_ws/devel/setup.bash
 
 alias rh="roscd; cd .."
 alias rs="roscd; cd ../src"
