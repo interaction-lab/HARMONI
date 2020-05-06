@@ -9,30 +9,12 @@
 # python           3.6          (apt)
 # ==================================================================
 
-FROM ros-dev:latest
+FROM cmbirmingham/harmoni-dev:latest
 
-# install ros packages
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ros-$ROS_DISTRO-audio-common \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
+run \
+    APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-        build-essential \
-        ca-certificates \
-        wget \
-        git \
-        apt-utils \
-        vim \
-        emacs \
-        nano \
-		terminator \
-        htop \
-        g++ \
-        cmake \
-        # for MKL
-        apt-transport-https \
         # for libsndfile
         autoconf automake autogen build-essential libasound2-dev \
         libflac-dev libogg-dev libtool libvorbis-dev pkg-config python \
@@ -42,41 +24,17 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         zlib1g-dev libbz2-dev liblzma-dev libboost-all-dev \
         # gflags
         libgflags-dev libgflags2v5 \
-        # pyaudio
-        portaudio19-dev libportaudio2 libportaudiocpp0 \
-        ffmpeg libav-tools \
-        # for receipts data processing
-        sox && \
+        && \
 # ==================================================================
 # python (for receipts data processing)
 # ------------------------------------------------------------------
     PIP_INSTALL="python3 -m pip --no-cache-dir install --upgrade" && \
-    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-        software-properties-common \
-        && \
-    add-apt-repository ppa:deadsnakes/ppa && \
-    apt-get update && \
-    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-        python3.6 \
-        python3.6-dev \
-        && \
-    wget -O ~/get-pip.py \
-        https://bootstrap.pypa.io/get-pip.py && \
-    python3.6 ~/get-pip.py && \
-    ln -s /usr/bin/python3.6 /usr/local/bin/python3 && \
-    ln -s /usr/bin/python3.6 /usr/local/bin/python && \
-    $PIP_INSTALL \
-        setuptools \
-        && \
     $PIP_INSTALL \
         sox \
         tqdm \
-        numpy \
-        pyaudio \
-        rospkg \
-        pyaml \
         torch==1.2.0 \
-        packaging==19.1 && \
+        packaging==19.1 \
+        && \
 # ==================================================================
 # MKL https://software.intel.com/en-us/mkl
 # ------------------------------------------------------------------
@@ -105,15 +63,15 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # ------------------------------------------------------------------
     ldconfig && \
     apt-get clean && \
-    apt-get autoremove && \
+    apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/* /tmp/*
 
 
-# WORKDIR /root/
-# RUN git clone https://github.com/facebookresearch/wav2letter.git
+WORKDIR /root/
+RUN git clone https://github.com/facebookresearch/wav2letter.git
 # Copy wav2letter src directory from host.
-RUN mkdir /root/wav2letter
-COPY . /root/wav2letter
+# RUN mkdir /root/wav2letter
+# COPY . /root/wav2letter
 RUN ls /root/wav2letter
 
 # build w2l
@@ -131,6 +89,21 @@ RUN apt-get update && apt-get install -q -y --no-install-recommends \
     dirmngr \
     gnupg2 \
     && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && apt-get install -y openssh-server
+RUN mkdir /var/run/sshd
+RUN echo 'root:robotsareourfriends' | chpasswd
+RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+# SSH login fix. Otherwise user is kicked off after login
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+
+ENV NOTVISIBLE "in users profile"
+RUN echo "export VISIBLE=now" >> /etc/profile
+
+EXPOSE 22
+CMD ["/usr/sbin/sshd", "-D"]
+
 
 # For convenience add a source script to bashrc and update without clearing
 RUN \

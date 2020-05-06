@@ -9,28 +9,12 @@
 # python           3.6          (apt)
 # ==================================================================
 
-FROM osrf/ros:kinetic-desktop
+FROM harmoni/ros-kinetic_harmoni:latest
 
-# install ros packages
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ros-$ROS_DISTRO-audio-common \
-    && rm -rf /var/lib/apt/lists/*
 
 RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-        build-essential \
-        ca-certificates \
-        wget \
-        git \
-        apt-utils \
-        vim \
-        emacs \
-        nano \
-		terminator \
-        htop \
-        g++ \
-        cmake \
         # for MKL
         apt-transport-https \
         # for libsndfile
@@ -42,41 +26,18 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         zlib1g-dev libbz2-dev liblzma-dev libboost-all-dev \
         # gflags
         libgflags-dev libgflags2v5 \
-        # pyaudio
-        portaudio19-dev libportaudio2 libportaudiocpp0\
-        ffmpeg libav-tools \
         # for receipts data processing
         sox && \
 # ==================================================================
 # python (for receipts data processing)
 # ------------------------------------------------------------------
     PIP_INSTALL="python3 -m pip --no-cache-dir install --upgrade" && \
-    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-        software-properties-common \
-        && \
-    add-apt-repository ppa:deadsnakes/ppa && \
-    apt-get update && \
-    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-        python3.6 \
-        python3.6-dev \
-        && \
-    wget -O ~/get-pip.py \
-        https://bootstrap.pypa.io/get-pip.py && \
-    python3.6 ~/get-pip.py && \
-    ln -s /usr/bin/python3.6 /usr/local/bin/python3 && \
-    ln -s /usr/bin/python3.6 /usr/local/bin/python && \
-    $PIP_INSTALL \
-        setuptools \
-        && \
     $PIP_INSTALL \
         sox \
         tqdm \
-        numpy \
-        pyaml \
-        rospkg \
-        pyaudio \
         torch==1.2.0 \
-        packaging==19.1 && \
+        packaging==19.1 \
+        && \
 # ==================================================================
 # MKL https://software.intel.com/en-us/mkl
 # ------------------------------------------------------------------
@@ -105,7 +66,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # ------------------------------------------------------------------
     ldconfig && \
     apt-get clean && \
-    apt-get autoremove && \
+    apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/* /tmp/*
 
 
