@@ -1,19 +1,22 @@
 # Using Harmoni with Docker
 
 To launch the complete harmoni setup in docker:
-1. In order to run with window forwarding on linux use:\
+1. In order to run with window forwarding on linux use:
+```
     xhost +local:
+```
 
-2. Use docker compose to launch the complete system (will build if necessary, use --build to force)\
+2. Use docker compose to launch the complete system (will build if necessary, use --build to force)
+```
     docker-compose -f docker-compose-harmoni-dev.yml up
-
+```
 4. Launch the desired packages and run the desired scripts in the respective docker containers
 
     For use with with Wave2Letter:
     - From the ros_dev:
-        - roslaunch harmoni_stt microphone_service.launch
+        - ```roslaunch harmoni_stt microphone_service.launch```
     - From w2l_ros:
-        - python3.6 harmoni_stt/src/py_test_inference.py
+        - ```python3.6 harmoni_stt/src/py_test_inference.py```
 
 
 # Still todo:
@@ -75,9 +78,22 @@ Tier 1:
     ros_kinetic_harmoni_harmoni-pc
 
 
-# Building Harmoni
+# Building 
+## Harmoni
+```
 docker build -f dockerfiles/ros-kinetic_harmoni --tag harmoni/ros-kinetic_harmoni:latest --squash .
 
 docker build -f dockerfiles/ros-kinetic_harmoni_harmoni-pc --tag harmoni/ros-kinetic_harmoni_harmoni-pc:latest --squash .
 
 docker build -f dockerfiles/ros-kinetic_harmoni_w2l-inf --tag harmoni/ros-kinetic_harmoni_w2l-inf:latest --squash .
+```
+## Dev
+```
+docker build -f dockerfiles/dev/ubuntu16-dev --tag cmbirmingham/ubuntu16-dev:latest --squash .
+
+docker build -f dockerfiles/dev/ros-kinetic-dev --tag cmbirmingham/ros-kinetic-dev:latest --squash .
+
+docker build -f dockerfiles/dev/harmoni-dev --tag cmbirmingham/harmoni-dev:latest --squash .
+
+docker build -f dockerfiles/dev/w2l-dev --tag cmbirmingham/w2l-dev:latest --squash .
+```
