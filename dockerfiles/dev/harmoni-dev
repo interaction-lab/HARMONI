@@ -9,7 +9,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         nodejs \
         npm \
-        nmap iputils-ping \
     && \
     npm install http-server -g && \
     ln -s /usr/bin/nodejs /usr/bin/node \
