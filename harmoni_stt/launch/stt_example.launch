@@ -3,7 +3,6 @@
    
 	<arg name="use_microphone" default="true"/>
   	<group if="$(arg use_microphone)">
-			<rosparam file="$(find harmoni_stt)/config/configuration.yaml"/>
 			<node pkg="harmoni_stt" type="py_test_inference.py" name="stt" output="screen"/>
   	</group>
     

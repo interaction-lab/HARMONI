@@ -1,3 +1,6 @@
+#!/usr/bin/env python3.6
+
+# Importing the libraries
 from subprocess import Popen, PIPE
 import select
 import pty
