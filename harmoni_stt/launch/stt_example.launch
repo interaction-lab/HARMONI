@@ -1,9 +1,11 @@
 <!-- This is an example launch file for how a ROS application could use a node -->
 <launch>
    
-	<arg name="use_microphone" default="true"/>
-  	<group if="$(arg use_microphone)">
-			<node pkg="harmoni_stt" type="py_test_inference.py" name="stt" output="screen"/>
+	<arg name="use_w2l" default="true"/>
+	<arg name="start_on_startup" default="true"/>
+  	<group if="$(arg use_w2l)">
+			<rosparam file="$(find harmoni_stt)/config/configuration.yaml"/>
+			<node pkg="harmoni_stt" type="w2l_service.py" name="stt" output="screen" args="$(arg start_on_startup)" />
   	</group>
     
 </launch>
