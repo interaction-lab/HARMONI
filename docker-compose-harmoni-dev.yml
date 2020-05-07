@@ -123,7 +123,7 @@ services:
             - /dev/snd:/dev/snd
             - /dev/video0:/dev/video0
         volumes:
-            #- harmoni_catkin_ws:/root/harmoni_catkin_ws
+            - harmoni-pc_catkin_ws:/root/harmoni_catkin_ws
             # Configuration
             - ./dockerfiles/config/setup_script.sh:/root/.setup_script.sh
             - ./dockerfiles/config/dev_setup_script.sh:/root/.dev_setup_script.sh
@@ -147,6 +147,7 @@ networks:
 
 volumes:
     harmoni_catkin_ws:
+    harmoni-pc_catkin_ws:
     wav2letter:
     aws_config:
     pycharm_config:
