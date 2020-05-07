@@ -14,7 +14,7 @@ from harmoni_common_lib.constants import State
 from harmoni_common_lib.child import InternalServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 from audio_common_msgs.msg import AudioData
-
+from std_msgs.msg import String
 
 class SpeechToTextService(HarmoniServiceManager):
     """
@@ -30,8 +30,7 @@ class SpeechToTextService(HarmoniServiceManager):
         """Setup publishers and subscribers"""
         rospy.Subscriber('/harmoni/sensing/listening/microphone', AudioData, self.callback)
         self.text_pub = rospy.Publisher('/harmoni/detecting/speech', String, queue_size=10)
-        """ Get ready for text """
-        self.set_w2l_proc()
+        
         """Setup the microphone service as server """
         self.state = State.INIT
         super().__init__(self.state)
@@ -49,15 +48,11 @@ class SpeechToTextService(HarmoniServiceManager):
 
     def start(self, rate=""):
         rospy.loginfo("Start the %s service" % self.name)
+        self.set_w2l_proc()
         super().start(rate)
         if self.state == State.INIT:
             self.state = State.START
             self.state_update()
-            try:
-                self.open_stream()
-                self.listen()  # Start the microphone service at the INIT
-            except:
-                self.state = State.FAILED
         else:
             self.state = State.START
         self.state_update()
@@ -83,9 +78,10 @@ class SpeechToTextService(HarmoniServiceManager):
         return
 
     def test(self):
-        file_name = '/root/audio/test4.wav'
-        print(file_name)
-        self.transcribe_file(file_name)
+        #file_name = '/root/audio/test4.wav'
+        #print(file_name)
+        #self.transcribe_file(file_name)
+        return
 
     def set_w2l_proc(self):
         self.w2l_process = Popen(['{} --input_files_base_path={}'.format(self.w2l_bin, self.model_path)],
@@ -97,8 +93,12 @@ class SpeechToTextService(HarmoniServiceManager):
 
     def callback(self, data):
         if self.state == State.START:
+            rospy.loginfo("Transcribing")
             text = self.transcribe_bytes(data.data)
             self.text_pub.publish(text)
+        else:
+            rospy.loginfo("Not Transcribing Audio")
+
         return
 
     def transcribe_file(self, file_name):
@@ -132,15 +132,16 @@ class SpeechToTextService(HarmoniServiceManager):
 
 
 def main():
+    args = sys.argv
     try:
         service_name = "stt"
         rospy.init_node(service_name + "_node")
         param = rospy.get_param("/w2l_param/")
         s = SpeechToTextService(service_name, param)
         hardware_reading_server = InternalServiceServer(name=service_name, service_manager=s)
-        hardware_reading_server.update_feedback()
         if args[1]:
             s.start()
+        hardware_reading_server.update_feedback()
         rospy.spin()
     except rospy.ROSInterruptException:
         pass

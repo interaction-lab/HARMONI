@@ -73,6 +73,7 @@ class HarmoniActionClient(object):
             self.action_client.wait_for_server()
         self.execute_goal_result_callback = execute_goal_result_callback
         self.execute_goal_feedback_callback = execute_goal_feedback_callback
+        rospy.loginfo("action_client {} server connected.".format(action_type_name))
         return
 
     def get_feedback_data(self):

@@ -149,9 +149,9 @@ class InternalServiceServer(HarmoniActionServer, object):
         else:
             rospy.logwarn("{name} has not been started")
         self.setup_server(name, self._execute_goal_received_callback)
-        while not rospy.is_shutdown():
-            self.send_feedback(self.service_manager.state)
-            rospy.Rate(.2)
+        # while not rospy.is_shutdown():
+        #     self.send_feedback(self.service_manager.state)
+        #     rospy.Rate(.2)
 
     def update_feedback(self):
         """Update the feedback message """
