@@ -145,9 +145,9 @@ class InternalServiceServer(HarmoniActionServer, object):
 
         success = self.service_manager.test()
         if success:
-            rospy.loginfo("{name} has been successfully set up")
+            rospy.loginfo(f"{name} has been successfully set up")
         else:
-            rospy.logwarn("{name} has not been started")
+            rospy.logwarn(f"{name} has not been started")
         self.setup_server(name, self._execute_goal_received_callback)
         # while not rospy.is_shutdown():
         #     self.send_feedback(self.service_manager.state)
