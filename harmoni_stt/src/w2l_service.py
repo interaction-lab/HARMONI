@@ -77,11 +77,6 @@ class SpeechToTextService(HarmoniServiceManager):
         self.state_update()
         return
 
-    def test(self):
-        #file_name = '/root/audio/test4.wav'
-        #print(file_name)
-        #self.transcribe_file(file_name)
-        return
 
     def set_w2l_proc(self):
         self.w2l_process = Popen(['{} --input_files_base_path={}'.format(self.w2l_bin, self.model_path)],
@@ -141,7 +136,7 @@ def main():
         hardware_reading_server = InternalServiceServer(name=service_name, service_manager=s)
         if args[1]:
             s.start()
-        hardware_reading_server.update_feedback()
+        # hardware_reading_server.update_feedback()
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
