@@ -47,7 +47,7 @@ services:
             - /etc/localtime:/etc/localtime:ro
         working_dir: /root/harmoni_catkin_ws/src/HARMONI
         command: bash -c "
-            terminator -ue \"echo 'Entering harmoni_core Container...' &&
+            terminator -ue \"echo 'Entering harmoni_core Container... \\n start with roscore and rlrouters' &&
                             bash\""
 
     ros_w2l:
@@ -94,7 +94,10 @@ services:
             - /etc/localtime:/etc/localtime:ro
         working_dir: /root/harmoni_catkin_ws/src/HARMONI
         command: bash -c "
-            terminator -ue \"echo 'Entering ros_w2l Container...' && bash\" "
+            terminator -ue \"echo 'Entering ros_w2l Container... \\n start with rlspeech' && bash\" "
+
+
+
     ros_pc:
         build:
             context: .
@@ -134,7 +137,7 @@ services:
             - /etc/localtime:/etc/localtime:ro
         working_dir: /root/harmoni_catkin_ws/src/HARMONI
         command: bash -c "
-            terminator -ue \"echo 'Entering harmoni_pc Container...' &&
+            terminator -ue \"echo 'Entering harmoni_pc Container... \\n start with rlservices' &&
                         bash\""
 
 networks:
