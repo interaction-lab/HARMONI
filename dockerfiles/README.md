@@ -95,5 +95,7 @@ docker build -f dockerfiles/dev/ros-kinetic-dev --tag cmbirmingham/ros-kinetic-d
 
 docker build -f dockerfiles/dev/harmoni-dev --tag cmbirmingham/harmoni-dev:latest --squash .
 
+docker build -f dockerfiles/dev/harmoni-pc-dev --tag cmbirmingham/harmoni-pc-dev:latest --squash .
+
 docker build -f dockerfiles/dev/w2l-dev --tag cmbirmingham/w2l-dev:latest --squash .
 ```

@@ -128,7 +128,7 @@ RUN \
 # For convenience add a source script to bashrc and update without clearing
 RUN \
        echo 'source /root/.dev_setup_script.sh' >> /root/.bashrc \
-       && apt-get update -y && apt-get upgrade -y
+       # && apt-get update -y && apt-get upgrade -y
 
 # Setup MongoDB
     # RUN \
