@@ -90,7 +90,8 @@ class SpeechToTextService(HarmoniServiceManager):
         if self.state == State.START:
             rospy.loginfo("Transcribing")
             text = self.transcribe_bytes(data.data)
-            self.text_pub.publish(text)
+            if text:
+                self.text_pub.publish(text)
         else:
             rospy.loginfo("Not Transcribing Audio")
 
@@ -109,6 +110,7 @@ class SpeechToTextService(HarmoniServiceManager):
             return
         print(text_list)
         self.set_w2l_proc()
+        text_list = [t for t in text_list if t]
         return ' '.join(text_list)
 
     def fix_text(self, text):
