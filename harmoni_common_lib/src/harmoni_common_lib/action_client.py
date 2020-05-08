@@ -59,7 +59,7 @@ class HarmoniActionClient(object):
         """Init client action variables and setup client 
         
         Args:
-            action_type_name (str): The name of the action server the client should connect to.
+            action_type_name (str): The name of the action server the client should connect to. #TODO rename. this is just the server name.
             execute_goal_result_callback (func): [Optional] A callback function
                 handle for action results (done state).
             execute_goal_feedback_callback (func): [Optional] A callback function
