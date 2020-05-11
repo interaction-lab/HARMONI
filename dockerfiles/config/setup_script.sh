@@ -14,18 +14,3 @@ alias sd="roscd; cd ..; source devel/setup.bash"
 alias rlspeech="roslaunch harmoni_stt stt_example.launch"
 alias rlservices="roslaunch harmoni_decision services.launch use_harmoni_services:=false"
 alias rlrouters="roslaunch harmoni_decision routers.launch"
-
-# if [ "$ROS_HOSTNAME" = "ros_w2l" ]
-# then 
-#     roslaunch harmoni_stt stt_example.launch
-
-# elif [ "$ROS_HOSTNAME" = "ros_pc" ]
-# then 
-#     roslaunch harmoni_decision services.launch use_harmoni_services:=false
-
-# elif [ "$ROS_HOSTNAME" = "harmoni_core" ]
-# then 
-#     roscore
-#     roslaunch harmoni_decision routers.launch
-
-# fi

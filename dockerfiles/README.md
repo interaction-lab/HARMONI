@@ -1,6 +1,6 @@
 # Using Harmoni with Docker
 
-To launch the complete harmoni setup in docker:
+To launch the complete harmoni dev setup in docker:
 1. In order to run with window forwarding on linux use:
 ```
     xhost +local:
@@ -10,13 +10,19 @@ To launch the complete harmoni setup in docker:
 ```
     docker-compose -f docker-compose-harmoni-dev.yml up
 ```
-4. Launch the desired packages and run the desired scripts in the respective docker containers
 
-    For use with with Wave2Letter:
-    - From the ros_dev:
-        - ```roslaunch harmoni_stt microphone_service.launch```
-    - From w2l_ros:
-        - ```python3.6 harmoni_stt/src/py_test_inference.py```
+3. Launch the desired packages and run the desired scripts in the respective docker containers
+
+    For example, to use Wave2Letter (requires running get_w2l_models.sh first):
+    - From harmoni_core, open two terminals and:
+        - ```roscore```
+        - ```roslaunch roslaunch harmoni_decision services.launch use_harmoni_services:=false```
+
+    - From harmoni_pc:
+        - ``` roslaunch harmoni_decision services.launch use_harmoni_services:=false ```
+
+    - From ros_w2l:
+        - ```roslaunch harmoni_stt stt_example.launch```
 
 
 # Still todo:
@@ -26,30 +32,30 @@ To launch the complete harmoni setup in docker:
 - [X] modularize containers and organize dependencies
 - [X] setup cloning harmoni repo and building
 - [X] setup cloning harmoni-[external] repo and building
-- [ ] single launch bash script 
-- [ ] push images to dockerhub
-- [ ] update readme
+- [X] single launch bash script 
+- [X] push images to dockerhub
+- [X] update readme
 
 
 
 # Docker and Harmoni Organization
 
-Harmoni will be broken into several components:
-- Harmoni Core includes:
-    - Central Control
-        - Harmoni Decision Manager
-        - Harmoni Knowledge Store (Possibly seperate out?)
-        - Harmoni Behavior Patterns
-    - Common
-        - Harmoni Common Lib
-        - Harmoni Common Messages
-    - Routers
-        - Dialogue
-        - Detectors
-        - Actuators
-        - Sensors
-        - Web
-The children of the routers will each be containers
+The center of the Harmoni tool runs on a single core container, which is responsible for the following:
+- Central Control
+    - Harmoni Decision Manager
+    - Harmoni Knowledge Store (Possibly seperate out?)
+    - Harmoni Behavior Patterns
+- Common
+    - Harmoni Common Lib
+    - Harmoni Common Messages
+- Routers
+    - Dialogue
+    - Detectors
+    - Actuators
+    - Sensors
+    - Web
+
+Around that core exists an ecosystem of supporting children, which will live in their own containers and interface with hardware or with custom processes. These children are coupled with the harmoni core libaries to provide standard communication and control methods, making them easy to extend or replace. 
 - Harmoni Dialogue (1 Container Active)
 
 - Harmoni Detectors (N Containers)
@@ -61,21 +67,12 @@ The children of the routers will each be containers
 
 # Docker Containers
 
+We provide two sets of docker containers. The first set is a heavier development set of containers, which are based off of a ubuntu-16 image and contain graphical tools for use in a typical development cycle. These containers are built on top of one another and are named with their development purpose and the suffix -dev.
 
-Base containers:
-    osrf/ros:kinetic-desktop (ros_kinetic_base)
-    ubuntu:xenial (ubuntu16_base)
-Dev containers: base containers with extra tools
-    ubuntu16_dev
-    ros_kinetic_dev
+The second set of containers are for use in deployment or on machines with limited space. These are built on top of the OSRF distribution of ros-kinetic, and have been named according to what was included in the container.
 
-Tier 1:
-    ros_kinetic_harmoni
-        # includes kinetic audio-common, numpy, pyaudio
-        # built on python 3.6
-        # with a built harmoni installed
-    ros_kinetic_harmoni_w2l-inf
-    ros_kinetic_harmoni_harmoni-pc
+All containers are built on Ros Kinetic with python 2.7, but with the catkin-workspace set up to default to python 3.6. In future releases we may build containers entirely without python2.7, including a ros installation that is built on python3.6. We may also choose to jump directly to Ros 2.
+
 
 
 # Building 
