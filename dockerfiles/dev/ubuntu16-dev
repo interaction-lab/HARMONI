@@ -127,7 +127,7 @@ RUN \
 
 # For convenience add a source script to bashrc and update without clearing
 RUN \
-       echo 'source /root/.dev_setup_script.sh' >> /root/.bashrc \
+       echo 'source /root/.dev_setup_script.sh' >> /root/.bashrc 
        # && apt-get update -y && apt-get upgrade -y
 
 # Setup MongoDB
@@ -138,3 +138,8 @@ RUN \
     # 	&& apt-get install -y \
     # 		mongodb-org \
     # 	&& rm -rf /var/lib/apt/lists/* 
+
+
+ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 /usr/local/bin/dumb-init
+RUN chmod +x /usr/local/bin/dumb-init
+ENTRYPOINT ["/usr/local/bin/dumb-init","--rewrite","15:10","--"]
