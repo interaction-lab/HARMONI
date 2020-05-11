@@ -110,7 +110,7 @@ RUN git -C src clone \
       https://github.com/interaction-lab/HARMONI.git 
 
 RUN git -C src clone \
-      -b feature/4-face \
+      -b develop \
       https://github.com/interaction-lab/HARMONI-PC.git 
 
 # ==================================================================
