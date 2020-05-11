@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.7'
 
 
 services:
@@ -8,6 +8,7 @@ services:
             dockerfile: dockerfiles/dev/harmoni-dev
             network: host
         image: cmbirmingham/harmoni-dev:latest
+        init: true
         environment:
             DISPLAY: $DISPLAY
             QT_GRAPHICSSYSTEM: native
@@ -47,15 +48,15 @@ services:
             - /etc/localtime:/etc/localtime:ro
         working_dir: /root/harmoni_catkin_ws/src/HARMONI
         command: bash -c "
-            terminator -ue \"echo 'Entering harmoni_core Container... \\n start with roscore and rlrouters' &&
-                            bash\""
+            terminator -ue \"echo 'Entering harmoni_core Container... \\n start with roscore and rlrouters' && bash\""
 
     ros_w2l:
         build:
             context: .
-            dockerfile: dockerfiles/ros-kinetic_harmoni_w2l-inf
+            dockerfile: dockerfiles/dev/w2l-dev
             network: host
         image: cmbirmingham/w2l-dev:latest
+        init: true
         environment:
             DISPLAY: $DISPLAY
             QT_GRAPHICSSYSTEM: native
@@ -78,7 +79,7 @@ services:
             - /dev/snd:/dev/snd
             - /dev/video0:/dev/video0
         volumes:
-            - ~/coding/w2l/model/:/root/model/
+            - ../model/w2l:/root/model/
             - wav2letter:/root/wav2letter
             - harmoni_catkin_ws:/root/harmoni_catkin_ws
             # Configuration
@@ -104,6 +105,7 @@ services:
             dockerfile: dockerfiles/dev/harmoni-pc-dev
             network: host
         image: cmbirmingham/harmoni-pc-dev:latest
+        init: true
         environment:
             DISPLAY: $DISPLAY
             QT_GRAPHICSSYSTEM: native
@@ -137,8 +139,7 @@ services:
             - /etc/localtime:/etc/localtime:ro
         working_dir: /root/harmoni_catkin_ws/src/HARMONI
         command: bash -c "
-            terminator -ue \"echo 'Entering harmoni_pc Container... \\n start with rlservices' &&
-                        bash\""
+            terminator -ue \"echo 'Entering harmosni_pc Container... \\n start with rlservices' && bash\""
 
 networks:
     ros_net:
