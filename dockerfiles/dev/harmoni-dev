@@ -17,6 +17,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     $PIP_INSTALL \
         packaging==19.1 \
         soundfile \
+        dlib \
+        imutils \
         && \
     rm -rf /var/lib/apt/lists/* /tmp/*
 
