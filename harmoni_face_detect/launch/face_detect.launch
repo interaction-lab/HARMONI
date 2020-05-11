@@ -3,7 +3,7 @@
    
 	<arg name="use_face_detect" default="true"/>
   	<group if="$(arg use_face_detect)">
-			<node pkg="harmoni_face_detect" type="detect.py" name="face_detect" output="screen"/>
+			<node pkg="harmoni_face_detect" type="detector.py" name="face_detect" output="screen"/>
   	</group>
 
 
