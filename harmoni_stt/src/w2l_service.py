@@ -16,6 +16,7 @@ from harmoni_common_lib.service_manager import HarmoniServiceManager
 from audio_common_msgs.msg import AudioData
 from std_msgs.msg import String
 
+
 class SpeechToTextService(HarmoniServiceManager):
     """
     Speech to text service using wave2letter
@@ -30,7 +31,7 @@ class SpeechToTextService(HarmoniServiceManager):
         """Setup publishers and subscribers"""
         rospy.Subscriber('/harmoni/sensing/listening/microphone', AudioData, self.callback)
         self.text_pub = rospy.Publisher('/harmoni/detecting/speech', String, queue_size=10)
-        
+
         """Setup the microphone service as server """
         self.state = State.INIT
         super().__init__(self.state)
@@ -76,7 +77,6 @@ class SpeechToTextService(HarmoniServiceManager):
         self.state = State.SUCCESS
         self.state_update()
         return
-
 
     def set_w2l_proc(self):
         self.w2l_process = Popen(['{} --input_files_base_path={}'.format(self.w2l_bin, self.model_path)],
