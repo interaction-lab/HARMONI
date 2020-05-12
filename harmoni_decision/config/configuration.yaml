@@ -1,15 +1,12 @@
-# This is a configuration file describing the names of the child of each router
-routers:
-  sensor: ["pc_microphone", "pc_camera"]
-  dialogue: ["lex"]
-  actuator: ["pc_face", "pc_speaker", "tts", "web"]
-  #detector: ["skeleton", "object", "stt", "face"]
-
-# Here are listed the module it could subscribe to
-subscribers: 
-  skeleton: point3d,
-  stt: string,
-  object: point3d,
-  face: point3d
-  web_listener: string 
-
+# This is a configuration file describing the id of the child of each repo
+repo:
+  harmoni:
+    lex : ["def"]
+    tts: ["def"]
+    web: ["def"]
+    stt: ["def"]
+  pc:
+    microphone: ["def"]
+    camera : ["def"]
+    face: ["def"]
+    speaker: ["def"]
