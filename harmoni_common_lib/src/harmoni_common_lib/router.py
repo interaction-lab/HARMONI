@@ -19,16 +19,19 @@ class HarmoniRouter(HarmoniActionServer, object):
     This class provides basic router functionality which the subclasses of router can exploit
     """
 
-    def __init__(self, router_name, child_names, last_event):
+    def __init__(self, router_name, child_constants_names, last_event):
         """ Initialization of the variables """
         rospy.loginfo("Initializing HarmoniRouter")
         self.timeout_for_result = TIMEOUT_FOR_RESULT
         self.timeout_for_server = TIMEOUT_FOR_SERVER
         self.last_event = last_event
         self.children_clients = defaultdict(HarmoniActionClient)
+        child_names = self._get_child_name(child_constants_names)
+        rospy.loginfo("The %s children are %s" %(router_name, child_names))
         for child in child_names:
             self.children_clients[child] = HarmoniActionClient()
         self.router_name = router_name
+
 
     def setup_actions(self, execute_goal_result_callback, execute_goal_feedback_callback):
         """ Setup clients of each subclass and the server of the router"""
@@ -58,3 +61,14 @@ class HarmoniRouter(HarmoniActionServer, object):
         rospy.loginfo("Start a goal request to the child")
         self.children_clients[goal.child_server].send_goal(action_goal= goal.action_type, child_server=goal.child_server, optional_data=goal.optional_data, condition="", time_out=self.timeout_for_result)
         return
+
+    def _get_child_name(self, child_constants_names):
+        """Get children from config file"""
+        repos = rospy.get_param("/repo/")
+        child_names = []
+        for repo in repos:
+            for child in child_constants_names:
+                if child in repos[repo]:
+                    for i in range(len(repos[repo][child])):
+                        child_names.append(repo + "_" + child +"_"+ repos[repo][child][i])
+        return child_names

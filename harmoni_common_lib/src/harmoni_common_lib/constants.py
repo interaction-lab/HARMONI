@@ -25,16 +25,19 @@ class Router(Enum):
 class RouterSensor(Enum):
     MICROPHONE = "microphone"
     CAMERA = "camera"
+    PATH = "harmoni/sensing/"
 
 class RouterActuator(Enum):
     SPEAKER = "speaker"
     FACE = "face"
     TTS = "tts"
     WEB = "web"
+    PATH = "harmoni/actuating/"
 
 class RouterDialogue(Enum):
     LEX = "lex"
-
+    PATH = "harmoni/dialoging/"
 
 class RouterDetector(Enum):
     STT = "stt"
+    PATH = "harmoni/detecting/"

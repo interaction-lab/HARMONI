@@ -4,15 +4,17 @@
 import rospy
 import roslib
 from harmoni_common_lib.router import HarmoniRouter
+from harmoni_common_lib.constants import RouterDialogue, Router
 
 class HarmoniDialogueRouter(HarmoniRouter):
     """
     The dialogue router aims to handle the dialogue, interfacing with external or internal services
     """
 
-    def __init__(self, router_name, child_names, last_event):
+    def __init__(self, router_name, last_event):
         """ Init router"""
-        super(HarmoniDialogueRouter, self).__init__(router_name, child_names, last_event)
+        child_constants_names = [enum.value for enum in list(RouterDialogue)]
+        super(HarmoniDialogueRouter, self).__init__(router_name, child_constants_names, last_event)
 
     def setup_router(self):
         self.setup_actions(self.execute_result_callback, self.execute_feedback_callback)
@@ -34,13 +36,10 @@ class HarmoniDialogueRouter(HarmoniRouter):
 
 def main():
     try: 
-        router_name = "dialogue"
+        router_name = Router.DIALOGUE.value
         rospy.init_node(router_name + "_node")
-        last_event = ""  # TODO: How to get information about last_event from behavior controller?
-        child_names = rospy.get_param("/routers/"+router_name)
-        # I am not 100% sure but I think you need to pass the same set of args to a parent init
-        # Or possible use *args, *kwargs
-        hr = HarmoniDialogueRouter(router_name, child_names, last_event)
+        last_event = ""  
+        hr = HarmoniDialogueRouter(router_name, last_event)
         hr.setup_router()
         rospy.spin()
     except rospy.ROSInterruptException:
