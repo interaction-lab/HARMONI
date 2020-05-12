@@ -5,7 +5,7 @@ import rospy
 import roslib
 import boto3
 from std_msgs.msg import String
-from harmoni_common_lib.constants import State
+from harmoni_common_lib.constants import State, RouterActuator
 from harmoni_common_lib.child import WebServiceServer, HardwareControlServer
 from harmoni_common_lib.service_manager import HarmoniExternalServiceManager
 
@@ -77,7 +77,7 @@ class WebService(HarmoniExternalServiceManager):
 
 def main():
     try:
-        service_name = "web"
+        service_name = RouterActuator.WEB.value
         rospy.init_node(service_name + "_node")
         last_event = ""  # TODO: How to get information about last_event from behavior controller?
         param = rospy.get_param("/"+service_name+"_param/")

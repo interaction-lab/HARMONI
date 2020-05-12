@@ -4,7 +4,7 @@
 import rospy
 import roslib
 import boto3
-from harmoni_common_lib.constants import State
+from harmoni_common_lib.constants import State, RouterDialogue
 from harmoni_common_lib.child import WebServiceServer
 from harmoni_common_lib.service_manager import HarmoniExternalServiceManager
 
@@ -66,7 +66,7 @@ class AWSLexService(HarmoniExternalServiceManager):
 
 def main():
     try:
-        service_name = "lex"
+        service_name = RouterDialogue.LEX.value
         rospy.init_node(service_name + "_node")
         last_event = ""  # TODO: How to get information about last_event from behavior controller?
         param = rospy.get_param("/"+service_name+"_param/")

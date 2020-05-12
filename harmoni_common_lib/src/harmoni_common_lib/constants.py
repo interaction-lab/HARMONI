@@ -20,7 +20,7 @@ class Router(Enum):
     SENSOR = "sensor"
     DIALOGUE = "dialogue"
     ACTUATOR = "actuator"
-    #DETECTOR = "detector"
+    DETECTOR = "detector"
 
 class RouterSensor(Enum):
     MICROPHONE = "microphone"
