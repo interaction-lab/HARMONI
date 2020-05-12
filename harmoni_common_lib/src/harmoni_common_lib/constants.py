@@ -22,19 +22,19 @@ class Router(Enum):
     ACTUATOR = "actuator"
     #DETECTOR = "detector"
 
-class RouterSensor(IntEnum):
-    pc_microphone = 1
-    pc_camera = 2
+class RouterSensor(Enum):
+    MICROPHONE = "microphone"
+    CAMERA = "camera"
 
-class RouterActuator(IntEnum):
-    pc_speaker = 1
-    pc_face = 2
-    tts = 3
-    web = 4
+class RouterActuator(Enum):
+    SPEAKER = "speaker"
+    FACE = "face"
+    TTS = "tts"
+    WEB = "web"
 
-class RouterDialogue(IntEnum):
-    lex = 1
+class RouterDialogue(Enum):
+    LEX = "lex"
 
 
-class RouterDetector(IntEnum):
-    stt = 1
+class RouterDetector(Enum):
+    STT = "stt"
