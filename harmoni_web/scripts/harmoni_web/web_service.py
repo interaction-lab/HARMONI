@@ -5,7 +5,7 @@ import rospy
 import roslib
 import boto3
 from std_msgs.msg import String
-from harmoni_common_lib.constants import State, RouterActuator
+from harmoni_common_lib.constants import State, RouterActuator, HelperFunctions
 from harmoni_common_lib.child import WebServiceServer, HardwareControlServer
 from harmoni_common_lib.service_manager import HarmoniExternalServiceManager
 
@@ -75,15 +75,42 @@ class WebService(HarmoniExternalServiceManager):
         rospy.loginfo("Received an event from the webpage")
         return
 
+
+def main():
+    try:
+        service_name = RouterActuator.TTS.value
+        rospy.init_node(service_name + "_node")
+        last_event = ""  # TODO: How to get information about last_event from behavior controller?
+        list_service_names = HelperFunctions.get_child_list(service_name)
+        service_server_list = []
+        for service in list_service_names:
+            print(service)
+            service_id = HelperFunctions.get_child_id(service)
+            param = rospy.get_param("/"+service_id+"/")
+            s = AWSTtsService(service, param)
+            service_server_list.append(WebServiceServer(name=service, service_manager=s))
+        for server in service_server_list:
+            server.update_feedback()
+        rospy.spin()
+    except rospy.ROSInterruptException:
+        pass
+
+
 def main():
     try:
         service_name = RouterActuator.WEB.value
         rospy.init_node(service_name + "_node")
         last_event = ""  # TODO: How to get information about last_event from behavior controller?
-        param = rospy.get_param("/"+service_name+"_param/")
-        s = WebService(service_name, param)
-        web_service_server_actuator = HardwareControlServer(name=service_name, service_manager=s)
-        web_service_server_actuator.update_feedback()
+        list_service_names = HelperFunctions.get_child_list(service_name)
+        service_server_list = []
+        for service in list_service_names:
+            print(service)
+            service_id = HelperFunctions.get_child_id(service)
+            param = rospy.get_param("/"+service_id+"/")
+            s = WebService(service, param)
+            service_server_list.append(HardwareControlServer(name=service, service_manager=s))
+        for server in service_server_list:
+            server.update_feedback()
         rospy.spin()
     except rospy.ROSInterruptException:
         pass

@@ -1,4 +1,4 @@
 # Configuration file for the microphone
-web_param:
+def:
   user_id: "user_id"
   
