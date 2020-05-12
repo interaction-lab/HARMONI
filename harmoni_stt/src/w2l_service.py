@@ -10,7 +10,7 @@ import time
 import re
 
 import rospy
-from harmoni_common_lib.constants import State
+from harmoni_common_lib.constants import State, RouterDetector
 from harmoni_common_lib.child import InternalServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 from audio_common_msgs.msg import AudioData
@@ -131,7 +131,7 @@ class SpeechToTextService(HarmoniServiceManager):
 def main():
     args = sys.argv
     try:
-        service_name = "stt"
+        service_name = RouterDetector.STT.value
         rospy.init_node(service_name + "_node")
         param = rospy.get_param("/w2l_param/")
         s = SpeechToTextService(service_name, param)

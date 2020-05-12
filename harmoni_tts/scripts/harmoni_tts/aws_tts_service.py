@@ -11,7 +11,7 @@ import soundfile as sf
 import numpy as np
 from botocore.exceptions import BotoCoreError, ClientError
 from contextlib import closing
-from harmoni_common_lib.constants import State
+from harmoni_common_lib.constants import State, RouterActuator
 from harmoni_common_lib.child import WebServiceServer
 from harmoni_common_lib.service_manager import HarmoniExternalServiceManager
 
@@ -197,7 +197,7 @@ class AWSTtsService(HarmoniExternalServiceManager):
 
 def main():
     try:
-        service_name = "tts"
+        service_name = RouterActuator.TTS.value
         rospy.init_node(service_name + "_node")
         last_event = ""  # TODO: How to get information about last_event from behavior controller?
         param = rospy.get_param("/"+service_name+"_param/")

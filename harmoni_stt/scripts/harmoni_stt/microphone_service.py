@@ -11,7 +11,7 @@ from collections import deque
 # from harmoni_common_lib.child import HarwareReadingServer
 # from harmoni_common_lib.service_manager import HarmoniServiceManager
 from audio_common_msgs.msg import AudioData
-
+from harmoni_common_lib.constants import RouterSensor
 
 class Status():
     """ Status of the microphone service """
@@ -229,7 +229,7 @@ class MicrophoneService():
 
 def main():
     try:
-        service_name = "microphone"
+        service_name = RouterSensor.MICROPHONE.value
         rospy.init_node(service_name + "_node")
         param = rospy.get_param("/" + service_name + "_param/")
         s = MicrophoneService(service_name, param)
