@@ -1,5 +1,5 @@
 # Configuration file for the microphone
-lex_param:
+def:
   user_id : "micol_testing"
   bot_name: "QTRobotBot"
   bot_alias: "qt_robot_demo" 

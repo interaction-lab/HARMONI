@@ -13,6 +13,6 @@ microphone_param:
     set_threshold: constant #default if you want to detect the silence, 
                             #constant if you want to set it to a constant value
 
-w2l_param:
+def:
     model_path: /root/model/
     w2l_bin: /root/wav2letter/build/inference/inference/examples/simple_streaming_asr_example
