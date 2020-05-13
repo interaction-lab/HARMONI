@@ -3,6 +3,8 @@
 # Importing the libraries
 import rospy
 import roslib
+import os
+import yaml
 from harmoni_common_lib.constants import State
 from harmoni_common_lib.action_server import HarmoniActionServer
 from harmoni_common_lib.action_client import HarmoniActionClient
@@ -64,7 +66,11 @@ class HarmoniRouter(HarmoniActionServer, object):
 
     def _get_child_name(self, child_constants_names):
         """Get children from config file"""
-        repos = rospy.get_param("/repo/")
+        abs_path = os.path.abspath(__file__)
+        path = abs_path.split("HARMONI/")
+        with open(path[0] + 'HARMONI/harmoni_decision/config/configuration.yaml') as file:
+            repos = yaml.load(file, Loader=yaml.FullLoader)
+        repos = repos["repo"]
         child_names = []
         for repo in repos:
             for child in child_constants_names:

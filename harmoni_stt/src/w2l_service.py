@@ -31,7 +31,6 @@ class SpeechToTextService(HarmoniServiceManager):
         """Setup publishers and subscribers"""
         rospy.Subscriber('/harmoni/sensing/listening/microphone', AudioData, self.callback)
         self.text_pub = rospy.Publisher('/harmoni/detecting/speech', String, queue_size=10)
-
         """Setup the microphone service as server """
         self.state = State.INIT
         super().__init__(self.state)
@@ -127,7 +126,7 @@ class SpeechToTextService(HarmoniServiceManager):
             final_output.append(sec)
         return(final_output)
 
-""" FOR MULTIPLE INSTANCES OF THE SAME DETECTOR
+# FOR MULTIPLE INSTANCES OF THE SAME DETECTOR
 def main():
     args = sys.argv
     try:
@@ -165,7 +164,7 @@ def main():
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
-
+"""
 
 if __name__ == "__main__":
     main()
