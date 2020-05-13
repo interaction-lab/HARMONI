@@ -41,14 +41,14 @@ function setupRosNetwork() {
 
     display_view_listener = new ROSLIB.Topic({
         ros: ros,
-        name: 'harmoni/web/set_view',
+        name: '/harmoni/web/set_view',
         messageType: 'std_msgs/String'
     });
     display_view_listener.subscribe(viewListener);
 
     user_response_publisher = new ROSLIB.Topic({
         ros: ros,
-        name: 'harmoni/web/listen_click_event',
+        name: '/harmoni/web/listen_click_event',
         queue_size: 1,
         messageType: 'std_msgs/String'
     });

@@ -23,8 +23,8 @@ class WebService(HarmoniExternalServiceManager):
         """ Setup the web request """
         self.setup_web()
         """Setup publisher and subscriber """
-        self.web_sub = rospy.Subscriber("harmoni/web/listen_click_event", String, self._event_click_callback, queue_size=1)
-        self.web_pub = rospy.Publisher("harmoni/web/set_view", String, queue_size=1)
+        self.web_sub = rospy.Subscriber("/harmoni/web/listen_click_event", String, self._event_click_callback, queue_size=1)
+        self.web_pub = rospy.Publisher("/harmoni/web/set_view", String, queue_size=1)
         """Setup the web service as server """
         self.state = State.INIT 
         super().__init__(self.state)
