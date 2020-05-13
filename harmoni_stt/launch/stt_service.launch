@@ -5,7 +5,7 @@
 	<arg name="start_on_startup" default="true"/>
   	<group if="$(arg use_w2l)">
 			<rosparam file="$(find harmoni_stt)/config/configuration.yaml"/>
-			<node pkg="harmoni_stt" type="w2l_service.py" name="stt" output="screen" args="$(arg start_on_startup)" />
+			<node pkg="harmoni_stt" type="w2l_service.py" name="harmoni_stt" output="screen" args="$(arg start_on_startup)" />
   	</group>
     
 </launch>
