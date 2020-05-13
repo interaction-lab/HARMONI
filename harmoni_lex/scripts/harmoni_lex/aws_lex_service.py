@@ -74,7 +74,7 @@ def main():
         for service in list_service_names:
             print(service)
             service_id = HelperFunctions.get_child_id(service)
-            param = rospy.get_param("/"+service_id+"/")
+            param = rospy.get_param("/"+service_id+"_param/")
             s = AWSLexService(service, param)
             service_server_list.append(WebServiceServer(name=service, service_manager=s))
         for server in service_server_list:
