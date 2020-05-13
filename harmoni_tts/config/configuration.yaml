@@ -1,5 +1,5 @@
 # Configuration file for the microphone
-def:
+def_param:
   region_name: "us-west-2"
   language: "en-US"
   outdir: "/home/micol/catkin_ws/src/HARMONI/harmoni_tts/temp_data"

@@ -10,7 +10,7 @@ from cv_bridge import CvBridge, CvBridgeError
 import dlib
 import numpy as np
 
-from harmoni_common_lib.constants import State
+from harmoni_common_lib.constants import State, RouterDetector, HelperFunctions
 from harmoni_common_lib.child import HarwareReadingServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 from harmoni_common_msgs.msg import Object2D, Object2DArray
@@ -90,11 +90,31 @@ class DlibFaceDetector(HarmoniServiceManager):
             self._face_pub.publish(Object2DArray(faces))
                 
 
-
-if __name__ == "__main__":
+""" FOR MULTIPLE INSTANCES OF THE SAME DETECTOR
+def main():
+    args = sys.argv
     try:
-        service_name = "face_detect"
-        rospy.init_node(service_name)
+        service_name = RouterDetector.STT.value
+        rospy.init_node(service_name + "_node")
+        list_service_names = HelperFunctions.get_child_list(service_name)
+        service_server_list = []
+        last_event = ""  
+        for service in list_service_names:
+            print(service)
+            service_id = HelperFunctions.get_child_id(service)
+            param = rospy.get_param("/"+service_id+"_param/")
+            s = DlibFaceDetector(service, param)
+            service_server_list.append(HarwareReadingServer(name=service, service_manager=s))
+        for server in service_server_list:
+            server.update_feedback()
+        rospy.spin()
+    except rospy.ROSInterruptException:
+        pass
+"""
+def main():
+    try:
+        service_name = RouterDetector.FACE_DETECT.value
+        rospy.init_node(service_name + "_node")
         #param = rospy.get_param("/"+service_name+"_param/")
         s = DlibFaceDetector(service_name)
         hardware_reading_server = HarwareReadingServer(name=service_name, service_manager=s)
@@ -102,3 +122,7 @@ if __name__ == "__main__":
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
+
+
+if __name__ == "__main__":
+    main()

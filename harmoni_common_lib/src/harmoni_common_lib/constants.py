@@ -65,4 +65,5 @@ class RouterDialogue(Enum):
 
 class RouterDetector(Enum):
     STT = "stt"
+    FACE_DETECT = "face_detect"
     PATH = "/harmoni/detecting/"
