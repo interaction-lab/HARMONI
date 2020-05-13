@@ -1,7 +1,7 @@
 # HARMONI
 Controller code for Human And Robot Modular OpeN Interactions
 
-## Setup Instructions
+## Setup Instructions without docker
 
 1. Install Ubuntu 16.04 on your computer
 
@@ -72,9 +72,20 @@ Controller code for Human And Robot Modular OpeN Interactions
     $ cd ..
     $ catkin init 
     $ catkin config -DPYTHON_EXECUTABLE:=/usr/bin/python3
-    $ catkin config --whitelist harmoni_actuator harmoni_common_lib harmoni_common_msgs harmoni_decision harmoni_detector harmoni_dialogue harmoni_lex harmoni_sensor harmoni_sst harmoni_tts harmoni_web pc_face pc_microphone pc_speaker
     $ catkin build 
     ~~~~
+
+## Setup Instructions with docker
+1. In order to run with window forwarding on linux use:
+```
+    xhost +local:
+```
+
+2. Use docker compose to launch the complete system (will build if necessary, use --build to force) for developing:
+```
+    docker-compose -f docker-compose-harmoni-dev.yml up
+```
+
 
 ## Test instructions (with HARMONI_PC)
 Before testing these packages, you should follow the HARMONI_PC setup instructions.
@@ -83,9 +94,11 @@ Follow these steps for testing each service of HARMONI.
     - microphone (HARMONI-PC)
     - speaker (HARMONI-PC)
     - face (HARMONI-PC)
+    - camera (HARMONI-PC)
     - tts
     - lex
     - web
+    - stt
 2. Open 4 terminals:
     ~~~~
     $ roscore
@@ -100,9 +113,7 @@ Follow these steps for testing each service of HARMONI.
     ~~~~
     $ roslaunch harmoni_decision behavior_interface.launch test_service:= "service_to_test"
     ~~~~
-3. Open the webpages:
-    127.0.0.1:8080/index.html (face port) 
-    127.0.0.1:8081/index.html (web port)
+3. Open the webpages for both face and web. You find the url in the terminal
 4. Refresh the page for successfully setting up the face and web servers (it will be automatically handle autostart file)
 5. Verify if the goal has been successfully received
 
@@ -111,10 +122,12 @@ The above instructions enables to run some default messages of each service. If 
 
 | Service              | Argument name | Message format | Default |
 |----------------------|---------------|----------------|---------|
+|camera            |None          |None        | None|
 |microphone            |None          |None        | None|
 |speaker                 | wav_file           | string: path of file to save     | "/home/username/catkin_ws/src/HARMONI/harmoni_tts/temp_data/tts.wav"/|
 |face              |   face_input         | string: [{start: int, time: int, type: string (i.e.,action, viseme, or word), id: string}]     | "[{'start': 0.075, 'time': 2,'type': 'action', 'id': 'QT/point_front'}, {'start': 0.075,'time': 2, 'type': 'viseme', 'id': 'POSTALVEOLAR'},{'start': 0.006, 'time': 2,  'type': 'action', 'id': 'happy_face'}]"|
 |tts                |   tts_input_text         |     string   |"My name is HARMONI"|
+|stt      |  TODO          |     TODO   |TODO|
 |lex      |  dialogue_input_text          |     string   |"Hey"|
 |web      |  display_input          |     string:{component_id : string, set_content: string}   |"{'component_id' : 'container_1', 'set_content': ' ' }"|
 
