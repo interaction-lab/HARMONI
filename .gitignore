@@ -89,6 +89,7 @@ ENV/
 .ropeproject
 
 .vscode/
+
 **/*.pyc
 **/msg_gen/**
 **/srv_gen/**
@@ -106,4 +107,4 @@ ENV/
 #**/*.yaml
 **/*.wav
 **/*.ogg
-cordial_lex/scripts/data/*
+#cordial_lex/scripts/data/*
