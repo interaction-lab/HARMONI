@@ -29,14 +29,6 @@ To launch the complete harmoni dev setup in docker:
 
 # Still todo:
 
-- [X] make harmoni public
-- [X] separate the rest of the continers (below)
-- [X] modularize containers and organize dependencies
-- [X] setup cloning harmoni repo and building
-- [X] setup cloning harmoni-[external] repo and building
-- [X] single launch bash script 
-- [X] push images to dockerhub
-- [X] update readme
 
 
 
