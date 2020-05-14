@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-# Importing the libraries
 import rospy
 import roslib
 import actionlib
@@ -10,19 +9,20 @@ from harmoni_common_msgs.msg import harmoniAction, harmoniFeedback, harmoniResul
 class HarmoniActionServer(object):
     """A wrapper around SimpleActionServer that is structured for HARMONI architecture.
 
-    Most nodes (both controllers and children) are servers.
-    This class provides basic server functionality which controllers and children extend,
+    Most nodes (both routers and children) are servers.
+    This class provides basic server functionality which routers and children extend,
     including basic type checking, warnings, interrupts, etc.py
-    
+
     TODO: Implement priority handling for received goals instead of preempting current goals.
 
     """
 
     def _init_(self):
-        """Initialization"""
+        """No initialization required, server setup must be called explicitly """
 
+    # You must know the action name to set up a server
     def setup_server(self, action_topic, execute_goal_received_callback):
-        """You must know the action name to set up a server"""
+        """ Set up action server with appropriate action topic"""
         self._feedback = harmoniFeedback()
         self._result = harmoniResult()
         self.action_topic = action_topic
@@ -35,10 +35,11 @@ class HarmoniActionServer(object):
         self._action_server.start()
         rospy.loginfo("(Server) Startup")
         self.execute_goal_received_callback = execute_goal_received_callback
+        rospy.loginfo(f"{action_topic} server started")
         return
 
     def _goal_received_callback(self, goal):
-        """ Callback function, initialize the variables and set the goal to received"""
+        """ Save the goal data, set the goal to received, and execute the child callback """
         self.action_goal = goal.action_type  # action request
         self.optional_data = goal.optional_data  # input data for the module
         self.child = goal.child_server  # external module that will accomplish the task
@@ -49,6 +50,8 @@ class HarmoniActionServer(object):
             f"(Server) The goal is a {goal.action_type} request for {goal.child_server}"
         )
         self.goal_received = True
+        rospy.loginfo("The goal is: %i" % goal.action_type)
+        # Perform the callback set by child
         self.execute_goal_received_callback(goal)
         return
 
@@ -77,7 +80,7 @@ class HarmoniActionServer(object):
         return request_data
 
     def send_feedback(self, state):
-        """ Send the feedback"""
+        """ Send the state as feedback"""
         self._feedback.action_type = self.action_goal
         self._feedback.state = state
         self._action_server.publish_feedback(self._feedback)
@@ -94,3 +97,22 @@ class HarmoniActionServer(object):
             f"(Server) sending result {do_action} to actiontype {self.action_goal}"
         )
         return
+
+    # is this useful?
+    def get_preemption_status(self):
+        """ Check preemption status on action server and log if preempted"""
+        if self._action_server.is_preempt_requested():
+            rospy.loginfo(self.action_goal + " Action Preemepted")
+            self._action_server.set_preempted()
+            return True
+        else:
+            return False
+
+    # is this useful?
+    def get_goal_received(self):
+        """ Check if goal has been recieved and log if true"""
+        if self.goal_received:
+            rospy.loginfo(f"The goal for {self.action_goal} has been received")
+            return True
+        else:
+            return False
