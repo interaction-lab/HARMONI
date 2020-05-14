@@ -16,7 +16,9 @@ To launch the complete harmoni dev setup in docker:
     For example, to use Wave2Letter (requires running get_w2l_models.sh first):
     - From harmoni_core, open two terminals and:
         - ```roscore```
-        - ```roslaunch roslaunch harmoni_decision services.launch use_harmoni_services:=false```
+        - ```roslaunch harmoni_decision services.launch use_pc_services:=false```
+        - ```roslaunch harmoni_decision routers.launch```
+        - ```roslaunch harmoni_decision behavior_interface.launch test_service:="$REPO_$SERVER_$ID"```
 
     - From harmoni_pc:
         - ``` roslaunch harmoni_decision services.launch use_harmoni_services:=false ```
