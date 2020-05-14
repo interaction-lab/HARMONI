@@ -13,7 +13,7 @@ In order to support a wide range of hardware types the core HARMONI functionalit
 To further improve modularity, functionality in HARMONI is divided into individual modules. The modules are tightly coupled through a messaging scheme based on ROS actionlib, the details of which are described further in the harmoni_common_lib module.
 
 ## TODO
-- [ ] Describe to set up of the autostart scripts
+- [ ] Rearrange face detection package
 - [ ] Create a changelog
 
 

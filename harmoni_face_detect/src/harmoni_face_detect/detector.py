@@ -90,27 +90,27 @@ class DlibFaceDetector(HarmoniServiceManager):
             self._face_pub.publish(Object2DArray(faces))
                 
 
-""" FOR MULTIPLE INSTANCES OF THE SAME DETECTOR
-def main():
-    args = sys.argv
-    try:
-        service_name = RouterDetector.STT.value
-        rospy.init_node(service_name + "_node")
-        list_service_names = HelperFunctions.get_child_list(service_name)
-        service_server_list = []
-        last_event = ""  
-        for service in list_service_names:
-            print(service)
-            service_id = HelperFunctions.get_child_id(service)
-            param = rospy.get_param("/"+service_id+"_param/")
-            s = DlibFaceDetector(service, param)
-            service_server_list.append(HarwareReadingServer(name=service, service_manager=s))
-        for server in service_server_list:
-            server.update_feedback()
-        rospy.spin()
-    except rospy.ROSInterruptException:
-        pass
-"""
+# FOR MULTIPLE INSTANCES OF THE SAME DETECTOR
+# def main():
+#     args = sys.argv
+#     try:
+#         service_name = RouterDetector.STT.value
+#         rospy.init_node(service_name + "_node")
+#         list_service_names = HelperFunctions.get_child_list(service_name)
+#         service_server_list = []
+#         last_event = ""  
+#         for service in list_service_names:
+#             print(service)
+#             service_id = HelperFunctions.get_child_id(service)
+#             param = rospy.get_param("/"+service_id+"_param/")
+#             s = DlibFaceDetector(service, param)
+#             service_server_list.append(HarwareReadingServer(name=service, service_manager=s))
+#         for server in service_server_list:
+#             server.update_feedback()
+#         rospy.spin()
+#     except rospy.ROSInterruptException:
+#         pass
+
 def main():
     try:
         service_name = RouterDetector.FACE_DETECT.value
