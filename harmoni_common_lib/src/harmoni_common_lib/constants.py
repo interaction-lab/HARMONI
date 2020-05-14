@@ -12,12 +12,12 @@ class HelperFunctions:
         path = abs_path.split("HARMONI/")
         with open(path[0] + 'HARMONI/harmoni_decision/config/configuration.yaml') as file:
             repos = yaml.load(file, Loader=yaml.FullLoader)
-        for repo in repos["repo"]:
-            if child_name in repos["repo"][repo]:
+        for repo in repos:
+            if child_name in repos[repo]:
                 repo_child_name = repo + "_" + child_name
         [child_repo, child_name] = repo_child_name.split("_")
         ids_list = []
-        for id_child in repos["repo"][child_repo][child_name]:
+        for id_child in repos[child_repo][child_name]:
             ids_list.append(child_repo + "_" + child_name+ "_" + id_child)
         return ids_list
 

@@ -4,7 +4,6 @@
 import rospy
 import roslib
 import boto3
-import sys
 import json
 from std_msgs.msg import String
 from harmoni_common_lib.constants import State, RouterActuator, HelperFunctions
@@ -79,7 +78,9 @@ class WebService(HarmoniExternalServiceManager):
 
 
 def main():
-    args = sys.argv
+    test = rospy.get_param("/test/")
+    input_test = rospy.get_param("/input_test/")
+    id_test = rospy.get_param("/id_test/")
     try:
         service_name = RouterActuator.WEB.value
         rospy.init_node(service_name + "_node")
@@ -92,10 +93,10 @@ def main():
             param = rospy.get_param("/"+service_id+"_param/")
             s = WebService(service, param)
             service_server_list.append(HardwareControlServer(name=service, service_manager=s))
-            if args[1] and (service_id == args[3]):
+            if test and (service_id == id_test):
                 rospy.loginfo("Testing the %s" %(service))
-                s.do(json.dumps(args[2]))
-        if not args[1]:
+                s.do(input_test)
+        if not test:
             for server in service_server_list:
                 server.update_feedback()
         rospy.spin()
