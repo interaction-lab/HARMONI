@@ -7,7 +7,10 @@
 	<arg name="id_test" default="def"/>
   	<group if="$(arg use_aws_tts)">
 			<rosparam file="$(find harmoni_tts)/config/configuration.yaml"/>
-			<node pkg="harmoni_tts" type="aws_tts_service.py" name="harmoni_tts" output="screen" args="$(arg test) $(arg input_test) $(arg id_test)"/>
+			<param name="test" value="$(arg test)"/>
+			<param name="input_test" value="$(arg input_test)"/>
+			<param name="id_test" value="$(arg id_test)"/>
+			<node pkg="harmoni_tts" type="aws_tts_service.py" name="harmoni_tts" output="screen"/>
   	</group>
 
 
