@@ -2,9 +2,12 @@
 <launch>
    
 	<arg name="use_aws_lex" default="true"/>
+	<arg name="test" default="false"/>
+	<arg name="input_test" default="'Hey'"/>
+	<arg name="id_test" default="def"/>
   	<group if="$(arg use_aws_lex)">
 			<rosparam file="$(find harmoni_lex)/config/configuration.yaml"/>
-			<node pkg="harmoni_lex" type="aws_lex_service.py" name="harmoni_lex" output="screen"/>
+			<node pkg="harmoni_lex" type="aws_lex_service.py" name="harmoni_lex" output="screen"  args="$(arg test) $(arg input_test) $(arg id_test)"/>
   	</group>
 
 

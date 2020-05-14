@@ -2,10 +2,12 @@
 <launch>
    
 	<arg name="use_w2l" default="true"/>
-	<arg name="start_on_startup" default="true"/>
+	<arg name="test" default="false"/>
+	<arg name="input_test" default="$(find harmoni_tts)/temp_data/tts.wav"/>
+	<arg name="id_test" default="def"/>
   	<group if="$(arg use_w2l)">
 			<rosparam file="$(find harmoni_stt)/config/configuration.yaml"/>
-			<node pkg="harmoni_stt" type="w2l_service.py" name="harmoni_stt" output="screen" args="$(arg start_on_startup)" />
+			<node pkg="harmoni_stt" type="w2l_service.py" name="harmoni_stt" output="screen" args="$(arg test) $(arg input_test) $(arg id_test)"/>
   	</group>
     
 </launch>

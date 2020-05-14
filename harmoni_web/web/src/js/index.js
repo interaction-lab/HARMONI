@@ -36,7 +36,7 @@ function viewListener(view){
     var json_data = JSON.parse(data)
     var component = json_data.component_id
     var content = json_data.set_content
-    if(content!= ""){
+    if(content!= "null"){
         $("#"+component).html(content)
     }
     $("#"+component).show();
