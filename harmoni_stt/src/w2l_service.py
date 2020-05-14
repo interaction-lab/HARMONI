@@ -31,7 +31,7 @@ class SpeechToTextService(HarmoniServiceManager):
         """Setup publishers and subscribers"""
         rospy.Subscriber('/harmoni/sensing/listening/microphone', AudioData, self.callback)
         self.text_pub = rospy.Publisher('/harmoni/detecting/speech', String, queue_size=10)
-        """Setup the microphone service as server """
+        """Setup the stt service as server """
         self.state = State.INIT
         super().__init__(self.state)
         return
@@ -126,7 +126,6 @@ class SpeechToTextService(HarmoniServiceManager):
             final_output.append(sec)
         return(final_output)
 
-# FOR MULTIPLE INSTANCES OF THE SAME DETECTOR
 def main():
     args = sys.argv
     try:
@@ -134,37 +133,23 @@ def main():
         rospy.init_node(service_name + "_node")
         list_service_names = HelperFunctions.get_child_list(service_name)
         service_server_list = []
-        last_event = ""  
+        last_event = "" 
         for service in list_service_names:
             print(service)
             service_id = HelperFunctions.get_child_id(service)
             param = rospy.get_param("/"+service_id+"_param/")
             s = SpeechToTextService(service, param)
-            service_server_list.append(InternalServiceServer(name=service, service_manager=s))
-            if args[1]:
+            if args[1] and service_id == args[3]:
+                rospy.loginfo("Testing the %s" %(service))
                 s.start()
-        #for server in service_server_list:
-            #server.update_feedback()
+                s.transcribe_file(args[2])
+            service_server_list.append(InternalServiceServer(name=service, service_manager=s))
+        if not args[1]:
+            for server in service_server_list:
+                server.update_feedback()
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
-
-"""
-def main():
-    args = sys.argv
-    try:
-        service_name = RouterDetector.STT.value
-        rospy.init_node(service_name + "_node")
-        param = rospy.get_param("/def_param/")
-        s = SpeechToTextService(service_name, param)
-        hardware_reading_server = InternalServiceServer(name=service_name, service_manager=s)
-        if args[1]:
-            s.start()
-        # hardware_reading_server.update_feedback()
-        rospy.spin()
-    except rospy.ROSInterruptException:
-        pass
-"""
 
 if __name__ == "__main__":
     main()

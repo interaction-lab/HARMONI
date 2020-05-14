@@ -9,6 +9,7 @@ import json
 import ast
 import soundfile as sf
 import numpy as np
+import sys
 from botocore.exceptions import BotoCoreError, ClientError
 from contextlib import closing
 from harmoni_common_lib.constants import State, RouterActuator, HelperFunctions
@@ -195,6 +196,7 @@ class AWSTtsService(HarmoniExternalServiceManager):
         return
 
 def main():
+    args = sys.argv
     try:
         service_name = RouterActuator.TTS.value
         rospy.init_node(service_name + "_node")
@@ -207,8 +209,12 @@ def main():
             param = rospy.get_param("/"+service_id+"_param/")
             s = AWSTtsService(service, param)
             service_server_list.append(WebServiceServer(name=service, service_manager=s))
-        for server in service_server_list:
-            server.update_feedback()
+            if args[1] and (service_id == args[3]):
+                rospy.loginfo("Testing the %s" %(service))
+                s.request(args[2])
+        if not args[1]:
+            for server in service_server_list:
+                server.update_feedback()
         rospy.spin()
     except rospy.ROSInterruptException:
         pass

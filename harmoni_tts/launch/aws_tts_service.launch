@@ -2,9 +2,12 @@
 <launch>
    
 	<arg name="use_aws_tts" default="true"/>
+	<arg name="test" default="false"/>
+	<arg name="input_test" default="'My name is HARMONI'"/>
+	<arg name="id_test" default="def"/>
   	<group if="$(arg use_aws_tts)">
 			<rosparam file="$(find harmoni_tts)/config/configuration.yaml"/>
-			<node pkg="harmoni_tts" type="aws_tts_service.py" name="harmoni_tts" output="screen"/>
+			<node pkg="harmoni_tts" type="aws_tts_service.py" name="harmoni_tts" output="screen" args="$(arg test) $(arg input_test) $(arg id_test)"/>
   	</group>
 
 

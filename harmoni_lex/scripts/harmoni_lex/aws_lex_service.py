@@ -4,6 +4,7 @@
 import rospy
 import roslib
 import boto3
+import sys
 from harmoni_common_lib.constants import State, RouterDialogue, HelperFunctions
 from harmoni_common_lib.child import WebServiceServer
 from harmoni_common_lib.service_manager import HarmoniExternalServiceManager
@@ -56,6 +57,7 @@ class AWSLexService(HarmoniExternalServiceManager):
 														accept = 'text/plain; charset=utf-8',
 														inputStream = textdata)
             self.state = State.SUCCESS
+            rospy.loginfo("The response is %s" %(lex_response["message"]))
             self.response_update(response_received=True, state=self.state, result_msg=lex_response["message"])
         except rospy.ServiceException:
             self.start = State.FAILED
@@ -65,6 +67,7 @@ class AWSLexService(HarmoniExternalServiceManager):
 
 
 def main():
+    args = sys.argv
     try:
         service_name = RouterDialogue.LEX.value
         rospy.init_node(service_name + "_node")
@@ -77,8 +80,12 @@ def main():
             param = rospy.get_param("/"+service_id+"_param/")
             s = AWSLexService(service, param)
             service_server_list.append(WebServiceServer(name=service, service_manager=s))
-        for server in service_server_list:
-            server.update_feedback()
+            if args[1] and (service_id == args[3]):
+                rospy.loginfo("Testing the %s" %(service))
+                s.request(args[2])
+        if not args[1]:
+            for server in service_server_list:
+                server.update_feedback()
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
