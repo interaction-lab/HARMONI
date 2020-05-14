@@ -1,0 +1,5 @@
+<!-- This is an example launch file for how a ROS application could use a node -->
+<launch>
+	<node pkg="harmoni_decision" type="launcher.py" name="harmoni_launcher" output="screen">
+	</node>
+</launch>
