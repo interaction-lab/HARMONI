@@ -47,7 +47,7 @@ class Launcher():
 
     def _launch_with_subprocess(self,repo, launch):
         """Launch with subprocess """
-        p = subprocess.Popen("roslaunch harmoni_decision "+repo+"_"+launch+"_launch.launch", shell=True)
+        p = subprocess.Popen("roslaunch harmoni_decision "+repo+"_"+launch+".launch", shell=True)
         return p
 
     def _get_router_pkg(self):
@@ -80,25 +80,27 @@ class Launcher():
         tree = ET.ElementTree(root)
         abs_path = os.path.abspath(__file__)
         path = abs_path.split("scripts/")
-        tree.write(path[0] + "launch/"+ repo +"_"+ name+"_launch.launch")
+        tree.write(path[0] + "launch/"+ repo +"_"+ name+".launch")
         rospy.loginfo("Creating the launch file")
         return
 
-    def launch_router(self):
+    def launch_router(self, launch):
         """Launch routers """
         name = "router"
         [repo, pkg, exb] = self._get_router_pkg()
         self._create_xml_launcher(name,repo, pkg, exb)
-        self._launch_with_subprocess(repo, name)
+        if launch:
+            self._launch_with_subprocess(repo, name)
         return
 
 
-    def launch_services(self, repo):
+    def launch_services(self, repo, launch):
         """Launch services """
         name = "service"
         [repo, pkg, exb] = self._get_service_pkg(repo)
         self._create_xml_launcher(name,repo, pkg, exb)
-        self._launch_with_subprocess(repo, name)
+        if launch:
+            self._launch_with_subprocess(repo, name)
         return
 
 
@@ -107,14 +109,17 @@ def main():
         interface_name = "launcher"
         rospy.init_node(interface_name + "_node")
         rospy.loginfo("Set up the %s" %interface_name)
+        launch = rospy.get_param("~launch")
+        router = rospy.get_param("~router")
+        service = rospy.get_param("~service")
+        services = service.split(",")
+        print(services)
         l = Launcher()
-        l.launch_router()
-        """
-        repos_list = HelperFunctions.get_all_repos()
-        for repo in repos_list:
-            l.launch_services(repo)
-        """
-        l.launch_services("harmoni")
+        if router:
+            l.launch_router(launch)
+        for serv in services:
+            if serv != "":
+                l.launch_services(serv, launch)
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
