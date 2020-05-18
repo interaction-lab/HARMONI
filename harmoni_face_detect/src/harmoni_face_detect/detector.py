@@ -20,7 +20,7 @@ class DlibFaceDetector(HarmoniServiceManager):
     """Face detector based off of Dlib
 
     Args:
-        detector_threshold(int): Confidence threshold for faces. Positive values
+        detector_threshold(float): Confidence threshold for faces. Positive values
             will return fewer detections, and negative values more detections.
             This value can be changed at any time with no major side-effects.
     """
@@ -29,18 +29,18 @@ class DlibFaceDetector(HarmoniServiceManager):
     UPSAMPLING = 0 
     DEFAULT_RATE = 10 # Hz
 
-    def __init__(self, detector_threshold=0):
+    def __init__(self, detector_threshold: float=0.0):
         self.update(State.INIT)
         self.detector_threshold = detector_threshold
 
         self._image_source = "/harmoni/sensing/watching/pc_camera" #TODO get this from constant or rosparam
         self._image_sub = None #assign this when start() called. #TODO test subscription during init
-        self._face_pub = rospy.Publisher("/harmoni/detector/face", Object2D, queue_size=1)
+        self._face_pub = rospy.Publisher("/harmoni/detector/face", Object2DArray, queue_size=1)
         self._rate = DlibFaceDetector.DEFAULT_RATE
         self._hogFaceDetector = dlib.get_frontal_face_detector()
         self._cv_bridge = CvBridge()   
 
-    def start(self,rate):
+    def start(self,rate=DEFAULT_RATE):
         """
         Args:
             rate(int): How often the detector should run per second (Hz).
@@ -69,7 +69,7 @@ class DlibFaceDetector(HarmoniServiceManager):
         Args:
             image(Image): the image we want to run face detection on.
         """
-        frame = self.cv_bridge.imgmsg_to_cv2(image, desired_encoding='passthrough')
+        frame = self._cv_bridge.imgmsg_to_cv2(image, desired_encoding='passthrough')
         
         if frame is not None:
             h, w, _ = frame.shape
@@ -85,7 +85,7 @@ class DlibFaceDetector(HarmoniServiceManager):
                 x2 = d.right()
                 y2 = d.bottom()
                 
-                faces.append(Object2D(width=w, height=h,id=idx[i],center_x=center[0],center_y=center[1],topleft_x=x1,
+                faces.append(Object2D(width=w, height=h,id=idx[i],center_x=center.x,center_y=center.y,topleft_x=x1,
                          topleft_y=y1,botright_x=x2,botright_y=y2,confidence=probs[i]))
             self._face_pub.publish(Object2DArray(faces))
                 
@@ -116,7 +116,7 @@ def main():
         service_name = RouterDetector.FACE_DETECT.value
         rospy.init_node(service_name + "_node")
         #param = rospy.get_param("/"+service_name+"_param/")
-        s = DlibFaceDetector(service_name)
+        s = DlibFaceDetector()
         hardware_reading_server = HarwareReadingServer(name=service_name, service_manager=s)
         hardware_reading_server.update_feedback()
         rospy.spin()
