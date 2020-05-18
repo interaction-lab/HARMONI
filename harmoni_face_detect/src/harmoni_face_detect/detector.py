@@ -117,8 +117,8 @@ def main():
         rospy.init_node(service_name + "_node")
         #param = rospy.get_param("/"+service_name+"_param/")
         s = DlibFaceDetector()
-        hardware_reading_server = HarwareReadingServer(name=service_name, service_manager=s)
-        hardware_reading_server.update_feedback()
+        server = InternalServiceServer(name=service_name, service_manager=s)
+        server.update_feedback()
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
