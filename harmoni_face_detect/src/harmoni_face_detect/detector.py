@@ -45,11 +45,7 @@ class DlibFaceDetector(HarmoniServiceManager):
         self._hogFaceDetector = dlib.get_frontal_face_detector()
         self._cv_bridge = CvBridge()
 
-    def test(self):
-        success = True
-        return success
-
-    def start(self, rate):
+    def start(self, rate=DEFAULT_RATE):
         """
         Args:
             rate(int): How often the detector should run per second (Hz).
@@ -78,7 +74,7 @@ class DlibFaceDetector(HarmoniServiceManager):
         Args:
             image(Image): the image we want to run face detection on.
         """
-        frame = self.cv_bridge.imgmsg_to_cv2(image, desired_encoding='passthrough')
+        frame = self._cv_bridge.imgmsg_to_cv2(image, desired_encoding='passthrough')
 
         if frame is not None:
             h, w, _ = frame.shape
