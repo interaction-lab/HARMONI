@@ -21,7 +21,7 @@ class DlibFaceDetector(HarmoniServiceManager):
     """Face detector based off of Dlib
 
     Args:
-        detector_threshold(int): Confidence threshold for faces. Positive values
+        detector_threshold(float): Confidence threshold for faces. Positive values
             will return fewer detections, and negative values more detections.
             This value can be changed at any time with no major side-effects.
     """
@@ -75,7 +75,6 @@ class DlibFaceDetector(HarmoniServiceManager):
             image(Image): the image we want to run face detection on.
         """
         frame = self._cv_bridge.imgmsg_to_cv2(image, desired_encoding='passthrough')
-
         if frame is not None:
             h, w, _ = frame.shape
 
