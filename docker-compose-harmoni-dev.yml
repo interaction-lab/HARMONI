@@ -3,6 +3,7 @@ version: '3.7'
 
 services:
     harmoni_core:
+        container_name: harmoni_core
         build:
             context: .
             dockerfile: dockerfiles/dev/harmoni-dev
@@ -41,7 +42,8 @@ services:
             # Other
             - /tmp/.X11-unix:/tmp/.X11-unix
             - ~/.config/terminator/config:/root/.config/terminator/config
-            - ~/.gitconfig/:/root/.gitconfig/:ro
+            - ~/.gitconfig:/root/.gitconfig:ro
+            - ~/.ssh/:/root/.ssh:ro
             - ~/.vimrc:/root/.vimrc:ro
             - ~/.vim/:/root/.vim/:ro
             - /etc/timezone:/etc/timezone:ro
@@ -51,6 +53,7 @@ services:
             terminator -ue \"echo 'Entering harmoni_core Container... \\n start with roscore and rlharmoni' && bash\""
 
     ros_w2l:
+        container_name: ros_w2l
         build:
             context: .
             dockerfile: dockerfiles/dev/w2l-dev
@@ -88,7 +91,8 @@ services:
             # Other
             - /tmp/.X11-unix:/tmp/.X11-unix
             - ~/.config/terminator/config:/root/.config/terminator/config
-            - ~/.gitconfig/:/root/.gitconfig/:ro
+            - ~/.gitconfig:/root/.gitconfig:ro
+            - ~/.ssh/:/root/.ssh:ro
             - ~/.vimrc:/root/.vimrc:ro
             - ~/.vim/:/root/.vim/:ro
             - /etc/timezone:/etc/timezone:ro
@@ -98,8 +102,8 @@ services:
             terminator -ue \"echo 'Entering ros_w2l Container... \\n start with rlspeech' && bash\" "
 
 
-
     ros_pc:
+        container_name: ros_pc
         build:
             context: .
             dockerfile: dockerfiles/dev/harmoni-pc-dev
@@ -132,7 +136,8 @@ services:
             # Other
             - /tmp/.X11-unix:/tmp/.X11-unix
             - ~/.config/terminator/config:/root/.config/terminator/config
-            - ~/.gitconfig/:/root/.gitconfig/:ro
+            - ~/.gitconfig:/root/.gitconfig:ro
+            - ~/.ssh/:/root/.ssh:ro
             - ~/.vimrc:/root/.vimrc:ro
             - ~/.vim/:/root/.vim/:ro
             - /etc/timezone:/etc/timezone:ro
