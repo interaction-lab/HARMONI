@@ -81,5 +81,5 @@ class HarmoniActionServer(object):
         self._result.do_action = do_action
         self._result.message = message
         self._action_server.set_succeeded(self._result)
-        rospy.loginfo("The action %i  have been set to succeded" %self._result.action_type)
+        rospy.loginfo("The action %i  have been received" %self._result.action_type)
         return
