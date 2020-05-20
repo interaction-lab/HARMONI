@@ -4,8 +4,8 @@
 	<arg name="use_recorder" default="true"/>
   	<group if="$(arg use_recorder)">
 			<rosparam file="$(find harmoni_recorder)/config/configuration.yaml"/>
-			<rosparam file="$(find pc_microphone)/config/configuration.yaml"/>
-			<rosparam file="$(find pc_camera)/config/configuration.yaml"/>
+			<!--<rosparam file="$(find pc_microphone)/config/configuration.yaml"/>
+			<rosparam file="$(find pc_camera)/config/configuration.yaml"/>-->
 			<node pkg="harmoni_recorder" type="recording_manager.py" name="harmoni_recorder" output="screen"/>
   	</group>
 
