@@ -143,7 +143,7 @@ def main():
         for service in list_service_names:
             print(service)
             service_id = HelperFunctions.get_child_id(service)
-            param = rospy.get_param("/"+service_id+"_param/")
+            param = rospy.get_param("~"+service_id+"_param/")
             s = SpeechToTextService(service, param)
             service_server_list.append(InternalServiceServer(name=service, service_manager=s))
             if test and (service_id == id_test):

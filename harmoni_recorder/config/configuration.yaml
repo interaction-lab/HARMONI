@@ -1,4 +1,4 @@
-recording:
+harmoni_recorder:
   audio_data: ["pc_microphone_def"]
   video_data: []
   audio_video_data: ["pc_microphone_1", "pc_camera_1"] #It is an array of 2 items: array[0] refers to audio data input, array[1] refers to video data input

@@ -132,7 +132,7 @@ def main():
     try: 
         manager_name = "recording"
         rospy.init_node(manager_name + "_node")
-        child_names = rospy.get_param("/recording/")
+        child_names = rospy.get_param("/harmoni_recorder/")
         HarmoniRecordingManager(manager_name, child_names)
         rospy.spin()
     except rospy.ROSInterruptException:
