@@ -1,6 +1,7 @@
 # Configuration file for the microphone
-def_param:
-  user_id : "micol_testing"
-  bot_name: "QTRobotBot"
-  bot_alias: "qt_robot_demo" 
-  region_name: "us-west-2"
+harmoni_lex:
+  default_param:
+    user_id : "micol_testing"
+    bot_name: "QTRobotBot"
+    bot_alias: "qt_robot_demo" 
+    region_name: "us-west-2"
