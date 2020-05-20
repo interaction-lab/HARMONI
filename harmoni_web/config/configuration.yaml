@@ -1,4 +1,4 @@
-# Configuration file for the microphone
-def_param:
-  user_id: "user_id"
+harmoni_web:
+  default_param:
+    user_id: "user_id"
   

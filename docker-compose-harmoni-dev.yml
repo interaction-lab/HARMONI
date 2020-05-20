@@ -82,7 +82,7 @@ services:
             - /dev/snd:/dev/snd
             - /dev/video0:/dev/video0
         volumes:
-            - ../model/w2l:/root/model/
+            #- ../model/w2l:/root/model/
             - wav2letter:/root/wav2letter
             - harmoni_catkin_ws:/root/harmoni_catkin_ws
             # Configuration
