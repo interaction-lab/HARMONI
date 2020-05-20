@@ -92,21 +92,26 @@ class SpeechToTextService(HarmoniServiceManager):
                 self.text_pub.publish(text)
         else:
             rospy.loginfo("Not Transcribing Audio")
-
         return
 
     def transcribe_file(self, file_name):
+        """ Transcription of audio into text from file"""
+        rospy.loginfo("Transcription of audio file")
         with open(file_name, mode='rb') as wav_file:
             wav_contents = wav_file.read()
         self.transcribe_bytes(wav_contents)
+        return
 
     def transcribe_bytes(self, b_string):
+        """ Transcription of bytes"""
+        rospy.loginfo("Transcription of the bytes")
         outs, errs = self.w2l_process.communicate(input=b_string, timeout=15)
+        print(outs, errs)
         text_list = self.fix_text(outs)
+        rospy.loginfo("The text list is %s" %text_list)
         if not any(text_list):
             self.set_w2l_proc()
             return
-        print(text_list)
         self.set_w2l_proc()
         text_list = [t for t in text_list if t]
         return ' '.join(text_list)
@@ -140,11 +145,11 @@ def main():
             service_id = HelperFunctions.get_child_id(service)
             param = rospy.get_param("/"+service_id+"_param/")
             s = SpeechToTextService(service, param)
+            service_server_list.append(InternalServiceServer(name=service, service_manager=s))
             if test and (service_id == id_test):
                 rospy.loginfo("Testing the %s" %(service))
                 s.start()
                 s.transcribe_file(input_test)
-            service_server_list.append(InternalServiceServer(name=service, service_manager=s))
         if not test:
             for server in service_server_list:
                 server.update_feedback()
