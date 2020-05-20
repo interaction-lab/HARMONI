@@ -26,6 +26,8 @@ class SpeechToTextService(HarmoniServiceManager):
         rospy.loginfo("Wav2Letter initializing")
         self.name = name
         self.model_path = param["model_path"]
+        if not os.path.isdir(self.model_path):
+            raise Exception("W2L model has not been dowloaded", "Try running get_w2l_models.sh")
         self.w2l_bin = param["w2l_bin"]
         """Setup publishers and subscribers"""
         rospy.Subscriber('/harmoni/sensing/listening/microphone', AudioData, self.callback)
