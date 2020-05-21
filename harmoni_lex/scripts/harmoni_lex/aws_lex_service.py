@@ -70,7 +70,7 @@ def main():
     input_test = rospy.get_param("/input_test/")
     id_test = rospy.get_param("/id_test/")
     try:
-        service_name = RouterDialogue.LEX.value
+        service_name = RouterDialogue.lex.name
         rospy.init_node(service_name + "_node")
         list_service_names = HelperFunctions.get_child_list(service_name)
         service_server_list = []
