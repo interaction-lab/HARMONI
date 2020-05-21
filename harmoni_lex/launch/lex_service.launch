@@ -4,7 +4,7 @@
 	<arg name="use_aws_lex" default="true"/>
 	<arg name="test" default="false"/>
 	<arg name="input_test" default="Hey"/>
-	<arg name="id_test" default="def"/>
+	<arg name="id_test" default="default"/>
   	<group if="$(arg use_aws_lex)">
 			<rosparam file="$(find harmoni_lex)/config/configuration.yaml"/>
 			<param name="test" value="$(arg test)"/>
