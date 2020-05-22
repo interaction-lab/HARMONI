@@ -78,22 +78,22 @@ class Router(Enum):
     DETECTOR = "detector"
 
 class RouterSensor(Enum):
-    MICROPHONE = "microphone"
-    CAMERA = "camera"
-    PATH = "/harmoni/sensing/"
+    microphone = "/harmoni/sensing/microphone/"
+    camera = "/harmoni/sensing/camera/"
+    ROUTER = "/harmoni/sensing/"
 
 class RouterActuator(Enum):
-    SPEAKER = "speaker"
-    FACE = "face"
-    TTS = "tts"
-    WEB = "web"
-    PATH = "/harmoni/actuating/"
+    speaker = "/harmoni/actuating/speaker/"
+    face = "/harmoni/actuating/face/"
+    tts = "/harmoni/actuating/tts/"
+    web = "/harmoni/actuating/web/"
+    ROUTER = "/harmoni/actuating/"
 
 class RouterDialogue(Enum):
-    LEX = "lex"
-    PATH = "/harmoni/dialoging/"
+    lex = "/harmoni/dialoging/lex/"
+    ROUTER = "/harmoni/dialoging/"
 
 class RouterDetector(Enum):
-    STT = "stt"
-    FACE_DETECT = "face_detect"
-    PATH = "/harmoni/detecting/"
+    stt = "/harmoni/detecting/stt/"
+    face_detect = "/harmoni/detecting/face_detect/"
+    ROUTER = "/harmoni/detecting/"

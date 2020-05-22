@@ -13,7 +13,7 @@ class HarmoniActuatorRouter(HarmoniRouter):
 
     def __init__(self, router_name, last_event):
         """ Init router"""
-        child_constants_names = [enum.value for enum in list(RouterActuator)]
+        child_constants_names = [enum.name for enum in list(RouterActuator)]
         super().__init__(router_name, child_constants_names, last_event)
 
 

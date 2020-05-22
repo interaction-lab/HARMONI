@@ -94,7 +94,7 @@ class DlibFaceDetector(HarmoniServiceManager):
 def main():
     args = sys.argv
     try:
-        service_name = RouterDetector.STT.value
+        service_name = RouterDetector.face_detect.name
         rospy.init_node(service_name + "_node")
         list_service_names = HelperFunctions.get_child_list(service_name)
         service_server_list = []
@@ -113,7 +113,7 @@ def main():
 """
 def main():
     try:
-        service_name = RouterDetector.FACE_DETECT.value
+        service_name = RouterDetector.face_detect.name
         rospy.init_node(service_name + "_node")
         #param = rospy.get_param("/"+service_name+"_param/")
         s = DlibFaceDetector(service_name)

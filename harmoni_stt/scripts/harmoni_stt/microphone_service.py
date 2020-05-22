@@ -229,7 +229,7 @@ class MicrophoneService():
 
 def main():
     try:
-        service_name = RouterSensor.MICROPHONE.value
+        service_name = RouterSensor.microphone.name
         rospy.init_node(service_name + "_node")
         param = rospy.get_param("/" + service_name + "_param/")
         s = MicrophoneService(service_name, param)

@@ -13,7 +13,7 @@ class HarmoniSensorRouter(HarmoniRouter):
 
     def __init__(self, router_name, last_event):
         """ Init router"""
-        child_constants_names = [enum.value for enum in list(RouterSensor)]
+        child_constants_names = [enum.name for enum in list(RouterSensor)]
         super(HarmoniSensorRouter, self).__init__(router_name, child_constants_names, last_event)
         
 
