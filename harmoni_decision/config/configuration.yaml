@@ -3,6 +3,7 @@ harmoni:
   lex : ["default"]
   tts: ["default"]
   web: ["default"]
+  #detectors: stt:[] face_detect:[]
   stt: ["default"]
   face_detect: ["default"]
 pc:

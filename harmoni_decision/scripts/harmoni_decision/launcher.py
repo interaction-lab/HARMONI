@@ -68,8 +68,14 @@ class Launcher():
         exec_array= []
         for serv in services:
             name = serv.split("_")
-            pkg_array.append(name[1])
-            exec_array.append(name[1] +"_service")
+            n= ""
+            for i in range(0,len(name)):
+                if i!=0 and i!=(len(name)-1):
+                    n+= name[i]+"_"
+                elif i!=0 and i==(len(name)-1):
+                    n+= name[i]
+            pkg_array.append(n)
+            exec_array.append(n +"_service")
         return(repo, pkg_array, exec_array)
 
     def _create_xml_launcher(self,name, repo, package_array, launch_file_array):
@@ -88,6 +94,7 @@ class Launcher():
         """Launch routers """
         name = "router"
         [repo, pkg, exb] = self._get_router_pkg()
+        print(repo)
         self._create_xml_launcher(name,repo, pkg, exb)
         if launch:
             self._launch_with_subprocess(repo, name)
@@ -98,6 +105,7 @@ class Launcher():
         """Launch services """
         name = "service"
         [repo, pkg, exb] = self._get_service_pkg(repo)
+        print(pkg)
         self._create_xml_launcher(name,repo, pkg, exb)
         if launch:
             self._launch_with_subprocess(repo, name)
