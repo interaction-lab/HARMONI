@@ -29,7 +29,7 @@ class DlibFaceDetector(HarmoniServiceManager):
     #UPSAMPLING = 0 
     #DEFAULT_RATE = 10 # Hz
 
-    def __init__(self, param, detector_threshold=0):
+    def __init__(self, service, param, detector_threshold=0):
         self._upsampling = param["up_sampling"]
         self._rate = param["rate_frame"]
         self.update(State.INIT)
@@ -42,6 +42,10 @@ class DlibFaceDetector(HarmoniServiceManager):
         self._hogFaceDetector = dlib.get_frontal_face_detector()
         self._cv_bridge = CvBridge()   
 
+    def test(self):
+        success = True
+        return success
+    
     def start(self,rate):
         """
         Args:
@@ -105,7 +109,7 @@ def main():
         for service in list_service_names:
             print("The service is: "+service)
             service_id = HelperFunctions.get_child_id(service)
-            param = rospy.get_param("~"+service_id+"_param/")
+            param = rospy.get_param("/harmoni_face_detect/"+service_id+"_param/") #TODO: FIX IT WITH ~
             s = DlibFaceDetector(service, param)
             service_server_list.append(HarwareReadingServer(name=service, service_manager=s))
             if test and (service_id == id_test):
