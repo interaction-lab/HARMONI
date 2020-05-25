@@ -26,17 +26,19 @@ class DlibFaceDetector(HarmoniServiceManager):
     """
     # The input image can be upsampled for the detector to see more faces. 
     # This is usually not necessary.
-    UPSAMPLING = 0 
-    DEFAULT_RATE = 10 # Hz
+    #UPSAMPLING = 0 
+    #DEFAULT_RATE = 10 # Hz
 
-    def __init__(self, detector_threshold=0):
+    def __init__(self, param, detector_threshold=0):
+        self._upsampling = param["up_sampling"]
+        self._rate = param["rate_frame"]
         self.update(State.INIT)
         self.detector_threshold = detector_threshold
 
         self._image_source = "/harmoni/sensing/watching/pc_camera" #TODO get this from constant or rosparam
         self._image_sub = None #assign this when start() called. #TODO test subscription during init
         self._face_pub = rospy.Publisher("/harmoni/detector/face", Object2D, queue_size=1)
-        self._rate = DlibFaceDetector.DEFAULT_RATE
+        
         self._hogFaceDetector = dlib.get_frontal_face_detector()
         self._cv_bridge = CvBridge()   
 
@@ -77,7 +79,7 @@ class DlibFaceDetector(HarmoniServiceManager):
             # preprocess img acquired
             #frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # convert bgr to rgb
             faces = []
-            dets, probs, idx = self._hogFaceDetector.run(frame, DlibFaceDetector.UPSAMPLING, self.detector_threshold)
+            dets, probs, idx = self._hogFaceDetector.run(frame, self._upsampling, self.detector_threshold)
             for i, d in enumerate(dets):
                 center = d.center()
                 x1 = d.left()
@@ -90,39 +92,31 @@ class DlibFaceDetector(HarmoniServiceManager):
             self._face_pub.publish(Object2DArray(faces))
                 
 
-""" FOR MULTIPLE INSTANCES OF THE SAME DETECTOR
 def main():
-    args = sys.argv
+    test = rospy.get_param("/test/")
+    input_test = rospy.get_param("/input_test/")
+    id_test = rospy.get_param("/id_test/")
     try:
         service_name = RouterDetector.face_detect.name
         rospy.init_node(service_name + "_node")
         list_service_names = HelperFunctions.get_child_list(service_name)
         service_server_list = []
-        last_event = ""  
+        last_event = ""  # TODO
         for service in list_service_names:
-            print(service)
+            print("The service is: "+service)
             service_id = HelperFunctions.get_child_id(service)
-            param = rospy.get_param("/"+service_id+"_param/")
+            param = rospy.get_param("~"+service_id+"_param/")
             s = DlibFaceDetector(service, param)
             service_server_list.append(HarwareReadingServer(name=service, service_manager=s))
-        for server in service_server_list:
-            server.update_feedback()
+            if test and (service_id == id_test):
+                rospy.loginfo("Testing the %s" %(service))
+                s.start(input_test)
+        if not test:
+            for server in service_server_list:
+                server.update_feedback()
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
-"""
-def main():
-    try:
-        service_name = RouterDetector.face_detect.name
-        rospy.init_node(service_name + "_node")
-        #param = rospy.get_param("/"+service_name+"_param/")
-        s = DlibFaceDetector(service_name)
-        hardware_reading_server = HarwareReadingServer(name=service_name, service_manager=s)
-        hardware_reading_server.update_feedback()
-        rospy.spin()
-    except rospy.ROSInterruptException:
-        pass
-
 
 if __name__ == "__main__":
     main()

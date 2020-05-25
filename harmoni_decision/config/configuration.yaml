@@ -4,6 +4,7 @@ harmoni:
   tts: ["default"]
   web: ["default"]
   stt: ["default"]
+  face_detect: ["default"]
 pc:
   microphone: ["default"]
   camera : ["default"]
