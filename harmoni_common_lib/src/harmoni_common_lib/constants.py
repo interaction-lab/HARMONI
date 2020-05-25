@@ -36,8 +36,14 @@ class HelperFunctions:
             if repo == repository:
                 for child in repos[repo]:
                     repo_child_name = repo + "_" + child
-                    [child_repo, child_name] = repo_child_name.split("_")
-                    service_list.append(child_repo + "_" + child_name)
+                    child_array = repo_child_name.split("_")
+                    child_name = ""
+                    for i in range(0,len(child_array)):
+                        if i == 0:
+                            child_repo = child_array[0]
+                        else:
+                            child_name += "_"+child_array[i]
+                    service_list.append(child_repo + child_name)
         return service_list
 
     def get_child_id(service_name):
