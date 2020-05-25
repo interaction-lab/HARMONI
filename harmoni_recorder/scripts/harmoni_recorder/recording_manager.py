@@ -5,10 +5,13 @@ import rospy
 import roslib
 import pyaudio
 import wave
+import sys
 from datetime import datetime
 import numpy as np
-#import cv2
-#from cv_bridge import CvBridge, CvBridgeError
+sys.path.remove('/opt/ros/kinetic/lib/python2.7/dist-packages')
+sys.path.append('/opt/ros/kinetic/lib/python2.7/dist-packages')
+import cv2
+from cv_bridge import CvBridge, CvBridgeError
 #import ffmpeg
 from audio_common_msgs.msg import AudioData
 from sensor_msgs.msg import Image
@@ -17,6 +20,7 @@ from sensor_msgs.msg import Image
 class HarmoniRecordingManager():
     """
     The recording manager aims at storing the information collected by the sensors
+    TODO: fix the topic names
     """
 
     def __init__(self, manager_name,child_names):
@@ -34,7 +38,7 @@ class HarmoniRecordingManager():
         self.video_data = {}
         self.frame = {}
         format_size = pyaudio.paInt16
-        #self.cv_bridge = CvBridge()
+        self.cv_bridge = CvBridge()
         """ Init subscribers"""
         for child in self.audio_child:
             param = rospy.get_param(child+"_param")
@@ -49,7 +53,7 @@ class HarmoniRecordingManager():
             if child == self.merge_child[1]:
                 rospy.Subscriber("/harmoni/sensing/"+child, Image, self._video_merge_data_callback, child, queue_size=1)
             else:
-                rospy.Subscriber("/harmoni/sensing/"+child, Image, self._video_data_callback, child, queue_size=1)
+                rospy.Subscriber("/harmoni/sensing/watching/pc_camera", Image, self._video_data_callback, child, queue_size=1)
         
 
     def _record_audio(self, data, child):
