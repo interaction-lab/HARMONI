@@ -144,7 +144,7 @@ services:
             - /etc/localtime:/etc/localtime:ro
         working_dir: /root/harmoni_catkin_ws/src/HARMONI
         command: bash -c "
-            terminator -ue \"git pull && cd ../HARMONI-PC && git pull && echo 'Entering harmoni_visual_detector Container... \\n start with [TODO]' && bash\""
+            terminator -ue \"git pull && cd ../HARMONI-PC && git pull && echo 'Entering harmoni_visual_detector Container... \\n start with rlfacedetect' && bash\""
 
     harmoni_pc:
         container_name: harmoni_pc
