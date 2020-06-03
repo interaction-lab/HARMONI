@@ -20,12 +20,13 @@ class WebService(HarmoniExternalServiceManager):
         rospy.loginfo("Web initializing")
         self.name = name
         self.user_id = param["user_id"]
+        self.service_id = HelperFunctions.get_child_id(self.name)
         self.is_request = True
         """ Setup the web request """
         self.setup_web()
         """Setup publisher and subscriber """
-        self.web_sub = rospy.Subscriber("/harmoni/web/listen_click_event", String, self._event_click_callback, queue_size=1)
-        self.web_pub = rospy.Publisher("/harmoni/web/set_view", String, queue_size=1)
+        self.web_sub = rospy.Subscriber(RouterActuator.web.value + self.service_id + "/listen_click_event"  , String, self._event_click_callback, queue_size=1)
+        self.web_pub = rospy.Publisher(RouterActuator.web.value   + self.service_id + "/set_view" , String, queue_size=1)
         """Setup the web service as server """
         self.state = State.INIT 
         super().__init__(self.state)
@@ -34,7 +35,7 @@ class WebService(HarmoniExternalServiceManager):
     def setup_web(self):
         rospy.loginfo("Setting up the %s" % self.name)
         rospy.loginfo("Checking that web is connected to ROS websocket")
-        rospy.wait_for_service("/harmoni/web/is_connected")
+        rospy.wait_for_service(RouterActuator.web.value  + self.service_id + "/is_connected" )
         rospy.loginfo("Done, web is connected to ROS websocket")
         return
 
@@ -56,7 +57,8 @@ class WebService(HarmoniExternalServiceManager):
         data = super().do(data)
         self.state = State.REQUEST
         self.actuation_update(actuation_completed = False)
-        try:    
+        try:
+            rospy.sleep(1)
             self._send_request(data)
             self.state = State.SUCCESS
             self.actuation_update(actuation_completed = True)
@@ -82,7 +84,7 @@ def main():
     input_test = rospy.get_param("/input_test/")
     id_test = rospy.get_param("/id_test/")
     try:
-        service_name = RouterActuator.WEB.value
+        service_name = RouterActuator.web.name
         rospy.init_node(service_name + "_node")
         last_event = ""  # TODO: How to get information about last_event from behavior controller?
         list_service_names = HelperFunctions.get_child_list(service_name)
@@ -90,7 +92,7 @@ def main():
         for service in list_service_names:
             print(service)
             service_id = HelperFunctions.get_child_id(service)
-            param = rospy.get_param("/"+service_id+"_param/")
+            param = rospy.get_param("~"+service_id+"_param/")
             s = WebService(service, param)
             service_server_list.append(HardwareControlServer(name=service, service_manager=s))
             if test and (service_id == id_test):

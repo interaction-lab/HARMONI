@@ -3,6 +3,7 @@ version: '3.7'
 
 services:
     harmoni_core:
+        container_name: harmoni_core
         build:
             context: .
             dockerfile: dockerfiles/dev/harmoni-dev
@@ -41,16 +42,18 @@ services:
             # Other
             - /tmp/.X11-unix:/tmp/.X11-unix
             - ~/.config/terminator/config:/root/.config/terminator/config
-            - ~/.gitconfig/:/root/.gitconfig/:ro
+            - ~/.gitconfig:/root/.gitconfig:ro
+            - ~/.ssh/:/root/.ssh:ro
             - ~/.vimrc:/root/.vimrc:ro
             - ~/.vim/:/root/.vim/:ro
             - /etc/timezone:/etc/timezone:ro
             - /etc/localtime:/etc/localtime:ro
         working_dir: /root/harmoni_catkin_ws/src/HARMONI
         command: bash -c "
-            terminator -ue \"echo 'Entering harmoni_core Container... \\n start with roscore and rlharmoni' && bash\""
+            terminator -ue \"git pull && echo 'Entering harmoni_core Container... \\n start with roscore and rlharmoni' && bash\""
 
     ros_w2l:
+        container_name: ros_w2l
         build:
             context: .
             dockerfile: dockerfiles/dev/w2l-dev
@@ -79,7 +82,7 @@ services:
             - /dev/snd:/dev/snd
             - /dev/video0:/dev/video0
         volumes:
-            - ../model/w2l:/root/model/
+            #- ../model/w2l:/root/model/
             - wav2letter:/root/wav2letter
             - harmoni_catkin_ws:/root/harmoni_catkin_ws
             # Configuration
@@ -88,18 +91,18 @@ services:
             # Other
             - /tmp/.X11-unix:/tmp/.X11-unix
             - ~/.config/terminator/config:/root/.config/terminator/config
-            - ~/.gitconfig/:/root/.gitconfig/:ro
+            - ~/.gitconfig:/root/.gitconfig:ro
+            - ~/.ssh/:/root/.ssh:ro
             - ~/.vimrc:/root/.vimrc:ro
             - ~/.vim/:/root/.vim/:ro
             - /etc/timezone:/etc/timezone:ro
             - /etc/localtime:/etc/localtime:ro
         working_dir: /root/harmoni_catkin_ws/src/HARMONI
         command: bash -c "
-            terminator -ue \"echo 'Entering ros_w2l Container... \\n start with rlspeech' && bash\" "
+            terminator -ue \"git pull && echo 'Entering ros_w2l Container... \\n start with rlspeech' && bash\" "
 
-
-
-    ros_pc:
+    harmoni_visual_detector:
+        container_name: harmoni_visual_detector
         build:
             context: .
             dockerfile: dockerfiles/dev/harmoni-pc-dev
@@ -112,7 +115,52 @@ services:
             ROS_DISTRO: kinetic
             IS_DOCKER_ENV: "true"
             CATKIN_WS: harmoni_catkin_ws
-            ROS_HOSTNAME: ros_pc
+            ROS_HOSTNAME: harmoni_visual_detector
+            ROS_MASTER_URI: http://harmoni_core:11311
+        privileged: true
+        networks:
+            ros_net:
+        hostname: harmoni_visual_detector
+        depends_on: 
+            - "harmoni_core"
+            - "harmoni_pc"
+        devices: 
+            - /dev/dri:/dev/dri
+            - /dev/snd:/dev/snd
+            - /dev/video0:/dev/video0
+        volumes:
+            - harmoni-pc_catkin_ws:/root/harmoni_catkin_ws
+            # Configuration
+            - ./dockerfiles/config/setup_script.sh:/root/.setup_script.sh
+            - ./dockerfiles/config/dev_setup_script.sh:/root/.dev_setup_script.sh
+            # Other
+            - /tmp/.X11-unix:/tmp/.X11-unix
+            - ~/.config/terminator/config:/root/.config/terminator/config
+            - ~/.gitconfig:/root/.gitconfig:ro
+            - ~/.ssh/:/root/.ssh:ro
+            - ~/.vimrc:/root/.vimrc:ro
+            - ~/.vim/:/root/.vim/:ro
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
+        working_dir: /root/harmoni_catkin_ws/src/HARMONI
+        command: bash -c "
+            terminator -ue \"git pull && cd ../HARMONI-PC && git pull && echo 'Entering harmoni_visual_detector Container... \\n start with rlfacedetect' && bash\""
+
+    harmoni_pc:
+        container_name: harmoni_pc
+        build:
+            context: .
+            dockerfile: dockerfiles/dev/harmoni-pc-dev
+            network: host
+        image: cmbirmingham/harmoni-pc-dev:latest
+        init: true
+        environment:
+            DISPLAY: $DISPLAY
+            QT_GRAPHICSSYSTEM: native
+            ROS_DISTRO: kinetic
+            IS_DOCKER_ENV: "true"
+            CATKIN_WS: harmoni_catkin_ws
+            ROS_HOSTNAME: harmoni_pc
             ROS_MASTER_URI: http://harmoni_core:11311
         privileged: true
         networks:
@@ -132,14 +180,15 @@ services:
             # Other
             - /tmp/.X11-unix:/tmp/.X11-unix
             - ~/.config/terminator/config:/root/.config/terminator/config
-            - ~/.gitconfig/:/root/.gitconfig/:ro
+            - ~/.gitconfig:/root/.gitconfig:ro
+            - ~/.ssh/:/root/.ssh:ro
             - ~/.vimrc:/root/.vimrc:ro
             - ~/.vim/:/root/.vim/:ro
             - /etc/timezone:/etc/timezone:ro
             - /etc/localtime:/etc/localtime:ro
         working_dir: /root/harmoni_catkin_ws/src/HARMONI
         command: bash -c "
-            terminator -ue \"echo 'Entering harmoni_pc Container... \\n start with rlpcservices' && bash\""
+            terminator -ue \"git pull && cd ../HARMONI-PC && git pull && echo 'Entering harmoni_pc Container... \\n start with rlpcservices' && bash\""
 
 networks:
     ros_net:

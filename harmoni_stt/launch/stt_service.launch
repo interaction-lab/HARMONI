@@ -3,8 +3,8 @@
    
 	<arg name="use_w2l" default="true"/>
 	<arg name="test" default="false"/>
-	<arg name="input_test" default="$(find harmoni_tts)/temp_data/tts.wav"/>
-	<arg name="id_test" default="def"/>
+	<arg name="input_test" default="$(find harmoni_stt)/temp_data/test.wav"/>
+	<arg name="id_test" default="default"/>
   	<group if="$(arg use_w2l)">
 			<rosparam file="$(find harmoni_stt)/config/configuration.yaml"/>
 			<param name="test" value="$(arg test)"/>
