@@ -8,7 +8,7 @@ import xml.etree.cElementTree as ET
 import os
 import json
 import ast
-from harmoni_common_lib.constants import HelperFunctions
+from harmoni_common_lib.constants import HelperFunctions, RouterDetector
 
 
 class Launcher():
@@ -50,6 +50,16 @@ class Launcher():
         p = subprocess.Popen("roslaunch harmoni_decision "+repo+"_"+launch+".launch", shell=True)
         return p
 
+    def _check_if_detector(self, service_name):
+        """Check if detector. It returns true if it is a detector """
+        list_detectors = [enum.name for enum in list(RouterDetector)]
+        for d in list_detectors:
+            if service_name == d:
+                return True
+        rospy.loginfo("%s not a detector" %service_name)
+        return False 
+
+
     def _get_router_pkg(self):
         """Get routers """
         repo = "harmoni"
@@ -62,14 +72,21 @@ class Launcher():
         return(repo, pkg_array, exec_array)
 
     def _get_service_pkg(self, repo):
-        """Get routers """
+        """Get services """
         services = HelperFunctions.get_service_list_of_repo(repo)
         pkg_array = []
         exec_array= []
         for serv in services:
             name = serv.split("_")
-            pkg_array.append(name[1])
-            exec_array.append(name[1] +"_service")
+            n= ""
+            for i in range(0,len(name)):
+                if i!=0 and i!=(len(name)-1):
+                    n+= name[i]+"_"
+                elif i!=0 and i==(len(name)-1):
+                    n+= name[i]
+            if not self._check_if_detector(n):
+                pkg_array.append(n)
+                exec_array.append(n +"_service")
         return(repo, pkg_array, exec_array)
 
     def _create_xml_launcher(self,name, repo, package_array, launch_file_array):
@@ -88,6 +105,7 @@ class Launcher():
         """Launch routers """
         name = "router"
         [repo, pkg, exb] = self._get_router_pkg()
+        print(repo)
         self._create_xml_launcher(name,repo, pkg, exb)
         if launch:
             self._launch_with_subprocess(repo, name)
@@ -98,6 +116,7 @@ class Launcher():
         """Launch services """
         name = "service"
         [repo, pkg, exb] = self._get_service_pkg(repo)
+        print(pkg)
         self._create_xml_launcher(name,repo, pkg, exb)
         if launch:
             self._launch_with_subprocess(repo, name)

@@ -20,20 +20,18 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         dlib \
         imutils \
         && \
-    rm -rf /var/lib/apt/lists/* /tmp/*
-
-
 # ==================================================================
 # install ros packages for harmoni
 # ------------------------------------------------------------------
-RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
-    apt-get update && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
     ros-$ROS_DISTRO-rosbridge-server \
     ros-$ROS_DISTRO-audio-common \
     ros-$ROS_DISTRO-dynamixel-msgs \
     build-essential \
-    && rm -rf /var/lib/apt/lists/*
+    && \
+    rm -rf /var/lib/apt/lists/* /tmp/*
+
+
 
 
 ENV ROS_WS /root/harmoni_catkin_ws
@@ -57,9 +55,11 @@ RUN catkin config \
     catkin build
 
 
+# ==================================================================
 RUN \
        apt-get update -y && apt-get upgrade -y
 
+# ==================================================================
 ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 /usr/local/bin/dumb-init
 RUN chmod +x /usr/local/bin/dumb-init
 ENTRYPOINT ["/usr/local/bin/dumb-init","--rewrite","15:10","--"]
