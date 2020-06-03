@@ -7,9 +7,8 @@ import pty
 import os
 import time
 import re
-
 import rospy
-from harmoni_common_lib.constants import State, RouterDetector, HelperFunctions
+from harmoni_common_lib.constants import State, RouterDetector, HelperFunctions, RouterSensor
 from harmoni_common_lib.child import InternalServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 from audio_common_msgs.msg import AudioData
@@ -25,13 +24,15 @@ class SpeechToTextService(HarmoniServiceManager):
         """ Initialization of variables and w2l parameters """
         rospy.loginfo("Wav2Letter initializing")
         self.name = name
+        self.subscriber_id = param["subscriber_id"]
         self.model_path = param["model_path"]
         if not os.path.isdir(self.model_path):
             raise Exception("W2L model has not been dowloaded", "Try running get_w2l_models.sh")
         self.w2l_bin = param["w2l_bin"]
+        self.service_id = HelperFunctions.get_child_id(self.name)
         """Setup publishers and subscribers"""
-        rospy.Subscriber('/harmoni/sensing/listening/microphone', AudioData, self.callback)
-        self.text_pub = rospy.Publisher('/harmoni/detecting/speech', String, queue_size=10)
+        rospy.Subscriber(RouterSensor.microphone.value + self.subscriber_id+ "/talking"  , AudioData, self.callback)
+        self.text_pub = rospy.Publisher(RouterDetector.stt.value + self.service_id , String, queue_size=10)
         """Setup the stt service as server """
         self.state = State.INIT
         super().__init__(self.state)

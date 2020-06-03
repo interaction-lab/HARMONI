@@ -10,7 +10,7 @@ from cv_bridge import CvBridge, CvBridgeError
 import dlib
 import numpy as np
 
-from harmoni_common_lib.constants import State, RouterDetector, HelperFunctions
+from harmoni_common_lib.constants import State, RouterDetector, HelperFunctions, RouterSensor
 from harmoni_common_lib.child import HarwareReadingServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 from harmoni_common_msgs.msg import Object2D, Object2DArray
@@ -29,15 +29,17 @@ class DlibFaceDetector(HarmoniServiceManager):
     #UPSAMPLING = 0 
     #DEFAULT_RATE = 10 # Hz
 
-    def __init__(self, service, param, detector_threshold=0):
+    def __init__(self, name, param, detector_threshold=0):
+        self.name = name
         self._upsampling = param["up_sampling"]
         self._rate = param["rate_frame"]
+        self.subscriber_id = param["subscriber_id"]
         self.update(State.INIT)
         self.detector_threshold = detector_threshold
-
-        self._image_source = "/harmoni/sensing/watching/pc_camera" #TODO get this from constant or rosparam
+        self.service_id = HelperFunctions.get_child_id(self.name)
+        self._image_source = RouterSensor.camera.value + self.subscriber_id + "watching"#/harmoni/sensing/watching/pc_camera"
         self._image_sub = None #assign this when start() called. #TODO test subscription during init
-        self._face_pub = rospy.Publisher("/harmoni/detector/face", Object2D, queue_size=1)
+        self._face_pub = rospy.Publisher(RouterDetector.face_detect.value + self.service_id, Object2D, queue_size=1)
         
         self._hogFaceDetector = dlib.get_frontal_face_detector()
         self._cv_bridge = CvBridge()   

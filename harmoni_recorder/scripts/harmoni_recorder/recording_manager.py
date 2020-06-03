@@ -40,6 +40,7 @@ class HarmoniRecordingManager():
         format_size = pyaudio.paInt16
         self.cv_bridge = CvBridge()
         """ Init subscribers"""
+        #FIX IT: GET ALL THE TOPICS /HARMONI/SENSING/CAMERA OR /HARMONI/SENSING/MICROPHONE
         for child in self.audio_child:
             param = rospy.get_param(child+"_param")
             self.audio_children[child] = {"first_frame": True, "channels" : param["total_channels"], "chunk_size":param["chunk_size"], "sample_rate":param["audio_rate"], "format_size": format_size}
