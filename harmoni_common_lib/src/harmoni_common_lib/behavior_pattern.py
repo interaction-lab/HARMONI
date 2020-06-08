@@ -41,13 +41,21 @@ class BehaviorPatternService(HarmoniServiceManager):
         """Start the Behavior Pattern sending the first goal to the child"""
         self.state = State.START
         super().start()
-        self.router_clients[router].send_goal(action_goal=action_goal, optional_data=optional_data, child_server=child_server)
+        try:
+            self.router_clients[router].send_goal(action_goal=action_goal, optional_data=optional_data, child_server=child_server)
+            self.state = State.SUCCESS
+        except:
+            self.state = State.FAILED
         return
 
     def stop(self, router):
         """Stop the Behavior Pattern """
         super().stop()
-        self.router_clients[router].cancel_goal()
+        try:
+            self.router_clients[router].cancel_goal()
+            self.state = State.SUCCESS
+        except:
+            self.state = State.FAILED
         return
 
     def pause(self):
@@ -55,22 +63,7 @@ class BehaviorPatternService(HarmoniServiceManager):
         self.pause()
         return
 
-# The main function will be structured like chilren,
-# with a service manager that recieves instructions and controls
-# the pattern
+    def update(self, state):
+        self.update(state)
+        return
 
-class DialogingPattern(BehaviorPatternService):
-    """
-    Dialoging pattern class
-    """
-    def __init__(self):
-        """Init the behavior pattern """
-        self.start(action_goal = ActionType.REQUEST, child_server="harmoni_lex_def", router="dialogue", optional_data="Hey")
-        
-
-def main():
-    pass
-
-
-if __name__ == "__main__":
-    main()
