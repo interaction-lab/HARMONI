@@ -191,7 +191,7 @@ class AWSTtsService(HarmoniExternalServiceManager):
             self.response_update(response_received=True, state=self.state, result_msg=tts_response)
         except (BotoCoreError, ClientError) as error:
             rospy.logerr("The erros is " + str(error))
-            self.start = State.FAILED
+            self.state = State.FAILED
             self.response_update(response_received=True, state=self.state, result_msg="")
         return
 
