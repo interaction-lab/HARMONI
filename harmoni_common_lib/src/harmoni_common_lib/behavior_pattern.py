@@ -17,6 +17,7 @@ class BehaviorPatternService(HarmoniServiceManager):
     def __init__(self):
         """Setup the Behavior Pattern as a client of all the routers """
         self.state = State.INIT
+        self.service = service
         super().__init__(self.state)
         self.router_names = [enum.value for enum in list(Router)]
         print(self.router_names)
@@ -35,7 +36,7 @@ class BehaviorPatternService(HarmoniServiceManager):
     def execute_feedback_callback(self, feedback):
         """ Send the feedback state to the Behavior Pattern tree to decide what to do next """
         rospy.logdebug("The feedback is %s" %feedback)
-        return
+        return 
 
     def start(self, action_goal, child_server, router, optional_data):
         """Start the Behavior Pattern sending the first goal to the child"""
