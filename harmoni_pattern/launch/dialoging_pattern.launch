@@ -1,0 +1,17 @@
+<!-- This is an example launch file for how a ROS application could use a node -->
+<launch>
+   
+	<arg name="use_pattern" default="true"/>
+	<arg name="test" default="false"/>
+	<arg name="input_test" default="Hey"/>
+	<arg name="id_test" default="default"/>
+  	<group if="$(arg use_pattern)">
+			<rosparam file="$(find harmoni_pattern)/config/configuration.yaml"/>
+			<param name="test" value="$(arg test)"/>
+			<param name="input_test" value="$(arg input_test)"/>
+			<param name="id_test" value="$(arg id_test)"/>
+			<node pkg="harmoni_pattern" type="dialoging_pattern.py" name="harmoni_pattern" output="screen"  args="$(arg test) $(arg input_test) $(arg id_test)"/>
+  	</group>
+
+
+</launch>
