@@ -10,14 +10,13 @@ from collections import defaultdict
 
 # The main pattern will act as a service
 # subscriptions do not need to be dynamic
-class BehaviorPatternService(HarmoniServiceManager):
+class BehaviorPatternService(HarmoniServiceManager, object):
     """Abstract class defining common variables/functions for behavior patterns
     """
 
-    def __init__(self):
+    def __init__(self, result_callback, feedback_callback):
         """Setup the Behavior Pattern as a client of all the routers """
         self.state = State.INIT
-        self.service = service
         super().__init__(self.state)
         self.router_names = [enum.value for enum in list(Router)]
         print(self.router_names)
@@ -25,18 +24,8 @@ class BehaviorPatternService(HarmoniServiceManager):
         for rout in self.router_names:
             self.router_clients[rout] = HarmoniActionClient()
         for rout, client in self.router_clients.items():
-            client.setup_client(rout, self.execute_result_callback, self.execute_feedback_callback)
+            client.setup_client(rout, result_callback, feedback_callback)
         rospy.loginfo("Behavior interface action clients have been set up")
-
-    def execute_result_callback(self, result):
-        """ Do something when result has been received """
-        rospy.loginfo("The result has been received")
-        return
-
-    def execute_feedback_callback(self, feedback):
-        """ Send the feedback state to the Behavior Pattern tree to decide what to do next """
-        rospy.logdebug("The feedback is %s" %feedback)
-        return 
 
     def start(self, action_goal, child_server, router, optional_data):
         """Start the Behavior Pattern sending the first goal to the child"""
