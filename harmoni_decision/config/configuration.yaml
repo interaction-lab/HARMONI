@@ -3,7 +3,7 @@ harmoni:
   lex : ["default"]
   tts: ["default"]
   web: ["default"]
-  #stt: ["default"]
+  stt: ["default"]
   #face_detect: ["default"]
 pc:
   microphone: ["default"]
