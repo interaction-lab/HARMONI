@@ -21,47 +21,48 @@ class DialogingPattern(BehaviorPatternService):
     """
     def __init__(self, sequence, loop):
         """Init the behavior pattern """
-        super().__init__(result_callback, feedback_callback)
+        super().__init__(self.result_callback, self.feedback_callback)
         self.sequence = sequence
         self.loop = loop
         self.count = -1
         self.count_loop = -1
         self.end_sequence = False
-        self.end_loop = False
-        self.n_loop = 0 # Number of total loop before breaking the looping
+        self.end_single_loop = False
+        self.end_looping = False 
         self.action_info = {
-            DialogueState.DIALOGING: {"router": Router.DIALOGUE, "action_goal": ActionType.REQUEST},
-            DialogueState.SENSING: {"router": Router.SENSOR, "action_goal": ActionType.ON} ,
-            DialogueState.SYNTHETIZING: {"router": Router.ACTUATOR, "action_goal": ActionType.REQUEST} ,
-            DialogueState.SPEAKING: {"router": Router.ACTUATOR, "action_goal": ActionType.REQUEST} ,
-            DialogueState.EXPRESSING: {"router": Router.ACTUATOR, "action_goal": ActionType.REQUEST} ,
-            DialogueState.MOVING: {"router": Router.ACTUATOR, "action_goal": ActionType.REQUEST},
-            DialogueState.SPEECH_DETECTING: {"router": Router.DETECTOR, "action_goal": ActionType.ON}
+            DialogueState.DIALOGING: {"router": Router.DIALOGUE.value, "action_goal": ActionType.REQUEST},
+            DialogueState.SENSING: {"router": Router.SENSOR.value, "action_goal": ActionType.ON} ,
+            DialogueState.SYNTHETIZING: {"router": Router.ACTUATOR.value, "action_goal": ActionType.REQUEST} ,
+            DialogueState.SPEAKING: {"router": Router.ACTUATOR.value, "action_goal": ActionType.REQUEST} ,
+            DialogueState.EXPRESSING: {"router": Router.ACTUATOR.value, "action_goal": ActionType.REQUEST} ,
+            DialogueState.MOVING: {"router": Router.ACTUATOR.value, "action_goal": ActionType.REQUEST},
+            DialogueState.SPEECH_DETECTING: {"router": Router.DETECTOR.value, "action_goal": ActionType.ON}
         }
 
     def result_callback(self, result):
         """ Do something when result has been received """
         rospy.loginfo("The result has been received")
-        self.result = result
-        data = ""
-        if not self.end_sequence:
-            self.do_sequence(data)
-        elif self.count_loop != self.n_loop:
-            self.do_loop(data)
+        data = result
+        if result["do_action"]:
+            if not self.end_sequence:
+                self.do_sequence(data["message"])
+            elif not self.end_looping and self.end_sequence:
+                self.do_loop(data)["message"]
         else:
-            #END THE BEHAVIOR PATTERN?
+            # if the dialogue intent is finalized
+            #END THE BEHAVIOR PATTERN
+            print("END BEHAVIOR PATTERN. DO SOMETHING.")
         return
 
     def feedback_callback(self, feedback):
         """ Send the feedback state to the Behavior Pattern tree to decide what to do next """
         rospy.logdebug("The feedback is %s" %feedback)
-        self.feedback = feedback
         return 
 
     def _get_action_info(self, action):
         """Get action info """
-        self.state = self.action
-        child_server = self.action
+        self.state = action
+        child_server = action
         router = self.action_info[child_server]["router"]
         action_goal = self.action_info[child_server]["action_goal"]
         return (child_server, router, action_goal)
@@ -81,7 +82,7 @@ class DialogingPattern(BehaviorPatternService):
         else:
             [child_server, router, action_goal] = self._get_action_info(action)
         optional_data = data
-        super().start(self, action_goal, child_server, router, optional_data)
+        super().start(action_goal, child_server, router, optional_data)
         self.update(self.state)
         if self.count == len(self.sequence):
             print("End of the sequence")
@@ -106,9 +107,12 @@ class DialogingPattern(BehaviorPatternService):
         self.update(self.state)
         super().start(self, action_goal, child_server, router, optional_data)
         if self.count == len(self.loop):
-            print("End of the loop")
-            self.end_loop = True
+            print("End of the single loop")
+            self.end_single_loop = True
             self.count_loop += 1
+            self.count = -1
+            if self.end_looping:
+                print("End looping")
         return
 
     def stop(self):
@@ -116,13 +120,16 @@ class DialogingPattern(BehaviorPatternService):
         
 
 def main():
+    trigger_intent = "Hey"
     parallel = [DialogueState.SPEAKING, DialogueState.EXPRESSING]
     sequence = [DialogueState.DIALOGING, DialogueState.SYNTHETIZING, parallel]
-    loop = [DialogueState.SENSING, DialogueState.SPEECH_DETECTING, DialogueState.DIALOGING, DialogueState.SYNTHETIZING, self.parallel]
+    loop = [DialogueState.SENSING, DialogueState.SPEECH_DETECTING, DialogueState.DIALOGING, DialogueState.SYNTHETIZING, parallel]
     try:
+        rospy.init_node("dialoging_pattern")
         dp = DialogingPattern(sequence, loop)
-        dp.do_sequence()
-    except:
+        dp.do_sequence(data = trigger_intent)
+        rospy.spin()
+    except rospy.ROSInterruptException:
         pass
 
 

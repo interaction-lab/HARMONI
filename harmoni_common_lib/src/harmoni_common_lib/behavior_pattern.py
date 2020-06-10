@@ -30,12 +30,16 @@ class BehaviorPatternService(HarmoniServiceManager, object):
     def start(self, action_goal, child_server, router, optional_data):
         """Start the Behavior Pattern sending the first goal to the child"""
         self.state = State.START
-        super().start()
-        try:
-            self.router_clients[router].send_goal(action_goal=action_goal, optional_data=optional_data, child_server=child_server)
-            self.state = State.SUCCESS
-        except:
-            self.state = State.FAILED
+        rate = ""
+        super().start(rate)
+        #try:
+        self.state = State.REQUEST
+        rospy.loginfo("Sending the goal to the router %s" %router)
+        self.router_clients[router].send_goal(action_goal=action_goal, optional_data=optional_data, child_server=child_server)
+        self.state = State.SUCCESS
+        rospy.loginfo("Sent the goal %s" %action_goal)
+        #except:
+        #    self.state = State.FAILED
         return
 
     def stop(self, router):
@@ -50,10 +54,10 @@ class BehaviorPatternService(HarmoniServiceManager, object):
 
     def pause(self):
         """Pause the Behavior Pattern """
-        self.pause()
+        super().pause()
         return
 
     def update(self, state):
-        self.update(state)
+        super().update(state)
         return
 
