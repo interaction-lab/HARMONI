@@ -37,7 +37,7 @@ class DlibFaceDetector(HarmoniServiceManager):
         self.update(State.INIT)
         self.detector_threshold = detector_threshold
         self.service_id = HelperFunctions.get_child_id(self.name)
-        self._image_source = RouterSensor.camera.value + self.subscriber_id + "watching"#/harmoni/sensing/watching/pc_camera"
+        self._image_source = RouterSensor.camera.value + self.subscriber_id + "/watching"#/harmoni/sensing/watching/pc_camera"
         self._image_sub = None #assign this when start() called. #TODO test subscription during init
         self._face_pub = rospy.Publisher(RouterDetector.face_detect.value + self.service_id, Object2DArray, queue_size=1)
         
@@ -58,8 +58,14 @@ class DlibFaceDetector(HarmoniServiceManager):
         super().start(rate)
         self._rate = rate
         self._image_sub = rospy.Subscriber(self._image_source, Image, self.detect_callback)
-        rospy.loginfo("Face detector started.")
-        self.update(State.START)
+        print(self._image_source)
+        if (self._image_sub != None):
+            self.update(State.START)
+            rospy.loginfo("Face detector started.")
+        else:
+            self.update(State.FAILED)
+            rospy.logerr("Face detector failed to start.")
+        return
 
     def stop(self):
         rospy.loginfo("Face detector stopped.")
@@ -73,6 +79,7 @@ class DlibFaceDetector(HarmoniServiceManager):
         self.stop()
 
     def detect_callback(self,image):
+        print("Hello")
         """Uses image to detect and publish face info.
 
         Args:
