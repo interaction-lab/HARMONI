@@ -48,7 +48,7 @@ class DlibFaceDetector(HarmoniServiceManager):
         success = True
         return success
     
-    def start(self,rate):
+    def start(self,rate=None):
         """
         Args:
             rate(int): How often the detector should run per second (Hz).
@@ -58,6 +58,7 @@ class DlibFaceDetector(HarmoniServiceManager):
         super().start(rate)
         self._rate = rate
         self._image_sub = rospy.Subscriber(self._image_source, Image, self.detect_callback)
+        rospy.loginfo("Face detector started.")
         self.update(State.START)
 
     def stop(self):

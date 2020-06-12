@@ -5,24 +5,23 @@ import roslib
 from harmoni_common_lib import constants
 from harmoni_common_msgs.msg import Object2D, Object2DArray
 
-from behavior_pattern import BehaviorPattern
-
-
-class FaceTracker(BehaviorPattern):
+class FaceTracker(HarmoniServiceManager):
     """Track Faces
 
         Args:
             track_threshold(tuple: (int,int)): x,y # pixels to ignore from each side of image center #TODO change this to a percentage instead
     """
     def __init__(self, track_threshold = (50,50)):
-
+        self._track_threshold = track_threshold
         self._face_sub = None
         self._pause = False
-        self._track_threshold = track_threshold
-        super.__init__()
+        
+        self.state = State.INIT
+        super().__init__(self.state)
         return
 
     def start(self):
+        #TODO add action client subscription to appropriate actuators
         self._face_sub = rospy.Subscriber(constants.RouterDetector.face_detect.value, Object2DArray, self.detect_callback)
         super().start()
         if (self._face_sub != None):
@@ -69,9 +68,20 @@ class FaceTracker(BehaviorPattern):
                 print("Face Tracker: Face below, move head down.")
         else:
             rospy.logerr("Face Tracker received bad face object from detector.")
+        return
+        
 
-
+def launch(service_name: str, service: HarmoniServiceManager):
+    # Launch the pattern as a node.
+    try:
+        rospy.init_node(service_name)
+        rospy.loginfo("Launching", service_name)
+        
+        InternalServiceServer(name=service, service_manager=service()))
+        rospy.spin()
+    except rospy.ROSInterruptException:
+        pass
          
 
 if __name__ == "__main__":
-    BehaviorPattern.launch(constants.BehaviorPattern.tracking.name, FaceTracker())
+    launch(constants.BehaviorPattern.face_tracker.name, FaceTracker())
