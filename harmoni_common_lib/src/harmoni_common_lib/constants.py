@@ -105,6 +105,6 @@ class RouterDetector(Enum):
     ROUTER = "/harmoni/detecting/"
 
 class BehaviorPattern(Enum):
-    tracking = "/harmoni/behavior/tracking/"
-    dialogue = "/harmoni/behavior/talking/"
+    face_tracker = "/harmoni/behavior/face_tracking/"
+    dialogue = "/harmoni/behavior/dialoging/"
     mimicry = "/harmoni/behavior/mimicking/"

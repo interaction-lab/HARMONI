@@ -24,7 +24,7 @@ class HarmoniServiceManager(object):
         """ Test the hardware, sending default action """
         return
 
-    def start(self, rate):
+    def start(self, rate=None):
         """ Start reading or processing data """
         return
 
