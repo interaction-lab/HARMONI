@@ -20,7 +20,7 @@ class DlibFaceDetector(HarmoniServiceManager):
     """Face detector based off of Dlib
 
     Args:
-        detector_threshold(int): Confidence threshold for faces. Positive values
+        detector_threshold(float): Confidence threshold for faces. Positive values
             will return fewer detections, and negative values more detections.
             This value can be changed at any time with no major side-effects.
     """
@@ -39,7 +39,7 @@ class DlibFaceDetector(HarmoniServiceManager):
         self.service_id = HelperFunctions.get_child_id(self.name)
         self._image_source = RouterSensor.camera.value + self.subscriber_id + "watching"#/harmoni/sensing/watching/pc_camera"
         self._image_sub = None #assign this when start() called. #TODO test subscription during init
-        self._face_pub = rospy.Publisher(RouterDetector.face_detect.value + self.service_id, Object2D, queue_size=1)
+        self._face_pub = rospy.Publisher(RouterDetector.face_detect.value + self.service_id, Object2DArray, queue_size=1)
         
         self._hogFaceDetector = dlib.get_frontal_face_detector()
         self._cv_bridge = CvBridge()   
@@ -78,7 +78,7 @@ class DlibFaceDetector(HarmoniServiceManager):
         Args:
             image(Image): the image we want to run face detection on.
         """
-        frame = self.cv_bridge.imgmsg_to_cv2(image, desired_encoding='passthrough')
+        frame = self._cv_bridge.imgmsg_to_cv2(image, desired_encoding='passthrough')
         
         if frame is not None:
             h, w, _ = frame.shape
@@ -94,7 +94,7 @@ class DlibFaceDetector(HarmoniServiceManager):
                 x2 = d.right()
                 y2 = d.bottom()
                 
-                faces.append(Object2D(width=w, height=h,id=idx[i],center_x=center[0],center_y=center[1],topleft_x=x1,
+                faces.append(Object2D(width=w, height=h,id=idx[i],center_x=center.x,center_y=center.y,topleft_x=x1,
                          topleft_y=y1,botright_x=x2,botright_y=y2,confidence=probs[i]))
             self._face_pub.publish(Object2DArray(faces))
                 
