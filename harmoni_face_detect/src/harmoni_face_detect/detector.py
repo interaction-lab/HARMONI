@@ -10,7 +10,8 @@ from cv_bridge import CvBridge, CvBridgeError
 import dlib
 import numpy as np
 
-from harmoni_common_lib.constants import State, RouterDetector, HelperFunctions, RouterSensor
+from harmoni_common_lib.constants import State, RouterDetector, RouterSensor
+from harmoni_common_lib.helper_functions import HelperFunctions
 from harmoni_common_lib.child import HarwareReadingServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 from harmoni_common_msgs.msg import Object2D, Object2DArray

@@ -6,7 +6,8 @@ import roslib
 import boto3
 import json
 from std_msgs.msg import String
-from harmoni_common_lib.constants import State, RouterActuator, HelperFunctions
+from harmoni_common_lib.constants import State, RouterActuator
+from harmoni_common_lib.helper_functions import HelperFunctions
 from harmoni_common_lib.child import WebServiceServer, HardwareControlServer
 from harmoni_common_lib.service_manager import HarmoniExternalServiceManager
 

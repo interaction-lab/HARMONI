@@ -4,7 +4,8 @@
 import rospy
 import roslib
 import boto3
-from harmoni_common_lib.constants import State, RouterDialogue, HelperFunctions
+from harmoni_common_lib.constants import State, RouterDialogue
+from harmoni_common_lib.helper_functions import HelperFunctions
 from harmoni_common_lib.child import WebServiceServer
 from harmoni_common_lib.service_manager import HarmoniExternalServiceManager
 

@@ -8,7 +8,8 @@ import os
 import time
 import re
 import rospy
-from harmoni_common_lib.constants import State, RouterDetector, HelperFunctions, RouterSensor
+from harmoni_common_lib.constants import State, RouterDetector, RouterSensor
+from harmoni_common_lib.helper_functions import HelperFunctions
 from harmoni_common_lib.child import InternalServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 from audio_common_msgs.msg import AudioData
