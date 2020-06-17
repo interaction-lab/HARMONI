@@ -32,6 +32,9 @@ class DialogingPattern(HarmoniServiceManager, object):
         self.end_looping = False 
         self.action_info = {
             DialogueState.DIALOGING: {"router": Router.DIALOGUE.value, "action_goal": ActionType.REQUEST} ,
+            DialogueState.SENSING: {"router": Router.SENSOR.value, "action_goal": ActionType.ON} ,
+            DialogueState.SPEAKING: {"router": Router.ACTUATOR.value, "action_goal": ActionType.REQUEST} ,
+            DialogueState.SYNTHETIZING: {"router": Router.ACTUATOR.value, "action_goal": ActionType.REQUEST} ,
             DialogueState.EXPRESSING: {"router": Router.ACTUATOR.value, "action_goal": ActionType.REQUEST} ,
             DialogueState.MOVING: {"router": Router.ACTUATOR.value, "action_goal": ActionType.REQUEST},
             DialogueState.SPEECH_DETECTING: {"router": Router.DETECTOR.value, "action_goal": ActionType.ON}
@@ -125,7 +128,7 @@ class DialogingPattern(HarmoniServiceManager, object):
         else:
             [child_server, router, action_goal] = self._get_action_info(action)
         optional_data = data
-        super().start(action_goal, child_server, router, optional_data)
+        self.start(action_goal, child_server, router, optional_data)
         self.update(self.state)
         if self.count == len(self.sequence):
             print("End of the sequence")
@@ -148,7 +151,7 @@ class DialogingPattern(HarmoniServiceManager, object):
             [child_server, router, action_goal] = self._get_action_info(action)
         optional_data = data
         self.update(self.state)
-        super().start(self, action_goal, child_server, router, optional_data)
+        self.start(self, action_goal, child_server, router, optional_data)
         if self.count == len(self.loop):
             print("End of the single loop")
             self.end_single_loop = True
