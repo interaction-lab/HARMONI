@@ -37,7 +37,7 @@ class HarmoniDialogueRouter(HarmoniRouter):
 def main():
     try: 
         router_name = Router.DIALOGUE.value
-        rospy.init_node(router_name + "_node")
+        rospy.init_node(router_name)
         last_event = ""  
         hr = HarmoniDialogueRouter(router_name, last_event)
         hr.setup_router()

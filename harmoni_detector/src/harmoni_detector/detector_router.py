@@ -35,7 +35,7 @@ class HarmoniDetectorRouter(HarmoniRouter):
 def main():
     try:
         router_name = Router.DETECTOR.value
-        rospy.init_node(router_name + "_node")
+        rospy.init_node(router_name)
         last_event = ""  # TODO: How to get information about last_event from behavior controller?
         hr = HarmoniDetectorRouter(router_name, last_event)
         hr.setup_router()

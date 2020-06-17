@@ -104,7 +104,7 @@ def main():
     id_test = rospy.get_param("/id_test/")
     try:
         service_name = RouterDetector.face_detect.name
-        rospy.init_node(service_name + "_node")
+        rospy.init_node(service_name)
         list_service_names = HelperFunctions.get_child_list(service_name)
         service_server_list = []
         last_event = ""  # TODO
