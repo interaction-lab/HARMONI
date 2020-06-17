@@ -85,7 +85,7 @@ def main():
     id_test = rospy.get_param("/id_test/")
     try:
         service_name = RouterActuator.web.name
-        rospy.init_node(service_name + "_node")
+        rospy.init_node(service_name)
         last_event = ""  # TODO: How to get information about last_event from behavior controller?
         list_service_names = HelperFunctions.get_child_list(service_name)
         service_server_list = []

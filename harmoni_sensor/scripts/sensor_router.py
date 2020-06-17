@@ -37,7 +37,7 @@ class HarmoniSensorRouter(HarmoniRouter):
 def main():
     try: 
         router_name = Router.SENSOR.value
-        rospy.init_node(router_name + "_node")
+        rospy.init_node(router_name)
         last_event = ""  #
         hr = HarmoniSensorRouter(router_name, last_event)
         hr.setup_router()

@@ -136,7 +136,7 @@ class HarmoniRecordingManager():
 def main():
     try: 
         manager_name = "recording"
-        rospy.init_node(manager_name + "_node")
+        rospy.init_node(manager_name)
         child_names = rospy.get_param("/harmoni_recorder/")
         HarmoniRecordingManager(manager_name, child_names)
         rospy.spin()

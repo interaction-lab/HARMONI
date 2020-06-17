@@ -126,7 +126,7 @@ class Launcher():
 def main():
     try: 
         interface_name = "launcher"
-        rospy.init_node(interface_name + "_node")
+        rospy.init_node(interface_name)
         rospy.loginfo("Set up the %s" %interface_name)
         launch = rospy.get_param("~launch")
         router = rospy.get_param("~router")
