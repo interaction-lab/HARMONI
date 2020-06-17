@@ -3,8 +3,10 @@
 # Importing the libraries
 import rospy
 import roslib
-from harmoni_common_lib.behavior_pattern import BehaviorPatternService
+from harmoni_common_lib.action_client import HarmoniActionClient
+from harmoni_common_lib.service_manager import HarmoniServiceManager
 from harmoni_common_lib.constants import *
+from collections import defaultdict
 
 class DialogueState():
     SENSING = "pc_microphone_default"
@@ -15,13 +17,12 @@ class DialogueState():
     EXPRESSING = "pc_face_default"
     MOVING = ""
     
-class DialogingPattern(BehaviorPatternService):
+class DialogingPattern(HarmoniServiceManager, object):
     """
     Dialoging pattern class
     """
     def __init__(self, sequence, loop):
-        """Init the behavior pattern """
-        super().__init__(self.result_callback, self.feedback_callback)
+        """Init the behavior pattern and setup the clients"""
         self.sequence = sequence
         self.loop = loop
         self.count = -1
@@ -30,16 +31,23 @@ class DialogingPattern(BehaviorPatternService):
         self.end_single_loop = False
         self.end_looping = False 
         self.action_info = {
-            DialogueState.DIALOGING: {"router": Router.DIALOGUE.value, "action_goal": ActionType.REQUEST},
-            DialogueState.SENSING: {"router": Router.SENSOR.value, "action_goal": ActionType.ON} ,
-            DialogueState.SYNTHETIZING: {"router": Router.ACTUATOR.value, "action_goal": ActionType.REQUEST} ,
-            DialogueState.SPEAKING: {"router": Router.ACTUATOR.value, "action_goal": ActionType.REQUEST} ,
+            DialogueState.DIALOGING: {"router": Router.DIALOGUE.value, "action_goal": ActionType.REQUEST} ,
             DialogueState.EXPRESSING: {"router": Router.ACTUATOR.value, "action_goal": ActionType.REQUEST} ,
             DialogueState.MOVING: {"router": Router.ACTUATOR.value, "action_goal": ActionType.REQUEST},
             DialogueState.SPEECH_DETECTING: {"router": Router.DETECTOR.value, "action_goal": ActionType.ON}
         }
+        self.state = State.INIT
+        super().__init__(self.state)
+        self.router_names = [enum.value for enum in list(Router)]
+        print(self.router_names)
+        self.router_clients = defaultdict(HarmoniActionClient)
+        for rout in self.router_names:
+            self.router_clients[rout] = HarmoniActionClient()
+        for rout, client in self.router_clients.items():
+            client.setup_client(rout, self._result_callback, self._feedback_callback)
+        rospy.loginfo("Behavior interface action clients have been set up")
 
-    def result_callback(self, result):
+    def _result_callback(self, result):
         """ Do something when result has been received """
         rospy.loginfo("The result has been received")
         data = result
@@ -54,10 +62,45 @@ class DialogingPattern(BehaviorPatternService):
             print("END BEHAVIOR PATTERN. DO SOMETHING.")
         return
 
-    def feedback_callback(self, feedback):
+    def _feedback_callback(self, feedback):
         """ Send the feedback state to the Behavior Pattern tree to decide what to do next """
         rospy.logdebug("The feedback is %s" %feedback)
         return 
+
+
+    def start(self, action_goal, child_server, router, optional_data):
+        """Start the Behavior Pattern sending the first goal to the child"""
+        self.state = State.START
+        rate = ""
+        super().start(rate)
+        #try:
+        self.state = State.REQUEST
+        rospy.loginfo("Sending the goal to the router %s" %router)
+        self.router_clients[router].send_goal(action_goal=action_goal, optional_data=optional_data, child_server=child_server)
+        self.state = State.SUCCESS
+        rospy.loginfo("Sent the goal %s" %action_goal)
+        #except:
+        #    self.state = State.FAILED
+        return
+
+    def stop(self, router):
+        """Stop the Behavior Pattern """
+        super().stop()
+        try:
+            self.router_clients[router].cancel_goal()
+            self.state = State.SUCCESS
+        except:
+            self.state = State.FAILED
+        return
+
+    def pause(self):
+        """Pause the Behavior Pattern """
+        super().pause()
+        return
+
+    def update(self, state):
+        super().update(state)
+        return
 
     def _get_action_info(self, action):
         """Get action info """
