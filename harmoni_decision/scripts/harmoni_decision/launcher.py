@@ -8,7 +8,8 @@ import xml.etree.cElementTree as ET
 import os
 import json
 import ast
-from harmoni_common_lib.constants import HelperFunctions, RouterDetector
+from harmoni_common_lib.constants import  RouterDetector
+from harmoni_common_lib.helper_functions import HelperFunctions
 
 
 class Launcher():

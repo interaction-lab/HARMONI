@@ -12,7 +12,8 @@ import numpy as np
 import sys
 from botocore.exceptions import BotoCoreError, ClientError
 from contextlib import closing
-from harmoni_common_lib.constants import State, RouterActuator, HelperFunctions
+from harmoni_common_lib.constants import State, RouterActuator
+from harmoni_common_lib.helper_functions import HelperFunctions
 from harmoni_common_lib.child import WebServiceServer
 from harmoni_common_lib.service_manager import HarmoniExternalServiceManager
 
