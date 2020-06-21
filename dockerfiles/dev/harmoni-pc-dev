@@ -57,6 +57,7 @@ RUN catkin config \
 RUN \
        apt-get update -y && apt-get upgrade -y 
 
+RUN ln -s /root/harmoni_catkin_ws/src/HARMONI-PC /root/local_mount/
 
 # ==================================================================
 ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 /usr/local/bin/dumb-init

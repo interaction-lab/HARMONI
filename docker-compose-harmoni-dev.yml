@@ -23,14 +23,15 @@ services:
             ros_net:
         hostname: harmoni_core
         ports:
-            - "11311:11311"
-            - "33690:33690"
+            - "11312:11312"
+            - "33691:33691"
         devices: 
           - /dev/dri:/dev/dri
           - /dev/snd:/dev/snd
           - /dev/video0:/dev/video0
         volumes:
             - harmoni_catkin_ws:/root/harmoni_catkin_ws
+            - ../HARMONI/:/root/local_mount/HARMONI/
             # IDEs
             - pycharm_config:/root/.PyCharmCE2019.3/
             - aws_config:/root/.aws/
@@ -82,9 +83,11 @@ services:
             - /dev/snd:/dev/snd
             - /dev/video0:/dev/video0
         volumes:
-            #- ../model/w2l:/root/model/
+            - ../model/w2l:/root/model/w2l/
             - wav2letter:/root/wav2letter
             - harmoni_catkin_ws:/root/harmoni_catkin_ws
+            - ../HARMONI/:/root/local_mount/HARMONI/
+            - ../HARMONI-PC/:/root/local_mount/HARMONI-PC/
             # Configuration
             - ./dockerfiles/config/setup_script.sh:/root/.setup_script.sh
             - ./dockerfiles/config/dev_setup_script.sh:/root/.dev_setup_script.sh
@@ -129,7 +132,9 @@ services:
             - /dev/snd:/dev/snd
             - /dev/video0:/dev/video0
         volumes:
+            - ../HARMONI/:/root/local_mount/HARMONI/
             - harmoni-pc_catkin_ws:/root/harmoni_catkin_ws
+            - ../HARMONI-PC/:/root/local_mount/HARMONI-PC/
             # Configuration
             - ./dockerfiles/config/setup_script.sh:/root/.setup_script.sh
             - ./dockerfiles/config/dev_setup_script.sh:/root/.dev_setup_script.sh
@@ -173,6 +178,8 @@ services:
             - /dev/snd:/dev/snd
             - /dev/video0:/dev/video0
         volumes:
+            - ../HARMONI/:/root/local_mount/HARMONI/
+            - ../HARMONI-PC/:/root/local_mount/HARMONI-PC/
             - harmoni-pc_catkin_ws:/root/harmoni_catkin_ws
             # Configuration
             - ./dockerfiles/config/setup_script.sh:/root/.setup_script.sh
@@ -193,7 +200,6 @@ services:
 networks:
     ros_net:
         driver: bridge
-
 
 volumes:
     harmoni_catkin_ws:
