@@ -34,7 +34,7 @@ services:
             - ../HARMONI/:/root/local_mount/HARMONI/
             # IDEs
             - pycharm_config:/root/.PyCharmCE2019.3/
-            - aws_config:/root/.aws/
+            - ~/.aws:/root/.aws/
             - visual_code_config:/root/.visual_code/
             - ~/.vscode/:/root/.vscode/
             # Configuration
@@ -205,6 +205,5 @@ volumes:
     harmoni_catkin_ws:
     harmoni-pc_catkin_ws:
     wav2letter:
-    aws_config:
     pycharm_config:
     visual_code_config:
