@@ -23,17 +23,16 @@ class HarmoniRouter(HarmoniActionServer, object):
 
     def __init__(self, router_name, child_constants_names, last_event):
         """ Initialization of the variables """
-        rospy.loginfo("Initializing HarmoniRouter")
+        rospy.loginfo(f"Initializing HarmoniRouter: {router_name}")
         self.timeout_for_result = TIMEOUT_FOR_RESULT
         self.timeout_for_server = TIMEOUT_FOR_SERVER
         self.last_event = last_event
         self.children_clients = defaultdict(HarmoniActionClient)
         child_names = self._get_child_name(child_constants_names)
-        rospy.loginfo("The %s children are %s" %(router_name, child_names))
+        rospy.loginfo("The %s children are %s" % (router_name, child_names))
         for child in child_names:
             self.children_clients[child] = HarmoniActionClient()
         self.router_name = router_name
-
 
     def setup_actions(self, execute_goal_result_callback, execute_goal_feedback_callback):
         """ Setup clients of each subclass and the server of the router"""
@@ -58,10 +57,10 @@ class HarmoniRouter(HarmoniActionServer, object):
         Sending the goal request to the server (client role)
         """
         rospy.loginfo("The request data are:" + str(goal))
-        #if goal.condition != "uncondition":  # check if the action is conditioned by another event or not
-            #self.setup_conditional_startup(goal.condition, self.last_event)
+        # if goal.condition != "uncondition":  # check if the action is conditioned by another event or not
+        #self.setup_conditional_startup(goal.condition, self.last_event)
         rospy.loginfo("Start a goal request to the child")
-        self.children_clients[goal.child_server].send_goal(action_goal= goal.action_type, child_server=goal.child_server, optional_data=goal.optional_data, condition="", time_out=self.timeout_for_result)
+        self.children_clients[goal.child_server].send_goal(action_goal=goal.action_type, child_server=goal.child_server, optional_data=goal.optional_data, condition="", time_out=self.timeout_for_result)
         return
 
     def _get_child_name(self, child_constants_names):
@@ -75,5 +74,5 @@ class HarmoniRouter(HarmoniActionServer, object):
             for child in child_constants_names:
                 if child in repos[repo]:
                     for i in range(len(repos[repo][child])):
-                        child_names.append(repo + "_" + child +"_"+ repos[repo][child][i])
+                        child_names.append(repo + "_" + child + "_" + repos[repo][child][i])
         return child_names
