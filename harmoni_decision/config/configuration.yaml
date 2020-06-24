@@ -2,7 +2,7 @@
 harmoni:
   lex : ["default"]
   tts: ["default"]
-  web: ["default"]
+#   web: ["default"]
   stt: ["default"]
   face_detect: ["default"]
 pc:
