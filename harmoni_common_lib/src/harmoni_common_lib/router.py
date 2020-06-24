@@ -51,14 +51,19 @@ class HarmoniRouter(HarmoniActionServer, object):
         return
 
     def execute_goal_received_callback(self, goal):
-        """ 
+        """
         Receiving the request (server role)
         Check if setting up a conditional startup or not
         Sending the goal request to the server (client role)
         """
-        rospy.loginfo("The request data are:" + str(goal))
+        if len(goal.optional_data) < 500:
+            rospy.loginfo(f"Message: \n action_type type: {goal.action_type} \n optional_data: {goal.optional_data} \n child: {goal.child_server}")
+        else:
+            rospy.loginfo(f"Message: \n action_type type: {goal.action_type} \n optional_data: (too large to print) \n child: {goal.child_server}")
+
+        # rospy.loginfo("The request data are:" + str(goal))
         # if goal.condition != "uncondition":  # check if the action is conditioned by another event or not
-        #self.setup_conditional_startup(goal.condition, self.last_event)
+        # self.setup_conditional_startup(goal.condition, self.last_event)
         rospy.loginfo("Start a goal request to the child")
         self.children_clients[goal.child_server].send_goal(action_goal=goal.action_type, child_server=goal.child_server, optional_data=goal.optional_data, condition="", time_out=self.timeout_for_result)
         return
