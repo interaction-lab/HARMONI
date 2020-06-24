@@ -56,19 +56,19 @@ class DialogingPattern(HarmoniServiceManager, object):
 
     def _result_callback(self, result):
         """ Do something when result has been received """
-        rospy.loginfo("The result has been received")
+        rospy.loginfo("The result of the request has been received")
         data = result
+        rospy.loginfo(f"The result callback message was {len(data['message'])} long")
         if result["do_action"]:
+            # If you are not done working through your sequence, do the next step
             if not self.end_sequence:
-                rospy.loginfo(f"Results says to do sequence {data['message']}")
                 self.do_sequence(data['message'])
+            # If you are at the end of your sequence, work through the loop
             elif not self.end_looping and self.end_sequence:
-                rospy.loginfo(f"Results says to do loop {data['message']}")
-                self.do_loop(data)['message']
+                self.do_loop(data['message'])
         else:
-            # if the dialogue intent is finalized
-            # END THE BEHAVIOR PATTERN
-            print("END BEHAVIOR PATTERN. DO SOMETHING ELSE NOW.")
+            # If the result did not say to do anything next
+            print("Callback specified stop.")
         return
 
     def _feedback_callback(self, feedback):
@@ -76,16 +76,30 @@ class DialogingPattern(HarmoniServiceManager, object):
         rospy.logdebug("The feedback recieved is %s and nothing more" % feedback)
         return
 
-    def start(self, action_goal, child_server, router, optional_data):
-        """Start the Behavior Pattern sending the first goal to the child"""
+    def request_step(self, action_goal, child_server, router, optional_data):
+        """Send goal request to appropriate child"""
+        # try:
+        self.state = State.REQUEST
+        rospy.loginfo(f"Sending the following to the {router} router")
+        if len(optional_data) < 500:
+            rospy.loginfo(f"Message: \n action_goal type: {action_goal} \n optional_data: {optional_data} \n child: {child_server}")
+        else:
+            rospy.loginfo(f"Message: \n action_goal type: {action_goal} \n optional_data: (too large to print) \n child: {child_server}")
+
+        self.router_clients[router].send_goal(action_goal=action_goal, optional_data=optional_data, child_server=child_server)
+        rospy.loginfo("Goal sent.")
+        self.state = State.SUCCESS
+        # except:
+        #    self.state = State.FAILED
+        return
+
+    def start(self, data):
+        """Send goal request to appropriate child"""
         self.state = State.START
         rate = ""
         super().start(rate)
         # try:
-        self.state = State.REQUEST
-        rospy.loginfo(f"Sending the goal: {action_goal} to the router {router}")
-        self.router_clients[router].send_goal(action_goal=action_goal, optional_data=optional_data, child_server=child_server)
-        self.state = State.SUCCESS
+        self.do_sequence(data=data)
         # except:
         #    self.state = State.FAILED
         return
@@ -110,7 +124,7 @@ class DialogingPattern(HarmoniServiceManager, object):
         return
 
     def _get_action_info(self, action):
-        """Get action info """
+        """Helper function to get the server, router, and goal associated with an action"""
         self.state = action
         child_server = action
         router = self.action_info[child_server]["router"]
@@ -125,19 +139,22 @@ class DialogingPattern(HarmoniServiceManager, object):
             data: are the optional data to input to the service
         """
         self.count += 1
+        rospy.loginfo(f"************* Starting sequence step: {self.count}")
         action = self.sequence[self.count]
         if isinstance(action, list):
             for item in action:  # If it is an array, it means that is a parallel actions, so I start multiple goals
                 [child_server, router, action_goal] = self._get_action_info(item)
         else:
             [child_server, router, action_goal] = self._get_action_info(action)
+
         optional_data = data
-        self.start(action_goal, child_server, router, optional_data)
-        self.update(self.state)
+        self.request_step(action_goal, child_server, router, optional_data)
+        # self.update(self.state)
+
+        rospy.loginfo(f"************ End of sequence step: {self.count} *************")
         if self.count == len(self.sequence):
-            print("End of the sequence")
+            print("DONE WITH THE WHOLE SEQUENCE")
             self.end_sequence = True
-        rospy.loginfo(f"The count is {self.count}")
         return
 
     def do_loop(self, data):
@@ -147,18 +164,22 @@ class DialogingPattern(HarmoniServiceManager, object):
         Args:
             data: are the optional data to input to the service
         """
-        # self.count += 1
+        self.count_loop += 1
+        rospy.loginfo(f"Starting loop step: {self.count_loop}")
 
-        action = self.loop[self.count]
+        action = self.loop[self.count_loop]
+        rospy.loginfo(f"Loop step action is {action}")
         if isinstance(action, list):
             for item in action:  # If it is an array, it means that is a parallel actions, so I start multiple goals
                 [child_server, router, action_goal] = self._get_action_info(item)
+                self.request_step(self, action_goal, child_server, router, optional_data)
         else:
             [child_server, router, action_goal] = self._get_action_info(action)
+            self.request_step(self, action_goal, child_server, router, optional_data)
         optional_data = data
-        self.update(self.state)
-        self.start(self, action_goal, child_server, router, optional_data)
-        if self.count == len(self.loop):
+        # self.update(self.state)
+        
+        if self.count_loop == len(self.loop):
             print("End of the single loop")
             self.end_single_loop = True
             self.count_loop += 1
@@ -173,13 +194,15 @@ class DialogingPattern(HarmoniServiceManager, object):
 
 def main():
     trigger_intent = "Hey"
-    parallel = [DialogueState.SPEAKING, DialogueState.EXPRESSING]
+    parallel = [DialogueState.EXPRESSING, DialogueState.SPEAKING]
     sequence = [DialogueState.DIALOGING, DialogueState.SYNTHETIZING, parallel]
     loop = [DialogueState.SENSING, DialogueState.SPEECH_DETECTING, DialogueState.DIALOGING, DialogueState.SYNTHETIZING, parallel]
     try:
         rospy.init_node("dialoging_pattern")
+        # Initialize the pattern with pattern sequence/loop
         dp = DialogingPattern(sequence, loop)
-        dp.do_sequence(data=trigger_intent)
+        rospy.loginfo("Set up. Starting first step of dialogue pattern.")
+        dp.start(data=trigger_intent)
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
