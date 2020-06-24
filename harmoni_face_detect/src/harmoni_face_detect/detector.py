@@ -10,7 +10,8 @@ from cv_bridge import CvBridge, CvBridgeError
 import dlib
 import numpy as np
 
-from harmoni_common_lib.constants import State, RouterDetector, HelperFunctions, RouterSensor
+from harmoni_common_lib.constants import State, RouterDetector, RouterSensor
+from harmoni_common_lib.helper_functions import HelperFunctions
 from harmoni_common_lib.child import HarwareReadingServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 from harmoni_common_msgs.msg import Object2D, Object2DArray
@@ -112,7 +113,7 @@ def main():
     id_test = rospy.get_param("/id_test/")
     try:
         service_name = RouterDetector.face_detect.name
-        rospy.init_node(service_name + "_node")
+        rospy.init_node(service_name)
         list_service_names = HelperFunctions.get_child_list(service_name)
         service_server_list = []
         last_event = ""  # TODO

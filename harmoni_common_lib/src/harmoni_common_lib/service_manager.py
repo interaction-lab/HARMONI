@@ -5,19 +5,19 @@ import rospy
 import roslib
 
 
-
 class HarmoniServiceManager(object):
     """
     Service manager for the harware reading and internal service servers.
     Individual service managers overwrite the parent public functions.
     """
+
     def __init__(self, state):
         rospy.loginfo("Init the service manager state")
         self.state = state
 
     def update(self, state):
         self.state = state
-        rospy.loginfo("Update the state to %i" %state)
+        rospy.loginfo("Update the state to %i" % state)
         return
 
     def test(self):

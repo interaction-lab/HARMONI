@@ -88,7 +88,7 @@ def test(service, hi, wav_file, tts_input, dialogue_input, face_input, display_i
 def main():
     try: 
         interface_name = "behavior_interface"
-        rospy.init_node(interface_name + "_node")
+        rospy.init_node(interface_name)
         rospy.loginfo("Set up the %s" %interface_name)
         test_service = rospy.get_param("/test_service/")
         wav_file = rospy.get_param("/wav_file/")
