@@ -24,13 +24,18 @@ class HarmoniActuatorRouter(HarmoniRouter):
 
     def execute_result_callback(self, result):
         """ Do something when result has been received """
-        rospy.loginfo("The result has been received")
-        self.send_result(result["do_action"], result["message"])
+        rospy.loginfo("ActuatorRouter: A result has been received")
+        if not self.result_received:
+            rospy.loginfo(f"{self.router_name} Router: NO result was received earlier")
+            self.send_result(result["do_action"], result["message"])
+        else:
+            rospy.loginfo(f"{self.router_name} Router: a result was received earlier")
+        self.result_received = False
         return
 
     def execute_feedback_callback(self, feedback):
         """ Send the feedback backward when feedback has been received """
-        rospy.logdebug("The feedback received is %s" % feedback)
+        rospy.logdebug("ActuatorRouter: The feedback received is %s" % feedback)
         self.send_feedback(feedback["state"])
         return
 

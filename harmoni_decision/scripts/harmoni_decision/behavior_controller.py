@@ -15,12 +15,12 @@ class BehaviorController():
     This class is a singleton ROS node and should only be instantiated once.
     """
 
-    def __init__(self, auto_start=True, startup_patterns: list = None):        
+    def __init__(self, auto_start=True, startup_patterns: list = None):
         self.ready = False
         self.router_names = [enum.value for enum in list(constants.Router)]
         self.active_patterns = []
         self.router_clients = {}
-        self.topic_data = {} #accessed by behavior patterns
+        self.topic_data = {}  # accessed by behavior patterns
 
         self._subscribers = {}
         self._routers_connected = False
@@ -30,7 +30,6 @@ class BehaviorController():
             self.connect_to_routers()
             if startup_patterns:
                 self.setup_behavior_patterns(startup_patterns)
-                
 
     def _update_ready(self):
         if (self._routers_connected and self._topics_connected):
@@ -48,10 +47,10 @@ class BehaviorController():
         self._routers_connected = True
         self._update_ready()
         return
-    
+
     def setup_behavior_patterns(self, patterns: list):
         """Setup behavior patterns needed for this session.
-        
+
         Args:
             patterns(list<string>): All the behavior patterns we may use this session
         """
@@ -61,7 +60,7 @@ class BehaviorController():
             for topic_info in pattern.TOPICS:
                 if not (topic_info[ROUTE] in self.topic_data):
                     func = None
-                    #create a new callback function for each topic
+                    # create a new callback function for each topic
                     cb_name = str(count) + "_callback"
                     callback_def = inspect.cleandoc("""
                         def {}(cls, data):
@@ -71,10 +70,10 @@ class BehaviorController():
                     """.format(cb_name, topic_info[ROUTE], cb_name))
                     exec(callback_def)
                     setattr(self, cb_name, classmethod(func))
-                    
+
                     self._subscribers[topic_info[ROUTE]] = rospy.Subscriber(*topic_info, cb_name)
                     count += 1
-        self._topics_connected = True #TODO add error handling to provide a robust false case
+        self._topics_connected = True  # TODO add error handling to provide a robust false case
         self._update_ready()
         return
 

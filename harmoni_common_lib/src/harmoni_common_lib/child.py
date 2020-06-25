@@ -25,19 +25,21 @@ class HardwareControlServer(HarmoniActionServer, object):
 
         success = self.service_manager.test()
         if success:
-            rospy.loginfo("%s has been successfully set up" %name)
+            rospy.loginfo(
+                f"HardwareControlServer {self.name} has been successfully set up"
+            )
         else:
-            rospy.logwarn("%s has not been started" %name)
+            rospy.logwarn(f"HardwareControlServer {self.name} has not been started")
         self.setup_server(name, self._execute_goal_received_callback)
 
     def update_feedback(self):
         """Update the feedback message """
-        rospy.loginfo("Start updating the feedback")
+        rospy.loginfo("HardwareControlServer start continuously updating the feedback")
         while not rospy.is_shutdown():
             if self.service_manager.state != State.FAILED:
                 if self.service_manager.state != State.INIT:
                     self.send_feedback(self.service_manager.state)
-                rospy.Rate(.2)
+                rospy.Rate(0.2)
             else:
                 break
         return
@@ -54,17 +56,17 @@ class HardwareControlServer(HarmoniActionServer, object):
                 rospy.Rate(10)
 
         if success:
-            if self.service_manager.state == State.SUCCESS: # Success
-                rospy.loginfo("Result success")
+            if self.service_manager.state == State.SUCCESS:  # Success
+                rospy.loginfo(f"HardwareControlServer {self.name} result success")
                 self.send_result(
-                    do_action=True,
-                    message=self.service_manager.result_msg)
+                    do_action=True, message=self.service_manager.result_msg
+                )
                 self.service_manager.reset_init()
-            elif self.service_manager.state == State.FAILED: # Failure
-                rospy.loginfo("Result failure")
+            elif self.service_manager.state == State.FAILED:  # Failure
+                rospy.loginfo(f"HardwareControlServer {self.name} failure")
                 self.send_result(
-                    do_action=False,
-                    message=self.service_manager.result_msg)
+                    do_action=False, message=self.service_manager.result_msg
+                )
                 self.service_manager.reset_init()
         return
 
@@ -85,9 +87,9 @@ class WebServiceServer(HarmoniActionServer, object):
 
         success = self.service_manager.test()
         if success:
-            rospy.loginfo("%s has been successfully set up" %name)
+            rospy.loginfo(f"WebServiceServer {self.name} has been successfully set up")
         else:
-            rospy.logwarn("%s has not been started"%name)
+            rospy.logwarn(f"WebServiceServer {self.name} has not been started")
         self.setup_server(name, self._execute_goal_received_callback)
 
     def update_feedback(self):
@@ -97,7 +99,7 @@ class WebServiceServer(HarmoniActionServer, object):
             if self.service_manager.state != State.FAILED:
                 if self.service_manager.state != State.INIT:
                     self.send_feedback(self.service_manager.state)
-                rospy.Rate(.2)
+                rospy.Rate(0.2)
             else:
                 break
         return
@@ -106,25 +108,29 @@ class WebServiceServer(HarmoniActionServer, object):
         """
         Currently not supporting sending data to external service except through optional_data
         """
-        self.service_manager.request(goal.optional_data)  # state is in response_recieved, result in return_msg
+        self.service_manager.request(
+            goal.optional_data
+        )  # state is in response_recieved, result in return_msg
         success = True
         while not self.service_manager.response_received:
             if self.get_preemption_status():
-                rospy.loginfo("Check prempt")
+                rospy.loginfo(f"WebServiceServer {self.name} Check prempt")
                 success = False
                 rospy.Rate(10)
         if success:
-            rospy.loginfo("Send result")
-            rospy.loginfo("The state is %i" %self.service_manager.state)
-            if self.service_manager.state == State.SUCCESS: # Success
+            rospy.loginfo(f"WebServiceServer {self.name} Send result")
+            rospy.loginfo(
+                f"WebServiceServer {self.name} The state is {self.service_manager.state}"
+            )
+            if self.service_manager.state == State.SUCCESS:  # Success
                 self.send_result(
-                    do_action=True,
-                    message=self.service_manager.result_msg)
+                    do_action=True, message=self.service_manager.result_msg
+                )
                 self.service_manager.reset_init()
-            elif self.service_manager.state == State.FAILED: # Failure
+            elif self.service_manager.state == State.FAILED:  # Failure
                 self.send_result(
-                    do_action=False,
-                    message=self.service_manager.result_msg)
+                    do_action=False, message=self.service_manager.result_msg
+                )
                 self.service_manager.reset_init()
 
         return
@@ -145,9 +151,9 @@ class InternalServiceServer(HarmoniActionServer, object):
 
         success = self.service_manager.test()
         if success:
-            rospy.loginfo("%s has been successfully set up" % self.name)
+            rospy.loginfo(f"{self.name} has been successfully set up")
         else:
-            rospy.logwarn("%s has not been started" % self.name)
+            rospy.logwarn(f"{self.name} has not been started")
         self.setup_server(name, self._execute_goal_received_callback)
 
     def update_feedback(self):
@@ -158,9 +164,11 @@ class InternalServiceServer(HarmoniActionServer, object):
                 if self.service_manager.state != State.FAILED:
                     if self.service_manager.state != State.INIT:
                         self.send_feedback(self.service_manager.state)
-                    rospy.Rate(.2)
+                    rospy.Rate(0.2)
                 else:
-                    self.send_result(do_action=False, message=str(self.service_manager.state))
+                    self.send_result(
+                        do_action=False, message=str(self.service_manager.state)
+                    )
                     break
         return
 
@@ -191,16 +199,16 @@ class HarwareReadingServer(HarmoniActionServer, object):
         Initialize, control flow of information through sensor class
         """
         self.name = name
-        rospy.loginfo("The service name is %s" % self.name)
+        rospy.loginfo(f"The service name is {self.name}")
         self.service_manager = service_manager
 
         success = self.service_manager.test()
         if success:
-            rospy.loginfo("%s has been successfully set up" % self.name)
+            rospy.loginfo(f"{self.name} has been successfully set up")
         else:
-            rospy.logwarn("%s has not been started" % self.name)
+            rospy.logwarn(f"{self.name} has not been started")
         self.setup_server(name, self._execute_goal_received_callback)
- 
+
     def update_feedback(self):
         """Update the feedback message """
         rospy.loginfo("Start updating the feedback")
@@ -208,9 +216,11 @@ class HarwareReadingServer(HarmoniActionServer, object):
             if self.service_manager.state != State.FAILED:
                 if self.service_manager.state != State.INIT:
                     self.send_feedback(self.service_manager.state)
-                rospy.Rate(.2)
+                rospy.Rate(0.2)
             else:
-                self.send_result(do_action=False, message=str(self.service_manager.state))
+                self.send_result(
+                    do_action=False, message=str(self.service_manager.state)
+                )
                 break
         return
 
