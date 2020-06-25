@@ -29,7 +29,7 @@ class HarmoniBehaviorInterface():
         array_subscriber = []
         for name in router_names:
             array_router.append(name)
-        #for name in subscriber_names:
+        # for name in subscriber_names:
         #    array_subscriber.append(name)
         return(array_router)
 
@@ -50,14 +50,14 @@ class HarmoniBehaviorInterface():
 
     def execute_feedback_callback(self, feedback):
         """ Send the feedback state to the Behavior Pattern tree to decide what to do next """
-        rospy.logdebug("The feedback is %s" %feedback)
+        rospy.logdebug("The feedback is %s" % feedback)
         return
 
     def send_goal(self, action_goal, child_server, router, optional_data):
         self.router_clients[router].send_goal(action_goal=action_goal, optional_data=optional_data, child_server=child_server)
         return
 
-    
+
 def test(service, hi, wav_file, tts_input, dialogue_input, face_input, display_input):
     if service == "pc_microphone_def":
         rospy.loginfo("Send the goal listening to the SensorRouter")
@@ -70,7 +70,7 @@ def test(service, hi, wav_file, tts_input, dialogue_input, face_input, display_i
         hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="dialogue", optional_data=dialogue_input)
     elif service == "pc_speaker_def":
         file_handle = wav_file
-        data = np.fromfile(file_handle, np.uint8)[24:] #Loading wav file
+        data = np.fromfile(file_handle, np.uint8)[24:]  # Loading wav file
         data = data.astype(np.uint8).tostring()
         rospy.loginfo("Send the goal speaking to the ActuatorRouter")
         hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="actuator", optional_data=str(data))
@@ -85,11 +85,12 @@ def test(service, hi, wav_file, tts_input, dialogue_input, face_input, display_i
         hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="actuator", optional_data=display_input)
     return
 
+
 def main():
-    try: 
+    try:
         interface_name = "behavior_interface"
         rospy.init_node(interface_name)
-        rospy.loginfo("Set up the %s" %interface_name)
+        rospy.loginfo("Set up the %s" % interface_name)
         test_service = rospy.get_param("/test_service/")
         wav_file = rospy.get_param("/wav_file/")
         tts_input = rospy.get_param("/tts_input_text/")
@@ -98,7 +99,7 @@ def main():
         display_input = rospy.get_param("/display_input/")
         hi = HarmoniBehaviorInterface()
         if test_service != "":
-            rospy.loginfo("The service to be tested is %s" %test_service)
+            rospy.loginfo("The service to be tested is %s" % test_service)
             test(test_service, hi, wav_file, tts_input, dialogue_input, face_input, display_input)
         rospy.spin()
     except rospy.ROSInterruptException:

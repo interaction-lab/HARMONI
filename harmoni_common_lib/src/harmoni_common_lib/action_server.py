@@ -26,9 +26,14 @@ class HarmoniActionServer(object):
         self._feedback = harmoniFeedback()
         self._result = harmoniResult()
         self.action_topic = action_topic
-        self._action_server = actionlib.SimpleActionServer(self.action_topic, harmoniAction, self._goal_received_callback, auto_start=False)
+        self._action_server = actionlib.SimpleActionServer(
+            self.action_topic,
+            harmoniAction,
+            self._goal_received_callback,
+            auto_start=False,
+        )
         self._action_server.start()
-        rospy.loginfo("Server starts")
+        rospy.loginfo("(Server) Startup")
         self.execute_goal_received_callback = execute_goal_received_callback
         return
 
@@ -37,8 +42,12 @@ class HarmoniActionServer(object):
         self.action_goal = goal.action_type  # action request
         self.optional_data = goal.optional_data  # input data for the module
         self.child = goal.child_server  # external module that will accomplish the task
-        self.condition = goal.condition  # event condition to wait before starting the action
-        rospy.loginfo("The goal is: %i" %goal.action_type)
+        self.condition = (
+            goal.condition
+        )  # event condition to wait before starting the action
+        rospy.loginfo(
+            f"(Server) The goal is a {goal.action_type} request for {goal.child_server}"
+        )
         self.goal_received = True
         self.execute_goal_received_callback(goal)
         return
@@ -46,7 +55,7 @@ class HarmoniActionServer(object):
     def get_preemption_status(self):
         preempted = False
         if self._action_server.is_preempt_requested():
-            rospy.loginfo(self.action_goal + " Action Preemepted")
+            rospy.loginfo(f"(Server) {self.action_goal} Action Preemepted")
             self._action_server.set_preempted()
             preempted = True
         return preempted
@@ -54,7 +63,7 @@ class HarmoniActionServer(object):
     def get_goal_received(self):
         if self.goal_received:
             received = True
-            rospy.loginfo("The goal has been received:" + str(received))
+            rospy.loginfo("(Server) The goal has been received:" + str(received))
         else:
             received = False
         return received
@@ -65,14 +74,14 @@ class HarmoniActionServer(object):
         request_data["optional_data"] = self.optional_data
         request_data["child_server"] = self.child
         request_data["condition"] = self.condition
-        return(request_data)
+        return request_data
 
     def send_feedback(self, state):
         """ Send the feedback"""
         self._feedback.action_type = self.action_goal
         self._feedback.state = state
         self._action_server.publish_feedback(self._feedback)
-        rospy.logdebug("The feedback is " + str(self._feedback.state))
+        rospy.logdebug("(Server) The feedback is " + str(self._feedback.state))
         return
 
     def send_result(self, do_action, message):
@@ -81,5 +90,7 @@ class HarmoniActionServer(object):
         self._result.do_action = do_action
         self._result.message = message
         self._action_server.set_succeeded(self._result)
-        rospy.loginfo("The action %i  have been received" %self._result.action_type)
+        rospy.loginfo(
+            f"(Server) sending result {do_action} to actiontype {self.action_goal}"
+        )
         return

@@ -16,9 +16,10 @@ TIMEOUT_FOR_SERVER = 10
 
 class HarmoniRouter(HarmoniActionServer, object):
     """
-    A control provider receives some request from the manager and send the correspondings
-    request action to the child.
-    This class provides basic router functionality which the subclasses of router can exploit
+    A control provider receives some request from the manager and send the
+    correspondings request action to the child.
+    This class provides basic router functionality which the subclasses of
+    router can exploit
     """
 
     def __init__(self, router_name, child_constants_names, last_event):
@@ -33,21 +34,28 @@ class HarmoniRouter(HarmoniActionServer, object):
         for child in child_names:
             self.children_clients[child] = HarmoniActionClient()
         self.router_name = router_name
+        self.result_received = False
 
-    def setup_actions(self, execute_goal_result_callback, execute_goal_feedback_callback):
+    def setup_actions(
+        self, execute_goal_result_callback, execute_goal_feedback_callback
+    ):
         """ Setup clients of each subclass and the server of the router"""
         for child, client in self.children_clients.items():
-            client.setup_client(child, execute_goal_result_callback, execute_goal_feedback_callback)
-            rospy.loginfo("Set up client for " + child)
+            client.setup_client(
+                child, execute_goal_result_callback, execute_goal_feedback_callback
+            )
+            rospy.loginfo(f"{self.router_name} Router: Set up client for " + child)
         self.setup_server(self.router_name, self.execute_goal_received_callback)
         return
 
     def setup_conditional_startup(self, condition_event, checked_event):
         """ Set condition for starting the action """
         while condition_event != checked_event:
-            rospy.loginfo("Waiting for event to finish")
+            rospy.loginfo(f"{self.router_name} Router: Waiting for event to finish")
             rospy.Rate(1)
-        rospy.loginfo("Conditional event ended successfully")
+        rospy.loginfo(
+            f"{self.router_name} Router: Conditional event ended successfully"
+        )
         return
 
     def execute_goal_received_callback(self, goal):
@@ -57,27 +65,58 @@ class HarmoniRouter(HarmoniActionServer, object):
         Sending the goal request to the server (client role)
         """
         if len(goal.optional_data) < 500:
-            rospy.loginfo(f"Message: \n action_type type: {goal.action_type} \n optional_data: {goal.optional_data} \n child: {goal.child_server}")
+            rospy.loginfo(
+                f"{self.router_name} Router-Message: \n action_type type: {goal.action_type} \n optional_data: {goal.optional_data} \n child: {goal.child_server}"
+            )
         else:
-            rospy.loginfo(f"Message: \n action_type type: {goal.action_type} \n optional_data: (too large to print) \n child: {goal.child_server}")
-
+            rospy.loginfo(
+                f"{self.router_name} Router-Message: \n action_type type: {goal.action_type} \n optional_data: (too large to print) \n child: {goal.child_server}"
+            )
+        # TODO This hack is going to need some work
+        wait = True
+        if (
+            goal.child_server
+            == "pc_face_default"
+            # or goal.child_server == "pc_speaker_default"
+        ):
+            wait = False
         # rospy.loginfo("The request data are:" + str(goal))
         # if goal.condition != "uncondition":  # check if the action is conditioned by another event or not
         # self.setup_conditional_startup(goal.condition, self.last_event)
-        rospy.loginfo("Start a goal request to the child")
-        self.children_clients[goal.child_server].send_goal(action_goal=goal.action_type, child_server=goal.child_server, optional_data=goal.optional_data, condition="", time_out=self.timeout_for_result)
+        rospy.loginfo(
+            f"{self.router_name} Router: Start a goal request to the {goal.child_server}"
+        )
+        self.children_clients[goal.child_server].send_goal(
+            action_goal=goal.action_type,
+            child_server=goal.child_server,
+            optional_data=goal.optional_data,
+            condition="",
+            time_out=self.timeout_for_result,
+            wait=wait,
+        )
+        rospy.loginfo(f"{self.router_name} Router: message sent")
+        if not wait:
+            rospy.loginfo(
+                f"{self.router_name} Router: Not waiting, submitting an early return"
+            )
+            self.send_result(True, "Early return")
+            self.result_received = True
         return
 
     def _get_child_name(self, child_constants_names):
         """Get children from config file"""
         abs_path = os.path.abspath(__file__)
         path = abs_path.split("HARMONI/")
-        with open(path[0] + 'HARMONI/harmoni_decision/config/configuration.yaml') as file:
+        with open(
+            path[0] + "HARMONI/harmoni_decision/config/configuration.yaml"
+        ) as file:
             repos = yaml.load(file, Loader=yaml.FullLoader)
         child_names = []
         for repo in repos:
             for child in child_constants_names:
                 if child in repos[repo]:
                     for i in range(len(repos[repo][child])):
-                        child_names.append(repo + "_" + child + "_" + repos[repo][child][i])
+                        child_names.append(
+                            repo + "_" + child + "_" + repos[repo][child][i]
+                        )
         return child_names
