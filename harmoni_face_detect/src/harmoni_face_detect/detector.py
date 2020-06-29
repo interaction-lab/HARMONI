@@ -1,21 +1,23 @@
 #! /usr/bin/env python3
 
-from sensor_msgs.msg import Image
-from harmoni_common_msgs.msg import Object2D, Object2DArray
-from harmoni_common_lib.service_manager import HarmoniServiceManager
-from harmoni_common_lib.child import HarwareReadingServer
-from harmoni_common_lib.helper_functions import HelperFunctions
-from harmoni_common_lib.constants import State, RouterDetector, RouterSensor
-import numpy as np
-import dlib
-from cv_bridge import CvBridge, CvBridgeError
-import cv2
+
 import rospy
 import roslib
 import sys
 
 sys.path.remove("/opt/ros/kinetic/lib/python2.7/dist-packages")
 sys.path.append("/opt/ros/kinetic/lib/python2.7/dist-packages")
+import cv2
+from cv_bridge import CvBridge, CvBridgeError
+import dlib
+import numpy as np
+
+from harmoni_common_lib.constants import State, RouterDetector, RouterSensor
+from harmoni_common_lib.helper_functions import HelperFunctions
+from harmoni_common_lib.child import HarwareReadingServer
+from harmoni_common_lib.service_manager import HarmoniServiceManager
+from harmoni_common_msgs.msg import Object2D, Object2DArray
+from sensor_msgs.msg import Image
 
 
 class DlibFaceDetector(HarmoniServiceManager):
