@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-# Importing the libraries
 import rospy
 import roslib
 from actionlib import SimpleActionClient
@@ -11,8 +10,8 @@ from harmoni_common_lib.constants import State
 class HarmoniActionClient(object):
     """A wrapper around SimpleActionClient that is structured for HARMONI architecture.
 
-    Controllers and manager are clients.
-    This class provides basic client functionality which controller and manager extend,
+    Routers and managers are clients.
+    This class provides basic client functionality which routers and managers extend,
     including basic type checking, warnings, interrupts, etc.
     """
 
@@ -22,6 +21,7 @@ class HarmoniActionClient(object):
         self._set_com_flag_variables()
 
     def _set_com_flag_variables(self):
+        """ Set communication flag variables to default: False """
         self.feedback_received = False
         self.result_received = False
         return
@@ -70,7 +70,7 @@ class HarmoniActionClient(object):
         wait=True,
     ):
         """Init client action variables and setup client 
-        
+
         Args:
             action_type_name (str): The name of the action server the client should connect to. #TODO rename. this is just the server name.
             execute_goal_result_callback (func): [Optional] A callback function
@@ -79,7 +79,9 @@ class HarmoniActionClient(object):
                 handle for action feedback.
             wait (bool): Indicates whether
         """
+
         self._init_action_variables()
+
         self.action_client = SimpleActionClient(action_type_name, harmoniAction)
         if wait:
             rospy.loginfo(
@@ -88,6 +90,7 @@ class HarmoniActionClient(object):
                 )
             )
             self.action_client.wait_for_server()
+
         self.execute_goal_result_callback = execute_goal_result_callback
         self.execute_goal_feedback_callback = execute_goal_feedback_callback
         rospy.loginfo("action_client {} server connected.".format(action_type_name))
@@ -95,7 +98,7 @@ class HarmoniActionClient(object):
 
     def get_feedback_data(self):
         """Return Feedback Data
-        
+
         Returns:
             dictionary: feedback message content 
         """
@@ -103,7 +106,7 @@ class HarmoniActionClient(object):
 
     def get_result_data(self):
         """Return Result Data
-        
+
         Returns:
             dictionary: result message content 
         """
@@ -119,12 +122,13 @@ class HarmoniActionClient(object):
         wait=True,
     ):
         """Sends a goal to the action server tied to this client.
-        
+
         Args:
             action_goal (harmoniGoal): The goal object given to the action server
             optional_data: 
         Reset of check variables. Send goal and set the time out 
         """
+
         self._set_com_flag_variables()
         goal = harmoniGoal(
             action_type=action_goal,
@@ -144,4 +148,50 @@ class HarmoniActionClient(object):
         else:
             rospy.loginfo("(Client) Not waiting for result.")
 
+        return
+
+    def _result_callback(self, terminal_state, result):
+        """ Save the action result and perform the callback if set """
+        rospy.loginfo("Heard result from: %i" % result.action_type)
+        self._action_result["do_action"] = result.do_action
+        self._action_result["message"] = result.message
+
+        if (self.execute_goal_result_callback):
+            self.execute_goal_result_callback(self._action_result)
+
+        self.result_received = True
+        return
+
+    def _feedback_callback(self, feedback):
+        """ Save the action feedback and perform the callback if set """
+        rospy.logdebug("Heard back feedback from: %i" % feedback.action_type)
+        self._action_feedback["state"] = feedback.state
+
+        if (self.execute_goal_feedback_callback):
+            self.execute_goal_feedback_callback(self._action_feedback)
+
+        self.feedback_received = True
+        return
+
+    def _result_callback(self, terminal_state, result):
+        """ Save the action result and perform the callback if set """
+        rospy.loginfo("Heard result from: %i" % result.action_type)
+        self._action_result["do_action"] = result.do_action
+        self._action_result["message"] = result.message
+
+        if (self.execute_goal_result_callback):
+            self.execute_goal_result_callback(self._action_result)
+
+        self.result_received = True
+        return
+
+    def _feedback_callback(self, feedback):
+        """ Save the action feedback and perform the callback if set """
+        rospy.logdebug("Heard back feedback from: %i" % feedback.action_type)
+        self._action_feedback["state"] = feedback.state
+
+        if (self.execute_goal_feedback_callback):
+            self.execute_goal_feedback_callback(self._action_feedback)
+
+        self.feedback_received = True
         return
