@@ -51,7 +51,7 @@ services:
             - /etc/localtime:/etc/localtime:ro
         working_dir: /root/harmoni_catkin_ws/src/HARMONI
         command: bash -c "
-            terminator -ue \"git pull > git_status.txt && echo 'Entering harmoni_core Container... \\n start with roscore and rlharmoni' && bash\""
+            terminator -ue \" echo 'Entering harmoni_core Container... \\n start with roscore and rlharmoni' && bash\""
 
     ros_w2l:
         container_name: ros_w2l
@@ -102,7 +102,7 @@ services:
             - /etc/localtime:/etc/localtime:ro
         working_dir: /root/harmoni_catkin_ws/src/HARMONI
         command: bash -c "
-            terminator -ue \"git pull > git_status.txt && echo 'Entering ros_w2l Container... \\n start with rlspeech' && bash\" "
+            terminator -ue \" echo 'Entering ros_w2l Container... \\n start with rlspeech' && bash\" "
 
     harmoni_visual_detector:
         container_name: harmoni_visual_detector
@@ -149,7 +149,7 @@ services:
             - /etc/localtime:/etc/localtime:ro
         working_dir: /root/harmoni_catkin_ws/src/HARMONI
         command: bash -c "
-            terminator -ue \"git pull > git_status.txt && cd ../HARMONI-PC && git pull > git_status.txt && echo 'Entering harmoni_visual_detector Container... \\n start with rlfacedetect' && bash\""
+            terminator -ue \" cd ../HARMONI-PC &&  echo 'Entering harmoni_visual_detector Container... \\n start with rlfacedetect' && bash\""
 
     harmoni_pc:
         container_name: harmoni_pc
@@ -195,7 +195,7 @@ services:
             - /etc/localtime:/etc/localtime:ro
         working_dir: /root/harmoni_catkin_ws/src/HARMONI
         command: bash -c "
-            terminator -ue \"git pull > git_status.txt && cd ../HARMONI-PC && git pull > git_status.txt && echo 'Entering harmoni_pc Container... \\n start with rlpcservices' && bash\""
+            terminator -ue \" cd ../HARMONI-PC &&  echo 'Entering harmoni_pc Container... \\n start with rlpcservices' && bash\""
 
 networks:
     ros_net:
