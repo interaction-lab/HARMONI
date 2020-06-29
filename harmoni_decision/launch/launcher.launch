@@ -1,0 +1,13 @@
+<!-- This is an example launch file for how a ROS application could use a node -->
+<launch>
+	<arg name="launch" default="true"/> <!--Set it to false if you want just to create the file-->
+	<arg name="router" default="true"/>
+	<!-- If you want to launch multiple services from different repo set the service:="harmoni,pc", 
+	so you need to list the repo you want to launch the services from-->
+	<arg name="service" default="harmoni"/> 
+		<node pkg="harmoni_decision" type="launcher.py" name="harmoni_launcher" output="screen">
+			<param name="router" value="$(arg router)"/>
+			<param name="service" value="$(arg service)"/>
+			<param name="launch" value="$(arg launch)"/>
+		</node>
+</launch>

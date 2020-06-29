@@ -1,13 +1,4 @@
-# ==================================================================
-# module list
-# ------------------------------------------------------------------
-# Ubuntu           16.04
-# cmake            3.10         (git)
-# MKL              2018.4-057   (apt)
-# libsndfile       bef2abc      (git)
-# KenLM            e47088d      (git)
-# python           3.6          (apt)
-# ==================================================================
+
 
 FROM cmbirmingham/harmoni-dev:latest
 
@@ -67,12 +58,9 @@ run \
     rm -rf /var/lib/apt/lists/* /tmp/*
 
 
+# ==================================================================
 WORKDIR /root/
 RUN git clone https://github.com/facebookresearch/wav2letter.git
-# Copy wav2letter src directory from host.
-# RUN mkdir /root/wav2letter
-# COPY . /root/wav2letter
-RUN ls /root/wav2letter
 
 # build w2l
 RUN export KENLM_ROOT_DIR=/root/kenlm && \
@@ -84,18 +72,15 @@ RUN export KENLM_ROOT_DIR=/root/kenlm && \
     cmake .. -DCMAKE_BUILD_TYPE=Release -DW2L_BUILD_LIBRARIES_ONLY=ON -DW2L_LIBRARIES_USE_CUDA=OFF -DW2L_BUILD_INFERENCE=ON   && \
     make -j$(nproc)
 
-# install packages
-RUN apt-get update && apt-get install -q -y --no-install-recommends \
-    dirmngr \
-    gnupg2 \
-    && rm -rf /var/lib/apt/lists/*
 
 
+# ==================================================================
 # For convenience add a source script to bashrc and update without clearing
 RUN \
        apt-get update -y && apt-get upgrade -y
 
 
+# ==================================================================
 ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 /usr/local/bin/dumb-init
 RUN chmod +x /usr/local/bin/dumb-init
 ENTRYPOINT ["/usr/local/bin/dumb-init","--rewrite","15:10","--"]

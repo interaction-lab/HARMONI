@@ -13,7 +13,7 @@ class HarmoniSensorRouter(HarmoniRouter):
 
     def __init__(self, router_name, last_event):
         """ Init router"""
-        child_constants_names = [enum.value for enum in list(RouterSensor)]
+        child_constants_names = [enum.name for enum in list(RouterSensor)]
         super(HarmoniSensorRouter, self).__init__(router_name, child_constants_names, last_event)
         
 
@@ -24,7 +24,7 @@ class HarmoniSensorRouter(HarmoniRouter):
 
     def execute_result_callback(self, result):
         """ Do something when result has been received """
-        rospy.loginfo("The result received is %s" %result)
+        rospy.loginfo("The result has been received")
         return
 
     def execute_feedback_callback(self, feedback):

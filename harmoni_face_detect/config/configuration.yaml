@@ -1,0 +1,6 @@
+# Configuration file for the microphone
+harmoni_face_detect:
+  default_param:
+    rate_frame: 10
+    up_sampling: 0
+    subscriber_id : "default"

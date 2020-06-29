@@ -5,12 +5,10 @@ from subprocess import Popen, PIPE
 import select
 import pty
 import os
-import sys
 import time
 import re
-
 import rospy
-from harmoni_common_lib.constants import State, RouterDetector, HelperFunctions
+from harmoni_common_lib.constants import State, RouterDetector, HelperFunctions, RouterSensor
 from harmoni_common_lib.child import InternalServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 from audio_common_msgs.msg import AudioData
@@ -26,12 +24,16 @@ class SpeechToTextService(HarmoniServiceManager):
         """ Initialization of variables and w2l parameters """
         rospy.loginfo("Wav2Letter initializing")
         self.name = name
+        self.subscriber_id = param["subscriber_id"]
         self.model_path = param["model_path"]
+        if not os.path.isdir(self.model_path):
+            raise Exception("W2L model has not been dowloaded", "Try running get_w2l_models.sh")
         self.w2l_bin = param["w2l_bin"]
+        self.service_id = HelperFunctions.get_child_id(self.name)
         """Setup publishers and subscribers"""
-        rospy.Subscriber('/harmoni/sensing/listening/microphone', AudioData, self.callback)
-        self.text_pub = rospy.Publisher('/harmoni/detecting/speech', String, queue_size=10)
-        """Setup the microphone service as server """
+        rospy.Subscriber(RouterSensor.microphone.value + self.subscriber_id+ "/talking"  , AudioData, self.callback)
+        self.text_pub = rospy.Publisher(RouterDetector.stt.value + self.service_id , String, queue_size=10)
+        """Setup the stt service as server """
         self.state = State.INIT
         super().__init__(self.state)
         return
@@ -93,21 +95,26 @@ class SpeechToTextService(HarmoniServiceManager):
                 self.text_pub.publish(text)
         else:
             rospy.loginfo("Not Transcribing Audio")
-
         return
 
     def transcribe_file(self, file_name):
+        """ Transcription of audio into text from file"""
+        rospy.loginfo("Transcription of audio file")
         with open(file_name, mode='rb') as wav_file:
             wav_contents = wav_file.read()
         self.transcribe_bytes(wav_contents)
+        return
 
     def transcribe_bytes(self, b_string):
+        """ Transcription of bytes"""
+        rospy.loginfo("Transcription of the bytes")
         outs, errs = self.w2l_process.communicate(input=b_string, timeout=15)
+        print(outs, errs)
         text_list = self.fix_text(outs)
+        rospy.loginfo("The text list is %s" %text_list)
         if not any(text_list):
             self.set_w2l_proc()
             return
-        print(text_list)
         self.set_w2l_proc()
         text_list = [t for t in text_list if t]
         return ' '.join(text_list)
@@ -126,45 +133,32 @@ class SpeechToTextService(HarmoniServiceManager):
             final_output.append(sec)
         return(final_output)
 
-# FOR MULTIPLE INSTANCES OF THE SAME DETECTOR
 def main():
-    args = sys.argv
+    test = rospy.get_param("/test/")
+    input_test = rospy.get_param("/input_test/")
+    id_test = rospy.get_param("/id_test/")
     try:
-        service_name = RouterDetector.STT.value
+        service_name = RouterDetector.stt.name
         rospy.init_node(service_name + "_node")
         list_service_names = HelperFunctions.get_child_list(service_name)
         service_server_list = []
-        last_event = ""  
+        last_event = "" 
         for service in list_service_names:
             print(service)
             service_id = HelperFunctions.get_child_id(service)
-            param = rospy.get_param("/"+service_id+"_param/")
+            param = rospy.get_param("~"+service_id+"_param/")
             s = SpeechToTextService(service, param)
             service_server_list.append(InternalServiceServer(name=service, service_manager=s))
-            if args[1]:
+            if test and (service_id == id_test):
+                rospy.loginfo("Testing the %s" %(service))
                 s.start()
-        #for server in service_server_list:
-            #server.update_feedback()
+                s.transcribe_file(input_test)
+        if not test:
+            for server in service_server_list:
+                server.update_feedback()
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
-
-"""
-def main():
-    args = sys.argv
-    try:
-        service_name = RouterDetector.STT.value
-        rospy.init_node(service_name + "_node")
-        param = rospy.get_param("/def_param/")
-        s = SpeechToTextService(service_name, param)
-        hardware_reading_server = InternalServiceServer(name=service_name, service_manager=s)
-        if args[1]:
-            s.start()
-        # hardware_reading_server.update_feedback()
-        rospy.spin()
-    except rospy.ROSInterruptException:
-        pass
-"""
 
 if __name__ == "__main__":
     main()

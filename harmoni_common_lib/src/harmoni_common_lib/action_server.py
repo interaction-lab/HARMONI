@@ -12,7 +12,7 @@ class HarmoniActionServer(object):
     Most nodes (both routers and children) are servers.
     This class provides basic server functionality which routers and children extend,
     including basic type checking, warnings, interrupts, etc.py
-    
+
     TODO: Implement priority handling for received goals instead of preempting current goals.
 
     """
@@ -26,7 +26,7 @@ class HarmoniActionServer(object):
         self._feedback = harmoniFeedback()
         self._result = harmoniResult()
         self.action_topic = action_topic
-        # autostart can be buggy, so start is called explicitly 
+        # autostart can be buggy, so start is called explicitly
         self._action_server = actionlib.SimpleActionServer(self.action_topic, harmoniAction, self._goal_received_callback, auto_start=False)
         self._action_server.start()
         self.execute_goal_received_callback = execute_goal_received_callback
@@ -39,7 +39,7 @@ class HarmoniActionServer(object):
         self.optional_data = goal.optional_data  # input data for the module
         self.child = goal.child_server  # external module that will accomplish the task
         self.condition = goal.condition  # event condition to wait before starting the action
-        
+
         self.goal_received = True
         rospy.loginfo("The goal is: %i" % goal.action_type)
         # Perform the callback set by child

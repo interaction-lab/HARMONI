@@ -24,7 +24,8 @@ class HarmoniServiceManager(object):
         """ Test the hardware, sending default action """
         return
 
-    def start(self, rate):
+    #FIXME this rate is not used and it also depends on being set by HarwareReadingServer which calls the start function without the rate argument.
+    def start(self, rate): 
         """ Start reading or processing data """
         return
 

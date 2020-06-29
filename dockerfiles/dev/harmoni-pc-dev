@@ -8,28 +8,19 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         libboost-all-dev \
-    #    nodejs \
-    #    npm \
-    #    && \
-    #npm install http-server -g && \
-    #ln -s /usr/bin/nodejs /usr/bin/node \
     && \
     PIP_INSTALL="python3.6 -m pip --no-cache-dir install --upgrade" && \
     $PIP_INSTALL \
         opencv-python \
         && \
-    rm -rf /var/lib/apt/lists/* /tmp/*
-
-
 # ==================================================================
 # install ros packages for harmoni
 # ------------------------------------------------------------------
-RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
-    apt-get update && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
     ros-$ROS_DISTRO-dynamixel-msgs \
     build-essential \
-    && rm -rf /var/lib/apt/lists/*
+    && \
+    rm -rf /var/lib/apt/lists/* /tmp/*
 
 
 ENV ROS_WS /root/harmoni_catkin_ws
@@ -45,14 +36,6 @@ RUN ln -s /usr/lib/x86_64-linux-gnu/libboost_python-py35.so /usr/lib/x86_64-linu
 # ==================================================================
 # build ros package source
 # ------------------------------------------------------------------
-RUN catkin config \
-       --extend /opt/ros/$ROS_DISTRO \
-       -DPYTHON_EXECUTABLE=/usr/bin/python3.6 \
-       -DPYTHON_INCLUDE_DIR=/usr/include/python3.6m \
-       -DPYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.6m.so \
-       && \
-    catkin build
-
 RUN git -C src clone \
       -b develop \
       https://github.com/interaction-lab/HARMONI-PC.git 
@@ -70,10 +53,12 @@ RUN catkin config \
     catkin build
 
 
+# ==================================================================
 RUN \
        apt-get update -y && apt-get upgrade -y 
 
 
+# ==================================================================
 ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 /usr/local/bin/dumb-init
 RUN chmod +x /usr/local/bin/dumb-init
 ENTRYPOINT ["/usr/local/bin/dumb-init","--rewrite","15:10","--"]

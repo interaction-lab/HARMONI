@@ -6,20 +6,45 @@ import yaml
 import os
 
 class HelperFunctions:
+    def get_routers():
+        router_names = [enum.value for enum in list(Router)]
+        return router_names
+
     def get_child_list(child_name): 
         """Get children from config file"""
         abs_path = os.path.abspath(__file__)
         path = abs_path.split("HARMONI/")
         with open(path[0] + 'HARMONI/harmoni_decision/config/configuration.yaml') as file:
             repos = yaml.load(file, Loader=yaml.FullLoader)
-        for repo in repos["repo"]:
-            if child_name in repos["repo"][repo]:
+        for repo in repos:
+            if child_name in repos[repo]:
                 repo_child_name = repo + "_" + child_name
-        [child_repo, child_name] = repo_child_name.split("_")
+        child_repo = repo_child_name.split("_")[0]
         ids_list = []
-        for id_child in repos["repo"][child_repo][child_name]:
+        for id_child in repos[child_repo][child_name]:
             ids_list.append(child_repo + "_" + child_name+ "_" + id_child)
         return ids_list
+
+    def get_service_list_of_repo(repository): 
+        """Get children from config file of a specific repo"""
+        abs_path = os.path.abspath(__file__)
+        path = abs_path.split("HARMONI/")
+        service_list = []
+        with open(path[0] + 'HARMONI/harmoni_decision/config/configuration.yaml') as file:
+            repos = yaml.load(file, Loader=yaml.FullLoader)
+        for repo in repos:
+            if repo == repository:
+                for child in repos[repo]:
+                    repo_child_name = repo + "_" + child
+                    child_array = repo_child_name.split("_")
+                    child_name = ""
+                    for i in range(0,len(child_array)):
+                        if i == 0:
+                            child_repo = child_array[0]
+                        else:
+                            child_name += "_"+child_array[i]
+                    service_list.append(child_repo + child_name)
+        return service_list
 
     def get_child_id(service_name):
         """Get id of the child from service name"""
@@ -27,12 +52,23 @@ class HelperFunctions:
         id = service[-1]
         return id
 
+    def get_all_repos():
+        abs_path = os.path.abspath(__file__)
+        path = abs_path.split("HARMONI/")
+        repo_list = []
+        with open(path[0] + 'HARMONI/harmoni_decision/config/configuration.yaml') as file:
+            repos = yaml.load(file, Loader=yaml.FullLoader)
+        for repo in repos:
+            repo_list.append(repo)
+        return repo_list
+
+
 
 class ActionType(IntEnum):
+    OFF = 0
     ON = 1
-    OFF = 2
-    PAUSE = 3
-    REQUEST = 4
+    PAUSE = 2
+    REQUEST = 3
 
 class State(IntEnum):
     INIT = 0
@@ -48,22 +84,22 @@ class Router(Enum):
     DETECTOR = "detector"
 
 class RouterSensor(Enum):
-    MICROPHONE = "microphone"
-    CAMERA = "camera"
-    PATH = "/harmoni/sensing/"
+    microphone = "/harmoni/sensing/microphone/"
+    camera = "/harmoni/sensing/camera/"
+    ROUTER = "/harmoni/sensing/"
 
 class RouterActuator(Enum):
-    SPEAKER = "speaker"
-    FACE = "face"
-    TTS = "tts"
-    WEB = "web"
-    PATH = "/harmoni/actuating/"
+    speaker = "/harmoni/actuating/speaker/"
+    face = "/harmoni/actuating/face/"
+    tts = "/harmoni/actuating/tts/"
+    web = "/harmoni/actuating/web/"
+    ROUTER = "/harmoni/actuating/"
 
 class RouterDialogue(Enum):
-    LEX = "lex"
-    PATH = "/harmoni/dialoging/"
+    lex = "/harmoni/dialoging/lex/"
+    ROUTER = "/harmoni/dialoging/"
 
 class RouterDetector(Enum):
-    STT = "stt"
-    FACE_DETECT = "face_detect"
-    PATH = "/harmoni/detecting/"
+    stt = "/harmoni/detecting/stt/"
+    face_detect = "/harmoni/detecting/face_detect/"
+    ROUTER = "/harmoni/detecting/"
