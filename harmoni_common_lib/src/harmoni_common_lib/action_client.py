@@ -172,3 +172,26 @@ class HarmoniActionClient(object):
 
         self.feedback_received = True
         return
+
+    def _result_callback(self, terminal_state, result):
+        """ Save the action result and perform the callback if set """
+        rospy.loginfo("Heard result from: %i" % result.action_type)
+        self._action_result["do_action"] = result.do_action
+        self._action_result["message"] = result.message
+
+        if (self.execute_goal_result_callback):
+            self.execute_goal_result_callback(self._action_result)
+
+        self.result_received = True
+        return
+
+    def _feedback_callback(self, feedback):
+        """ Save the action feedback and perform the callback if set """
+        rospy.logdebug("Heard back feedback from: %i" % feedback.action_type)
+        self._action_feedback["state"] = feedback.state
+
+        if (self.execute_goal_feedback_callback):
+            self.execute_goal_feedback_callback(self._action_feedback)
+
+        self.feedback_received = True
+        return
