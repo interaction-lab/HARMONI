@@ -4,10 +4,10 @@
 from enum import IntEnum, Enum
 
 class ActionType(IntEnum):
+    OFF = 0
     ON = 1
-    OFF = 2
-    PAUSE = 3
-    REQUEST = 4
+    PAUSE = 2
+    REQUEST = 3
 
 class State(IntEnum):
     INIT = 0
