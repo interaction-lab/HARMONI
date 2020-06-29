@@ -12,8 +12,8 @@
   <!-- <url type="website">http://wiki.ros.org/harmoni_actuator</url> -->
 
   <author email="cbirming@usc.edu">Chris Birmingham</author>
-  <author email="rmswan@usc.edu ">Michael Swan</author>
-  <author email="micol.spitale@polimi.it ">Micol Spitale</author>
+<!--author email="rmswan@usc.edu ">Michael Swan</author>
+  <author email="micol.spitale@polimi.it ">Micol Spitale</author-->
 
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>rospy</build_depend>

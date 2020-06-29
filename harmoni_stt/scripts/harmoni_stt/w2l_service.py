@@ -28,12 +28,20 @@ class SpeechToTextService(HarmoniServiceManager):
         self.subscriber_id = param["subscriber_id"]
         self.model_path = param["model_path"]
         if not os.path.isdir(self.model_path):
-            raise Exception("W2L model has not been dowloaded", "Try running get_w2l_models.sh")
+            raise Exception(
+                "W2L model has not been dowloaded", "Try running get_w2l_models.sh"
+            )
         self.w2l_bin = param["w2l_bin"]
         self.service_id = HelperFunctions.get_child_id(self.name)
         """Setup publishers and subscribers"""
-        rospy.Subscriber(RouterSensor.microphone.value + self.subscriber_id+ "/talking"  , AudioData, self.callback)
-        self.text_pub = rospy.Publisher(RouterDetector.stt.value + self.service_id , String, queue_size=10)
+        rospy.Subscriber(
+            RouterSensor.microphone.value + self.subscriber_id + "/talking",
+            AudioData,
+            self.callback,
+        )
+        self.text_pub = rospy.Publisher(
+            RouterDetector.stt.value + self.service_id, String, queue_size=10
+        )
         """Setup the stt service as server """
         self.state = State.INIT
         super().__init__(self.state)
@@ -81,11 +89,15 @@ class SpeechToTextService(HarmoniServiceManager):
         return
 
     def set_w2l_proc(self):
-        self.w2l_process = Popen(['{} --input_files_base_path={}'.format(self.w2l_bin, self.model_path)],
-                                 bufsize=1,
-                                 stdin=PIPE, stdout=PIPE, stderr=PIPE,
-                                 shell=True,
-                                 close_fds=True)
+        self.w2l_process = Popen(
+            ["{} --input_files_base_path={}".format(self.w2l_bin, self.model_path)],
+            bufsize=1,
+            stdin=PIPE,
+            stdout=PIPE,
+            stderr=PIPE,
+            shell=True,
+            close_fds=True,
+        )
         return
 
     def callback(self, data):
@@ -101,7 +113,7 @@ class SpeechToTextService(HarmoniServiceManager):
     def transcribe_file(self, file_name):
         """ Transcription of audio into text from file"""
         rospy.loginfo("Transcription of audio file")
-        with open(file_name, mode='rb') as wav_file:
+        with open(file_name, mode="rb") as wav_file:
             wav_contents = wav_file.read()
         self.transcribe_bytes(wav_contents)
         return
@@ -112,27 +124,30 @@ class SpeechToTextService(HarmoniServiceManager):
         outs, errs = self.w2l_process.communicate(input=b_string, timeout=15)
         print(outs, errs)
         text_list = self.fix_text(outs)
-        rospy.loginfo("The text list is %s" %text_list)
+        rospy.loginfo("The text list is %s" % text_list)
         if not any(text_list):
             self.set_w2l_proc()
             return
         self.set_w2l_proc()
         text_list = [t for t in text_list if t]
-        return ' '.join(text_list)
+        return " ".join(text_list)
 
     def fix_text(self, text):
-        output_by_sec = ' '.join(re.split(r'[,\s]', text.decode("utf-8"))[95:-13]).split('  ')
-        output_by_sec = [' '.join(sec.split(' ')[2:]) for sec in output_by_sec]
+        output_by_sec = " ".join(
+            re.split(r"[,\s]", text.decode("utf-8"))[95:-13]
+        ).split("  ")
+        output_by_sec = [" ".join(sec.split(" ")[2:]) for sec in output_by_sec]
         final_output = []
         for sec in output_by_sec:  # Exclude some bad outputs
             if len(sec) > 0:
-                if (sec[0] == 'h' and len(sec) == 1):
-                    sec = ''
+                if sec[0] == "h" and len(sec) == 1:
+                    sec = ""
             if len(sec) > 1:
-                if sec[:2] == 'h ':
-                    sec = ''
+                if sec[:2] == "h ":
+                    sec = ""
             final_output.append(sec)
-        return(final_output)
+        return final_output
+
 
 def main():
     test = rospy.get_param("/test/")
@@ -143,15 +158,17 @@ def main():
         rospy.init_node(service_name)
         list_service_names = HelperFunctions.get_child_list(service_name)
         service_server_list = []
-        last_event = "" 
+        last_event = ""
         for service in list_service_names:
             print(service)
             service_id = HelperFunctions.get_child_id(service)
-            param = rospy.get_param("~"+service_id+"_param/")
+            param = rospy.get_param("~" + service_id + "_param/")
             s = SpeechToTextService(service, param)
-            service_server_list.append(InternalServiceServer(name=service, service_manager=s))
+            service_server_list.append(
+                InternalServiceServer(name=service, service_manager=s)
+            )
             if test and (service_id == id_test):
-                rospy.loginfo("Testing the %s" %(service))
+                rospy.loginfo("Testing the %s" % (service))
                 s.start()
                 s.transcribe_file(input_test)
         if not test:
@@ -160,6 +177,7 @@ def main():
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
+
 
 if __name__ == "__main__":
     main()
