@@ -1,5 +1,6 @@
 FROM ubuntu:xenial
 
+# ==================================================================
 # Abstractions for apt installation
 RUN \
 	apt-get update -y && apt-get upgrade -y \
@@ -10,47 +11,50 @@ RUN \
     APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+        # BUILD TOOLS
         build-essential \
         ca-certificates \
-        # downloading tools
+        # DOWNLOAD TOOLS
 		curl \
         wget \
 		zsh \
 		unzip \
-        # version control
+        # COMPILERS
+        g++ \
+        cmake \
+        # VERSION CONTROL
         git \
 		git-gui \
 		meld \
-        # basic editors
+        # BASIC EDITORS
         gedit \
         vim \
 		fonts-powerline \
         emacs \
         nano \
 		nautilus \
-        # compilers
-        g++ \
-        cmake \
-        # terminals
+        # TERMINAL TOOLS
 		terminator \
 		tmux \
 		sudo \
-        # misc
+        # MISC. TOOLS
         htop \
 		vlc \
-        # pyaudio
+        python-keybinder \
+        python-notify \
+        # PYAUDIO
         portaudio19-dev libportaudio2 libportaudiocpp0\
         ffmpeg libav-tools \
-        # graphics utils
+        # GRAPHICS UTILS
         libcanberra-gtk-module \
 		libgl1-mesa-glx \
 		libgl1-mesa-dri \
 		mesa-utils \
-        # docker py-pip \
 	&& sed -i 's/geteuid/getppid/' /usr/bin/vlc \
 	&& rm -rf /var/lib/apt/lists/* 
 
 
+# ==================================================================
 # Setup Python3.6 with pip, virtualenv
 RUN \
     APT_INSTALL="apt-get install -y --no-install-recommends" \
@@ -62,9 +66,8 @@ RUN \
 		python3.6-dev \
 		python3-pip \
 		python3-virtualenv \
-        # Ros
+        # ROS
 		python3-yaml \
-        #python-catkin-tools \
 	&& python3.6 -m pip install --upgrade pip \
 	&& python3.6 -m pip install \
         setuptools \
@@ -79,16 +82,12 @@ RUN \
         # AWS
         boto3 \
 		awscli \
-        # data science
+        # DATA SCIENCE TOOLS
 		pandas \
         sklearn \
 		statsmodels \
 		hmmlearn \
 		pmdarima \
-		# keras \
-		# tensorflow \
-        # install pytorch torchvision cudatoolkit=10.2 -c pytorch
-        # Utils
 		matplotlib \
 		dill \
 		requests \
@@ -101,9 +100,7 @@ RUN \
 	&& rm -rf /var/lib/apt/lists/* 
 
 
-
-
-
+# ==================================================================
 # Setup Pycharm
 RUN \
 	wget https://download.jetbrains.com/python/pycharm-community-2019.2.5.tar.gz?_ga=2.206607891.1099553149.1574619599-1281313269.1574206878 \
@@ -112,6 +109,7 @@ RUN \
 	&& rm pycharm-community.tar.gz \
 	&& echo 'alias pycharm="/opt/pycharm-community-2019.2.5/bin/pycharm.sh"' >> /root/.bashrc 
 
+# ==================================================================
 # Install Visual Studio Code
 RUN \
 	apt-get update -y \
@@ -125,11 +123,13 @@ RUN \
 	&& apt-get install -y code \
 	&& rm -rf /var/lib/apt/lists/* 
 
+# ==================================================================
 # For convenience add a source script to bashrc and update without clearing
 RUN \
        echo 'source /root/.dev_setup_script.sh' >> /root/.bashrc 
        # && apt-get update -y && apt-get upgrade -y
 
+# ==================================================================
 # Setup MongoDB
     # RUN \
     # 	wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | sudo apt-key add - \
@@ -140,6 +140,7 @@ RUN \
     # 	&& rm -rf /var/lib/apt/lists/* 
 
 
+# ==================================================================
 ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 /usr/local/bin/dumb-init
 RUN chmod +x /usr/local/bin/dumb-init
 ENTRYPOINT ["/usr/local/bin/dumb-init","--rewrite","15:10","--"]

@@ -70,7 +70,6 @@ class HarmoniRouter(HarmoniActionServer, object):
         path = abs_path.split("HARMONI/")
         with open(path[0] + 'HARMONI/harmoni_decision/config/configuration.yaml') as file:
             repos = yaml.load(file, Loader=yaml.FullLoader)
-        repos = repos["repo"]
         child_names = []
         for repo in repos:
             for child in child_constants_names:

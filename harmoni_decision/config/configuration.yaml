@@ -1,12 +1,12 @@
 # This is a configuration file describing the id of the child of each repo
-repo:
-  harmoni:
-    lex : ["def"]
-    tts: ["def"]
-    web: ["def"]
-    stt: ["def"]
-  pc:
-    microphone: ["def"]
-    camera : ["def"]
-    face: ["def"]
-    speaker: ["def"]
+harmoni:
+  lex : ["default"]
+  tts: ["default"]
+  web: ["default"]
+  stt: ["default"]
+  face_detect: ["default"]
+pc:
+  microphone: ["default"]
+  camera : ["default"]
+  face: ["default"]
+  speaker: ["default"]
