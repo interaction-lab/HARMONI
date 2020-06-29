@@ -6,7 +6,6 @@ import roslib
 from harmoni_common_lib.router import HarmoniRouter
 from harmoni_common_lib.constants import RouterDetector, Router
 
-
 class HarmoniDetectorRouter(HarmoniRouter):
     """
     The detector router aims to handle the processing of the input data
@@ -15,9 +14,7 @@ class HarmoniDetectorRouter(HarmoniRouter):
     def __init__(self, router_name, last_event):
         """ Init router"""
         child_constants_names = [enum.name for enum in list(RouterDetector)]
-        super(HarmoniDetectorRouter, self).__init__(
-            router_name, child_constants_names, last_event
-        )
+        super(HarmoniDetectorRouter, self).__init__(router_name, child_constants_names, last_event)
 
     def setup_router(self):
         self.setup_actions(self.execute_result_callback, self.execute_feedback_callback)
