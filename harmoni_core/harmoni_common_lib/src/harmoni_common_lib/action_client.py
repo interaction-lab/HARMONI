@@ -22,6 +22,7 @@ class SimpleGoalState:
 
 SimpleGoalState.to_string = classmethod(get_name_of_constant)
 
+
 class HarmoniActionClient(object):
     """A wrapper around SimpleActionClient that is structured for HARMONI architecture.
 
@@ -29,6 +30,7 @@ class HarmoniActionClient(object):
     This class provides basic client functionality which routers and managers extend,
     including basic type checking, warnings, interrupts, etc.
     """
+
     ## @brief Constructs a SimpleActionClient and opens connections to an ActionServer.
     ##
     ## @param ns The namespace in which to access the action.  For
@@ -41,7 +43,7 @@ class HarmoniActionClient(object):
 
     def _result_callback(self, terminal_state, result):
         """Save the action result """
-        rospy.loginfo(f"(Client) Heard back result on actiontype: {result.action_type}")
+        rospy.loginfo(f"(Client) Heard back result")
         rospy.loginfo(f"(Client) Result was : {result.do_action}")
         if len(result.message) < 500:
             rospy.loginfo(f"(Client) Message was : {result.message}")
@@ -58,9 +60,7 @@ class HarmoniActionClient(object):
 
     def _feedback_callback(self, feedback):
         """Save the action feedback """
-        rospy.logdebug(
-            f"(Client) Heard back feedback from type: {feedback.action_type}"
-        )
+        rospy.logdebug(f"(Client) Heard back feedback")
         rospy.logdebug(f"(Client) State was: {feedback.state}")
         self.action_feedback["state"] = feedback.state
         if self.execute_goal_feedback_callback:
@@ -71,7 +71,7 @@ class HarmoniActionClient(object):
         self,
         action_goal,
         optional_data="",
-        child_server="",
+        resource="",
         condition="",
         time_out=600,
         wait=True,
@@ -87,7 +87,7 @@ class HarmoniActionClient(object):
         goal = harmoniGoal(
             action_type=action_goal,
             optional_data=optional_data,
-            child_server=child_server,
+            resource=resource,
             condition=condition,
         )
         rospy.loginfo("(Client) Sending Goal.")

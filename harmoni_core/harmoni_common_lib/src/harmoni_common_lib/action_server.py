@@ -77,11 +77,25 @@ class HarmoniActionServer(object):
             self.internal_preempt_callback,
             auto_start,
         )
-
         self.action_goal = None
         self._feedback = harmoniFeedback()
         self._result = harmoniResult()
         self.start()
+
+    def _goal_received_callback(self, goal):
+        """ Save the goal data, set the goal to received, and execute the child callback """
+        self.optional_data = goal.optional_data  # input data for the module
+        self.child = goal.resource  # external module that will accomplish the task
+        self.condition = (
+            goal.condition
+        )  # event condition to wait before starting the action
+        rospy.loginfo(
+            f"(Server) The goal is a {goal.action_type} request for {goal.resource}"
+        )
+        self.goal_received = True
+        rospy.loginfo("The goal is: %i" % goal.action_type)
+        # Perform the callback set by child
+        self.execute_goal_received_callback(goal)
         return
 
     def __del__(self):
@@ -166,7 +180,6 @@ class HarmoniActionServer(object):
 
     def send_result(self, do_action, message):
         """Send the result and action set to succeded"""
-        self._result.action_type = self.action_goal
         self._result.do_action = do_action
         self._result.message = message
         self.set_succeeded(self._result)
