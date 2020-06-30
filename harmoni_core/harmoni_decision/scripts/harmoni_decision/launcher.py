@@ -132,13 +132,10 @@ def main():
         rospy.init_node(interface_name)
         rospy.loginfo("Set up the %s" % interface_name)
         launch_params = rospy.get_param("~launch")
-        router_params = rospy.get_param("~router")
         service_params = rospy.get_param("~service")
         repos = service_params.split(",")
         rospy.loginfo(f"Repos to include: {repos}")
         launch = Launcher()
-        if router_params:
-            launch.launch_router(launch_params)
         for repo in repos:
             if repo != "":
                 launch.launch_services(repo, launch_params)

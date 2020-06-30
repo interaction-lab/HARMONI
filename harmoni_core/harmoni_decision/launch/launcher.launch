@@ -2,12 +2,10 @@
         and/or services you can set the -->
 <launch>
 	<arg name="launch" default="true"/> <!--Set to false if you want to just create a launch file-->
-	<arg name="router" default="false"/>
 	<!-- If you want to launch multiple services from different repos set service variable to 
             include both repos e.g. service:="harmoni,pc", -->
 	<arg name="service" default="harmoni"/> 
 		<node pkg="harmoni_decision" type="launcher.py" name="harmoni_launcher_$(arg service)" output="screen">
-			<param name="router" value="$(arg router)"/>
 			<param name="service" value="$(arg service)"/>
 			<param name="launch" value="$(arg launch)"/>
 		</node>
