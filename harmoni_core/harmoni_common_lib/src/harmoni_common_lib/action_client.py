@@ -9,7 +9,6 @@ from actionlib.action_client import ActionClient, CommState, get_name_of_constan
 import roslib
 
 # from actionlib import SimpleActionClient
-from harmoni_common_lib.simple_action_client import SimpleActionClient
 from harmoni_common_msgs.msg import harmoniGoal, harmoniAction
 from harmoni_common_lib.constants import State
 
@@ -39,6 +38,8 @@ class HarmoniActionClient(object):
     ## @param ActionSpec The *Action message type.  The SimpleActionClient
     ## will grab the other message types from this type.
     def __init__(self):
+        self.action_result = {"do_action": None, "message": None}
+        self.action_feedback = {"state": None}
         return
 
     def _result_callback(self, terminal_state, result):
@@ -97,7 +98,7 @@ class HarmoniActionClient(object):
         rospy.loginfo("(Client) Goal Sent")
         if wait:
             rospy.loginfo("(Client) Waiting for return.")
-            self.action_client.wait_for_result(rospy.Duration.from_sec(time_out))
+            self.wait_for_result(rospy.Duration.from_sec(time_out))
             rospy.loginfo("(Client) done waiting.")
         else:
             rospy.loginfo("(Client) Not waiting for result.")

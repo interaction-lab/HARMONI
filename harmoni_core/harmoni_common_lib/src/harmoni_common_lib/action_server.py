@@ -12,7 +12,6 @@ import roslib
 
 # import actionlib
 from harmoni_common_msgs.msg import harmoniAction, harmoniFeedback, harmoniResult
-from harmoni_common_lib.simple_action_server import SimpleActionServer
 
 
 # I don't know why this was included in the simple action server
@@ -206,7 +205,6 @@ class HarmoniActionServer(object):
 
     def send_feedback(self, state):
         """ Send the state as feedback"""
-        self._feedback.action_type = self.action_goal
         self._feedback.state = state
         self.publish_feedback(self._feedback)
         rospy.logdebug("(Server) The feedback is " + str(self._feedback.state))
@@ -349,15 +347,10 @@ class HarmoniActionServer(object):
                 goal = self.accept_new_goal()
                 self.optional_data = goal.optional_data  # input data for the module
                 self.action_goal = goal.action_type  # action request
-                self.child = (
-                    goal.child_server
-                )  # external module that will accomplish the task
                 self.condition = (
                     goal.condition
                 )  # event condition to wait before starting the action
-                rospy.loginfo(
-                    f"(Server) The goal is a {goal.action_type} request for {goal.child_server}"
-                )
+                rospy.loginfo(f"(Server) The goal is a {goal.action_type}")
 
                 self.goal_received = True
                 rospy.loginfo("The goal is: %i" % goal.action_type)
