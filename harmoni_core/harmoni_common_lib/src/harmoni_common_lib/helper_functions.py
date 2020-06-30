@@ -6,6 +6,8 @@ import os
 from harmoni_common_lib.constants import Router
 
 
+PATH_CONFIG = "HARMONI/harmoni_core/harmoni_decision/config/configuration.yaml"
+
 class HelperFunctions:
     def get_routers():
         router_names = [enum.value for enum in list(Router)]
@@ -13,19 +15,22 @@ class HelperFunctions:
 
     def get_child_list(child_name):
         """Get children from config file"""
+        ids_list = []
+        existed = False
         abs_path = os.path.abspath(__file__)
         path = abs_path.split("HARMONI/")
         with open(
-            path[0] + "HARMONI/harmoni_decision/config/configuration.yaml"
+            path[0] + PATH_CONFIG
         ) as file:
             repos = yaml.load(file, Loader=yaml.FullLoader)
         for repo in repos:
             if child_name in repos[repo]:
                 repo_child_name = repo + "_" + child_name
-        child_repo = repo_child_name.split("_")[0]
-        ids_list = []
-        for id_child in repos[child_repo][child_name]:
-            ids_list.append(child_repo + "_" + child_name + "_" + id_child)
+                existed = True
+        if existed:
+            child_repo = repo_child_name.split("_")[0]
+            for id_child in repos[child_repo][child_name]:
+                ids_list.append(child_repo + "_" + child_name + "_" + id_child)
         return ids_list
 
     def get_service_list_of_repo(repository):
@@ -33,8 +38,9 @@ class HelperFunctions:
         abs_path = os.path.abspath(__file__)
         path = abs_path.split("HARMONI/")
         service_list = []
+        repo_service_list = []
         with open(
-            path[0] + "HARMONI/harmoni_decision/config/configuration.yaml"
+            path[0] + PATH_CONFIG
         ) as file:
             repos = yaml.load(file, Loader=yaml.FullLoader)
         for repo in repos:
@@ -48,8 +54,9 @@ class HelperFunctions:
                             child_repo = child_array[0]
                         else:
                             child_name += "_" + child_array[i]
-                    service_list.append(child_repo + child_name)
-        return service_list
+                    repo_service_list.append(child_repo + child_name)
+                    service_list.append(child_name.split("_")[1])
+        return (repo_service_list, service_list)
 
     def get_child_id(service_name):
         """Get id of the child from service name"""
@@ -62,7 +69,7 @@ class HelperFunctions:
         path = abs_path.split("HARMONI/")
         repo_list = []
         with open(
-            path[0] + "HARMONI/harmoni_decision/config/configuration.yaml"
+            path[0] + PATH_CONFIG
         ) as file:
             repos = yaml.load(file, Loader=yaml.FullLoader)
         for repo in repos:
