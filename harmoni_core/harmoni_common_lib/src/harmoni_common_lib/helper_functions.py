@@ -6,6 +6,8 @@ import os
 from harmoni_common_lib.constants import Router
 
 
+PATH_CONFIG = "HARMONI/harmoni_core/harmoni_decision/config/configuration.yaml"
+
 class HelperFunctions:
     def get_routers():
         router_names = [enum.value for enum in list(Router)]
@@ -16,7 +18,7 @@ class HelperFunctions:
         abs_path = os.path.abspath(__file__)
         path = abs_path.split("HARMONI/")
         with open(
-            path[0] + "HARMONI/harmoni_decision/config/configuration.yaml"
+            path[0] + PATH_CONFIG
         ) as file:
             repos = yaml.load(file, Loader=yaml.FullLoader)
         for repo in repos:
@@ -34,7 +36,7 @@ class HelperFunctions:
         path = abs_path.split("HARMONI/")
         service_list = []
         with open(
-            path[0] + "HARMONI/harmoni_decision/config/configuration.yaml"
+            path[0] + PATH_CONFIG
         ) as file:
             repos = yaml.load(file, Loader=yaml.FullLoader)
         for repo in repos:
@@ -62,7 +64,7 @@ class HelperFunctions:
         path = abs_path.split("HARMONI/")
         repo_list = []
         with open(
-            path[0] + "HARMONI/harmoni_decision/config/configuration.yaml"
+            path[0] + PATH_CONFIG
         ) as file:
             repos = yaml.load(file, Loader=yaml.FullLoader)
         for repo in repos:
