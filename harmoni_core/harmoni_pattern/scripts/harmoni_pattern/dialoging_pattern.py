@@ -227,7 +227,7 @@ class DialogingPattern(HarmoniServiceManager, object):
                     self, action_goal, resource, service, optional_data
                 )
         else:
-            [resource, router, action_goal] = self._get_action_info(action)
+            [resource, service, action_goal] = self._get_action_info(action)
             self.request_step(self, action_goal, resource, service, optional_data)
         optional_data = data
         # self.update(self.state)
@@ -269,7 +269,7 @@ def main():
         DialogueState.SYNTHETIZING,
         parallel,
     ]"""
-    sequence = [DialogueState.DIALOGING, DialogueState.SYNTHETIZING, DialogueState.EXPRESSING]
+    sequence = [DialogueState.DIALOGING, DialogueState.SYNTHETIZING, parallel]
     loop = ""
     try:
         rospy.init_node(pattern_name)
