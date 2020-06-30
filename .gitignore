@@ -105,6 +105,5 @@ ENV/
 **/build/**
 #**/__*__.py
 #**/*.yaml
-**/*.wav
+#**/*.wav
 **/*.ogg
-#cordial_lex/scripts/data/*
