@@ -69,7 +69,6 @@ class DialogingPattern(HarmoniServiceManager, object):
         }
         self.state = State.INIT
         super().__init__(self.state)
-        #self.router_names = [enum.value for enum in list(Router)]
         list_repos = HelperFunctions.get_all_repos()
         for repo in list_repos:
             [repo_child_list, child_list] = HelperFunctions.get_service_list_of_repo(repo)
@@ -106,6 +105,11 @@ class DialogingPattern(HarmoniServiceManager, object):
         rospy.logdebug("The feedback recieved is %s and nothing more" % feedback)
         return
 
+    def _sensing_callback(self, data):
+        """Sensing callback fucntion """
+        self._result_callback({"message": data, "do_action":True})
+
+
     def request_step(self, action_goal, resource, service, optional_data, wait=True):
         """Send goal request to appropriate child"""
         # try:
@@ -127,6 +131,16 @@ class DialogingPattern(HarmoniServiceManager, object):
             wait=wait,
         )
         rospy.loginfo("Goal sent.")
+        # After sending the sensing goal, subscribe to the topic
+        if service == DialogingState.SENSING:
+                    rospy.loginfo("(Client) Subscribe to microphone topic for ... HOW LONG?")
+                    service_id = HelperFunctions.get_child_id(self.state)
+                    rospy.Subscriber(
+                        RouterSensor.microphone.value + service_id + "/talking",
+                        String,
+                        self._sensing_callback,
+                        queue_size=1,
+                    )
         self.state = State.SUCCESS
         # except:
         #    self.state = State.FAILED
@@ -249,28 +263,14 @@ def main():
     pattern_name = "dialoging"
     trigger_intent = "Hey"
     parallel = [DialogueState.EXPRESSING, DialogueState.SPEAKING]
-    # parallel = [DialogueState.EXPRESSING]
-    """
-    sequence = [
-        DialogueState.DIALOGING,
-        DialogueState.SYNTHETIZING,
-        parallel,
-        DialogueState.DIALOGING,
-        DialogueState.SYNTHETIZING,
-        parallel,
-        DialogueState.DIALOGING,
-        DialogueState.SYNTHETIZING,
-        parallel,
-    ]
     loop = [
         DialogueState.SENSING,
         DialogueState.SPEECH_DETECTING,
         DialogueState.DIALOGING,
         DialogueState.SYNTHETIZING,
         parallel,
-    ]"""
+    ]
     sequence = [DialogueState.DIALOGING, DialogueState.SYNTHETIZING, parallel]
-    loop = ""
     try:
         rospy.init_node(pattern_name)
         # Initialize the pattern with pattern sequence/loop
