@@ -81,7 +81,6 @@ class HarmoniActionServer(object):
 
     def send_feedback(self, state):
         """ Send the state as feedback"""
-        self._feedback.action_type = self.action_goal
         self._feedback.state = state
         self._action_server.publish_feedback(self._feedback)
         rospy.logdebug("(Server) The feedback is " + str(self._feedback.state))
@@ -89,7 +88,6 @@ class HarmoniActionServer(object):
 
     def send_result(self, do_action, message):
         """Send the result and action set to succeded"""
-        self._result.action_type = self.action_goal
         self._result.do_action = do_action
         self._result.message = message
         self._action_server.set_succeeded(self._result)
