@@ -164,8 +164,10 @@ class DialogingPattern(HarmoniServiceManager, object):
 
     def _get_action_info(self, action):
         """Helper function to get the server, resource, and goal associated with an action"""
+        rospy.loginfo("The action is %s" %action)
         self.state = action
         service = action
+        print(self.action_info[service])
         resource = self.action_info[service]["resource"]
         action_goal = self.action_info[service]["action_goal"]
         return (resource, service, action_goal)
@@ -195,7 +197,7 @@ class DialogingPattern(HarmoniServiceManager, object):
                     action_goal, resource, service, data, wait=(i == len(action))
                 )
         else:
-            [resource, router, action_goal] = self._get_action_info(action)
+            [resource, service, action_goal] = self._get_action_info(action)
             self.request_step(action_goal, resource, service, data)
         # self.update(self.state)
 
@@ -248,6 +250,7 @@ def main():
     trigger_intent = "Hey"
     parallel = [DialogueState.EXPRESSING, DialogueState.SPEAKING]
     # parallel = [DialogueState.EXPRESSING]
+    """
     sequence = [
         DialogueState.DIALOGING,
         DialogueState.SYNTHETIZING,
@@ -265,7 +268,9 @@ def main():
         DialogueState.DIALOGING,
         DialogueState.SYNTHETIZING,
         parallel,
-    ]
+    ]"""
+    sequence = [DialogueState.DIALOGING, DialogueState.SYNTHETIZING, DialogueState.EXPRESSING]
+    loop = ""
     try:
         rospy.init_node(pattern_name)
         # Initialize the pattern with pattern sequence/loop
