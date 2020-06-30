@@ -73,7 +73,7 @@ class Launcher():
 
     def _get_service_pkg(self, repo):
         """Get services """
-        services = HelperFunctions.get_service_list_of_repo(repo)  # read from configuration.yaml
+        [repo_service, services] = HelperFunctions.get_service_list_of_repo(repo)  # read from configuration.yaml
         pkg_array = []
         exec_array = []
         for serv in services:

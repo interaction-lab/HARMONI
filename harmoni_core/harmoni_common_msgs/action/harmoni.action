@@ -2,7 +2,7 @@
 
 uint8 action_type # the type of action. Enums defined in harmoni_common_lib
 string optional_data # usually used for requests
-string child_server # specfic action server to use
+string resource # specific the resource in use in the child for the goal sent
 string condition #TODO-future: convert to enum
 
 ---

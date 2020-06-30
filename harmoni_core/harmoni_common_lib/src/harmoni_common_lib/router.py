@@ -66,29 +66,29 @@ class HarmoniRouter(HarmoniActionServer, object):
         """
         if len(goal.optional_data) < 500:
             rospy.loginfo(
-                f"{self.router_name} Router-Message: \n action_type type: {goal.action_type} \n optional_data: {goal.optional_data} \n child: {goal.child_server}"
+                f"{self.router_name} Router-Message: \n action_type type: {goal.action_type} \n optional_data: {goal.optional_data} \n child: {goal.resource}"
             )
         else:
             rospy.loginfo(
-                f"{self.router_name} Router-Message: \n action_type type: {goal.action_type} \n optional_data: (too large to print) \n child: {goal.child_server}"
+                f"{self.router_name} Router-Message: \n action_type type: {goal.action_type} \n optional_data: (too large to print) \n child: {goal.resource}"
             )
         # TODO This hack is going to need some work
         wait = True
         if (
-            goal.child_server
+            goal.resource
             == "pc_face_default"
-            # or goal.child_server == "pc_speaker_default"
+            # or goal.resource == "pc_speaker_default"
         ):
             wait = False
         # rospy.loginfo("The request data are:" + str(goal))
         # if goal.condition != "uncondition":  # check if the action is conditioned by another event or not
         # self.setup_conditional_startup(goal.condition, self.last_event)
         rospy.loginfo(
-            f"{self.router_name} Router: Start a goal request to the {goal.child_server}"
+            f"{self.router_name} Router: Start a goal request to the {goal.resource}"
         )
-        self.children_clients[goal.child_server].send_goal(
+        self.children_clients[goal.resource].send_goal(
             action_goal=goal.action_type,
-            child_server=goal.child_server,
+            resource=goal.resource,
             optional_data=goal.optional_data,
             condition="",
             time_out=self.timeout_for_result,
@@ -108,7 +108,7 @@ class HarmoniRouter(HarmoniActionServer, object):
         abs_path = os.path.abspath(__file__)
         path = abs_path.split("HARMONI/")
         with open(
-            path[0] + "HARMONI/harmoni_decision/config/configuration.yaml"
+            path[0] + "HARMONI/harmoni_core/harmoni_decision/config/configuration.yaml"
         ) as file:
             repos = yaml.load(file, Loader=yaml.FullLoader)
         child_names = []

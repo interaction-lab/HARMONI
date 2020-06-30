@@ -53,36 +53,37 @@ class HarmoniBehaviorInterface():
         rospy.logdebug("The feedback is %s" % feedback)
         return
 
-    def send_goal(self, action_goal, child_server, router, optional_data):
-        self.router_clients[router].send_goal(action_goal=action_goal, optional_data=optional_data, child_server=child_server)
+    def send_goal(self, action_goal, resource, router, optional_data):
+        self.router_clients[router].send_goal(action_goal=action_goal, optional_data=optional_data, resource=resource)
         return
 
 
 def test(service, hi, wav_file, tts_input, dialogue_input, face_input, display_input):
+    ### TO FIX!!!
     if service == "pc_microphone_def":
         rospy.loginfo("Send the goal listening to the SensorRouter")
-        hi.send_goal(action_goal=ActionType.ON, child_server=service, router="sensor", optional_data="")
+        hi.send_goal(action_goal=ActionType.ON, resource=service, router="sensor", optional_data="")
     elif service == "pc_camera_def":
         rospy.loginfo("Send the goal listening to the SensorRouter")
-        hi.send_goal(action_goal=ActionType.ON, child_server=service, router="sensor", optional_data="")
+        hi.send_goal(action_goal=ActionType.ON, resource=service, router="sensor", optional_data="")
     elif service == "harmoni_lex_def":
         rospy.loginfo("Send the goal dialoging to the DialogueRouter")
-        hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="dialogue", optional_data=dialogue_input)
+        hi.send_goal(action_goal=ActionType.REQUEST, resource=service, router="dialogue", optional_data=dialogue_input)
     elif service == "pc_speaker_def":
         file_handle = wav_file
         data = np.fromfile(file_handle, np.uint8)[24:]  # Loading wav file
         data = data.astype(np.uint8).tostring()
         rospy.loginfo("Send the goal speaking to the ActuatorRouter")
-        hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="actuator", optional_data=str(data))
+        hi.send_goal(action_goal=ActionType.REQUEST, resource=service, router="actuator", optional_data=str(data))
     elif service == "harmoni_tts_def":
         rospy.loginfo("Send the goal synthetizing to the ActuatorRouter")
-        hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="actuator", optional_data=tts_input)
+        hi.send_goal(action_goal=ActionType.REQUEST, resource=service, router="actuator", optional_data=tts_input)
     elif service == "pc_face_def":
         rospy.loginfo("Send the goal expressing to the ActuatorRouter")
-        hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="actuator", optional_data=face_input)
+        hi.send_goal(action_goal=ActionType.REQUEST, resource=service, router="actuator", optional_data=face_input)
     elif service == "harmoni_web_def":
         rospy.loginfo("Send the goal expressing to the ActuatorRouter")
-        hi.send_goal(action_goal=ActionType.REQUEST, child_server=service, router="actuator", optional_data=display_input)
+        hi.send_goal(action_goal=ActionType.REQUEST, resource=service, router="actuator", optional_data=display_input)
     return
 
 
