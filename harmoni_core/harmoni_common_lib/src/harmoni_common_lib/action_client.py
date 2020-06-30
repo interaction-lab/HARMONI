@@ -153,11 +153,11 @@ class HarmoniActionClient(object):
     def _result_callback(self, terminal_state, result):
         """ Save the action result and perform the callback if set """
         rospy.loginfo("Heard result")
-        self._action_result["do_action"] = result.do_action
-        self._action_result["message"] = result.message
+        self.action_result["do_action"] = result.do_action
+        self.action_result["message"] = result.message
 
         if self.execute_goal_result_callback:
-            self.execute_goal_result_callback(self._action_result)
+            self.execute_goal_result_callback(self.action_result)
 
         self.result_received = True
         return
@@ -165,33 +165,10 @@ class HarmoniActionClient(object):
     def _feedback_callback(self, feedback):
         """ Save the action feedback and perform the callback if set """
         rospy.logdebug("Heard back feedback")
-        self._action_feedback["state"] = feedback.state
+        self.action_feedback["state"] = feedback.state
 
         if self.execute_goal_feedback_callback:
-            self.execute_goal_feedback_callback(self._action_feedback)
-
-        self.feedback_received = True
-        return
-
-    def _result_callback(self, terminal_state, result):
-        """ Save the action result and perform the callback if set """
-        rospy.loginfo("Heard result")
-        self._action_result["do_action"] = result.do_action
-        self._action_result["message"] = result.message
-
-        if self.execute_goal_result_callback:
-            self.execute_goal_result_callback(self._action_result)
-
-        self.result_received = True
-        return
-
-    def _feedback_callback(self, feedback):
-        """ Save the action feedback and perform the callback if set """
-        rospy.logdebug("Heard back feedback from")
-        self._action_feedback["state"] = feedback.state
-
-        if self.execute_goal_feedback_callback:
-            self.execute_goal_feedback_callback(self._action_feedback)
+            self.execute_goal_feedback_callback(self.action_feedback)
 
         self.feedback_received = True
         return
