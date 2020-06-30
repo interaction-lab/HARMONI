@@ -30,7 +30,7 @@ class HardwareControlServer(HarmoniActionServer, object):
             )
         else:
             rospy.logwarn(f"HardwareControlServer {self.name} has not been started")
-        self.setup_server(name, self._execute_goal_received_callback)
+        super().__init__(name, self._execute_goal_received_callback)
 
     def update_feedback(self):
         """Update the feedback message """
@@ -90,7 +90,7 @@ class WebServiceServer(HarmoniActionServer, object):
             rospy.loginfo(f"WebServiceServer {self.name} has been successfully set up")
         else:
             rospy.logwarn(f"WebServiceServer {self.name} has not been started")
-        self.setup_server(name, self._execute_goal_received_callback)
+        super().__init__(name, self._execute_goal_received_callback)
 
     def update_feedback(self):
         """Update the feedback message """
@@ -154,7 +154,7 @@ class InternalServiceServer(HarmoniActionServer, object):
             rospy.loginfo(f"{self.name} has been successfully set up")
         else:
             rospy.logwarn(f"{self.name} has not been started")
-        self.setup_server(name, self._execute_goal_received_callback)
+        super().__init__(name, self._execute_goal_received_callback)
 
     def update_feedback(self):
         """Update the feedback message """
@@ -207,7 +207,7 @@ class HarwareReadingServer(HarmoniActionServer, object):
             rospy.loginfo(f"{self.name} has been successfully set up")
         else:
             rospy.logwarn(f"{self.name} has not been started")
-        self.setup_server(name, self._execute_goal_received_callback)
+        super().__init__(name, self._execute_goal_received_callback)
 
     def update_feedback(self):
         """Update the feedback message """
