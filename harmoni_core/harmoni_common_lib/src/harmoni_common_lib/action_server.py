@@ -4,6 +4,7 @@ import rospy
 import roslib
 import actionlib
 from harmoni_common_msgs.msg import harmoniAction, harmoniFeedback, harmoniResult
+from harmoni_common_lib.simple_action_server import SimpleActionServer
 
 
 class HarmoniActionServer(object):
@@ -26,7 +27,7 @@ class HarmoniActionServer(object):
         self._feedback = harmoniFeedback()
         self._result = harmoniResult()
         self.action_topic = action_topic
-        self._action_server = actionlib.SimpleActionServer(
+        self._action_server = SimpleActionServer(
             self.action_topic,
             harmoniAction,
             self._goal_received_callback,
@@ -40,8 +41,8 @@ class HarmoniActionServer(object):
 
     def _goal_received_callback(self, goal):
         """ Save the goal data, set the goal to received, and execute the child callback """
-        self.action_goal = goal.action_type  # action request
         self.optional_data = goal.optional_data  # input data for the module
+        self.action_goal = goal.action_type  # action request
         self.child = goal.child_server  # external module that will accomplish the task
         self.condition = (
             goal.condition
