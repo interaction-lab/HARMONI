@@ -2,7 +2,9 @@
 
 import rospy
 import roslib
-from actionlib import SimpleActionClient
+
+# from actionlib import SimpleActionClient
+from harmoni_common_lib.simple_action_client import SimpleActionClient
 from harmoni_common_msgs.msg import harmoniGoal, harmoniAction
 from harmoni_common_lib.constants import State
 
@@ -28,10 +30,10 @@ class HarmoniActionClient(object):
 
     def _init_action_variables(self):
         """ Initizalize or reset action msg variables """
-        self.action_result = {}
-        self.action_feedback = {}
+
         self.action_result = {"do_action": False, "message": ""}
         self.action_feedback = {"state": ""}
+        return
 
     def _result_callback(self, terminal_state, result):
         """Save the action result """
@@ -77,7 +79,7 @@ class HarmoniActionClient(object):
                 handle for action results (done state).
             execute_goal_feedback_callback (func): [Optional] A callback function
                 handle for action feedback.
-            wait (bool): Indicates whether
+            wait (bool): Indicates whether or not to wait
         """
 
         self._init_action_variables()
