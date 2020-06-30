@@ -40,38 +40,31 @@ class DialogingPattern(HarmoniServiceManager, object):
         self.action_info = {
             DialogueState.DIALOGING: {
                 "action_goal": ActionType.REQUEST,
-                "resource": ""
+                "resource": "",
             },
-            DialogueState.SENSING: {
-                "action_goal": ActionType.ON,
-                "resource": ""
-            },
-            DialogueState.SPEAKING: {
-                "action_goal": ActionType.REQUEST,
-                "resource": ""
-            },
+            DialogueState.SENSING: {"action_goal": ActionType.ON, "resource": ""},
+            DialogueState.SPEAKING: {"action_goal": ActionType.REQUEST, "resource": ""},
             DialogueState.SYNTHETIZING: {
                 "action_goal": ActionType.REQUEST,
-                "resource": ""
+                "resource": "",
             },
             DialogueState.EXPRESSING: {
                 "action_goal": ActionType.REQUEST,
-                "resource": ""
+                "resource": "",
             },
-            DialogueState.MOVING: {
-                "action_goal": ActionType.REQUEST,
-                "resource": ""
-            },
+            DialogueState.MOVING: {"action_goal": ActionType.REQUEST, "resource": ""},
             DialogueState.SPEECH_DETECTING: {
                 "action_goal": ActionType.ON,
-                "resource": ""
+                "resource": "",
             },
         }
         self.state = State.INIT
         super().__init__(self.state)
         list_repos = HelperFunctions.get_all_repos()
         for repo in list_repos:
-            [repo_child_list, child_list] = HelperFunctions.get_service_list_of_repo(repo)
+            [repo_child_list, child_list] = HelperFunctions.get_service_list_of_repo(
+                repo
+            )
             for child in child_list:
                 self.service_names.extend(HelperFunctions.get_child_list(child))
         rospy.loginfo(f"Dialogue Pattern needs these services: {self.service_names}")
@@ -107,8 +100,7 @@ class DialogingPattern(HarmoniServiceManager, object):
 
     def _sensing_callback(self, data):
         """Sensing callback fucntion """
-        self._result_callback({"message": data, "do_action":True})
-
+        self._result_callback({"message": data, "do_action": True})
 
     def request_step(self, action_goal, resource, service, optional_data, wait=True):
         """Send goal request to appropriate child"""
@@ -132,15 +124,15 @@ class DialogingPattern(HarmoniServiceManager, object):
         )
         rospy.loginfo("Goal sent.")
         # After sending the sensing goal, subscribe to the topic
-        if service == DialogingState.SENSING:
-                    rospy.loginfo("(Client) Subscribe to microphone topic for ... HOW LONG?")
-                    service_id = HelperFunctions.get_child_id(self.state)
-                    rospy.Subscriber(
-                        RouterSensor.microphone.value + service_id + "/talking",
-                        String,
-                        self._sensing_callback,
-                        queue_size=1,
-                    )
+        if service == DialogueState.SENSING:
+            rospy.loginfo("(Client) Subscribe to microphone topic for ... HOW LONG?")
+            service_id = HelperFunctions.get_child_id(self.state)
+            rospy.Subscriber(
+                RouterSensor.microphone.value + service_id + "/talking",
+                String,
+                self._sensing_callback,
+                queue_size=1,
+            )
         self.state = State.SUCCESS
         # except:
         #    self.state = State.FAILED
@@ -178,7 +170,7 @@ class DialogingPattern(HarmoniServiceManager, object):
 
     def _get_action_info(self, action):
         """Helper function to get the server, resource, and goal associated with an action"""
-        rospy.loginfo("The action is %s" %action)
+        rospy.loginfo("The action is %s" % action)
         self.state = action
         service = action
         print(self.action_info[service])
@@ -207,6 +199,7 @@ class DialogingPattern(HarmoniServiceManager, object):
             for item in action:
                 i += 1
                 [resource, service, action_goal] = self._get_action_info(item)
+
                 self.request_step(
                     action_goal, resource, service, data, wait=(i == len(action))
                 )
@@ -226,24 +219,25 @@ class DialogingPattern(HarmoniServiceManager, object):
             data: are the optional data to input to the service
         """
         self.count_loop += 1
+        self.count_loop = self.count_loop % len(self.loop)
         rospy.loginfo(f"Starting loop step: {self.count_loop}")
 
         action = self.loop[self.count_loop]
         rospy.loginfo(f"Loop step action is {action}")
         if isinstance(action, list):
-            for (
-                item
-            ) in (
-                action
-            ):  # If it is an array, it means that is a parallel actions, so I start multiple goals
+            # If it is an array, it means that is a parallel actions, so I start multiple goals
+            rospy.loginfo("Running action in parallel!")
+            i = 0
+            for item in action:
+                i += 1
                 [resource, service, action_goal] = self._get_action_info(item)
+
                 self.request_step(
-                    self, action_goal, resource, service, optional_data
+                    action_goal, resource, service, data, wait=(i == len(action))
                 )
         else:
             [resource, service, action_goal] = self._get_action_info(action)
-            self.request_step(self, action_goal, resource, service, optional_data)
-        optional_data = data
+            self.request_step(action_goal, resource, service, data)
         # self.update(self.state)
 
         if self.count_loop == len(self.loop):
