@@ -116,7 +116,7 @@ class HarmoniActionClient(object):
         self,
         action_goal,
         optional_data="",
-        child_server="",
+        resource="",
         condition="",
         time_out=600,
         wait=True,
@@ -133,7 +133,7 @@ class HarmoniActionClient(object):
         goal = harmoniGoal(
             action_type=action_goal,
             optional_data=optional_data,
-            child_server=child_server,
+            resource=resource,
             condition=condition,
         )
         rospy.loginfo("(Client) Sending Goal.")
