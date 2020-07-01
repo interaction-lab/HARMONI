@@ -113,6 +113,7 @@ class DialogingPattern(HarmoniServiceManager, object):
     def request_step(self, action_goal, resource, service, optional_data, wait=True):
         """Send goal request to appropriate child"""
         # try:
+        service_name = HelperFunctions.get_service_name(service)
         self.state = State.REQUEST
         rospy.loginfo(f"Sending the following to the {service} service")
         if len(optional_data) < 500:
@@ -124,6 +125,10 @@ class DialogingPattern(HarmoniServiceManager, object):
                 f"Message: \n action_goal type: {action_goal} \n optional_data: (too large to print) \n child: {resource}"
             )
 
+        if HelperFunction.check_if_detector(service_name) or HelperFunctions.check_if_sensor(service_name):
+            rospy.loginfo("(Client) Set wait to False")
+            wait = False
+
         self.service_clients[service].send_goal(
             action_goal=action_goal,
             optional_data=optional_data,
@@ -131,13 +136,13 @@ class DialogingPattern(HarmoniServiceManager, object):
             wait=wait
         )
         rospy.loginfo("Goal sent.")
-        # After sending the sensing goal, subscribe to the topic
         self.state = State.SUCCESS
-        if service == DialogueState.SPEECH_DETECTING.value:
+        
+        if HelperFunctions.check_if_detector(service_name): # if detector, subscribe to the topic
             rospy.loginfo("(Client) Subscribe to detector topic")
-            service_id = HelperFunctions.get_child_id(DialogueState.SPEECH_DETECTING.value)
+            service_id = HelperFunctions.get_child_id(service)
             rospy.Subscriber(
-                RouterDetector.stt.value + service_id,
+                service,
                 String,
                 self._detecting_callback,
                 queue_size=1
