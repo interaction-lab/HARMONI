@@ -106,6 +106,9 @@ class DialogingPattern(HarmoniServiceManager, object):
         rospy.logdebug("The feedback recieved is %s and nothing more" % feedback)
         return
 
+    def _detecting_callback(self, data):
+        """Callback function from subscribing to the detector topic """
+        # HERE WE SHOULD GET THE DATA FOR PASSING THEM TO THE NEXT STEP
 
     def request_step(self, action_goal, resource, service, optional_data, wait=True):
         """Send goal request to appropriate child"""
@@ -130,6 +133,15 @@ class DialogingPattern(HarmoniServiceManager, object):
         rospy.loginfo("Goal sent.")
         # After sending the sensing goal, subscribe to the topic
         self.state = State.SUCCESS
+        if service == DialogueState.SPEECH_DETECTING.value:
+            rospy.loginfo("(Client) Subscribe to detector topic")
+            service_id = HelperFunctions.get_child_id(DialogueState.SPEECH_DETECTING.value)
+            rospy.Subscriber(
+                RouterDetector.stt.value + service_id,
+                String,
+                self._detecting_callback,
+                queue_size=1
+            )
         # except:
         #    self.state = State.FAILED
         return
@@ -202,7 +214,6 @@ class DialogingPattern(HarmoniServiceManager, object):
             [resource, service, action_goal] = self._get_action_info(action)
             self.request_step(action_goal, resource, service, data)
         # self.update(self.state)
-
         rospy.loginfo(f"************ End of sequence step: {self.count} *************")
         return
 
