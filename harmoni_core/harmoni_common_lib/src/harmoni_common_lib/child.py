@@ -216,9 +216,8 @@ class HarwareReadingServer(HarmoniActionServer, object):
                 if self.service_manager.state != State.INIT:
                     self.send_feedback(self.service_manager.state)
                 elif self.service_manager.state == State.START:
-                    self.send_result(
-                        do_action=True, message=str(self.service_manager.state)
-                        )
+                    rospy.loginfo("Reading hardware starts, sending result")
+                    self.send_result(do_action=True, message=str(self.service_manager.state))
                 rospy.Rate(0.2)
 
             else:
