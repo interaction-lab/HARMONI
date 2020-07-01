@@ -160,16 +160,15 @@ class InternalServiceServer(HarmoniActionServer, object):
         """Update the feedback message """
         rospy.loginfo("Start updating the feedback")
         while not rospy.is_shutdown():
-            while not rospy.is_shutdown():
-                if self.service_manager.state != State.FAILED:
-                    if self.service_manager.state != State.INIT:
-                        self.send_feedback(self.service_manager.state)
-                    rospy.Rate(0.2)
-                else:
-                    self.send_result(
-                        do_action=False, message=str(self.service_manager.state)
-                    )
-                    break
+            if self.service_manager.state != State.FAILED:
+                if self.service_manager.state != State.INIT:
+                    self.send_feedback(self.service_manager.state)
+                rospy.Rate(0.2)
+            else:
+                self.send_result(
+                    do_action=False, message=str(self.service_manager.state)
+                )
+                break
         return
 
     def _execute_goal_received_callback(self, goal):
@@ -216,11 +215,12 @@ class HarwareReadingServer(HarmoniActionServer, object):
             if self.service_manager.state != State.FAILED:
                 if self.service_manager.state != State.INIT:
                     self.send_feedback(self.service_manager.state)
+                elif self.service_manager.state == State.START:
+                    self.send_result(
+                        do_action=True, message=str(self.service_manager.state)
+                        )
                 rospy.Rate(0.2)
-            elif self.service_manager.state == State.START: # If the sensor is started successfully --> send response of success
-                self.send_result(
-                    do_action=True, message=str(self.service_manager.state)
-                )
+
             else:
                 self.send_result(
                     do_action=False, message=str(self.service_manager.state)
