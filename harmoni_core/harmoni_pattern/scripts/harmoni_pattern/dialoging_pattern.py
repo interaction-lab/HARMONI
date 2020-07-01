@@ -4,6 +4,7 @@
 import rospy
 import roslib
 import numpy as np
+from audio_common_msgs.msg import AudioData
 from harmoni_common_lib.action_client import HarmoniActionClient
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 from harmoni_common_lib.constants import *
@@ -105,10 +106,6 @@ class DialogingPattern(HarmoniServiceManager, object):
         rospy.logdebug("The feedback recieved is %s and nothing more" % feedback)
         return
 
-    def _sensing_callback(self, data):
-        """Sensing callback fucntion """
-        self._result_callback({"message": data, "do_action":True})
-
 
     def request_step(self, action_goal, resource, service, optional_data, wait=True):
         """Send goal request to appropriate child"""
@@ -128,19 +125,12 @@ class DialogingPattern(HarmoniServiceManager, object):
             action_goal=action_goal,
             optional_data=optional_data,
             resource=resource,
-            wait=wait,
+            wait=wait
         )
         rospy.loginfo("Goal sent.")
         # After sending the sensing goal, subscribe to the topic
-        if service == DialogingState.SENSING:
-                    rospy.loginfo("(Client) Subscribe to microphone topic for ... HOW LONG?")
-                    service_id = HelperFunctions.get_child_id(self.state)
-                    rospy.Subscriber(
-                        RouterSensor.microphone.value + service_id + "/talking",
-                        String,
-                        self._sensing_callback,
-                        queue_size=1,
-                    )
+        if service == DialogueState.SENSING:
+            self._result_callback({"message": "", "do_action":True})
         self.state = State.SUCCESS
         # except:
         #    self.state = State.FAILED
@@ -227,24 +217,17 @@ class DialogingPattern(HarmoniServiceManager, object):
         """
         self.count_loop += 1
         rospy.loginfo(f"Starting loop step: {self.count_loop}")
-
+        optional_data = data
         action = self.loop[self.count_loop]
         rospy.loginfo(f"Loop step action is {action}")
         if isinstance(action, list):
-            for (
-                item
-            ) in (
-                action
-            ):  # If it is an array, it means that is a parallel actions, so I start multiple goals
+            for (item) in (action):  # If it is an array, it means that is a parallel actions, so I start multiple goals
                 [resource, service, action_goal] = self._get_action_info(item)
-                self.request_step(
-                    self, action_goal, resource, service, optional_data
-                )
+                self.request_step(action_goal, resource, service, optional_data)
         else:
             [resource, service, action_goal] = self._get_action_info(action)
-            self.request_step(self, action_goal, resource, service, optional_data)
-        optional_data = data
-        # self.update(self.state)
+            self.request_step(action_goal, resource, service, optional_data)
+        self.update(self.state)
 
         if self.count_loop == len(self.loop):
             print("End of the single loop")

@@ -217,6 +217,10 @@ class HarwareReadingServer(HarmoniActionServer, object):
                 if self.service_manager.state != State.INIT:
                     self.send_feedback(self.service_manager.state)
                 rospy.Rate(0.2)
+            elif self.service_manager.state == State.START: # If the sensor is started successfully --> send response of success
+                self.send_result(
+                    do_action=True, message=str(self.service_manager.state)
+                )
             else:
                 self.send_result(
                     do_action=False, message=str(self.service_manager.state)
