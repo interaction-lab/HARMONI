@@ -159,15 +159,10 @@ class InternalServiceServer(HarmoniActionServer, object):
     def update_feedback(self):
         """Update the feedback message """
         rospy.loginfo("Start updating the feedback")
-        count = 0
         while not rospy.is_shutdown():
             if self.service_manager.state != State.FAILED:
                 if self.service_manager.state != State.INIT:
                     self.send_feedback(self.service_manager.state)
-                     if self.service_manager.state == State.START and count == 0:
-                        rospy.loginfo("Reading detector output starts, sending result")
-                        count += 1
-                        self.send_result(do_action=True, message=str(self.service_manager.state))
                 rospy.Rate(0.2)
             else:
                 self.send_result(
@@ -213,15 +208,10 @@ class HarwareReadingServer(HarmoniActionServer, object):
     def update_feedback(self):
         """Update the feedback message """
         rospy.loginfo("Start updating the feedback")
-        count = 0
         while not rospy.is_shutdown():
             if self.service_manager.state != State.FAILED:
                 if self.service_manager.state != State.INIT:
                     self.send_feedback(self.service_manager.state)
-                    if self.service_manager.state == State.START and count == 0:
-                        rospy.loginfo("Reading hardware starts, sending result")
-                        count += 1
-                        self.send_result(do_action=True, message=str(self.service_manager.state))
                 rospy.Rate(0.2)
 
             else:
