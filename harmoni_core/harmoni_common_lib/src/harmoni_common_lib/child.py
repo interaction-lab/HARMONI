@@ -175,10 +175,7 @@ class InternalServiceServer(HarmoniActionServer, object):
         """Control flow through internal processing class"""
         # TODO better case management
         if goal.action_type == ActionType.ON:
-            if goal.optional_data != "":
-                self.service_manager.start(int(goal.optional_data))
-            else:
-                self.service_manager.start()
+            self.service_manager.start(int(goal.optional_data))
         elif goal.action_type == ActionType.PAUSE:
             self.service_manager.stop()
         elif goal.action_type == ActionType.OFF:
@@ -211,13 +208,15 @@ class HarwareReadingServer(HarmoniActionServer, object):
     def update_feedback(self):
         """Update the feedback message """
         rospy.loginfo("Start updating the feedback")
+        count = 0
         while not rospy.is_shutdown():
             if self.service_manager.state != State.FAILED:
                 if self.service_manager.state != State.INIT:
                     self.send_feedback(self.service_manager.state)
-                elif self.service_manager.state == State.START:
-                    rospy.loginfo("Reading hardware starts, sending result")
-                    self.send_result(do_action=True, message=str(self.service_manager.state))
+                    if self.service_manager.state == State.START and count == 0:
+                        rospy.loginfo("Reading hardware starts, sending result")
+                        count += 1
+                        self.send_result(do_action=True, message=str(self.service_manager.state))
                 rospy.Rate(0.2)
 
             else:
