@@ -129,8 +129,6 @@ class DialogingPattern(HarmoniServiceManager, object):
         )
         rospy.loginfo("Goal sent.")
         # After sending the sensing goal, subscribe to the topic
-        if service == DialogueState.SENSING:
-            self._result_callback({"message": "", "do_action":True})
         self.state = State.SUCCESS
         # except:
         #    self.state = State.FAILED
