@@ -175,7 +175,7 @@ class InternalServiceServer(HarmoniActionServer, object):
         """Control flow through internal processing class"""
         # TODO better case management
         if goal.action_type == ActionType.ON:
-            self.service_manager.start(int(goal.optional_data))
+            self.service_manager.start()
         elif goal.action_type == ActionType.PAUSE:
             self.service_manager.stop()
         elif goal.action_type == ActionType.OFF:
@@ -226,7 +226,7 @@ class HarwareReadingServer(HarmoniActionServer, object):
         # TODO better case management here
         if goal.action_type == ActionType.ON:
             if goal.optional_data != "":
-                self.service_manager.start(int(goal.optional_data))
+                self.service_manager.start()
             else:
                 self.service_manager.start()
         elif goal.action_type == ActionType.PAUSE:

@@ -82,22 +82,18 @@ class HelperFunctions:
             repo_list.append(repo)
         return repo_list
 
-    def check_if_detector(self, service_name):
+    def check_if_detector(service_name):
         """Check if detector. It returns true if it is a detector """
         list_detectors = [enum.name for enum in list(RouterDetector)]
         for d in list_detectors:
             if service_name == d:
-                rospy.loginfo("checking: %s is a detector" % service_name)
                 return True
-        rospy.loginfo("checking: %s is not a detector" % service_name)
         return False
 
-    def check_if_sensor(self, service_name):
+    def check_if_sensor(service_name):
         """Check if sensor. It returns true if it is a sensor """
         list_sensors = [enum.name for enum in list(RouterSensor)]
         for d in list_sensors:
             if service_name == d:
-                rospy.loginfo("checking: %s is a sensor" % service_name)
                 return True
-        rospy.loginfo("checking: %s is not a sensor" % service_name)
         return False

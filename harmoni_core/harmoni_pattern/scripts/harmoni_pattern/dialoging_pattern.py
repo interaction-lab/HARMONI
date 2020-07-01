@@ -5,6 +5,7 @@ import rospy
 import roslib
 import numpy as np
 from audio_common_msgs.msg import AudioData
+from std_msgs.msg import String
 from harmoni_common_lib.action_client import HarmoniActionClient
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 from harmoni_common_lib.constants import *
@@ -109,11 +110,13 @@ class DialogingPattern(HarmoniServiceManager, object):
     def _detecting_callback(self, data):
         """Callback function from subscribing to the detector topic """
         # HERE WE SHOULD GET THE DATA FOR PASSING THEM TO THE NEXT STEP
+        self._result_callback({"do_action": True, "message": data})
 
     def request_step(self, action_goal, resource, service, optional_data, wait=True):
         """Send goal request to appropriate child"""
         # try:
         service_name = HelperFunctions.get_service_name(service)
+        print(service_name)
         self.state = State.REQUEST
         rospy.loginfo(f"Sending the following to the {service} service")
         if len(optional_data) < 500:
@@ -124,10 +127,22 @@ class DialogingPattern(HarmoniServiceManager, object):
             rospy.loginfo(
                 f"Message: \n action_goal type: {action_goal} \n optional_data: (too large to print) \n child: {resource}"
             )
-
-        if HelperFunction.check_if_detector(service_name) or HelperFunctions.check_if_sensor(service_name):
+        #HANDLE SENSOR AND DETECTOR CASE
+        if (HelperFunctions.check_if_detector(service_name = service_name)) or (HelperFunctions.check_if_sensor(service_name = service_name)):
             rospy.loginfo("(Client) Set wait to False")
             wait = False
+            if HelperFunctions.check_if_sensor(service_name = service_name):
+                self._result_callback({"do_action": True, "message": ""})
+            elif HelperFunctions.check_if_detector(service_name): # if detector, subscribe to the topic
+                rospy.loginfo("(Client) Subscribe to detector topic")
+                service_id = HelperFunctions.get_child_id(service)
+                rospy.Subscriber(
+                    service,
+                    String,
+                    self._detecting_callback,
+                    queue_size=1
+                )
+
 
         self.service_clients[service].send_goal(
             action_goal=action_goal,
@@ -137,16 +152,6 @@ class DialogingPattern(HarmoniServiceManager, object):
         )
         rospy.loginfo("Goal sent.")
         self.state = State.SUCCESS
-        
-        if HelperFunctions.check_if_detector(service_name): # if detector, subscribe to the topic
-            rospy.loginfo("(Client) Subscribe to detector topic")
-            service_id = HelperFunctions.get_child_id(service)
-            rospy.Subscriber(
-                service,
-                String,
-                self._detecting_callback,
-                queue_size=1
-            )
         # except:
         #    self.state = State.FAILED
         return
