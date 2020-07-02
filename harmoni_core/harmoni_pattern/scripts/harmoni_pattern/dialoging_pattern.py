@@ -40,13 +40,14 @@ class DialogingPattern(HarmoniServiceManager, object):
         self.end_sequence = False
         self.end_single_loop = False
         self.end_looping = False
+        self.dialogue_state = ""
         self.action_info = {
             DialogueState.DIALOGING: {
                 "action_goal": ActionType.REQUEST,
                 "resource": "",
             },
             DialogueState.SENSING: {"action_goal": ActionType.ON, "resource": ""},
-            DialogueState.NOTSENSING: {"action_goal": ActionType.PAUSE, "resource": ""},
+            #DialogueState.NOTSENSING: {"action_goal": ActionType.PAUSE, "resource": ""},
             DialogueState.SPEAKING: {"action_goal": ActionType.REQUEST, "resource": ""},
             DialogueState.SYNTHETIZING: {
                 "action_goal": ActionType.REQUEST,
@@ -105,7 +106,10 @@ class DialogingPattern(HarmoniServiceManager, object):
     def _detecting_callback(self, data):
         """Callback function from subscribing to the detector topic """
         # HERE WE SHOULD GET THE DATA FOR PASSING THEM TO THE NEXT STEP
-        self._result_callback({"do_action": True, "message": data})
+        rospy.loginfo("Subscribes to the sensor topic")
+        if self.count_detector == 0:
+            self._result_callback({"do_action": True, "message": data})
+            self.count_detector += 1
 
     def request_step(self, action_goal, resource, service, optional_data, wait=True):
         """Send goal request to appropriate child"""
@@ -133,11 +137,13 @@ class DialogingPattern(HarmoniServiceManager, object):
             elif HelperFunctions.check_if_detector(
                 service_name
             ):  # if detector, subscribe to the topic
+                self.count_detector = 0
                 rospy.loginfo("(Client) Subscribe to detector topic")
                 service_id = HelperFunctions.get_child_id(service)
                 rospy.Subscriber(
                     service, String, self._detecting_callback, queue_size=1
                 )
+                return
 
         self.service_clients[service].send_goal(
             action_goal=action_goal,
@@ -184,7 +190,7 @@ class DialogingPattern(HarmoniServiceManager, object):
     def _get_action_info(self, action):
         """Helper function to get the server, resource, and goal associated with an action"""
         rospy.loginfo("The action is %s" % action)
-        self.state = action
+        self.dialogue_state = action
         service = action
         print(self.action_info[service])
         resource = self.action_info[service]["resource"]
@@ -254,12 +260,12 @@ class DialogingPattern(HarmoniServiceManager, object):
         self.update(self.state)
 
         if self.count_loop == len(self.loop):
-            print("End of the single loop")
+            print("******** End of the single loop")
             self.end_single_loop = True
             self.count_loop += 1
             self.count = -1
             if self.end_looping:
-                print("End looping")
+                print("********** End looping")
         rospy.loginfo(f"************ End of LOOP step: {self.count_loop} *************")
         return
 
@@ -270,8 +276,8 @@ class DialogingPattern(HarmoniServiceManager, object):
 def main():
     pattern_name = "dialoging"
     trigger_intent = "Hey"
+    # DialogueState.NOTSENSING,  # BUG can't be last or won't wait
     parallel = [
-        # DialogueState.NOTSENSING,  # BUG can't be last or won't wait
         DialogueState.EXPRESSING,
         DialogueState.SPEAKING,
     ]
