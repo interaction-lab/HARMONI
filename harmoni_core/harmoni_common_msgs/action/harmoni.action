@@ -1,0 +1,15 @@
+# goal definition
+
+uint8 action_type # the type of action. Enums defined in harmoni_common_lib
+string optional_data # usually used for requests
+string resource # specific the resource in use in the child for the goal sent
+string condition #TODO-future: convert to enum
+
+---
+# result definition
+bool do_action # whether the action succeeded
+string message
+
+---
+# feedback
+int8 state # state of action server. Enums defined in harmoni_common_lib
