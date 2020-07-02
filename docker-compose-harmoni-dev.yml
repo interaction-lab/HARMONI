@@ -51,7 +51,7 @@ services:
             - /etc/localtime:/etc/localtime:ro
         working_dir: /root/harmoni_catkin_ws/src/HARMONI
         command: bash -c "
-            terminator -ue \"echo 'Entering harmoni_core Container... \\n start with roscore and rlharmoni' && bash\""
+            terminator -ue \"echo 'Entering harmoni_core Container... \\n start with roscore and rlharmoniservices' && bash\""
 
     ros_w2l:
         container_name: ros_w2l
