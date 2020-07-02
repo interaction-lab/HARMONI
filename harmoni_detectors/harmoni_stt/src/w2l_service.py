@@ -106,7 +106,6 @@ class SpeechToTextService(HarmoniServiceManager):
             text = self.transcribe_bytes(data.data)
             if text:
                 self.text_pub.publish(text)
-                self.state = State.SUCCESS
         else:
             rospy.loginfo("Not Transcribing Audio")
         return
