@@ -3,7 +3,7 @@
 # Importing the libraries
 import yaml
 import os
-from harmoni_common_lib.constants import Router
+from harmoni_common_lib.constants import Router, RouterDetector, RouterSensor
 
 
 PATH_CONFIG = "HARMONI/harmoni_core/harmoni_decision/config/configuration.yaml"
@@ -64,6 +64,12 @@ class HelperFunctions:
         id = service[-1]
         return id
 
+    def get_service_name(repo_service_id):
+        """Get id of the child from service name"""
+        service = repo_service_id.split("_")
+        name = service[1]
+        return name
+
     def get_all_repos():
         abs_path = os.path.abspath(__file__)
         path = abs_path.split("HARMONI/")
@@ -75,3 +81,19 @@ class HelperFunctions:
         for repo in repos:
             repo_list.append(repo)
         return repo_list
+
+    def check_if_detector(service_name):
+        """Check if detector. It returns true if it is a detector """
+        list_detectors = [enum.name for enum in list(RouterDetector)]
+        for d in list_detectors:
+            if service_name == d:
+                return True
+        return False
+
+    def check_if_sensor(service_name):
+        """Check if sensor. It returns true if it is a sensor """
+        list_sensors = [enum.name for enum in list(RouterSensor)]
+        for d in list_sensors:
+            if service_name == d:
+                return True
+        return False
