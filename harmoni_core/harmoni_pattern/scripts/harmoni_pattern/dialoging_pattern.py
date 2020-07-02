@@ -126,25 +126,14 @@ class DialogingPattern(HarmoniServiceManager, object):
             rospy.loginfo(
                 f"Message: \n action_goal type: {action_goal} \n optional_data: (too large to print) \n child: {resource}"
             )
-        # HANDLE SENSOR AND DETECTOR CASE
+
         if (HelperFunctions.check_if_detector(service_name=service_name)) or (
             HelperFunctions.check_if_sensor(service_name=service_name)
         ):
             rospy.loginfo("(Client) Set wait to False")
             wait = False
-            if HelperFunctions.check_if_sensor(service_name=service_name):
-                self._result_callback({"do_action": True, "message": ""})
-            elif HelperFunctions.check_if_detector(
-                service_name
-            ):  # if detector, subscribe to the topic
-                self.count_detector = 0
-                rospy.loginfo("(Client) Subscribe to detector topic")
-                service_id = HelperFunctions.get_child_id(service)
-                rospy.Subscriber(
-                    service, String, self._detecting_callback, queue_size=1
-                )
-                return
 
+        # HANDLE SENSOR AND DETECTOR CASE
         self.service_clients[service].send_goal(
             action_goal=action_goal,
             optional_data=optional_data,
@@ -153,6 +142,17 @@ class DialogingPattern(HarmoniServiceManager, object):
         )
         rospy.loginfo("Goal sent.")
         self.state = State.SUCCESS
+        if HelperFunctions.check_if_sensor(service_name=service_name):
+            self._result_callback({"do_action": True, "message": ""})
+        elif HelperFunctions.check_if_detector(service_name):  # if detector, subscribe to the topic
+            self.count_detector = 0
+            rospy.loginfo("(Client) Subscribe to detector topic")
+            service_id = HelperFunctions.get_child_id(service)
+            if service_name == RouterDetector.stt.name:
+                topic = RouterDetector.stt.value + service_id
+            rospy.Subscriber(
+                topic, String, self._detecting_callback, queue_size=10
+            )
         # except:
         #    self.state = State.FAILED
         return
@@ -256,6 +256,7 @@ class DialogingPattern(HarmoniServiceManager, object):
                 )
         else:
             [resource, service, action_goal] = self._get_action_info(action)
+            rospy.loginfo("Request step")
             self.request_step(action_goal, resource, service, optional_data)
         self.update(self.state)
 
