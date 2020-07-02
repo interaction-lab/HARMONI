@@ -45,7 +45,7 @@ class HarmoniRouter(HarmoniActionServer, object):
                 child, execute_goal_result_callback, execute_goal_feedback_callback
             )
             rospy.loginfo(f"{self.router_name} Router: Set up client for " + child)
-        self.setup_server(self.router_name, self.execute_goal_received_callback)
+        super().__init__(self.router_name, self.execute_goal_received_callback)
         return
 
     def setup_conditional_startup(self, condition_event, checked_event):
