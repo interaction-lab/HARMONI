@@ -66,7 +66,7 @@ class SpeechToTextService(HarmoniServiceManager):
             self.state_update()
         else:
             self.state = State.START
-        self.state_update()
+        #self.state_update()
         return
 
     def stop(self):
@@ -101,6 +101,7 @@ class SpeechToTextService(HarmoniServiceManager):
         return
 
     def callback(self, data):
+        rospy.loginfo("The state is %s" %self.state)
         if self.state == State.START:
             rospy.loginfo("Transcribing")
             text = self.transcribe_bytes(data.data)
