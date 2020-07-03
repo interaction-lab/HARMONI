@@ -308,24 +308,6 @@ class DialogingPattern(HarmoniServiceManager, object):
         rospy.loginfo(f"************* Starting LOOP step: {self.count_loop}")
         action = self.loop[self.count_loop]
         rospy.loginfo(f"Loop step action is {action}!!!!!!!!!!!!!!!!!!!")
-        """
-        if isinstance(action, list):
-            # If it is an array, it means that is a parallel actions, so I start multiple goals
-            rospy.loginfo("Running action in parallel!")
-            i = 0
-            for item in action:
-                i += 1
-                [resource, service, action_goal] = self._get_action_info(item)
-
-                self.request_step(
-                    action_goal, resource, service, data, wait=(i == len(action))
-                )
-        else:
-            [resource, service, action_goal] = self._get_action_info(action)
-            rospy.loginfo("Request step")
-            self.request_step(action_goal, resource, service, optional_data)
-        self.update(self.state)
-        """
         self.request_step(action, data)
 
         if self.count_loop == len(self.loop):
