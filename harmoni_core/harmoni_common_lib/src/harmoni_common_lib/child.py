@@ -185,7 +185,7 @@ class InternalServiceServer(HarmoniActionServer, object):
         return
 
 
-class HarwareReadingServer(HarmoniActionServer, object):
+class HardwareReadingServer(HarmoniActionServer, object):
     """
     An hardware reading class controls the behavior of a class that processes some
     data from a sensor and publishes it to a topic
