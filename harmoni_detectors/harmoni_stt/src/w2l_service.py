@@ -126,11 +126,14 @@ class SpeechToTextService(HarmoniServiceManager):
         text_list = self.fix_text(outs)
         rospy.loginfo("The text list is %s" % text_list)
         if not any(text_list):
+            rospy.loginfo("Nothing was heard")
             self.set_w2l_proc()
             return
         self.set_w2l_proc()
         text_list = [t for t in text_list if t]
-        return " ".join(text_list)
+        sentence = " ".join(text_list)
+        rospy.loginfo(f"heard: {sentence}")
+        return sentence
 
     def fix_text(self, text):
         output_by_sec = " ".join(
