@@ -174,7 +174,6 @@ class DialogingPattern(HarmoniServiceManager, object):
                 # handle multiple goals with recursion
                 self.request_step(sub_action, optional_data, wait=(i == len(action)))
         else:
-<<<<<<< HEAD
             rospy.loginfo(
                 f"Message: \n action_goal type: {action_goal} \n optional_data: (too large to print) \n child: {resource}"
             )
@@ -207,7 +206,6 @@ class DialogingPattern(HarmoniServiceManager, object):
             )
         # except:
         #    self.state = State.FAILED
-=======
             # Here is where the magic starts
             (
                 action_goal,
@@ -266,7 +264,6 @@ class DialogingPattern(HarmoniServiceManager, object):
             # except:
             #    self.state = State.FAILED
         self.update(self.state)
->>>>>>> 758a0d6d18170a07daa70fcf58f6a5f84d45c524
         return
 
     def start(self, data):
@@ -343,7 +340,6 @@ class DialogingPattern(HarmoniServiceManager, object):
         rospy.loginfo(f"************* Starting LOOP step: {self.count_loop}")
         action = self.loop[self.count_loop]
         rospy.loginfo(f"Loop step action is {action}!!!!!!!!!!!!!!!!!!!")
-<<<<<<< HEAD
         if isinstance(action, list):
             # If it is an array, it means that is a parallel actions, so I start multiple goals
             rospy.loginfo("Running action in parallel!")
@@ -360,9 +356,7 @@ class DialogingPattern(HarmoniServiceManager, object):
             rospy.loginfo("Request step")
             self.request_step(action_goal, resource, service, optional_data)
         self.update(self.state)
-=======
         self.request_step(action, data)
->>>>>>> 758a0d6d18170a07daa70fcf58f6a5f84d45c524
 
         if self.count_loop == len(self.loop):
             print("******** End of the single loop")
