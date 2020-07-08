@@ -1,6 +1,5 @@
 FROM cmbirmingham/harmoni-dev:latest
 
-
 # ==================================================================
 # harmoni-pc packages
 # ------------------------------------------------------------------
@@ -8,6 +7,12 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         libboost-all-dev \
+        libgstreamer1.0-0 gstreamer1.0-dev gstreamer1.0-tools gstreamer1.0-doc \
+        gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
+        gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly \
+        gstreamer1.0-libav \
+        gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-pulseaudio \
+        libgstreamer-plugins-base1.0-dev \
     && \
     PIP_INSTALL="python3.6 -m pip --no-cache-dir install --upgrade" && \
     $PIP_INSTALL \
@@ -32,6 +37,10 @@ RUN git -C src clone \
       https://github.com/ros-perception/vision_opencv.git
 
 RUN ln -s /usr/lib/x86_64-linux-gnu/libboost_python-py35.so /usr/lib/x86_64-linux-gnu/libboost_python3.so
+
+RUN git -C src clone \
+      -b master \
+      https://github.com/ros-drivers/audio_common.git
 
 # ==================================================================
 # build ros package source

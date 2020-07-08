@@ -92,7 +92,7 @@ class HarmoniActionServer(object):
             f"(Server) The goal is a {goal.action_type} request for {goal.resource}"
         )
         self.goal_received = True
-        rospy.loginfo("The goal is: %i" % goal.action_type)
+        # rospy.loginfo("The goal is: %i" % goal.action_type)
         # Perform the callback set by child
         self.execute_goal_received_callback(goal)
         return

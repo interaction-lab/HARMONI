@@ -27,7 +27,7 @@ services:
             - "33691:33691"
         devices: 
           - /dev/dri:/dev/dri
-          - /dev/snd:/dev/snd
+          #- /dev/snd:/dev/snd
           - /dev/video0:/dev/video0
         volumes:
             - harmoni_catkin_ws:/root/harmoni_catkin_ws
@@ -80,7 +80,7 @@ services:
             - "1022:22"
         devices: 
             - /dev/dri:/dev/dri
-            - /dev/snd:/dev/snd
+            #- /dev/snd:/dev/snd
             - /dev/video0:/dev/video0
         volumes:
             - ../model/w2l:/root/model/w2l/
@@ -129,7 +129,7 @@ services:
             - "harmoni_pc"
         devices: 
             - /dev/dri:/dev/dri
-            - /dev/snd:/dev/snd
+            #- /dev/snd:/dev/snd
             - /dev/video0:/dev/video0
         volumes:
             - ../HARMONI/:/root/local_mount/HARMONI/
@@ -184,6 +184,7 @@ services:
             # Configuration
             - ./dockerfiles/config/setup_script.sh:/root/.setup_script.sh
             - ./dockerfiles/config/dev_setup_script.sh:/root/.dev_setup_script.sh
+            - ./dockerfiles/config/.asoundrc:~/.asoundrc
             # Other
             - /tmp/.X11-unix:/tmp/.X11-unix
             - ~/.config/terminator/config:/root/.config/terminator/config
