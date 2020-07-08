@@ -31,36 +31,50 @@ class DialogingPattern(HarmoniServiceManager, object):
     Dialoging pattern class
     """
 
-    def __init__(self, name, sequence, loop, sensors, detectors):
+    def __init__(self, name, sensors, detectors):
         """Init the behavior pattern and setup the clients"""
         self.service_names = []
         self.name = name
-        self.sequence = sequence
-        self.loop = loop
 
-        self.count = self.count_loop = -1
-        self.end_sequence = self.end_single_loop = self.end_looping = False
+        self.end_sequence = False
         self.dialogue_state = ""
         self.action_info = {
             DialogueState.DIALOGING: {
                 "action_goal": ActionType.REQUEST,
-                "resource": "",
+                "resource": "lex",
+                "wait_for": "result",
+                "result": None,
             },
-            DialogueState.LISTENING: {"action_goal": ActionType.ON, "resource": ""},
-            # DialogueState.NOTLISTENING: {"action_goal": ActionType.PAUSE, "resource": ""},
-            DialogueState.SPEAKING: {"action_goal": ActionType.REQUEST, "resource": ""},
+            DialogueState.LISTENING: {
+                "action_goal": ActionType.ON,
+                "resource": "microphone",
+                "wait_for": "",
+                "result": None,
+            },
+            DialogueState.SPEAKING: {
+                "action_goal": ActionType.REQUEST,
+                "resource": "speaker",
+                "wait_for": "result",
+                "result": None,
+            },
             DialogueState.SYNTHETIZING: {
                 "action_goal": ActionType.REQUEST,
-                "resource": "",
+                "resource": "polly",
+                "wait_for": "result",
+                "result": None,
             },
             DialogueState.EXPRESSING: {
                 "action_goal": ActionType.REQUEST,
-                "resource": "",
+                "resource": "mouth",
+                "wait_for": "result",
+                "result": None,
             },
-            DialogueState.MOVING: {"action_goal": ActionType.REQUEST, "resource": ""},
+            # DialogueState.MOVING: {"action_goal": ActionType.REQUEST, "resource": ""},
             DialogueState.SPEECH_DETECTING: {
                 "action_goal": ActionType.ON,
-                "resource": "",
+                "resource": "w2l",
+                "wait_for": "next",
+                "result": None,
             },
         }
 
@@ -75,10 +89,12 @@ class DialogingPattern(HarmoniServiceManager, object):
             for child in child_list:
                 self.service_names.extend(HelperFunctions.get_child_list(child))
         rospy.loginfo(f"Dialogue Pattern needs these services: {self.service_names}")
-        self.service_clients = defaultdict(HarmoniActionClient)
 
+        self.service_clients = defaultdict(HarmoniActionClient)
+        self.client_results = {}
         for client in self.service_names:
-            self.service_clients[client] = HarmoniActionClient()
+            self.service_clients[client] = HarmoniActionClient(client)
+            self.client_results[client] = None
         rospy.loginfo("Clients created")
 
         for cl, client in self.service_clients.items():
@@ -139,16 +155,18 @@ class DialogingPattern(HarmoniServiceManager, object):
         """ Do something when result has been received """
         rospy.loginfo("The result of the request has been received")
         rospy.loginfo(f"The result callback message was {len(result['message'])} long")
-        if result["do_action"]:
-            # If you are not done working through your sequence, do the next step
-            if not self.end_sequence:
-                self.do_sequence(result["message"])
-            # If you are at the end of your sequence, work through the loop
-            elif not self.end_looping and self.end_sequence:
-                self.do_loop(result["message"])
-        else:
-            # If the result did not say to do anything next
-            print("Callback specified stop.")
+        self.client_results[result["child"]] = result["message"]
+        if not result["do_action"]:
+            pass
+            # # If you are not done working through your sequence, do the next step
+            # if not self.end_sequence:
+            #     self.do_sequence(result["message"])
+            # # If you are at the end of your sequence, work through the loop
+            # elif not self.end_looping and self.end_sequence:
+            #     self.do_loop(result["message"])
+        # else:
+        #     # If the result did not say to do anything next
+        #     print("Callback specified stop.")
         return
 
     def _feedback_callback(self, feedback):
@@ -172,7 +190,10 @@ class DialogingPattern(HarmoniServiceManager, object):
             for i, sub_action in enumerate(action, start=1):
                 # wait on the last item in a list TODO: update to wait on all items after all are sent
                 # handle multiple goals with recursion
-                self.request_step(sub_action, optional_data, wait=(i == len(action)))
+                result = self.request_step(
+                    sub_action, optional_data, wait=(i == len(action))
+                )
+            return result
         else:
             # Here is where the magic starts
             (
@@ -190,7 +211,7 @@ class DialogingPattern(HarmoniServiceManager, object):
             if _is_sensor:
                 rospy.logwarn("Sensor should be set up during init")
                 wait = False
-                self._result_callback({"do_action": True, "message": ""})
+                return
             elif _is_detector:  # if detector, get last message from topic
                 rospy.loginfo("getting result from the detector")
                 call_time = time()
@@ -199,7 +220,7 @@ class DialogingPattern(HarmoniServiceManager, object):
                     result = self.detector_queue[service_name].popleft()
                 r = rospy.Rate(1)
 
-                while result["time"] < call_time:
+                while result["time"] < call_time and not rospy.is_shutdown():
                     rospy.loginfo(f"got old message {result['data']}")
                     if len(self.detector_queue[service_name]) > 0:
                         result = self.detector_queue[service_name].popleft()
@@ -209,7 +230,6 @@ class DialogingPattern(HarmoniServiceManager, object):
                 self._result_callback({"do_action": True, "message": result["data"]})
                 return
             else:
-
                 # Log details about the service:
                 rospy.loginfo(f"Sending the following to the {service_name} service")
                 if len(optional_data) < 500:
@@ -220,7 +240,7 @@ class DialogingPattern(HarmoniServiceManager, object):
                     rospy.loginfo(
                         f"Message: \n action_goal type: {action_goal} \n optional_data: (too large to print) \n child: {resource}"
                     )
-
+                self.client_results[service] = None
                 self.service_clients[service].send_goal(
                     action_goal=action_goal,
                     optional_data=optional_data,
@@ -229,20 +249,19 @@ class DialogingPattern(HarmoniServiceManager, object):
                 )
                 rospy.loginfo("Goal sent.")
                 self.state = State.SUCCESS
-            # except:
-            #    self.state = State.FAILED
-        self.update(self.state)
-        return
 
-    def start(self, data):
+        self.update(self.state)
+        return self.client_results[service]
+
+    def start(self, sequence, data="Hey", looping=False):
         """Send goal request to appropriate child"""
         self.state = State.START
+        self.count = self.count_loop = -1
+        self.sequence = sequence
+        self.looping = looping
         rate = ""
         super().start(rate)
-        # try:
         self.do_sequence(data=data)
-        # except:
-        #    self.state = State.FAILED
         return
 
     def stop(self, router):
@@ -272,12 +291,13 @@ class DialogingPattern(HarmoniServiceManager, object):
         print(self.action_info[service])
         resource = self.action_info[service]["resource"]
         action_goal = self.action_info[service]["action_goal"]
+        wait_for = self.action_info[service]["wait_for"]
         service_name = HelperFunctions.get_service_name(service)
         _is_detector = HelperFunctions.check_if_detector(service_name)
         _is_sensor = HelperFunctions.check_if_sensor(service_name)
         return action_goal, resource, service, service_name, _is_detector, _is_sensor
 
-    def do_sequence(self, data):
+    def do_sequence(self, data=None):
         """
         Do sequence, Update state and send the goal according to the current state
 
@@ -285,43 +305,29 @@ class DialogingPattern(HarmoniServiceManager, object):
             data: are the optional data to input to the service
         """
         self.count += 1
-        if self.count == len(self.sequence):
+        if self.looping:
+            self.count = self.count % len(self.sequence)
+        if self.count >= len(self.sequence):
             print("DONE WITH THE WHOLE SEQUENCE")
             self.end_sequence = True
             return
+
         rospy.loginfo(f"************* Starting SEQUENCE step: {self.count}")
+
         action = self.sequence[self.count]
-        rospy.loginfo(f"Sequence step action is {action}!!!!!!!!!!!!!!!!!!!")
-        self.request_step(action, data)
+        rospy.loginfo(f"Sequence step action is {action}")
+        # if not data:
+        #     data = self.get_data() # TODO Implement
+
+        result = self.request_step(action, data)
+
         rospy.loginfo(f"************ End of SEQUENCE step: {self.count} *************")
+
+        if self.looping and self.count == len(self.sequence) - 1:
+            rospy.loginfo("Done with a loop!")
+
+        self.do_sequence(data=result)
         return
-
-    def do_loop(self, data):
-        """
-        Do loop, Update state and send the goal according to the current state
-
-        Args:
-            data: are the optional data to input to the service
-        """
-        self.count_loop += 1
-        self.count_loop = self.count_loop % len(self.loop)
-        rospy.loginfo(f"************* Starting LOOP step: {self.count_loop}")
-        action = self.loop[self.count_loop]
-        rospy.loginfo(f"Loop step action is {action}!!!!!!!!!!!!!!!!!!!")
-        self.request_step(action, data)
-
-        if self.count_loop == len(self.loop):
-            print("******** End of the single loop")
-            self.end_single_loop = True
-            self.count_loop += 1
-            self.count = -1
-            if self.end_looping:
-                print("********** End looping")
-        rospy.loginfo(f"************ End of LOOP step: {self.count_loop} *************")
-        return
-
-    def stop(self):
-        pass
 
 
 def main():
@@ -332,22 +338,27 @@ def main():
         DialogueState.SPEAKING,
     ]
     loop = [
-        # DialogueState.LISTENING,
+        DialogueState.LISTENING,
         DialogueState.SPEECH_DETECTING,
         DialogueState.DIALOGING,
         DialogueState.SYNTHETIZING,
         parallel,
     ]
-    sequence = [DialogueState.DIALOGING, DialogueState.SYNTHETIZING, parallel]
+    sequence = [
+        DialogueState.DIALOGING,
+        DialogueState.SYNTHETIZING,
+        parallel,
+    ]
     sensors = [DialogueState.LISTENING]
     detectors = [DialogueState.SPEECH_DETECTING]
 
     try:
         rospy.init_node(pattern_name)
         # Initialize the pattern with pattern sequence/loop
-        dp = DialogingPattern(pattern_name, sequence, loop, sensors, detectors)
+        dp = DialogingPattern(pattern_name, sensors, detectors)
         rospy.loginfo("Set up. Starting first step of dialogue pattern.")
-        dp.start(data=trigger_intent)
+        dp.start(sequence, data=trigger_intent, looping=False)
+        dp.start(loop, data=trigger_intent, looping=True)
         rospy.spin()
     except rospy.ROSInterruptException:
         pass

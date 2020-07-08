@@ -30,14 +30,15 @@ class HarmoniActionClient(object):
     including basic type checking, warnings, interrupts, etc.
     """
 
-    ## @brief Constructs a SimpleActionClient and opens connections to an ActionServer.
-    ##
-    ## @param ns The namespace in which to access the action.  For
-    ## example, the "goal" topic should occur under ns/goal
-    ##
-    ## @param ActionSpec The *Action message type.  The SimpleActionClient
-    ## will grab the other message types from this type.
-    def __init__(self):
+    def __init__(self, name):
+        ## @brief Constructs a SimpleActionClient and opens connections to an ActionServer.
+        ##
+        ## @param ns The namespace in which to access the action.  For
+        ## example, the "goal" topic should occur under ns/goal
+        ##
+        ## @param ActionSpec The *Action message type.  The SimpleActionClient
+        ## will grab the other message types from this type.
+        self.name = name
         self.action_result = {"do_action": None, "message": None}
         self.action_feedback = {"state": None}
         return
@@ -52,10 +53,11 @@ class HarmoniActionClient(object):
             rospy.loginfo(f"(Client) Message was : (too long to display)")
         # if self.result_received:
         #     rospy.loginfo(f"(Client) Result was already recieved")
+        self.action_result["child"] = self.name
         self.action_result["do_action"] = result.do_action
         self.action_result["message"] = result.message
-        # if self.execute_goal_result_callback:
-        #     self.execute_goal_result_callback(self.action_result)
+        if self.execute_goal_result_callback:
+            self.execute_goal_result_callback(self.action_result)
         # self.result_received = True
         return
 
@@ -104,8 +106,7 @@ class HarmoniActionClient(object):
             self.wait_for_result(rospy.Duration(time_out))
             # self.wait_for_result(rospy.Duration.from_sec(time_out))
             rospy.loginfo("(Client) done waiting.")
-            if self.execute_goal_result_callback:
-                self.execute_goal_result_callback(self.action_result)
+
         else:
             rospy.loginfo("(Client) Not waiting for result.")
         return
@@ -146,30 +147,30 @@ class HarmoniActionClient(object):
         rospy.loginfo("action_client {} server connected.".format(action_type_name))
         return
 
-    ## @brief Blocks until the action server connects to this client
-    ##
-    ## @param timeout Max time to block before returning. A zero
-    ## timeout is interpreted as an infinite timeout.
-    ##
-    ## @return True if the server connected in the allocated time. False on timeout
     def wait_for_server(self, timeout=rospy.Duration()):
+        ## @brief Blocks until the action server connects to this client
+        ##
+        ## @param timeout Max time to block before returning. A zero
+        ## timeout is interpreted as an infinite timeout.
+        ##
+        ## @return True if the server connected in the allocated time. False on timeout
         return self.action_client.wait_for_server(timeout)
 
-    ## @brief Sends a goal to the ActionServer, and also registers callbacks
-    ##
-    ## If a previous goal is already active when this is called. We simply forget
-    ## about that goal and start tracking the new goal. No cancel requests are made.
-    ##
-    ## @param done_cb Callback that gets called on transitions to
-    ## Done.  The callback should take two parameters: the terminal
-    ## state (as an integer from actionlib_msgs/GoalStatus) and the
-    ## result.
-    ##
-    ## @param active_cb   No-parameter callback that gets called on transitions to Active.
-    ##
-    ## @param feedback_cb Callback that gets called whenever feedback
-    ## for this goal is received.  Takes one parameter: the feedback.
     def _send_goal(self, goal, done_cb=None, active_cb=None, feedback_cb=None):
+        ## @brief Sends a goal to the ActionServer, and also registers callbacks
+        ##
+        ## If a previous goal is already active when this is called. We simply forget
+        ## about that goal and start tracking the new goal. No cancel requests are made.
+        ##
+        ## @param done_cb Callback that gets called on transitions to
+        ## Done.  The callback should take two parameters: the terminal
+        ## state (as an integer from actionlib_msgs/GoalStatus) and the
+        ## result.
+        ##
+        ## @param active_cb   No-parameter callback that gets called on transitions to Active.
+        ##
+        ## @param feedback_cb Callback that gets called whenever feedback
+        ## for this goal is received.  Takes one parameter: the feedback.
         # destroys the old goal handle
         self.stop_tracking_goal()
 
@@ -182,24 +183,24 @@ class HarmoniActionClient(object):
             goal, self._handle_transition, self._handle_feedback
         )
 
-    ## @brief Sends a goal to the ActionServer, waits for the goal to complete, and preempts goal is necessary
-    ##
-    ## If a previous goal is already active when this is called. We simply forget
-    ## about that goal and start tracking the new goal. No cancel requests are made.
-    ##
-    ## If the goal does not complete within the execute_timeout, the goal gets preempted
-    ##
-    ## If preemption of the goal does not complete withing the preempt_timeout, this
-    ## method simply returns
-    ##
-    ## @param execute_timeout The time to wait for the goal to complete
-    ##
-    ## @param preempt_timeout The time to wait for preemption to complete
-    ##
-    ## @return The goal's state.
     def send_goal_and_wait(
         self, goal, execute_timeout=rospy.Duration(), preempt_timeout=rospy.Duration()
     ):
+        ## @brief Sends a goal to the ActionServer, waits for the goal to complete, and preempts goal is necessary
+        ##
+        ## If a previous goal is already active when this is called. We simply forget
+        ## about that goal and start tracking the new goal. No cancel requests are made.
+        ##
+        ## If the goal does not complete within the execute_timeout, the goal gets preempted
+        ##
+        ## If preemption of the goal does not complete withing the preempt_timeout, this
+        ## method simply returns
+        ##
+        ## @param execute_timeout The time to wait for the goal to complete
+        ##
+        ## @param preempt_timeout The time to wait for preemption to complete
+        ##
+        ## @return The goal's state.
         self.send_goal(goal)
         if not self.wait_for_result(execute_timeout):
             # preempt action
@@ -217,10 +218,10 @@ class HarmoniActionClient(object):
                 )
         return self.get_state()
 
-    ## @brief Blocks until this goal transitions to done
-    ## @param timeout Max time to block before returning. A zero timeout is interpreted as an infinite timeout.
-    ## @return True if the goal finished. False if the goal didn't finish within the allocated timeout
     def wait_for_result(self, timeout=rospy.Duration()):
+        ## @brief Blocks until this goal transitions to done
+        ## @param timeout Max time to block before returning. A zero timeout is interpreted as an infinite timeout.
+        ## @return True if the goal finished. False if the goal didn't finish within the allocated timeout
 
         self.simple_state == SimpleGoalState.PENDING
         if not self.gh:
@@ -247,22 +248,22 @@ class HarmoniActionClient(object):
 
         return self.simple_state == SimpleGoalState.DONE
 
-    ## @brief Gets the Result of the current goal
     def get_result(self):
+        ## @brief Gets the Result of the current goal
         if not self.gh:
             rospy.logerr("Called get_result when no goal is running")
             return None
 
         return self.gh.get_result()
 
-    ## @brief Get the state information for this goal
-    ##
-    ## Possible States Are: PENDING, ACTIVE, RECALLED, REJECTED,
-    ## PREEMPTED, ABORTED, SUCCEEDED, LOST.
-    ##
-    ## @return The goal's state. Returns LOST if this
-    ## SimpleActionClient isn't tracking a goal.
     def get_state(self):
+        ## @brief Get the state information for this goal
+        ##
+        ## Possible States Are: PENDING, ACTIVE, RECALLED, REJECTED,
+        ## PREEMPTED, ABORTED, SUCCEEDED, LOST.
+        ##
+        ## @return The goal's state. Returns LOST if this
+        ## SimpleActionClient isn't tracking a goal.
         if not self.gh:
             return GoalStatus.LOST
         status = self.gh.get_goal_status()
@@ -274,44 +275,44 @@ class HarmoniActionClient(object):
 
         return status
 
-    ## @brief Returns the current status text of the goal.
-    ##
-    ## The text is sent by the action server. It is designed to
-    ## help debugging issues on the server side.
-    ##
-    ## @return The current status text of the goal.
     def get_goal_status_text(self):
+        ## @brief Returns the current status text of the goal.
+        ##
+        ## The text is sent by the action server. It is designed to
+        ## help debugging issues on the server side.
+        ##
+        ## @return The current status text of the goal.
         if not self.gh:
             rospy.logerr("Called get_goal_status_text when no goal is running")
             return "ERROR: Called get_goal_status_text when no goal is running"
 
         return self.gh.get_goal_status_text()
 
-    ## @brief Cancels all goals currently running on the action server
-    ##
-    ## This preempts all goals running on the action server at the point that
-    ## this message is serviced by the ActionServer.
     def cancel_all_goals(self):
+        ## @brief Cancels all goals currently running on the action server
+        ##
+        ## This preempts all goals running on the action server at the point that
+        ## this message is serviced by the ActionServer.
         self.action_client.cancel_all_goals()
 
-    ## @brief Cancels all goals prior to a given timestamp
-    ##
-    ## This preempts all goals running on the action server for which the
-    ## time stamp is earlier than the specified time stamp
-    ## this message is serviced by the ActionServer.
     def cancel_goals_at_and_before_time(self, time):
+        ## @brief Cancels all goals prior to a given timestamp
+        ##
+        ## This preempts all goals running on the action server for which the
+        ## time stamp is earlier than the specified time stamp
+        ## this message is serviced by the ActionServer.
         self.action_client.cancel_goals_at_and_before_time(time)
 
-    ## @brief Cancels the goal that we are currently pursuing
     def cancel_goal(self):
+        ## @brief Cancels the goal that we are currently pursuing
         if self.gh:
             self.gh.cancel()
 
-    ## @brief Stops tracking the state of the current goal. Unregisters this goal's callbacks
-    ##
-    ## This is useful if we want to make sure we stop calling our callbacks before sending a new goal.
-    ## Note that this does not cancel the goal, it simply stops looking for status info about this goal.
     def stop_tracking_goal(self):
+        ## @brief Stops tracking the state of the current goal. Unregisters this goal's callbacks
+        ##
+        ## This is useful if we want to make sure we stop calling our callbacks before sending a new goal.
+        ## Note that this does not cancel the goal, it simply stops looking for status info about this goal.
         self.gh = None
 
     def _handle_transition(self, gh):
