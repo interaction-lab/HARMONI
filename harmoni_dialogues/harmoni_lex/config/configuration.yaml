@@ -2,6 +2,6 @@
 harmoni_lex:
   default_param:
     user_id : "micol_testing"
-    bot_name: "QTDemo"
-    bot_alias: "qt_sample_demo" 
+    bot_name: "GreeterPrototype"
+    bot_alias: "test_bot" 
     region_name: "us-west-2"
