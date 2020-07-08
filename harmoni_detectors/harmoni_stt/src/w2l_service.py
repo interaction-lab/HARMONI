@@ -66,7 +66,7 @@ class SpeechToTextService(HarmoniServiceManager):
             self.state_update()
         else:
             self.state = State.START
-        self.state_update()
+        #self.state_update()
         return
 
     def stop(self):
@@ -101,6 +101,7 @@ class SpeechToTextService(HarmoniServiceManager):
         return
 
     def callback(self, data):
+        rospy.loginfo("The state is %s" %self.state)
         if self.state == State.START:
             rospy.loginfo("Transcribing")
             text = self.transcribe_bytes(data.data)
@@ -126,14 +127,11 @@ class SpeechToTextService(HarmoniServiceManager):
         text_list = self.fix_text(outs)
         rospy.loginfo("The text list is %s" % text_list)
         if not any(text_list):
-            rospy.loginfo("Nothing was heard")
             self.set_w2l_proc()
             return
         self.set_w2l_proc()
         text_list = [t for t in text_list if t]
-        sentence = " ".join(text_list)
-        rospy.loginfo(f"heard: {sentence}")
-        return sentence
+        return " ".join(text_list)
 
     def fix_text(self, text):
         output_by_sec = " ".join(
