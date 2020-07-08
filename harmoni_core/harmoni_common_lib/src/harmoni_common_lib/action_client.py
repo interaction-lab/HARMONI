@@ -54,8 +54,8 @@ class HarmoniActionClient(object):
         #     rospy.loginfo(f"(Client) Result was already recieved")
         self.action_result["do_action"] = result.do_action
         self.action_result["message"] = result.message
-        if self.execute_goal_result_callback:
-            self.execute_goal_result_callback(self.action_result)
+        # if self.execute_goal_result_callback:
+        #     self.execute_goal_result_callback(self.action_result)
         # self.result_received = True
         return
 
@@ -74,7 +74,7 @@ class HarmoniActionClient(object):
         optional_data="",
         resource="",
         condition="",
-        time_out=600,
+        time_out=60,
         wait=True,
     ):
         """Sends a goal to the action server tied to this client.
@@ -91,18 +91,23 @@ class HarmoniActionClient(object):
             resource=resource,
             condition=condition,
         )
-        rospy.loginfo("(Client) Sending Goal.")
+        if len(optional_data) < 50:
+            rospy.loginfo(f"(Client) Sending goal: {optional_data}")
+        else:
+            rospy.loginfo("(Client) Sending Goal.")
         self._send_goal(
             goal, done_cb=self._result_callback, feedback_cb=self._feedback_callback
         )
         rospy.loginfo("(Client) Goal Sent")
         if wait:
-            rospy.loginfo("(Client) Waiting for return.")
-            self.wait_for_result(rospy.Duration.from_sec(time_out))
+            rospy.loginfo(f"(Client) Waiting for return: {time_out}")
+            self.wait_for_result(rospy.Duration(time_out))
+            # self.wait_for_result(rospy.Duration.from_sec(time_out))
             rospy.loginfo("(Client) done waiting.")
+            if self.execute_goal_result_callback:
+                self.execute_goal_result_callback(self.action_result)
         else:
             rospy.loginfo("(Client) Not waiting for result.")
-
         return
 
     def setup_client(
@@ -216,6 +221,8 @@ class HarmoniActionClient(object):
     ## @param timeout Max time to block before returning. A zero timeout is interpreted as an infinite timeout.
     ## @return True if the goal finished. False if the goal didn't finish within the allocated timeout
     def wait_for_result(self, timeout=rospy.Duration()):
+
+        self.simple_state == SimpleGoalState.PENDING
         if not self.gh:
             rospy.logerr("Called wait_for_result when no goal exists")
             return False
@@ -226,9 +233,11 @@ class HarmoniActionClient(object):
             while not rospy.is_shutdown():
                 time_left = timeout_time - rospy.get_rostime()
                 if timeout > rospy.Duration(0.0) and time_left <= rospy.Duration(0.0):
+                    rospy.loginfo("Time break")
                     break
 
                 if self.simple_state == SimpleGoalState.DONE:
+                    rospy.loginfo("state break")
                     break
 
                 if time_left > loop_period or timeout == rospy.Duration():
