@@ -1,0 +1,25 @@
+<!-- This is an example launch file for how a ROS application could use a node -->
+<launch>
+   
+	<arg name="use_aws_lex" default="true"/>
+	<arg name="use_google" default="false"/>
+	<arg name="test" default="false"/>
+	<arg name="input_test" default="Hey"/>
+	<arg name="id_test" default="default"/>
+  	<group if="$(arg use_aws_lex)">
+			<rosparam file="$(find harmoni_bot)/config/configuration.yaml"/>
+			<param name="test" value="$(arg test)"/>
+			<param name="input_test" value="$(arg input_test)"/>
+			<param name="id_test" value="$(arg id_test)"/>
+			<param name="name" value="lex"/>
+			<node pkg="harmoni_bot" type="aws_lex_service.py" name="harmoni_bot_lex" output="screen"  args="$(arg test) $(arg input_test) $(arg id_test)"/>
+  	</group>
+	<group if="$(arg use_google)">
+			<rosparam file="$(find harmoni_bot)/config/configuration.yaml"/>
+			<param name="test" value="$(arg test)"/>
+			<param name="input_test" value="$(arg input_test)"/>
+			<param name="id_test" value="$(arg id_test)"/>
+			<param name="name" value="google"/>
+			<node pkg="harmoni_bot" type="google_service.py" name="harmoni_bot_google" output="screen"  args="$(arg test) $(arg input_test) $(arg id_test)"/>
+  	</group>
+</launch>
