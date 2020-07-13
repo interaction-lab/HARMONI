@@ -41,7 +41,7 @@ class RouterActuator(Enum):
 
 
 class RouterDialogue(Enum):
-    lex = "/harmoni/dialoging/lex/"
+    bot = "/harmoni/dialoging/bot/"
     ROUTER = "/harmoni/dialoging/"
 
 
