@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>harmoni_lex</name>
+  <name>harmoni_bot</name>
   <version>0.0.0</version>
-  <description>The harmoni_lex package</description>
+  <description>The harmoni_bot package</description>
   <maintainer email="cbirming@usc.edu">Chris Birmingham</maintainer>
 
 
