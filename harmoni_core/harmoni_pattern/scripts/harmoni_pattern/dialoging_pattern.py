@@ -3,6 +3,7 @@
 # Importing the libraries
 import rospy
 import roslib
+import json
 import numpy as np
 from audio_common_msgs.msg import AudioData
 from std_msgs.msg import String
@@ -26,147 +27,104 @@ class DialogueState:
     MOVING = ""
 
 
+action_type_map = {
+    "OFF": 0,
+    "ON": 1,
+    "PAUSE": 2,
+    "REQUEST": 3,
+}
+
+
 class DialogingPattern(HarmoniServiceManager, object):
     """
     Dialoging pattern class
     """
 
-    def __init__(self, name, sensors, detectors):
+    def __init__(self, name, script):
         """Init the behavior pattern and setup the clients"""
-        self.service_names = []
         self.name = name
+        self.script = script
 
-        self.end_sequence = False
-        self.dialogue_state = ""
-        self.action_info = {
-            DialogueState.DIALOGING: {
-                "action_goal": ActionType.REQUEST,
-                "resource": "lex",
-                "wait_for": "result",
-                "result": None,
-            },
-            DialogueState.LISTENING: {
-                "action_goal": ActionType.ON,
-                "resource": "microphone",
-                "wait_for": "",
-                "result": None,
-            },
-            DialogueState.SPEAKING: {
-                "action_goal": ActionType.REQUEST,
-                "resource": "speaker",
-                "wait_for": "result",
-                "result": None,
-            },
-            DialogueState.SYNTHETIZING: {
-                "action_goal": ActionType.REQUEST,
-                "resource": "polly",
-                "wait_for": "result",
-                "result": None,
-            },
-            DialogueState.EXPRESSING: {
-                "action_goal": ActionType.REQUEST,
-                "resource": "mouth",
-                "wait_for": "result",
-                "result": None,
-            },
-            # DialogueState.MOVING: {"action_goal": ActionType.REQUEST, "resource": ""},
-            DialogueState.SPEECH_DETECTING: {
-                "action_goal": ActionType.ON,
-                "resource": "w2l",
-                "wait_for": "next",
-                "result": None,
-            },
-        }
+        self.scripted_services = set()  # services used in this script
+        self.configured_services = []  # available services
+        self.service_clients = defaultdict(HarmoniActionClient)
+        self.client_results = defaultdict(deque)  # store state of the service
+        self.script_set_index = 0
 
         self.state = State.INIT
         super().__init__(self.state)
 
+        self.scripted_services = self._get_services(script)
+        self._setup_clients()
+
+        if script[self.script_set_index]["set"] == "setup":
+            self.setup(script[self.script_set_index]["steps"])
+            self.script_set_index += 1
+
+        # topic = f"/harmoni/detecting/stt/default"
+        # rospy.loginfo(f"subscribing to {topic}")
+        # rospy.Subscriber(
+        #     service,
+        #     String,
+        #     self._detecting_callback,
+        #     callback_args=service,
+        #     queue_size=1,
+        # )
+        return
+
+    def _setup_clients(self):
+        """
+        Set up all clients that have been configured in the
+        harmoni_decision module
+        """
         list_repos = HelperFunctions.get_all_repos()
         for repo in list_repos:
             [repo_child_list, child_list] = HelperFunctions.get_service_list_of_repo(
                 repo
             )
             for child in child_list:
-                self.service_names.extend(HelperFunctions.get_child_list(child))
-        rospy.loginfo(f"Dialogue Pattern needs these services: {self.service_names}")
+                self.configured_services.extend(HelperFunctions.get_child_list(child))
 
-        self.service_clients = defaultdict(HarmoniActionClient)
-        self.client_results = {}
-        for client in self.service_names:
+        for service in self.scripted_services:
+            assert (
+                service in self.configured_services
+            ), "Scripted service has not been configured"
+
+        for client in self.scripted_services:
             self.service_clients[client] = HarmoniActionClient(client)
-            self.client_results[client] = None
+            self.client_results[client] = deque()
         rospy.loginfo("Clients created")
+        rospy.loginfo(
+            f"Dialogue Pattern needs these services: {self.scripted_services}"
+        )
 
         for cl, client in self.service_clients.items():
             client.setup_client(cl, self._result_callback, self._feedback_callback)
         rospy.loginfo("Behavior interface action clients have been set up!")
-
-        # Sensors and detectors should be launched on startup
-        # detectors will have callbacks which store a queue of results
-        # In the loop the last item will be read and returned as the result
-        for sensor in sensors:
-            (
-                action_goal,
-                resource,
-                service,
-                service_name,
-                _is_detector,
-                _is_sensor,
-            ) = self._get_action_info(sensor)
-            self.service_clients[service].send_goal(
-                action_goal=action_goal,
-                optional_data="",
-                resource=resource,
-                wait=False,
-            )
-
-        self.detector_queue = defaultdict(deque)
-        for detector in detectors:
-            (
-                action_goal,
-                resource,
-                service,
-                service_name,
-                _is_detector,
-                _is_sensor,
-            ) = self._get_action_info(detector)
-
-            self.service_clients[service].send_goal(
-                action_goal=action_goal,
-                optional_data="",
-                resource=resource,
-                wait=False,
-            )
-            rospy.loginfo(
-                f"The detector service is {service} !@#$!@$(*&#!%)(!*#&$!()_@#$&"
-            )
-            service_id = HelperFunctions.get_child_id(service)
-            rospy.Subscriber(
-                RouterDetector.stt.value + "default",
-                String,
-                self._detecting_callback,
-                callback_args=service_name,
-                queue_size=1,
-            )
-            self.detector_queue[service_name] = deque()
         return
 
+    def _get_services(self, script):
+        service_names = set()
+        for s in script:
+            steps = s["steps"]
+            for step in steps:
+                if isinstance(step, list):
+                    for parallel_step in step:
+                        service_names.add(next(iter(parallel_step)))
+                else:
+                    service_names.add(next(iter(step)))
+        return service_names
+
     def _result_callback(self, result):
-        """ Do something when result has been received """
+        """ Recieve and store result with timestamp """
         rospy.loginfo("The result of the request has been received")
-        rospy.loginfo(f"The result callback message was {len(result['message'])} long")
-        self.client_results[result["child"]] = result["message"]
-        if not result["do_action"]:
-            pass
-            # # If you are not done working through your sequence, do the next step
-            # if not self.end_sequence:
-            #     self.do_sequence(result["message"])
-            # # If you are at the end of your sequence, work through the loop
-            # elif not self.end_looping and self.end_sequence:
-            #     self.do_loop(result["message"])
-        # else:
-        #     # If the result did not say to do anything next
-        #     print("Callback specified stop.")
+        rospy.loginfo(
+            f"The result callback message from {result['service']} was {len(result['message'])} long"
+        )
+        self.client_results[result["service"]].append(
+            {"time": time(), "data": result["message"]}
+        )
+        # TODO add handling of errors and continue=False
         return
 
     def _feedback_callback(self, feedback):
@@ -178,90 +136,32 @@ class DialogingPattern(HarmoniServiceManager, object):
         """Callback function from subscribing to the detector topic """
         # HERE WE SHOULD GET THE DATA FOR PASSING THEM TO THE NEXT STEP
         data = data.data
-        rospy.loginfo(f"Heard back from {service_name} detector: {data}")
-        self.detector_queue[service_name].append({"time": time(), "data": data})
+        rospy.loginfo(
+            f"Heard back from {service_name} detector: {data}!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        )
+        self.client_results[service_name].append({"time": time(), "data": data})
         return
 
-    def request_step(self, action, optional_data, wait=True):
-        """Send goal request to appropriate child"""
-        if isinstance(action, list):
-            # If it is an array, it means that is a parallel actions, so I start multiple goals
-            rospy.loginfo("Running action in parallel-ish (launching multiple goals)")
-            for i, sub_action in enumerate(action, start=1):
-                # wait on the last item in a list TODO: update to wait on all items after all are sent
-                # handle multiple goals with recursion
-                result = self.request_step(
-                    sub_action, optional_data, wait=(i == len(action))
-                )
-            return result
-        else:
-            # Here is where the magic starts
-            (
-                action_goal,
-                resource,
-                service,
-                service_name,
-                _is_detector,
-                _is_sensor,
-            ) = self._get_action_info(action)
-
-            self.state = State.REQUEST
-
-            # HANDLE SENSOR AND DETECTOR CASE
-            if _is_sensor:
-                rospy.logwarn("Sensor should be set up during init")
-                wait = False
-                return
-            elif _is_detector:  # if detector, get last message from topic
-                rospy.loginfo("getting result from the detector")
-                call_time = time()
-                result = {"time": 0, "data": "_not_data"}
-                if len(self.detector_queue[service_name]) < 0:
-                    result = self.detector_queue[service_name].popleft()
-                r = rospy.Rate(1)
-
-                while result["time"] < call_time and not rospy.is_shutdown():
-                    rospy.loginfo(f"got old message {result['data']}")
-                    if len(self.detector_queue[service_name]) > 0:
-                        result = self.detector_queue[service_name].popleft()
-                    r.sleep()
-
-                rospy.loginfo(f"Detected message {result['data']}")
-                self._result_callback({"do_action": True, "message": result["data"]})
-                return
-            else:
-                # Log details about the service:
-                rospy.loginfo(f"Sending the following to the {service_name} service")
-                if len(optional_data) < 500:
-                    rospy.loginfo(
-                        f"Message: \n action_goal type: {action_goal} \n optional_data: {optional_data} \n child: {resource}"
-                    )
-                else:
-                    rospy.loginfo(
-                        f"Message: \n action_goal type: {action_goal} \n optional_data: (too large to print) \n child: {resource}"
-                    )
-                self.client_results[service] = None
-                self.service_clients[service].send_goal(
-                    action_goal=action_goal,
-                    optional_data=optional_data,
-                    resource=resource,
-                    wait=wait,
-                )
-                rospy.loginfo("Goal sent.")
-                self.state = State.SUCCESS
-
-        self.update(self.state)
-        return self.client_results[service]
-
-    def start(self, sequence, data="Hey", looping=False):
+    def start(self):
         """Send goal request to appropriate child"""
         self.state = State.START
-        self.count = self.count_loop = -1
-        self.sequence = sequence
-        self.looping = looping
-        rate = ""
-        super().start(rate)
-        self.do_sequence(data=data)
+        super().start(rate=1)
+        r = rospy.Rate(1)
+        while self.script_set_index < len(self.script) and not rospy.is_shutdown():
+            if self.script[self.script_set_index]["set"] == "setup":
+                self.setup(self.script[self.script_set_index]["steps"])
+
+            elif self.script[self.script_set_index]["set"] == "sequence":
+                self.count = -1
+                self.do_sequence(self.script[self.script_set_index]["steps"])
+
+            elif self.script[self.script_set_index]["set"] == "loop":
+                self.count = -1
+                self.do_sequence(
+                    self.script[self.script_set_index]["steps"], looping=True
+                )
+            self.script_set_index += 1
+            r.sleep()
         return
 
     def stop(self, router):
@@ -283,82 +183,174 @@ class DialogingPattern(HarmoniServiceManager, object):
         super().update(state)
         return
 
-    def _get_action_info(self, action):
-        """Helper function to get the server, resource, and goal associated with an action"""
-        rospy.loginfo("The action is %s" % action)
-        self.dialogue_state = action
-        service = action
-        print(self.action_info[service])
-        resource = self.action_info[service]["resource"]
-        action_goal = self.action_info[service]["action_goal"]
-        wait_for = self.action_info[service]["wait_for"]
-        service_name = HelperFunctions.get_service_name(service)
-        _is_detector = HelperFunctions.check_if_detector(service_name)
-        _is_sensor = HelperFunctions.check_if_sensor(service_name)
-        return action_goal, resource, service, service_name, _is_detector, _is_sensor
+    def setup(self, children):
+        for child in children:
+            service = next(iter(child))
+            details = child[service]
 
-    def do_sequence(self, data=None):
+            assert details["resource_type"] in [
+                "sensor",
+                "detector",
+            ], "Can only set up sensors or detectors"
+
+            self.service_clients[service].send_goal(
+                action_goal=action_type_map[details["action_goal"]],
+                optional_data="",
+                resource=details["resource"],
+                wait=details["wait_for"],
+            )
+
+            if details["resource_type"] == "detector":
+                # service_id = HelperFunctions.get_child_id(service)
+                service_list = service.split("_")
+                service_id = "_".join(service_list[1:-1])
+                topic = f"/harmoni/detecting/{service_id}/default"
+                rospy.loginfo(f"subscribing to {topic}")
+                rospy.Subscriber(
+                    topic,
+                    String,
+                    self._detecting_callback,
+                    callback_args=service,
+                    queue_size=1,
+                )
+
+        return
+
+    def do_sequence(self, sequence, looping=False):
         """
         Do sequence, Update state and send the goal according to the current state
 
         Args:
             data: are the optional data to input to the service
         """
-        self.count += 1
-        if self.looping:
-            self.count = self.count % len(self.sequence)
-        if self.count >= len(self.sequence):
-            print("DONE WITH THE WHOLE SEQUENCE")
-            self.end_sequence = True
-            return
 
-        rospy.loginfo(f"************* Starting SEQUENCE step: {self.count}")
+        result = None
+        for cnt, step in enumerate(sequence, start=1):
+            if rospy.is_shutdown():
+                return
+            rospy.loginfo(f"------------- Starting sequence step: {cnt}-------------")
+            if result:
+                rospy.loginfo(f"with prior result length ({len(result)})")
+            else:
+                rospy.loginfo("no prior result")
+            result = self.request_step(step, result)
+            rospy.loginfo(f"************* End of sequence step: {cnt} *************")
 
-        action = self.sequence[self.count]
-        rospy.loginfo(f"Sequence step action is {action}")
-        # if not data:
-        #     data = self.get_data() # TODO Implement
-
-        result = self.request_step(action, data)
-
-        rospy.loginfo(f"************ End of SEQUENCE step: {self.count} *************")
-
-        if self.looping and self.count == len(self.sequence) - 1:
+        if looping:
             rospy.loginfo("Done with a loop!")
+            # TODO check on loop condition before continuing
+            if not rospy.is_shutdown():
+                self.do_sequence(sequence, looping=True)
 
-        self.do_sequence(data=result)
         return
+
+    def request_step(self, step, optional_data=None):
+        """Send goal request to appropriate child"""
+        if isinstance(step, list):
+            # If it is an array, it means that is a parallel actions, so I start multiple goals
+            rospy.loginfo("Running action in parallel-ish (launching multiple goals)")
+            for i, sub_action in enumerate(step, start=1):
+                result = self.request_step(sub_action, optional_data)
+            return result
+        else:
+            service = next(iter(step))
+            details = step[service]
+            rospy.loginfo(f"Step is {service} with details {details}")
+            # rospy.loginfo(f"and optional_data {optional_data}")
+            assert details["resource_type"] in [
+                "sensor",
+                "detector",
+                "actuator",
+                "service",
+            ], "must specify resource type of each step"
+
+            self.state = State.REQUEST
+
+            # HANDLE SENSOR AND DETECTOR CASE
+            if details["resource_type"] == "sensor":
+                rospy.logwarn("Sensor should be set up during init")
+                result = None
+
+            elif details["resource_type"] == "detector":
+                rospy.loginfo(f"Retrieving data from detector: {service}")
+                if details["wait_for"] == "new":
+                    return_data = self.get_new_result(service)
+                else:
+                    rospy.logwarn("Not waiting for a detector may return last result")
+                    if len(self.client_results[service]) > 0:
+                        return_data = self.client_results[service].popleft()["data"]
+                    return_data = None
+
+            else:  # Should be a request and response from an actuator or service
+                if "trigger" in details.keys():
+                    optional_data = details["trigger"]
+                elif not optional_data:
+                    optional_data = ""
+                rospy.loginfo(
+                    f"Sending goal to {service} optional_data len {len(optional_data)}"
+                )
+                self.service_clients[service].send_goal(
+                    action_goal=action_type_map[details["action_goal"]],
+                    optional_data=optional_data,
+                    resource=details["resource"],
+                    wait=False,
+                )
+                rospy.loginfo(f"Goal sent to {service}")
+                self.state = State.SUCCESS
+                if details["wait_for"] == "new":
+
+                    return_data = self.get_new_result(service)
+                else:
+                    rospy.logwarn("Not waiting for a detector may return last result")
+                    if len(self.client_results[service]) > 0:
+                        return_data = self.client_results[service].popleft()["data"]
+                    else:
+                        return_data = None
+
+        self.update(self.state)
+        return return_data
+
+    def get_new_result(self, service):
+        rospy.loginfo("getting result from the service")
+        rospy.loginfo(f"Queue size is {len(self.client_results[service])}")
+        rospy.loginfo(f"Queue is {self.client_results[service]}")
+
+        call_time = time()
+        result = {"time": 0, "data": "_the_queue_is_empty"}
+
+        if len(self.client_results[service]) > 0:
+            result = self.client_results[service].popleft()
+
+        r = rospy.Rate(1)
+        while result["time"] < call_time and not rospy.is_shutdown():
+            rospy.loginfo(f"got old message length ({len(result['data'])})")
+            if len(self.client_results[service]) > 0:
+                result = self.client_results[service].popleft()
+            r.sleep()
+
+        if len(result["data"]) < 500:
+            rospy.loginfo(f"result is {result['data']}")
+        rospy.loginfo(
+            f"Recieved result message length ({len(result['data'])}) from service {service}"
+        )
+        # self._result_callback({"do_action": True, "message": result["data"]})
+        return result["data"]
 
 
 def main():
-    pattern_name = "dialoging"
-    trigger_intent = "Hey"
-    parallel = [
-        DialogueState.EXPRESSING,
-        DialogueState.SPEAKING,
-    ]
-    loop = [
-        DialogueState.LISTENING,
-        DialogueState.SPEECH_DETECTING,
-        DialogueState.DIALOGING,
-        DialogueState.SYNTHETIZING,
-        parallel,
-    ]
-    sequence = [
-        DialogueState.DIALOGING,
-        DialogueState.SYNTHETIZING,
-        parallel,
-    ]
-    sensors = [DialogueState.LISTENING]
-    detectors = [DialogueState.SPEECH_DETECTING]
+    pattern_name = "dialogue"
+    trigger_intent = rospy.get_param("/input_test_" + pattern_name + "/")
+    pattern_script_path = "/root/harmoni_catkin_ws/src/HARMONI/harmoni_core/harmoni_pattern/pattern_scripting/dialogue.json"
+
+    with open(pattern_script_path, "r") as read_file:
+        script = json.load(read_file)
 
     try:
         rospy.init_node(pattern_name)
         # Initialize the pattern with pattern sequence/loop
-        dp = DialogingPattern(pattern_name, sensors, detectors)
+        dp = DialogingPattern(pattern_name, script)
         rospy.loginfo("Set up. Starting first step of dialogue pattern.")
-        dp.start(sequence, data=trigger_intent, looping=False)
-        dp.start(loop, data=trigger_intent, looping=True)
+        dp.start()
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
