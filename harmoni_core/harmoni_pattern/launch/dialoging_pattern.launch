@@ -13,15 +13,15 @@
 	<arg name="wav_file" default="/home/micol/catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/temp_data/tts.wav"/>
   	<group if="$(arg use_pattern)">
 			<rosparam file="$(find harmoni_pattern)/config/configuration.yaml"/>
-			<param name="test_service" value="$(arg test_service)"/>
-			<param name="wav_file" value="$(arg wav_file)"/>
-			<param name="face_input" value="$(arg face_input)"/>
-			<param name="display_input" value="$(arg display_input)"/>
-			<param name="tts_input_text" value="$(arg tts_input_text)"/>
-			<param name="dialogue_input_text" value="$(arg dialogue_input_text)"/>
-			<param name="test" value="$(arg test)"/>
-			<param name="input_test" value="$(arg input_test)"/>
-			<param name="id_test" value="$(arg id_test)"/>
+			<param name="test_service_dialogue" value="$(arg test_service)"/>
+			<param name="wav_file_dialogue" value="$(arg wav_file)"/>
+			<param name="face_input_dialogue" value="$(arg face_input)"/>
+			<param name="display_input_dialogue" value="$(arg display_input)"/>
+			<param name="tts_input_text_dialogue" value="$(arg tts_input_text)"/>
+			<param name="dialogue_input_text_dialogue" value="$(arg dialogue_input_text)"/>
+			<param name="test_dialogue" value="$(arg test)"/>
+			<param name="input_test_dialogue" value="$(arg input_test)"/>
+			<param name="id_test_dialogue" value="$(arg id_test)"/>
 			<node pkg="harmoni_pattern" type="dialoging_pattern.py" name="harmoni_pattern" output="screen"  args="$(arg test) $(arg input_test) $(arg id_test)"/>
   	</group>
 

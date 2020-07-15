@@ -53,7 +53,7 @@ class HarmoniActionClient(object):
             rospy.loginfo(f"(Client) Message was : (too long to display)")
         # if self.result_received:
         #     rospy.loginfo(f"(Client) Result was already recieved")
-        self.action_result["child"] = self.name
+        self.action_result["service"] = self.name
         self.action_result["do_action"] = result.do_action
         self.action_result["message"] = result.message
         if self.execute_goal_result_callback:
