@@ -27,12 +27,13 @@ class DialogueState:
     MOVING = ""
 
 
-action_type_map = {
-    "OFF": 0,
-    "ON": 1,
-    "PAUSE": 2,
-    "REQUEST": 3,
-}
+# TODO create this map using the ActionType Class (in constants)
+# ActionType = {
+#     "OFF": 0,
+#     .value"ON": 1,
+#     "PAUSE": 2,
+#     "REQUEST": 3,
+# }
 
 
 class DialogingPattern(HarmoniServiceManager, object):
@@ -61,15 +62,6 @@ class DialogingPattern(HarmoniServiceManager, object):
             self.setup(script[self.script_set_index]["steps"])
             self.script_set_index += 1
 
-        # topic = f"/harmoni/detecting/stt/default"
-        # rospy.loginfo(f"subscribing to {topic}")
-        # rospy.Subscriber(
-        #     service,
-        #     String,
-        #     self._detecting_callback,
-        #     callback_args=service,
-        #     queue_size=1,
-        # )
         return
 
     def _setup_clients(self):
@@ -136,9 +128,6 @@ class DialogingPattern(HarmoniServiceManager, object):
         """Callback function from subscribing to the detector topic """
         # HERE WE SHOULD GET THE DATA FOR PASSING THEM TO THE NEXT STEP
         data = data.data
-        rospy.loginfo(
-            f"Heard back from {service_name} detector: {data}!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-        )
         self.client_results[service_name].append({"time": time(), "data": data})
         return
 
@@ -194,7 +183,7 @@ class DialogingPattern(HarmoniServiceManager, object):
             ], "Can only set up sensors or detectors"
 
             self.service_clients[service].send_goal(
-                action_goal=action_type_map[details["action_goal"]],
+                action_goal=ActionType[details["action_goal"]].value,
                 optional_data="",
                 resource=details["resource"],
                 wait=details["wait_for"],
@@ -290,7 +279,7 @@ class DialogingPattern(HarmoniServiceManager, object):
                     f"Sending goal to {service} optional_data len {len(optional_data)}"
                 )
                 self.service_clients[service].send_goal(
-                    action_goal=action_type_map[details["action_goal"]],
+                    action_goal=ActionType[details["action_goal"]].value,
                     optional_data=optional_data,
                     resource=details["resource"],
                     wait=False,
@@ -298,7 +287,6 @@ class DialogingPattern(HarmoniServiceManager, object):
                 rospy.loginfo(f"Goal sent to {service}")
                 self.state = State.SUCCESS
                 if details["wait_for"] == "new":
-
                     return_data = self.get_new_result(service)
                 else:
                     rospy.logwarn("Not waiting for a detector may return last result")
