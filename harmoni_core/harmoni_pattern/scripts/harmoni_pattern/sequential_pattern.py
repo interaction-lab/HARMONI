@@ -3,6 +3,7 @@
 # Importing the libraries
 import rospy
 import roslib
+import rospkg
 import json
 import numpy as np
 from audio_common_msgs.msg import AudioData
@@ -17,26 +18,7 @@ from collections import deque
 from time import time
 
 
-class DialogueState:
-    LISTENING = "pc_microphone_default"
-    SPEECH_DETECTING = "harmoni_stt_default"
-    DIALOGING = "harmoni_lex_default"
-    SYNTHETIZING = "harmoni_tts_default"
-    SPEAKING = "pc_speaker_default"
-    EXPRESSING = "pc_face_default"
-    MOVING = ""
-
-
-# TODO create this map using the ActionType Class (in constants)
-# ActionType = {
-#     "OFF": 0,
-#     .value"ON": 1,
-#     "PAUSE": 2,
-#     "REQUEST": 3,
-# }
-
-
-class DialogingPattern(HarmoniServiceManager, object):
+class SequentialPattern(HarmoniServiceManager, object):
     """
     Dialoging pattern class
     """
@@ -87,7 +69,7 @@ class DialogingPattern(HarmoniServiceManager, object):
             self.client_results[client] = deque()
         rospy.loginfo("Clients created")
         rospy.loginfo(
-            f"Dialogue Pattern needs these services: {self.scripted_services}"
+            f"{self.name} Pattern needs these services: {self.scripted_services}"
         )
 
         for cl, client in self.service_clients.items():
@@ -326,9 +308,12 @@ class DialogingPattern(HarmoniServiceManager, object):
 
 
 def main():
+    # TODO this should be a rosparam
     pattern_name = "dialogue"
     trigger_intent = rospy.get_param("/input_test_" + pattern_name + "/")
-    pattern_script_path = "/root/harmoni_catkin_ws/src/HARMONI/harmoni_core/harmoni_pattern/pattern_scripting/dialogue.json"
+    rospack = rospkg.RosPack()
+    pck_path = rospack.get_path("harmoni_pattern")
+    pattern_script_path = pck_path + f"/pattern_scripting/{pattern_name}.json"
 
     with open(pattern_script_path, "r") as read_file:
         script = json.load(read_file)
@@ -336,8 +321,8 @@ def main():
     try:
         rospy.init_node(pattern_name)
         # Initialize the pattern with pattern sequence/loop
-        dp = DialogingPattern(pattern_name, script)
-        rospy.loginfo("Set up. Starting first step of dialogue pattern.")
+        dp = SequentialPattern(pattern_name, script)
+        rospy.loginfo(f"Set up. Starting first step of {pattern_name} pattern.")
         dp.start()
         rospy.spin()
     except rospy.ROSInterruptException:
