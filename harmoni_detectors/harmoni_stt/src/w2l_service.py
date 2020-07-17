@@ -7,6 +7,7 @@ import pty
 import os
 import time
 import re
+import numpy as np
 import rospy
 from harmoni_common_lib.constants import State, RouterDetector, RouterSensor
 from harmoni_common_lib.helper_functions import HelperFunctions
@@ -35,7 +36,7 @@ class SpeechToTextService(HarmoniServiceManager):
         self.service_id = HelperFunctions.get_child_id(self.name)
         """Setup publishers and subscribers"""
         rospy.Subscriber(
-            RouterSensor.microphone.value + self.subscriber_id + "/talking",
+            RouterSensor.microphone.value + self.subscriber_id,
             AudioData,
             self.callback,
         )
@@ -59,14 +60,14 @@ class SpeechToTextService(HarmoniServiceManager):
 
     def start(self, rate=""):
         rospy.loginfo("Start the %s service" % self.name)
-        self.set_w2l_proc()
         super().start(rate)
         if self.state == State.INIT:
             self.state = State.START
             self.state_update()
+            self.transcribe_stream()  # Start the microphone service at the INIT
         else:
             self.state = State.START
-        #self.state_update()
+        # self.state_update()
         return
 
     def stop(self):
@@ -88,74 +89,64 @@ class SpeechToTextService(HarmoniServiceManager):
         self.state_update()
         return
 
-    def set_w2l_proc(self):
+    def callback(self, data):
+        # rospy.loginfo("The state is %s" % self.state)
+        if self.state == State.START:
+
+            # self.w2l_process.stdin.write(np.asarray(data.data, dtype=np.byte))
+            self.w2l_process.stdin.write(data.data)
+            self.w2l_process.stdin.flush()
+        else:
+            rospy.loginfo("Not Transcribing Audio, The state is %s" % self.state)
+        return
+
+    def transcribe_stream(self):
+        rospy.loginfo("Openning up W2L process")
         self.w2l_process = Popen(
             ["{} --input_files_base_path={}".format(self.w2l_bin, self.model_path)],
-            bufsize=1,
             stdin=PIPE,
             stdout=PIPE,
             stderr=PIPE,
             shell=True,
-            close_fds=True,
         )
-        return
-
-    def callback(self, data):
-        rospy.loginfo("The state is %s" %self.state)
-        if self.state == State.START:
-            rospy.loginfo("Transcribing")
-            text = self.transcribe_bytes(data.data)
+        """Listening from the microphone """
+        rospy.loginfo("Setting up transcription")
+        for i in range(17):
+            output = self.w2l_process.stdout.readline()
+        # p = mp.Process(target=self.write_to_w2l, args=(,))
+        # p.start()
+        total_text = ""
+        rospy.loginfo("Setup complete")
+        while not rospy.is_shutdown():
+            output = self.w2l_process.stdout.readline()
+            text = self.fix_text(output)
             if text:
-                self.text_pub.publish(text)
-        else:
-            rospy.loginfo("Not Transcribing Audio")
-        return
+                total_text = total_text + " " + text
+            else:
+                if total_text:
+                    rospy.loginfo("Heard:" + total_text)
+                    self.text_pub.publish(total_text[1:])
+                    total_text = ""
 
-    def transcribe_file(self, file_name):
-        """ Transcription of audio into text from file"""
-        rospy.loginfo("Transcription of audio file")
-        with open(file_name, mode="rb") as wav_file:
-            wav_contents = wav_file.read()
-        self.transcribe_bytes(wav_contents)
-        return
-
-    def transcribe_bytes(self, b_string):
-        """ Transcription of bytes"""
-        rospy.loginfo("Transcription of the bytes")
-        outs, errs = self.w2l_process.communicate(input=b_string, timeout=15)
-        print(outs, errs)
-        text_list = self.fix_text(outs)
-        rospy.loginfo("The text list is %s" % text_list)
-        if not any(text_list):
-            self.set_w2l_proc()
-            return
-        self.set_w2l_proc()
-        text_list = [t for t in text_list if t]
-        return " ".join(text_list)
-
-    def fix_text(self, text):
-        output_by_sec = " ".join(
-            re.split(r"[,\s]", text.decode("utf-8"))[95:-13]
-        ).split("  ")
-        output_by_sec = [" ".join(sec.split(" ")[2:]) for sec in output_by_sec]
-        final_output = []
-        for sec in output_by_sec:  # Exclude some bad outputs
-            if len(sec) > 0:
-                if sec[0] == "h" and len(sec) == 1:
-                    sec = ""
-            if len(sec) > 1:
-                if sec[:2] == "h ":
-                    sec = ""
-            final_output.append(sec)
-        return final_output
+    def fix_text(self, output):
+        text = output.decode("utf-8")
+        text = text.split(",")[2][:-2]
+        # Remove some bad outputs
+        if len(text) > 0:
+            if text[0] == "h" and len(text) == 1:
+                text = ""
+        if len(text) > 1:
+            if text[:2] == "h " or text == " transcriptio":
+                text = ""
+        return text
 
 
 def main():
     service_name = RouterDetector.stt.name
-    name = rospy.get_param("/name_"+service_name+"/")
-    test = rospy.get_param("/test_"+service_name+"/")
-    input_test = rospy.get_param("/input_test_"+service_name+"/")
-    id_test = rospy.get_param("/id_test_"+service_name+"/")
+    name = rospy.get_param("/name_" + service_name + "/")
+    test = rospy.get_param("/test_" + service_name + "/")
+    input_test = rospy.get_param("/input_test_" + service_name + "/")
+    id_test = rospy.get_param("/id_test_" + service_name + "/")
     try:
         rospy.init_node(service_name)
         list_service_names = HelperFunctions.get_child_list(service_name)
@@ -164,7 +155,7 @@ def main():
         for service in list_service_names:
             print(service)
             service_id = HelperFunctions.get_child_id(service)
-            param = rospy.get_param(name+"/"+ service_id + "_param/")
+            param = rospy.get_param(name + "/" + service_id + "_param/")
             s = SpeechToTextService(service, param)
             service_server_list.append(
                 InternalServiceServer(name=service, service_manager=s)

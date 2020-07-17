@@ -93,11 +93,9 @@ class SpeechToTextService(HarmoniServiceManager):
         if self.state == State.INIT:
             self.state = State.START
             self.state_update()
-            try:
-                self.open_stream()
-                self.transcribe_stream()  # Start the microphone service at the INIT
-            except:
-                self.state = State.FAILED
+            self.open_stream()
+            self.transcribe_stream()  # Start the microphone service at the INIT
+            self.state = State.FAILED
         else:
             self.state = State.START
         # self.state_update()
@@ -148,61 +146,6 @@ class SpeechToTextService(HarmoniServiceManager):
         self.stream.close()
         return
 
-    def write_to_w2l(self, w2l_process):
-        while not rospy.is_shutdown():
-            current_audio = b""
-            for i in range(int(self.audio_rate / self.chunk_size) + 1):
-
-                latest_audio_data = self.stream.read(
-                    self.chunk_size, exception_on_overflow=False
-                )
-                current_audio += latest_audio_data
-
-            w2l_process.stdin.write(current_audio)
-            w2l_process.stdin.flush()
-        return
-
-    def transcribe_stream(self):
-        rospy.loginfo("Openning up W2L process")
-        w2l_process = Popen(
-            ["{} --input_files_base_path={}".format(self.w2l_bin, self.model_path)],
-            stdin=PIPE,
-            stdout=PIPE,
-            stderr=PIPE,
-            shell=True,
-        )
-        """Listening from the microphone """
-        rospy.loginfo("Setting up transcription")
-        for i in range(17):
-            output = w2l_process.stdout.readline()
-        p = mp.Process(target=self.write_to_w2l, args=(w2l_process,))
-        p.start()
-        total_text = ""
-        rospy.loginfo("Setup complete")
-        while not rospy.is_shutdown():
-            output = w2l_process.stdout.readline()
-            text = self.fix_text(output)
-            if text:
-                total_text = total_text + " " + text
-            else:
-                if total_text:
-                    rospy.loginfo("Heard:" + total_text)
-                    self.text_pub.publish(total_text[1:])
-                    total_text = ""
-        p.join()
-
-    def fix_text(self, output):
-        text = output.decode("utf-8")
-        text = text.split(",")[2][:-2]
-        # Remove some bad outputs
-        if len(text) > 0:
-            if text[0] == "h" and len(text) == 1:
-                text = ""
-        if len(text) > 1:
-            if text[:2] == "h " or text == " transcriptio":
-                text = ""
-        return text
-
     def get_index_device(self):
         """ 
         Find the input audio devices configured in ~/.asoundrc. 
@@ -247,6 +190,61 @@ class SpeechToTextService(HarmoniServiceManager):
         )
         rospy.loginfo("Silence threshold set to " + str(self.silence_threshold))
         return
+
+    def write_to_w2l(self, w2l_process):
+        while not rospy.is_shutdown():
+            latest_audio_data = self.stream.read(
+                self.chunk_size, exception_on_overflow=False
+            )
+            raw_audio_bitstream = np.fromstring(latest_audio_data, np.uint8)
+            raw_audio = raw_audio_bitstream.tolist()
+
+            temp = np.asarray(raw_audio, dtype=np.byte)
+
+            w2l_process.stdin.write(temp)
+            w2l_process.stdin.flush()
+        return
+
+    def transcribe_stream(self):
+        rospy.loginfo("Openning up W2L process")
+        w2l_process = Popen(
+            ["{} --input_files_base_path={}".format(self.w2l_bin, self.model_path)],
+            stdin=PIPE,
+            stdout=PIPE,
+            stderr=PIPE,
+            shell=True,
+        )
+        """Listening from the microphone """
+        rospy.loginfo("Setting up transcription")
+        for i in range(17):
+            output = w2l_process.stdout.readline()
+        p = mp.Process(target=self.write_to_w2l, args=(w2l_process,))
+        p.start()
+        total_text = ""
+        rospy.loginfo("Setup complete")
+        while not rospy.is_shutdown():
+            output = w2l_process.stdout.readline()
+            text = self.fix_text(output)
+            if text:
+                total_text = total_text + " " + text
+            else:
+                if total_text:
+                    rospy.loginfo("Heard:" + total_text)
+                    self.text_pub.publish(total_text[1:])
+                    total_text = ""
+        p.join()
+
+    def fix_text(self, output):
+        text = output.decode("utf-8")
+        text = text.split(",")[2][:-2]
+        # Remove some bad outputs
+        if len(text) > 0:
+            if text[0] == "h" and len(text) == 1:
+                text = ""
+        if len(text) > 1:
+            if text[:2] == "h " or text == " transcriptio":
+                text = ""
+        return text
 
 
 def main():
