@@ -40,6 +40,7 @@ class SpeechToTextService(HarmoniServiceManager):
             AudioData,
             self.callback,
         )
+        rospy.Subscriber("/audio/audio", AudioData, self.pause_back)
         self.text_pub = rospy.Publisher(
             RouterDetector.stt.value + self.service_id, String, queue_size=10
         )
@@ -47,6 +48,13 @@ class SpeechToTextService(HarmoniServiceManager):
         self.state = State.INIT
         super().__init__(self.state)
         return
+
+    def pause_back(self, data):
+        rospy.loginfo(f"pausing for data: {len(data.data)}")
+        self.pause()
+        rospy.sleep(int(len(data.data) / 30000))  # TODO calibrate this guess
+        self.state = State.START
+        self.state_update()
 
     def state_update(self):
         super().update(self.state)
@@ -92,10 +100,11 @@ class SpeechToTextService(HarmoniServiceManager):
     def callback(self, data):
         # rospy.loginfo("The state is %s" % self.state)
         if self.state == State.START:
-
-            # self.w2l_process.stdin.write(np.asarray(data.data, dtype=np.byte))
-            self.w2l_process.stdin.write(data.data)
-            self.w2l_process.stdin.flush()
+            if not self.w2l_process:
+                rospy.loginfo("Callback occured before setup")
+            else:
+                self.w2l_process.stdin.write(data.data)
+                self.w2l_process.stdin.flush()
         else:
             rospy.loginfo("Not Transcribing Audio, The state is %s" % self.state)
         return
@@ -130,7 +139,10 @@ class SpeechToTextService(HarmoniServiceManager):
 
     def fix_text(self, output):
         text = output.decode("utf-8")
-        text = text.split(",")[2][:-2]
+        if len(text) > 1:
+            text = text.split(",")[2][:-2]
+        else:
+            return
         # Remove some bad outputs
         if len(text) > 0:
             if text[0] == "h" and len(text) == 1:
