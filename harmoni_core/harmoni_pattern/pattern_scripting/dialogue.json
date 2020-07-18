@@ -46,7 +46,7 @@
                         "action_goal": "REQUEST",
                         "resource_type": "actuator",
                         "resource": "speaker",
-                        "wait_for": ""
+                        "wait_for": "v"
                     }
                 },
                 {
@@ -93,7 +93,7 @@
                         "action_goal": "REQUEST",
                         "resource_type": "actuator",
                         "resource": "speaker",
-                        "wait_for": ""
+                        "wait_for": "new"
                     }
                 },
                 {
