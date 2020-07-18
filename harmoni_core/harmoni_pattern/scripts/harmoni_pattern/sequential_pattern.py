@@ -16,6 +16,7 @@ from harmoni_common_lib.constants import State, RouterDetector
 from collections import defaultdict
 from collections import deque
 from time import time
+import threading
 
 
 class SequentialPattern(HarmoniServiceManager, object):
@@ -218,10 +219,20 @@ class SequentialPattern(HarmoniServiceManager, object):
     def request_step(self, step, optional_data=None):
         """Send goal request to appropriate child"""
         if isinstance(step, list):
+            threads = []
             # If it is an array, it means that is a parallel actions, so I start multiple goals
+            # In the current implementation parallel actions return values will not get passed on
             rospy.loginfo("Running action in parallel-ish (launching multiple goals)")
             for i, sub_action in enumerate(step, start=1):
-                result = self.request_step(sub_action, optional_data)
+                t = threading.Thread(
+                    target=self.request_step, args=(sub_action, optional_data)
+                )
+                threads.append(t)
+                t.start()
+                # result = self.request_step(sub_action, optional_data)
+            for t in threads:
+                t.join()
+            result = None
             return result
         else:
             service = next(iter(step))
