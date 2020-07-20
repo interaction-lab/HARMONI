@@ -3,7 +3,7 @@
 # Importing the libraries
 import yaml
 import os
-from harmoni_common_lib.constants import Router, RouterDetector, RouterSensor
+from harmoni_common_lib.constants import Router, RouterDetector, RouterSensor, Resources
 
 
 PATH_CONFIG = "HARMONI/harmoni_core/harmoni_decision/config/configuration.yaml"
@@ -18,6 +18,11 @@ class HelperFunctions:
         """Get children from config file"""
         ids_list = []
         existed = False
+        resources_name = [{"name":enum.name,"value": enum.value} for enum in list(Resources)]
+        resource_array = ""
+        for resource in resources_name:
+            if child_name == resource["name"]:
+                resource_array = resource["value"]
         abs_path = os.path.abspath(__file__)
         path = abs_path.split("HARMONI/")
         with open(path[0] + PATH_CONFIG) as file:
@@ -29,7 +34,11 @@ class HelperFunctions:
         if existed:
             child_repo = repo_child_name.split("_")[0]
             for id_child in repos[child_repo][child_name]:
-                ids_list.append(child_repo + "_" + child_name + "_" + id_child)
+                if resource_array !="":
+                    for r in resource_array:
+                        ids_list.append(child_repo + "_" + child_name +"_"+ r +"_" + id_child)
+                else:
+                    ids_list.append(child_repo + "_" + child_name + "_" + id_child)
         return ids_list
 
     def get_service_list_of_repo(repository):
@@ -92,3 +101,10 @@ class HelperFunctions:
             if service_name == d:
                 return True
         return False
+
+    def _check_if_resources(service):
+        """Check if the service contains many resources """
+        if service == "face":
+            
+            return resource_array
+        return service
