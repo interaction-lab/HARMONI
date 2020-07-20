@@ -49,3 +49,6 @@ class RouterDetector(Enum):
     stt = "/harmoni/detecting/stt/"
     face_detect = "/harmoni/detecting/face_detect/"
     ROUTER = "/harmoni/detecting/"
+
+class Resources(Enum):
+    face = ["eyes", "mouth"]
