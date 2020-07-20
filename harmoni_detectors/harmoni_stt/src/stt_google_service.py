@@ -3,15 +3,17 @@
 # Importing the libraries
 import rospy
 import roslib
-#import dialogflow
-#from google.api_core.exceptions import InvalidArgument
-from harmoni_common_lib.constants import State, RouterDialogue
+import io
+import os
+#from google.cloud import speech_v1
+#from google.cloud.speech_v1 import enums
+from harmoni_common_lib.constants import State, RouterDetector
 from harmoni_common_lib.helper_functions import HelperFunctions
 from harmoni_common_lib.child import WebServiceServer
 from harmoni_common_lib.service_manager import HarmoniExternalServiceManager
 
 
-class GoogleService(HarmoniExternalServiceManager):
+class STTGoogleService(HarmoniExternalServiceManager):
     """
     Google service
     """
@@ -20,9 +22,10 @@ class GoogleService(HarmoniExternalServiceManager):
         """ Initialization of variables and google parameters """
         rospy.loginfo("Google initializing")
         self.name = name
-        self.project_id = param["project_id"]
-        self.language = param["language"]
-        self.session_id = param["session_id"]
+        self.sample_rate = param["sample_rate"]
+        self.language = param["language_id"]
+        self.local_path = param["local_path"]
+        self.credential_path = param["credential"]
         """ Setup the google request """
         #self.setup_google()
         """Setup the google service as server """
@@ -31,8 +34,14 @@ class GoogleService(HarmoniExternalServiceManager):
         return
 
     def setup_google(self):
-        self.google_client = dialogflow.SessionsClient()
-        self.google_session = google_client.sessions_path(self.project_id, self.session_id) 
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = self.credential_path
+        self.client = speech_v1.SpeechClient()
+        encoding = enums.RecognitionConfig.AudioEncoding.LINEAR16
+        self.config = {
+            "launguage_code": self.language,
+            "sample_rate_hertz":self.sample_rate,
+            "encoding": encoding
+        }
         return
 
     def response_update(self, response_received, state, result_msg):
@@ -54,26 +63,35 @@ class GoogleService(HarmoniExternalServiceManager):
         #query_input = dialogflow.types.QueryInput(text=input_text)
         try:
             rospy.loginfo("Request to google")
-            #google_response = self.google_client.detect_intent(session=self.google_session, query_input=query_input)
-            
+            #operation = self.client.long_running_recognize(config, audio)
+            #response = operation.result()
+            #for result in response.results:
+            #   alternative = alternatives[0]
+            #   response = alternative.transcript
             #self.state = State.SUCCESS
-            #rospy.loginfo("The response is %s" % (google_response.fulfillment_text))
-            #self.response_update(response_received=True, state=self.state, result_msg=google_response["message"])
+            #rospy.loginfo("The response is %s" % (response)
+            #self.response_update(response_received=True, state=self.state, result_msg=response)
         except rospy.ServiceException:
             self.start = State.FAILED
             rospy.loginfo("Service call failed")
             self.response_update(response_received=True, state=self.state, result_msg="")
         return
 
+    def wav_to_data(self):
+        with io.open(self.local_path, "rb") as f:
+            content = f.read()
+        audio_data = content
+        return audio_data
+
 
 def main():
-    service_name = RouterDialogue.bot.name
-    name = rospy.get_param("/name_"+service_name+"/")
-    test = rospy.get_param("/test_"+service_name+"/")
-    input_test = rospy.get_param("/input_test_"+service_name+"/")
-    id_test = rospy.get_param("/id_test_"+service_name+"/")
+    service_name = RouterDetector.stt.name
+    name = rospy.get_param("/name_" + service_name + "/")
+    test = rospy.get_param("/test_" + service_name + "/")
+    input_test = rospy.get_param("/input_test_" + service_name + "/")
+    id_test = rospy.get_param("/id_test_" + service_name + "/")
     try:
-
+        service_name = RouterDialogue.bot.name
         rospy.init_node(service_name)
         list_service_names = HelperFunctions.get_child_list(service_name)
         print(list_service_names)
@@ -84,7 +102,7 @@ def main():
             service_id = HelperFunctions.get_child_id(service)
             param = rospy.get_param(name+"/"+ service_id + "_param/")
             print(param)
-            s = GoogleService(service, param)
+            s = STTGoogleService(service, param)
             service_server_list.append(WebServiceServer(name=service, service_manager=s))
             if test and (service_id == id_test):
                 rospy.loginfo("Testing the %s" % (service))
