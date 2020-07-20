@@ -50,7 +50,7 @@
                     }
                 },
                 {
-                    "pc_face_default": {
+                    "pc_face_mouth_default": {
                         "action_goal": "REQUEST",
                         "resource_type": "actuator",
                         "resource": "mouth",
@@ -97,7 +97,7 @@
                     }
                 },
                 {
-                    "pc_face_default": {
+                    "pc_face_mouth_default": {
                         "action_goal": "REQUEST",
                         "resource_type": "actuator",
                         "resource": "mouth",
