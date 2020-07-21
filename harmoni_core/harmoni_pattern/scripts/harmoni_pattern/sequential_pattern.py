@@ -168,7 +168,6 @@ class SequentialPattern(HarmoniServiceManager, object):
             self.service_clients[service].send_goal(
                 action_goal=ActionType[details["action_goal"]].value,
                 optional_data="",
-                resource=details["resource"],
                 wait=details["wait_for"],
             )
 
@@ -274,7 +273,6 @@ class SequentialPattern(HarmoniServiceManager, object):
                 self.service_clients[service].send_goal(
                     action_goal=ActionType[details["action_goal"]].value,
                     optional_data=optional_data,
-                    resource=details["resource"],
                     wait=False,
                 )
                 rospy.loginfo(f"Goal sent to {service}")

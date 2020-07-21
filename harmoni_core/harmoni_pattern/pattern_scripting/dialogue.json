@@ -6,7 +6,6 @@
                 "pc_microphone_default": {
                     "action_goal": "ON",
                     "resource_type": "sensor",
-                    "resource": "microphone",
                     "wait_for": ""
                 }
             },
@@ -14,7 +13,6 @@
                 "harmoni_stt_default": {
                     "action_goal": "ON",
                     "resource_type": "detector",
-                    "resource": "w2l",
                     "wait_for": ""
                 }
             }
@@ -27,7 +25,6 @@
                 "harmoni_bot_default": {
                     "action_goal": "REQUEST",
                     "resource_type": "service",
-                    "resource": "lex",
                     "wait_for": "new",
                     "trigger": "hey"
                 }
@@ -36,7 +33,6 @@
                 "harmoni_tts_default": {
                     "action_goal": "REQUEST",
                     "resource_type": "service",
-                    "resource": "polly",
                     "wait_for": "new"
                 }
             },
@@ -45,7 +41,6 @@
                     "pc_speaker_default": {
                         "action_goal": "REQUEST",
                         "resource_type": "actuator",
-                        "resource": "speaker",
                         "wait_for": "v"
                     }
                 },
@@ -53,7 +48,6 @@
                     "pc_face_mouth_default": {
                         "action_goal": "REQUEST",
                         "resource_type": "actuator",
-                        "resource": "mouth",
                         "wait_for": "new"
                     }
                 }
@@ -67,7 +61,6 @@
                 "harmoni_stt_default": {
                     "action_goal": "REQUEST",
                     "resource_type": "detector",
-                    "resource": "w2l",
                     "wait_for": "new"
                 }
             },
@@ -75,7 +68,6 @@
                 "harmoni_bot_default": {
                     "action_goal": "REQUEST",
                     "resource_type": "service",
-                    "resource": "lex",
                     "wait_for": "new"
                 }
             },
@@ -83,7 +75,6 @@
                 "harmoni_tts_default": {
                     "action_goal": "REQUEST",
                     "resource_type": "service",
-                    "resource": "polly",
                     "wait_for": "new"
                 }
             },
@@ -92,7 +83,6 @@
                     "pc_speaker_default": {
                         "action_goal": "REQUEST",
                         "resource_type": "actuator",
-                        "resource": "speaker",
                         "wait_for": "new"
                     }
                 },
@@ -100,7 +90,6 @@
                     "pc_face_mouth_default": {
                         "action_goal": "REQUEST",
                         "resource_type": "actuator",
-                        "resource": "mouth",
                         "wait_for": "new"
                     }
                 }
