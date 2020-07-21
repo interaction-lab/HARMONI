@@ -34,6 +34,7 @@ class SpeechToTextService(HarmoniServiceManager):
             )
         self.w2l_bin = param["w2l_bin"]
         self.service_id = HelperFunctions.get_child_id(self.name)
+        self.w2l_process = None
         """Setup publishers and subscribers"""
         rospy.Subscriber(
             RouterSensor.microphone.value + self.subscriber_id,
