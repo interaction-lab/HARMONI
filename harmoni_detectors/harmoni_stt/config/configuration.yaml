@@ -7,6 +7,7 @@ w2l:
 google:
     default_param:
         language_id: "it-IT"
-        sample_rate: 44100
-        local_path: "/root/harmoni_catkin_ws/src/HARMONI/harmoni_"
+        sample_rate: 16000 #44100 for wav audio file
+        audio_channel: 1
+        subscriber_id: "default"
         credential_path: "/root/harmoni_catkin_ws/src/HARMONI/harmoni_detectors/harmoni_stt/config/private-keys.json"
