@@ -17,6 +17,7 @@ class State(IntEnum):
     REQUEST = 2
     SUCCESS = 3
     FAILED = 4
+    END = 5
 
 
 class Router(Enum):

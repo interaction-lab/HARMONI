@@ -28,7 +28,7 @@ class SequentialPattern(HarmoniServiceManager, object):
         """Init the behavior pattern and setup the clients"""
         self.name = name
         self.script = script
-
+        self.end_pattern = False
         self.scripted_services = set()  # services used in this script
         self.configured_services = []  # available services
         self.service_clients = defaultdict(HarmoniActionClient)
@@ -105,6 +105,9 @@ class SequentialPattern(HarmoniServiceManager, object):
     def _feedback_callback(self, feedback):
         """ Send the feedback state to the Behavior Pattern tree to decide what to do next """
         rospy.logdebug("The feedback recieved is %s and nothing more" % feedback)
+        #Check if the state is end, stop the behavior pattern
+        #if feedback["state"] == State.END:
+        #    self.end_pattern = True
         return
 
     def _detecting_callback(self, data, service_name):
@@ -132,15 +135,19 @@ class SequentialPattern(HarmoniServiceManager, object):
                 self.do_sequence(
                     self.script[self.script_set_index]["steps"], looping=True
                 )
+            elif self.end_pattern:
+                #for client in self.scripted_services:
+                #    self.stop(client)
+                break
             self.script_set_index += 1
             r.sleep()
         return
 
-    def stop(self, router):
+    def stop(self, service):
         """Stop the Behavior Pattern """
         super().stop()
         try:
-            self.router_clients[router].cancel_goal()
+            self.service_clients[client].cancel_goal()
             self.state = State.SUCCESS
         except Exception as E:
             self.state = State.FAILED
