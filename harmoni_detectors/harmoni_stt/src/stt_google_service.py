@@ -3,11 +3,14 @@
 # Importing the libraries
 import rospy
 import roslib
-import io
+import numpy as np
 import os
+import io
 from google.cloud import speech_v1
 from google.cloud.speech_v1 import enums
-from harmoni_common_lib.constants import State, RouterDetector
+from audio_common_msgs.msg import AudioData
+from std_msgs.msg import String
+from harmoni_common_lib.constants import State, RouterDetector, RouterSensor
 from harmoni_common_lib.helper_functions import HelperFunctions
 from harmoni_common_lib.child import WebServiceServer
 from harmoni_common_lib.service_manager import HarmoniExternalServiceManager
@@ -24,13 +27,38 @@ class STTGoogleService(HarmoniExternalServiceManager):
         self.name = name
         self.sample_rate = param["sample_rate"]
         self.language = param["language_id"]
-        self.local_path = param["local_path"]
-        self.credential_path = param["credential"]
+        self.audio_channel = param["audio_channel"]
+        self.credential_path = param["credential_path"]
+        self.subscriber_id = param["subscriber_id"]
+        self.service_id = HelperFunctions.get_child_id(self.name)
         """ Setup the google request """
-        #self.setup_google()
+        self.setup_google()
         """Setup the google service as server """
         self.state = State.INIT
         super().__init__(self.state)
+        self.response_text = ""
+        self.data = b""
+        """Setup publishers and subscribers"""
+        rospy.Subscriber(
+            RouterSensor.microphone.value + self.subscriber_id,
+            AudioData,
+            self.callback,
+        )
+        rospy.Subscriber("/audio/audio", AudioData, self.pause_back)
+        self.text_pub = rospy.Publisher(
+            RouterDetector.stt.value + self.service_id, String, queue_size=10
+        )
+        """Setup the stt service as server """
+        self.state = State.INIT
+        super().__init__(self.state)
+        return
+
+    def pause_back(self, data):
+        rospy.loginfo(f"pausing for data: {len(data.data)}")
+        self.pause()
+        rospy.sleep(int(len(data.data) / 30000))  # TODO calibrate this guess
+        self.state = State.START
+        self.state_update()
         return
 
     def setup_google(self):
@@ -38,10 +66,18 @@ class STTGoogleService(HarmoniExternalServiceManager):
         self.client = speech_v1.SpeechClient()
         encoding = enums.RecognitionConfig.AudioEncoding.LINEAR16
         self.config = {
-            "launguage_code": self.language,
+            "language_code": self.language,
             "sample_rate_hertz":self.sample_rate,
-            "encoding": encoding
+            "encoding": encoding,
+            "audio_channel_count":self.audio_channel,
         }
+        config = types.RecognitionConfig(
+            encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
+            sample_rate_hertz=RATE,
+            language_code=language_code)
+        self.streaming_config = types.StreamingRecognitionConfig(
+        config=config,
+        interim_results=True)
         return
 
     def response_update(self, response_received, state, result_msg):
@@ -54,34 +90,63 @@ class STTGoogleService(HarmoniExternalServiceManager):
         success = True
         return success
 
-    def request(self, input_text):
-        rospy.loginfo("Start the %s request" % self.name)
-        self.state = State.REQUEST
+    def callback(self, data):
+        """ Callback function subscribing to the microphone topic"""
+        #data = np.fromstring(data.data, np.uint8)
+        self.data = self.data.join(data)
+        if self.state == State.START:
+            self.transcribe_stream_request(self.data)
+        else:
+            rospy.loginfo("Not Transcribing data")
+
+
+    def transcribe_stream_request(self,data):
+        # TODO: streaming transcription
+        requests = (types.StreamingRecognizeRequest(audio_content=content)
+                    for content in audio_generator)
+        responses = client.streaming_recognize(streaming_config, requests)
+        return
+
+
+    def transcribe_file_request(self, data):
         rate = ""  # TODO: TBD
         super().request(rate)
-        #textdata = dialogflow.types.TextInput(text=input_text, language_code=self.language)
-        #query_input = dialogflow.types.QueryInput(text=input_text)
+        audio = {"content": data}
         try:
             rospy.loginfo("Request to google")
-            #operation = self.client.long_running_recognize(config, audio)
-            #response = operation.result()
-            #for result in response.results:
-            #   alternative = alternatives[0]
-            #   response = alternative.transcript
-            #self.state = State.SUCCESS
-            #rospy.loginfo("The response is %s" % (response)
-            #self.response_update(response_received=True, state=self.state, result_msg=response)
+            operation = self.client.long_running_recognize(self.config, audio)
+            rospy.loginfo("Waiting for the operation to complete.")
+            self.state = State.PAUSE
+            response = operation.result()
+            for result in response.results:
+                self.data = b""
+                alternative = result.alternatives[0]
+                text = alternative.transcript
+                rospy.loginfo("The response is %s" % (text))
+                print(self.response_text)
+                if text:
+                    self.response_text = self.response_text + " " + text
+                else:
+                    if self.response_text:
+                        rospy.loginfo("Heard:" + self.response_text)
+                        self.text_pub.publish(self.response_text[1:])
+                        self.response_text = ""
+            self.state = State.START
         except rospy.ServiceException:
             self.start = State.FAILED
             rospy.loginfo("Service call failed")
             self.response_update(response_received=True, state=self.state, result_msg="")
         return
 
-    def wav_to_data(self):
-        with io.open(self.local_path, "rb") as f:
+    def request(self, input_data):
+        rospy.loginfo("Start the %s request" % self.name)
+        self.state = State.START
+        return
+
+    def wav_to_data(self, path):
+        with io.open(path, "rb") as f:
             content = f.read()
-        audio_data = content
-        return audio_data
+        return content
 
 
 def main():
@@ -91,7 +156,6 @@ def main():
     input_test = rospy.get_param("/input_test_" + service_name + "/")
     id_test = rospy.get_param("/id_test_" + service_name + "/")
     try:
-        service_name = RouterDialogue.bot.name
         rospy.init_node(service_name)
         list_service_names = HelperFunctions.get_child_list(service_name)
         print(list_service_names)
@@ -106,7 +170,9 @@ def main():
             service_server_list.append(WebServiceServer(name=service, service_manager=s))
             if test and (service_id == id_test):
                 rospy.loginfo("Testing the %s" % (service))
-                s.request(input_test)
+                data = s.wav_to_data(input_test)
+                s.request(data)
+                s.transcribe_file_request(data)
         if not test:
             for server in service_server_list:
                 server.update_feedback()

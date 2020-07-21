@@ -1,8 +1,8 @@
 <!-- This is an example launch file for how a ROS application could use a node -->
 <launch>
    
-	<arg name="use_w2l" default="true"/>
-	<arg name="use_google" default="false"/>
+	<arg name="use_w2l" default="false"/>
+	<arg name="use_google" default="true"/>
 	<arg name="test" default="false"/>
 	<arg name="input_test" default="$(find harmoni_stt)/temp_data/test.wav"/>
 	<arg name="id_test" default="default"/>
