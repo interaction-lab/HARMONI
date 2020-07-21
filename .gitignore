@@ -108,3 +108,4 @@ ENV/
 #**/*.wav
 **/*.ogg
 **/private-keys.json
+**/asoundrc
