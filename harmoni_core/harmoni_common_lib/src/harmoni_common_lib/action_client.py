@@ -74,7 +74,6 @@ class HarmoniActionClient(object):
         self,
         action_goal,
         optional_data="",
-        resource="",
         condition="",
         time_out=60,
         wait=True,
@@ -90,7 +89,6 @@ class HarmoniActionClient(object):
         goal = harmoniGoal(
             action_type=action_goal,
             optional_data=optional_data,
-            resource=resource,
             condition=condition,
         )
         if len(optional_data) < 50:
