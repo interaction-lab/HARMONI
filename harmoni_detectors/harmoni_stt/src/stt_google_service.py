@@ -5,8 +5,8 @@ import rospy
 import roslib
 import io
 import os
-#from google.cloud import speech_v1
-#from google.cloud.speech_v1 import enums
+from google.cloud import speech_v1
+from google.cloud.speech_v1 import enums
 from harmoni_common_lib.constants import State, RouterDetector
 from harmoni_common_lib.helper_functions import HelperFunctions
 from harmoni_common_lib.child import WebServiceServer

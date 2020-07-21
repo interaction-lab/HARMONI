@@ -3,8 +3,8 @@
 # Importing the libraries
 import rospy
 import roslib
-#import dialogflow
-#from google.api_core.exceptions import InvalidArgument
+import dialogflow
+from google.api_core.exceptions import InvalidArgument
 from harmoni_common_lib.constants import State, RouterDialogue
 from harmoni_common_lib.helper_functions import HelperFunctions
 from harmoni_common_lib.child import WebServiceServer
