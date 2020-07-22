@@ -14,7 +14,7 @@ services:
             DISPLAY: $DISPLAY
             QT_GRAPHICSSYSTEM: native
             ROS_DISTRO: kinetic
-            ROS_MASTER_URI: http://harmoni_core:11311            
+            ROS_MASTER_URI: http://192.168.100.1:11311            
             IS_DOCKER_ENV: "true"
             ROS_HOSTNAME: harmoni_core
             CATKIN_WS: harmoni_catkin_ws
@@ -68,7 +68,7 @@ services:
             IS_DOCKER_ENV: "true"
             CATKIN_WS: harmoni_catkin_ws
             ROS_HOSTNAME: ros_w2l
-            ROS_MASTER_URI: http://harmoni_core:11311
+            ROS_MASTER_URI: http://192.168.100.1:11311
         depends_on: 
             - "harmoni_core"
         privileged: true
@@ -119,7 +119,7 @@ services:
             IS_DOCKER_ENV: "true"
             CATKIN_WS: harmoni_catkin_ws
             ROS_HOSTNAME: harmoni_visual_detector
-            ROS_MASTER_URI: http://harmoni_core:11311
+            ROS_MASTER_URI: http://192.168.100.1:11311
         privileged: true
         networks:
             ros_net:
@@ -166,7 +166,7 @@ services:
             IS_DOCKER_ENV: "true"
             CATKIN_WS: harmoni_catkin_ws
             ROS_HOSTNAME: harmoni_pc
-            ROS_MASTER_URI: http://harmoni_core:11311
+            ROS_MASTER_URI: http://192.168.100.1:11311
         privileged: true
         networks:
             ros_net:
