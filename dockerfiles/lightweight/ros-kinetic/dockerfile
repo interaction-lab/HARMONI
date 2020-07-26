@@ -1,0 +1,66 @@
+FROM cmbirmingham/ubuntu16-lightweight:latest
+
+# ==================================================================
+# install packages
+RUN apt-get update && apt-get install -q -y --no-install-recommends \
+    dirmngr \
+    gnupg2 \
+    && rm -rf /var/lib/apt/lists/*
+
+
+# ==================================================================
+# setup keys
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+
+# setup sources.list
+RUN echo "deb http://packages.ros.org/ros/ubuntu xenial main" > /etc/apt/sources.list.d/ros1-latest.list
+
+# setup environment
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+
+# ros kinetic setup
+ENV ROS_DISTRO kinetic
+
+# install ros packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ros-kinetic-ros-core=1.3.2-0* \
+    python-rosdep \
+    python-rosinstall \
+    python-vcstools \
+    && rm -rf /var/lib/apt/lists/*
+
+
+# ==================================================================
+# bootstrap rosdep
+RUN rosdep init && \
+    rosdep update --rosdistro $ROS_DISTRO
+
+# install ros packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ros-$ROS_DISTRO-desktop-full=1.3.2-0* \
+    ros-$ROS_DISTRO-rosbridge-server \
+    && \
+    # PYTHON INSTALLS
+    add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get update && \
+    ln -s /usr/bin/python3.6 /usr/local/bin/python3 && \
+    ln -s /usr/bin/python3.6 /usr/local/bin/python && \
+    PIP_INSTALL="python3 -m pip --no-cache-dir install --upgrade" && \
+    $PIP_INSTALL \
+    numpy \
+    rospkg \
+    catkin_pkg \
+    catkin_tools \
+    && rm -rf /var/lib/apt/lists/* 
+
+# ==================================================================
+# For convenience add a source script to bashrc and update without clearing
+RUN \
+    echo 'source /root/.setup_script.sh' >> /root/.bashrc 
+
+
+# ==================================================================
+ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 /usr/local/bin/dumb-init
+RUN chmod +x /usr/local/bin/dumb-init
+ENTRYPOINT ["/usr/local/bin/dumb-init","--rewrite","15:10","--"]

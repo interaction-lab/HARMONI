@@ -6,7 +6,7 @@ services:
         container_name: harmoni_core
         build:
             context: .
-            dockerfile: dockerfiles/dev/harmoni/dockerfile
+            dockerfile: dockerfiles/lightweight/harmoni/dockerfile
             network: host
         image: cmbirmingham/harmoni-dev:latest
         init: true
@@ -14,7 +14,7 @@ services:
             DISPLAY: $DISPLAY
             QT_GRAPHICSSYSTEM: native
             ROS_DISTRO: kinetic
-            ROS_MASTER_URI: http://192.168.100.1:11311            
+            ROS_MASTER_URI: http://harmoni_core:11311            
             IS_DOCKER_ENV: "true"
             ROS_HOSTNAME: harmoni_core
             CATKIN_WS: harmoni_catkin_ws
@@ -33,7 +33,6 @@ services:
         volumes:
             - harmoni_catkin_ws:/root/harmoni_catkin_ws
             - ../HARMONI/:/root/local_mount/HARMONI/
-            # IDEs
             - ~/.aws:/root/.aws/
             # Configuration
             - ./dockerfiles/config/setup_script.sh:/root/.setup_script.sh
@@ -55,7 +54,7 @@ services:
         container_name: ros_w2l
         build:
             context: .
-            dockerfile: dockerfiles/dev/w2l/dockerfile
+            dockerfile: dockerfiles/lightweight/w2l-dev/dockerfile
             network: host
         image: cmbirmingham/w2l-dev:latest
         init: true
@@ -66,7 +65,7 @@ services:
             IS_DOCKER_ENV: "true"
             CATKIN_WS: harmoni_catkin_ws
             ROS_HOSTNAME: ros_w2l
-            ROS_MASTER_URI: http://192.168.100.1:11311
+            ROS_MASTER_URI: http://harmoni_core:11311
         depends_on: 
             - "harmoni_core"
         privileged: true
@@ -107,7 +106,7 @@ services:
         container_name: harmoni_visual_detector
         build:
             context: .
-            dockerfile: dockerfiles/dev/harmoni-pc/dockerfile
+            dockerfile: dockerfiles/lightweight/harmoni-pc-dev/dockerfile
             network: host
         image: cmbirmingham/harmoni-pc-dev:latest
         init: true
@@ -118,7 +117,7 @@ services:
             IS_DOCKER_ENV: "true"
             CATKIN_WS: harmoni_catkin_ws
             ROS_HOSTNAME: harmoni_visual_detector
-            ROS_MASTER_URI: http://192.168.100.1:11311
+            ROS_MASTER_URI: http://harmoni_core:11311
         privileged: true
         networks:
             ros_net:
@@ -155,7 +154,7 @@ services:
         container_name: harmoni_pc
         build:
             context: .
-            dockerfile: dockerfiles/dev/harmoni-pc/dockerfile
+            dockerfile: dockerfiles/lightweight/harmoni-pc-dev/dockerfile
             network: host
         image: cmbirmingham/harmoni-pc-dev:latest
         init: true
@@ -166,7 +165,7 @@ services:
             IS_DOCKER_ENV: "true"
             CATKIN_WS: harmoni_catkin_ws
             ROS_HOSTNAME: harmoni_pc
-            ROS_MASTER_URI: http://192.168.100.1:11311
+            ROS_MASTER_URI: http://harmoni_core:11311
         privileged: true
         networks:
             ros_net:
