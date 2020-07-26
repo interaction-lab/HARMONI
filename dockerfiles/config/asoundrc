@@ -6,5 +6,5 @@ pcm.!default {
 }
 ctl.!default {
   type hw
-  card 1
+  card 1n
 }
