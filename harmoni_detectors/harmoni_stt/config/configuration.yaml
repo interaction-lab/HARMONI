@@ -3,3 +3,11 @@ w2l:
         model_path: /root/model/w2l/
         w2l_bin: /root/wav2letter/build/inference/inference/examples/simple_streaming_asr_example
         subscriber_id: "default"
+
+google:
+    default_param:
+        language_id: "it-IT"
+        sample_rate: 16000 #44100 for wav audio file
+        audio_channel: 1
+        subscriber_id: "default"
+        credential_path: "/root/harmoni_catkin_ws/src/HARMONI/harmoni_detectors/harmoni_stt/config/private-keys.json"

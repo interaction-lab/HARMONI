@@ -58,6 +58,9 @@ class AWSLexService(HarmoniExternalServiceManager):
                                                         accept='text/plain; charset=utf-8',
                                                         inputStream=textdata)
             self.state = State.SUCCESS
+            if "intentName" in lex_response:
+                if lex_response["dialogState"] == 'Fulfilled':
+                    print("The dialogue is fulfilled, end the conversation.")
             rospy.loginfo("The response is %s" % (lex_response["message"]))
             self.response_update(response_received=True, state=self.state, result_msg=lex_response["message"])
         except rospy.ServiceException:

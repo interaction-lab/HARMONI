@@ -107,3 +107,5 @@ ENV/
 #**/*.yaml
 #**/*.wav
 **/*.ogg
+**/private-keys.json
+**/asoundrc

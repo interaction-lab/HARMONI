@@ -9,6 +9,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         nodejs \
         npm \
+        luakit \ 
     && \
     npm install http-server -g && \
     ln -s /usr/bin/nodejs /usr/bin/node \
@@ -19,6 +20,9 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         soundfile \
         dlib \
         imutils \
+        google-cloud-speech \
+        dialogflow \
+        google-api-python-client \
         && \
 # ==================================================================
 # install ros packages for harmoni

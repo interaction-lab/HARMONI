@@ -3,8 +3,8 @@
 # Importing the libraries
 import rospy
 import roslib
-#import dialogflow
-#from google.api_core.exceptions import InvalidArgument
+import dialogflow
+from google.api_core.exceptions import InvalidArgument
 from harmoni_common_lib.constants import State, RouterDialogue
 from harmoni_common_lib.helper_functions import HelperFunctions
 from harmoni_common_lib.child import WebServiceServer
@@ -67,12 +67,13 @@ class GoogleService(HarmoniExternalServiceManager):
 
 
 def main():
-    name = rospy.get_param("/name/")
-    test = rospy.get_param("/test/")
-    input_test = rospy.get_param("/input_test/")
-    id_test = rospy.get_param("/id_test/")
+    service_name = RouterDialogue.bot.name
+    name = rospy.get_param("/name_"+service_name+"/")
+    test = rospy.get_param("/test_"+service_name+"/")
+    input_test = rospy.get_param("/input_test_"+service_name+"/")
+    id_test = rospy.get_param("/id_test_"+service_name+"/")
     try:
-        service_name = RouterDialogue.bot.name
+
         rospy.init_node(service_name)
         list_service_names = HelperFunctions.get_child_list(service_name)
         print(list_service_names)
