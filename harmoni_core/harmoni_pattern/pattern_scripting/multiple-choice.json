@@ -1,0 +1,47 @@
+[
+    {
+        "set": "sequence",
+        "steps": [
+            {
+                "harmoni_web_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "actuator",
+                    "wait_for": "new",
+                    "trigger": "{'component_id':'container_1', 'set_content':'content'}"
+                }
+            },
+            {
+                "harmoni_tts_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": "new",
+                    "trigger": "'My name is HARMONI'"
+                }
+            },
+            [
+                {
+                    "pc_speaker_default": {
+                        "action_goal": "REQUEST",
+                        "resource_type": "actuator",
+                        "wait_for": ""
+                    }
+                },
+                {
+                    "pc_face_mouth_default": {
+                        "action_goal": "REQUEST",
+                        "resource_type": "actuator",
+                        "wait_for": "new"
+                    }
+                }
+            ],
+            {
+                "harmoni_web_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "actuator",
+                    "wait_for": "new",
+                    "trigger": "{'component_id':'container_1', 'set_content':''}"
+                }
+            }
+        ]
+    }
+]

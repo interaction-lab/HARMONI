@@ -14,14 +14,14 @@ services:
             DISPLAY: $DISPLAY
             QT_GRAPHICSSYSTEM: native
             ROS_DISTRO: kinetic
-            ROS_MASTER_URI: http://192.168.100.1:11311            
+            ROS_MASTER_URI: http://harmoni_core:11311   #http://192.168.100.1:11311            
             IS_DOCKER_ENV: "true"
             ROS_HOSTNAME: harmoni_core
             CATKIN_WS: harmoni_catkin_ws
         privileged: true
         networks:
             ros_net:
-                ipv4_address: 10.1.0.104
+                #ipv4_address: 10.1.0.104
         hostname: harmoni_core
         ports:
             - "11312:11312"
@@ -66,14 +66,14 @@ services:
             IS_DOCKER_ENV: "true"
             CATKIN_WS: harmoni_catkin_ws
             ROS_HOSTNAME: ros_w2l
-            ROS_MASTER_URI: http://192.168.100.1:11311
+            ROS_MASTER_URI: http://harmoni_core:11311 #http://192.168.100.1:11311
         depends_on: 
             - "harmoni_core"
         privileged: true
         # network_mode: host
         networks:
             ros_net:
-                ipv4_address: 10.1.0.103
+                #ipv4_address: 10.1.0.103
         hostname: ros_w2l
         ports:
             - "1022:22"
@@ -118,11 +118,11 @@ services:
             IS_DOCKER_ENV: "true"
             CATKIN_WS: harmoni_catkin_ws
             ROS_HOSTNAME: harmoni_visual_detector
-            ROS_MASTER_URI: http://192.168.100.1:11311
+            ROS_MASTER_URI: http://harmoni_core:11311 #http://192.168.100.1:11311
         privileged: true
         networks:
             ros_net:
-                ipv4_address: 10.1.0.101
+                #ipv4_address: 10.1.0.101
         hostname: harmoni_visual_detector
         depends_on: 
             - "harmoni_core"
@@ -166,11 +166,11 @@ services:
             IS_DOCKER_ENV: "true"
             CATKIN_WS: harmoni_catkin_ws
             ROS_HOSTNAME: harmoni_pc
-            ROS_MASTER_URI: http://192.168.100.1:11311
+            ROS_MASTER_URI: http://harmoni_core:11311 #http://192.168.100.1:11311
         privileged: true
         networks:
             ros_net:
-                ipv4_address: 10.1.0.100
+                #ipv4_address: 10.1.0.100
         hostname: ros_pc
         depends_on: 
             - "harmoni_core"
