@@ -3,7 +3,7 @@
    
 	<arg name="use_aws_tts" default="true"/>
 	<arg name="test" default="false"/>
-	<arg name="input_test" default="'My name is HARMONI'"/>
+	<arg name="input_test" default="'*web container_1 http* My name is HARMONI'"/>
 	<arg name="id_test" default="default"/>
   	<group if="$(arg use_aws_tts)">
 			<rosparam file="$(find harmoni_tts)/config/configuration.yaml"/>
