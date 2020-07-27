@@ -322,7 +322,7 @@ class SequentialPattern(HarmoniServiceManager, object):
         # self._result_callback({"do_action": True, "message": result["data"]})
         return result["data"]
 
-
+"""
 def main():
     # TODO this should be a rosparam
     #pattern_name = "dialogue"
@@ -348,3 +348,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+"""
