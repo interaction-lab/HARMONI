@@ -127,15 +127,26 @@ class AWSTtsService(HarmoniExternalServiceManager):
                 a[0] = (word_times[a[0]]["time"]) / 1000.0  # convert ms to seconds
         for a in actions:
             args = a[2]
-            data.append(
+            if a[1] == "web":
+                data.append(
                 {
                     "start": float(a[0])
                     + 0.01,  # prevent visemes and actions from being at exactly the same time
-                    "type": "action",
+                    "type": "web",
                     "args": args,
                     "id": a[1],
                 }
             )  # End edits
+            else:
+                data.append(
+                    {
+                        "start": float(a[0])
+                        + 0.01,  # prevent visemes and actions from being at exactly the same time
+                        "type": "action",
+                        "args": args,
+                        "id": a[1],
+                    }
+                )  # End edits
         visemes = list(
             map(
                 lambda l: [l["time"], self.vis_transl[l["value"]]],
