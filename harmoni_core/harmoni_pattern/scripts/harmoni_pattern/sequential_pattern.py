@@ -322,11 +322,12 @@ class SequentialPattern(HarmoniServiceManager, object):
         # self._result_callback({"do_action": True, "message": result["data"]})
         return result["data"]
 
-
+"""
 def main():
     # TODO this should be a rosparam
-    pattern_name = "dialogue"
-    trigger_intent = rospy.get_param("/input_test_" + pattern_name + "/")
+    #pattern_name = "dialogue"
+    pattern_name = "multiple-choice"
+    #trigger_intent = rospy.get_param("/input_test_" + pattern_name + "/")
     rospack = rospkg.RosPack()
     pck_path = rospack.get_path("harmoni_pattern")
     pattern_script_path = pck_path + f"/pattern_scripting/{pattern_name}.json"
@@ -347,3 +348,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+"""

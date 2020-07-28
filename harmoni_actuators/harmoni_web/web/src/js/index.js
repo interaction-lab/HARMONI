@@ -4,20 +4,20 @@ var page = "pageContent2";
 $(document).ready(function () {
 
     $.getJSON("src/config/config.json", function (data) {
-            $.each(data, function (key, val) {
-                if (page == key) {
-                    $.each(val, function (k, v) {
-                        console.log(v);
-                        var id = v.id;
-                        var component = v.component;
-                        var children = v.children;
-                        var id_parent = "body_page";
-                        handleComponents(children, id, component, id_parent);
-                        $("#"+id).hide();
-                    });
-                };
-            });
-        })
+        $.each(data, function (key, val) {
+            if (page == key) {
+                $.each(val, function (k, v) {
+                    console.log(v);
+                    var id = v.id;
+                    var component = v.component;
+                    var children = v.children;
+                    var id_parent = "body_page";
+                    handleComponents(children, id, component, id_parent);
+                    $("#" + id).hide();
+                });
+            };
+        });
+    })
         .done(function () {
             //$("#"+view).show();
             $("button").on("click", function () {
@@ -29,17 +29,19 @@ $(document).ready(function () {
         });
 });
 
-function viewListener(view){
+function viewListener(view) {
     //Waiting for the view request from the ROS package
     console.log(view.data)
     var data = view.data.replace(/'/g, '"')
     var json_data = JSON.parse(data)
     var component = json_data.component_id
     var content = json_data.set_content
-    if(content!= ""){
-        $("#"+component).html(content)
-    }
-    $("#"+component).show();
+    if (content != "") {
+        $("#" + component).html(content)
+    }else if(component.includes("container")){
+        $(".container").hide()
+    } 
+    $("#" + component).show();
 };
 
 function clickListener(clicked_component) {
@@ -63,6 +65,8 @@ function handleComponents(children, id, component, id_parent) {
     } else {
         var component_html = createComponent(component, children, id);
         $("#" + id_parent).append(component_html);
+        
+
     }
 }
 
