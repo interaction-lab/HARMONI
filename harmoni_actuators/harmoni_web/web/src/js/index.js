@@ -37,17 +37,28 @@ function viewListener(view) {
     var component = json_data.component_id
     var content = json_data.set_content
     if (content != "") {
-        $("#" + component).html(content)
-    }else if(component.includes("container")){
+        if (component.includes("img")) {
+            $("#" + component).attr("src", content);
+            $("#" + component).attr("value", content);
+            $('img', "#"+component).attr('src', content);
+        }
+        else {
+            $("#" + component).html(content)
+        }
+    } else if (component.includes("container")) {
         $(".container").hide()
-    } 
+    }
     $("#" + component).show();
 };
 
 function clickListener(clicked_component) {
     var selected_item = clicked_component.id;
+    $("#"+selected_item).css("opacity", "0.5");
+    if (selected_item.includes("img")){
+        var selected_item = clicked_component.value;
+    }
     console.log("Clicked")
-    user_response_publisher.publish({ data: selected_item })
+    user_response_publisher.publish({ data: JSON.stringify(clicked_component.getAttribute("value")) })
     // Send the event clicked to the ROS package
 }
 
@@ -65,7 +76,7 @@ function handleComponents(children, id, component, id_parent) {
     } else {
         var component_html = createComponent(component, children, id);
         $("#" + id_parent).append(component_html);
-        
+
 
     }
 }
@@ -80,7 +91,7 @@ function createComponent(component, content, id) {
             var html = "<a id=" + id + "><img src=" + content + "></a>";
             break;
         case "img":
-            var html = "<img src=" + content + " id=" + id + "/>";
+            var html = "<img src=" + content + " id=" + id + ">";
             break;
         case "text":
             if (!Array.isArray(content)) {
