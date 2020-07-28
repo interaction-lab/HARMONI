@@ -26,8 +26,6 @@ class WebService(HarmoniExternalServiceManager):
         self.timer_interval = param["timer_interval"]
         self.service_id = HelperFunctions.get_child_id(self.name)
         self.is_request = True
-        """ Setup the web request """
-        self.setup_web()
         """Setup publisher and subscriber """
         self.web_sub = rospy.Subscriber(
             RouterActuator.web.value + self.service_id + "/listen_click_event",
@@ -41,6 +39,8 @@ class WebService(HarmoniExternalServiceManager):
             String,
             queue_size=1,
         )
+        """ Setup the web request """
+        self.setup_web()
         """Setup the web service as server """
         self.state = State.INIT
         super().__init__(self.state)
@@ -78,6 +78,7 @@ class WebService(HarmoniExternalServiceManager):
             rospy.sleep(1)
             for data in data_array:
                 self.send_request(data)
+                rospy.sleep(0.2)
             self.state = State.SUCCESS
             self.actuation_update(actuation_completed=True)
         except:
@@ -88,19 +89,22 @@ class WebService(HarmoniExternalServiceManager):
     def _get_web_data(self, data):
         data = ast.literal_eval(data)
         web_array = []
-        if "behavior_data" in data.keys():
-            behavior_data = ast.literal_eval(data["behavior_data"])
-            
-            for b in behavior_data:
-                if "type" in b.keys():
-                    if b["type"] == "web":
-                        container_id = b["args"][0]
-                        set_view= ""
-                        if len(b["args"])>1:
-                            set_view = b["args"][1]
-                        web_array.append(str({"component_id":container_id, "set_content": set_view, "start": b["start"]}))
+        if not isinstance(data, list):
+            if "behavior_data" in data.keys():
+                behavior_data = ast.literal_eval(data["behavior_data"])
+                for b in behavior_data:
+                    if "type" in b.keys():
+                        if b["type"] == "web":
+                            container_id = b["args"][0]
+                            set_view= ""
+                            if len(b["args"])>1:
+                                set_view = b["args"][1]
+                            web_array.append(str({"component_id":container_id, "set_content": set_view, "start": b["start"]}))
+            else:
+                web_array.append(str(data))
         else:
-            web_array.append(str(data))
+            for item in data:
+                web_array.append(str(item))
         return web_array
 
     def send_request(self, display_view):
