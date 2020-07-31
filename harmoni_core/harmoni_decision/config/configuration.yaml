@@ -1,12 +1,12 @@
 # This is a configuration file describing the id of the child of each repo
 harmoni:
-  lex : ["default"]
+  bot : ["default"]
   tts: ["default"]
-#   web: ["default"]
-  stt: ["default"]
+  web: ["default"]
+  #stt: ["default"]
 #  face_detect: ["default"]
 pc:
-  microphone: ["default"]
-  camera : ["default"]
+  #microphone: ["default"]
+  #camera : ["default"]
   face: ["default"]
   speaker: ["default"]

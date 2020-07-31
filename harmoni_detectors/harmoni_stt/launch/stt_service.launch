@@ -1,16 +1,26 @@
 <!-- This is an example launch file for how a ROS application could use a node -->
 <launch>
    
-	<arg name="use_w2l" default="true"/>
+	<arg name="use_w2l" default="false"/>
+	<arg name="use_google" default="true"/>
 	<arg name="test" default="false"/>
 	<arg name="input_test" default="$(find harmoni_stt)/temp_data/test.wav"/>
 	<arg name="id_test" default="default"/>
   	<group if="$(arg use_w2l)">
 			<rosparam file="$(find harmoni_stt)/config/configuration.yaml"/>
-			<param name="test" value="$(arg test)"/>
-			<param name="input_test" value="$(arg input_test)"/>
-			<param name="id_test" value="$(arg id_test)"/>
-			<node pkg="harmoni_stt" type="w2l_service.py" name="harmoni_stt" output="screen"/>
+			<param name="test_stt" value="$(arg test)"/>
+			<param name="input_test_stt" value="$(arg input_test)"/>
+			<param name="id_test_stt" value="$(arg id_test)"/>
+			<param name="name_stt" value="w2l"/>
+			<node pkg="harmoni_stt" type="w2l_service.py" name="harmoni_stt_w2l" output="screen"/>
+  	</group>
+	<group if="$(arg use_google)">
+			<rosparam file="$(find harmoni_stt)/config/configuration.yaml"/>
+			<param name="test_stt" value="$(arg test)"/>
+			<param name="input_test_stt" value="$(arg input_test)"/>
+			<param name="id_test_stt" value="$(arg id_test)"/>
+			<param name="name_stt" value="google"/>
+			<node pkg="harmoni_stt" type="stt_google_service.py" name="harmoni_stt_google" output="screen"/>
   	</group>
     
 </launch>

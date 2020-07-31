@@ -1,0 +1,20 @@
+<!-- This is an example launch file for how a ROS application could use a node -->
+<launch>
+   
+	<arg name="use_w2l" default="true"/>
+	<arg name="test" default="false"/>
+	<arg name="input_test" default="$(find harmoni_stt)/temp_data/test.wav"/>
+	<arg name="id_test" default="default"/>
+  	<group if="$(arg use_w2l)">
+			<rosparam file="$(find harmoni_stt)/config/direct_configuration.yaml"/>
+            <param name="test" value="$(arg test)"/>
+			<param name="input_test" value="$(arg input_test)"/>
+			<param name="id_test" value="$(arg id_test)"/>
+			<param name="test_stt" value="$(arg test)"/>
+			<param name="input_test_stt" value="$(arg input_test)"/>
+			<param name="id_test_stt" value="$(arg id_test)"/>
+			<param name="name_stt" value="w2l"/>
+			<node pkg="harmoni_stt" type="direct_w2l_service.py" name="direct_harmoni_stt_w2l" output="screen"/>
+  	</group>
+    
+</launch>
