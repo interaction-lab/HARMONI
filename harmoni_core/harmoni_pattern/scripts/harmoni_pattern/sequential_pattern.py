@@ -60,7 +60,7 @@ class SequentialPattern(HarmoniServiceManager, object):
         for service in self.scripted_services:
             assert (
                 service in self.configured_services
-            ), "Scripted service has not been configured"
+            ), f"Scripted service: {service}, has not been configured"
 
         for client in self.scripted_services:
             self.service_clients[client] = HarmoniActionClient(client)
@@ -320,12 +320,11 @@ class SequentialPattern(HarmoniServiceManager, object):
         return result["data"]
 
 
-"""
 def main():
     # TODO this should be a rosparam
-    #pattern_name = "dialogue"
-    pattern_name = "multiple-choice"
-    #trigger_intent = rospy.get_param("/input_test_" + pattern_name + "/")
+    pattern_name = "dialogue"
+    # pattern_name = "multiple-choice"
+    # trigger_intent = rospy.get_param("/input_test_" + pattern_name + "/")
     rospack = rospkg.RosPack()
     pck_path = rospack.get_path("harmoni_pattern")
     pattern_script_path = pck_path + f"/pattern_scripting/{pattern_name}.json"
@@ -346,4 +345,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-"""
+
