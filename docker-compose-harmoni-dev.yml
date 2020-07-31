@@ -6,7 +6,7 @@ services:
         container_name: harmoni_core
         build:
             context: .
-            dockerfile: dockerfiles/dev/harmoni-dev
+            dockerfile: dockerfiles/dev/harmoni/dockerfile
             network: host
         image: cmbirmingham/harmoni-dev:latest
         init: true
@@ -14,29 +14,27 @@ services:
             DISPLAY: $DISPLAY
             QT_GRAPHICSSYSTEM: native
             ROS_DISTRO: kinetic
-            ROS_MASTER_URI: http://harmoni_core:11311            
+            ROS_MASTER_URI: http://172.18.3.4:11311            
             IS_DOCKER_ENV: "true"
             ROS_HOSTNAME: harmoni_core
             CATKIN_WS: harmoni_catkin_ws
         privileged: true
         networks:
             ros_net:
+                ipv4_address: 172.18.3.4
         hostname: harmoni_core
         ports:
             - "11312:11312"
             - "33691:33691"
         devices: 
           - /dev/dri:/dev/dri
-          - /dev/snd:/dev/snd
+          #- /dev/snd:/dev/snd
           - /dev/video0:/dev/video0
         volumes:
             - harmoni_catkin_ws:/root/harmoni_catkin_ws
             - ../HARMONI/:/root/local_mount/HARMONI/
             # IDEs
-            - pycharm_config:/root/.PyCharmCE2019.3/
             - ~/.aws:/root/.aws/
-            - visual_code_config:/root/.visual_code/
-            - ~/.vscode/:/root/.vscode/
             # Configuration
             - ./dockerfiles/config/setup_script.sh:/root/.setup_script.sh
             - ./dockerfiles/config/dev_setup_script.sh:/root/.dev_setup_script.sh
@@ -57,7 +55,7 @@ services:
         container_name: ros_w2l
         build:
             context: .
-            dockerfile: dockerfiles/dev/w2l-dev
+            dockerfile: dockerfiles/dev/w2l/dockerfile
             network: host
         image: cmbirmingham/w2l-dev:latest
         init: true
@@ -68,19 +66,20 @@ services:
             IS_DOCKER_ENV: "true"
             CATKIN_WS: harmoni_catkin_ws
             ROS_HOSTNAME: ros_w2l
-            ROS_MASTER_URI: http://harmoni_core:11311
+            ROS_MASTER_URI: http://172.18.3.4:11311
         depends_on: 
             - "harmoni_core"
         privileged: true
         # network_mode: host
         networks:
             ros_net:
+                ipv4_address: 172.18.3.3
         hostname: ros_w2l
         ports:
             - "1022:22"
         devices: 
             - /dev/dri:/dev/dri
-            - /dev/snd:/dev/snd
+            #- /dev/snd:/dev/snd
             - /dev/video0:/dev/video0
         volumes:
             - ../model/w2l:/root/model/w2l/
@@ -108,7 +107,7 @@ services:
         container_name: harmoni_visual_detector
         build:
             context: .
-            dockerfile: dockerfiles/dev/harmoni-pc-dev
+            dockerfile: dockerfiles/dev/harmoni-pc/dockerfile
             network: host
         image: cmbirmingham/harmoni-pc-dev:latest
         init: true
@@ -119,17 +118,18 @@ services:
             IS_DOCKER_ENV: "true"
             CATKIN_WS: harmoni_catkin_ws
             ROS_HOSTNAME: harmoni_visual_detector
-            ROS_MASTER_URI: http://harmoni_core:11311
+            ROS_MASTER_URI: http://172.18.3.4:11311
         privileged: true
         networks:
             ros_net:
+                ipv4_address: 172.18.3.2
         hostname: harmoni_visual_detector
         depends_on: 
             - "harmoni_core"
             - "harmoni_pc"
         devices: 
             - /dev/dri:/dev/dri
-            - /dev/snd:/dev/snd
+            #- /dev/snd:/dev/snd
             - /dev/video0:/dev/video0
         volumes:
             - ../HARMONI/:/root/local_mount/HARMONI/
@@ -155,7 +155,7 @@ services:
         container_name: harmoni_pc
         build:
             context: .
-            dockerfile: dockerfiles/dev/harmoni-pc-dev
+            dockerfile: dockerfiles/dev/harmoni-pc/dockerfile
             network: host
         image: cmbirmingham/harmoni-pc-dev:latest
         init: true
@@ -166,10 +166,11 @@ services:
             IS_DOCKER_ENV: "true"
             CATKIN_WS: harmoni_catkin_ws
             ROS_HOSTNAME: harmoni_pc
-            ROS_MASTER_URI: http://harmoni_core:11311
+            ROS_MASTER_URI: http://172.18.3.4:11311
         privileged: true
         networks:
             ros_net:
+                ipv4_address: 172.18.3.5
         hostname: ros_pc
         depends_on: 
             - "harmoni_core"
@@ -184,6 +185,7 @@ services:
             # Configuration
             - ./dockerfiles/config/setup_script.sh:/root/.setup_script.sh
             - ./dockerfiles/config/dev_setup_script.sh:/root/.dev_setup_script.sh
+            - ./dockerfiles/config/asoundrc:/root/.asoundrc
             # Other
             - /tmp/.X11-unix:/tmp/.X11-unix
             - ~/.config/terminator/config:/root/.config/terminator/config
@@ -200,10 +202,12 @@ services:
 networks:
     ros_net:
         driver: bridge
+        ipam:
+            driver: default
+            config:
+              -  subnet: 172.18.3.0/24
 
 volumes:
     harmoni_catkin_ws:
     harmoni-pc_catkin_ws:
     wav2letter:
-    pycharm_config:
-    visual_code_config:

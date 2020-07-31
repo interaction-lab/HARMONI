@@ -1,7 +1,0 @@
-# Configuration file for the microphone
-harmoni_lex:
-  default_param:
-    user_id : "micol_testing"
-    bot_name: "QTDemo"
-    bot_alias: "qt_sample_demo" 
-    region_name: "us-west-2"

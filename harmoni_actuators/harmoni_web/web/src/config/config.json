@@ -1,67 +1,9 @@
 {
-    "pageContent1": [{
-            "component": "container",
-            "id": "container_1",
-            "children": [
-                {
-                    "component": "img",
-                    "children": "../assets/imgs/test.jpg",
-                    "id": "img_1"
-            },
-                {
-                    "component": "title",
-                    "id": "title_1",
-                    "children": [
-                        {
-                            "component": "text",
-                            "id": "text_2",
-                            "children": "Text 2"
-                    }
-                ]
-            },
-                {
-                    "component": "text",
-                    "children": "Insert text here",
-                    "id": "text_1"
-            },
-                {
-                    "component": "button",
-                    "children": "Click here!",
-                    "id": "button_1"
-            }
-        ]
-    },
+    "pageContent2": [
         {
             "component": "container",
-            "id": "container_2",
-            "children": [
-                {
-                    "component": "img",
-                    "children": "../assets/imgs/test.jpg",
-                    "id": "img_2"
-            },
-                {
-                    "component": "text",
-                    "children": "Insert text here",
-                    "id": "text_2"
-            },
-                {
-                    "component": "button",
-                    "children": "Click here!",
-                    "id": "button_2"
-            }
-        ]
-    }],
-    "pageContent2": [{
-            "component": "container",
             "id": "container_1",
             "children": [
-                {
-                    "component": "title",
-                    "children": "TITLE",
-                    "id": "title_1"
-                    }
-                ,
                 {
                     "component": "row",
                     "id": "row_1",
@@ -70,19 +12,119 @@
                             "component": "click_img",
                             "children": "../assets/imgs/test.jpg",
                             "id": "img_1"
-            },
+                        },
+                        {
+                            "component": "click_img",
+                            "children": "../assets/imgs/test.jpg",
+                            "id": "img_2"
+                        },
+                        {
+                            "component": "click_img",
+                            "children": "../assets/imgs/test.jpg",
+                            "id": "img_3"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "component": "container",
+            "id": "container_2",
+            "children": [
+                {
+                    "component": "img",
+                    "id": "img_bkg",
+                    "children": "../assets/imgs/test.jpg"
+                }
+            ]
+        }
+    ],
+    "pageContent1": [
+        {
+            "component": "container",
+            "id": "container_1",
+            "children": [
+                {
+                    "component": "img",
+                    "children": "../assets/imgs/test.jpg",
+                    "id": "img_1"
+                },
+                {
+                    "component": "title",
+                    "id": "title_1",
+                    "children": [
+                        {
+                            "component": "text",
+                            "id": "text_2",
+                            "children": "Text 2"
+                        }
+                    ]
+                },
+                {
+                    "component": "text",
+                    "children": "Insert text here",
+                    "id": "text_1"
+                },
+                {
+                    "component": "button",
+                    "children": "Click here!",
+                    "id": "button_1"
+                }
+            ]
+        },
+        {
+            "component": "container",
+            "id": "container_2",
+            "children": [
+                {
+                    "component": "img",
+                    "children": "../assets/imgs/test.jpg",
+                    "id": "img_2"
+                },
+                {
+                    "component": "text",
+                    "children": "Insert text here",
+                    "id": "text_2"
+                },
+                {
+                    "component": "button",
+                    "children": "Click here!",
+                    "id": "button_2"
+                }
+            ]
+        }
+    ],
+    "test": [
+        {
+            "component": "container",
+            "id": "container_1",
+            "children": [
+                {
+                    "component": "title",
+                    "children": "TITLE",
+                    "id": "title_1"
+                },
+                {
+                    "component": "row",
+                    "id": "row_1",
+                    "children": [
+                        {
+                            "component": "click_img",
+                            "children": "../assets/imgs/test.jpg",
+                            "id": "img_1"
+                        },
                         {
                             "component": "img",
                             "children": "../assets/imgs/test.jpg",
                             "id": "img_2"
-            },
+                        },
                         {
                             "component": "img",
                             "children": "../assets/imgs/test.jpg",
                             "id": "img_3"
-                    }
-             ]
-                    },
+                        }
+                    ]
+                },
                 {
                     "component": "row",
                     "id": "row_2",
@@ -91,23 +133,21 @@
                             "component": "button",
                             "children": "Click here!",
                             "id": "button_2"
-            },
+                        },
                         {
                             "component": "button",
                             "children": "Click here!",
                             "id": "button_3"
-            },
+                        },
                         {
                             "component": "button",
                             "children": "Click here!",
                             "id": "button_4"
-            }
-             ]
-
-
-                    }
+                        }
                     ]
-            },
+                }
+            ]
+        },
         {
             "component": "container",
             "id": "container_2",
@@ -120,19 +160,19 @@
                             "component": "click_img",
                             "children": "../assets/imgs/test.jpg",
                             "id": "img_4"
-            },
+                        },
                         {
                             "component": "img",
                             "children": "../assets/imgs/test.jpg",
                             "id": "img_5"
-            },
+                        },
                         {
                             "component": "img",
                             "children": "../assets/imgs/test.jpg",
                             "id": "img_6"
-                    }
-             ]
-            },
+                        }
+                    ]
+                },
                 {
                     "component": "row",
                     "id": "row_4",
@@ -141,20 +181,20 @@
                             "component": "button",
                             "children": "Click here!",
                             "id": "button_5"
-            },
+                        },
                         {
                             "component": "button",
                             "children": "Click here!",
                             "id": "button_6"
-            },
+                        },
                         {
                             "component": "button",
                             "children": "Click here!",
                             "id": "button_7"
-            }
-             ]
-            }
-
-        ]
-    }]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
 }

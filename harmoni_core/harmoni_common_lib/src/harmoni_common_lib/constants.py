@@ -17,6 +17,7 @@ class State(IntEnum):
     REQUEST = 2
     SUCCESS = 3
     FAILED = 4
+    PAUSE = 5
 
 
 class Router(Enum):
@@ -41,7 +42,7 @@ class RouterActuator(Enum):
 
 
 class RouterDialogue(Enum):
-    lex = "/harmoni/dialoging/lex/"
+    bot = "/harmoni/dialoging/bot/"
     ROUTER = "/harmoni/dialoging/"
 
 
@@ -49,3 +50,6 @@ class RouterDetector(Enum):
     stt = "/harmoni/detecting/stt/"
     face_detect = "/harmoni/detecting/face_detect/"
     ROUTER = "/harmoni/detecting/"
+
+class Resources(Enum):
+    face = ["eyes", "mouth"]

@@ -9,7 +9,7 @@ from harmoni_common_lib import constants
 import inspect
 
 
-class BehaviorController():
+class BehaviorController:
     """Instantiates behaviors and receives commands/data for them.
 
     This class is a singleton ROS node and should only be instantiated once.
@@ -32,7 +32,7 @@ class BehaviorController():
                 self.setup_behavior_patterns(startup_patterns)
 
     def _update_ready(self):
-        if (self._routers_connected and self._topics_connected):
+        if self._routers_connected and self._topics_connected:
             self.ready = True
         else:
             self.ready = False
@@ -62,25 +62,33 @@ class BehaviorController():
                     func = None
                     # create a new callback function for each topic
                     cb_name = str(count) + "_callback"
-                    callback_def = inspect.cleandoc("""
+                    callback_def = inspect.cleandoc(
+                        """
                         def {}(cls, data):
                             topic = {}
                             cls.topic_data[topic] = data
                         func = {}
-                    """.format(cb_name, topic_info[ROUTE], cb_name))
+                    """.format(
+                            cb_name, topic_info[ROUTE], cb_name
+                        )
+                    )
                     exec(callback_def)
                     setattr(self, cb_name, classmethod(func))
 
-                    self._subscribers[topic_info[ROUTE]] = rospy.Subscriber(*topic_info, cb_name)
+                    self._subscribers[topic_info[ROUTE]] = rospy.Subscriber(
+                        *topic_info, cb_name
+                    )
                     count += 1
-        self._topics_connected = True  # TODO add error handling to provide a robust false case
+        self._topics_connected = (
+            True  # TODO add error handling to provide a robust false case
+        )
         self._update_ready()
         return
 
 
 if __name__ == "__main__":
     try:
-        rospy.init_node("behavior_node")
+        rospy.init_node("harmoni/behavior_node")
         bc = BehaviorController()
         rospy.loginfo("behavior_node started.")
         rospy.spin()

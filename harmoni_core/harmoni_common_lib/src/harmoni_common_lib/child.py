@@ -175,6 +175,7 @@ class InternalServiceServer(HarmoniActionServer, object):
         """Control flow through internal processing class"""
         # TODO better case management
         if goal.action_type == ActionType.ON:
+            rospy.loginfo("(Server) Received goal. Start the detectors")
             self.service_manager.start()
         elif goal.action_type == ActionType.PAUSE:
             self.service_manager.stop()
@@ -184,7 +185,7 @@ class InternalServiceServer(HarmoniActionServer, object):
         return
 
 
-class HarwareReadingServer(HarmoniActionServer, object):
+class HardwareReadingServer(HarmoniActionServer, object):
     """
     An hardware reading class controls the behavior of a class that processes some
     data from a sensor and publishes it to a topic

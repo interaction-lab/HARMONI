@@ -1,0 +1,99 @@
+[
+    {
+        "set": "setup",
+        "steps": [
+            {
+                "pc_microphone_default": {
+                    "action_goal": "ON",
+                    "resource_type": "sensor",
+                    "wait_for": ""
+                }
+            },
+            {
+                "harmoni_stt_default": {
+                    "action_goal": "ON",
+                    "resource_type": "detector",
+                    "wait_for": ""
+                }
+            }
+        ]
+    },
+    {
+        "set": "sequence",
+        "steps": [
+            {
+                "harmoni_bot_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": "new",
+                    "trigger": "hey"
+                }
+            },
+            {
+                "harmoni_tts_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": "new"
+                }
+            },
+            [
+                {
+                    "pc_speaker_default": {
+                        "action_goal": "REQUEST",
+                        "resource_type": "actuator",
+                        "wait_for": "v"
+                    }
+                },
+                {
+                    "pc_face_mouth_default": {
+                        "action_goal": "REQUEST",
+                        "resource_type": "actuator",
+                        "wait_for": "new"
+                    }
+                }
+            ]
+        ]
+    },
+    {
+        "set": "loop",
+        "steps": [
+            {
+                "harmoni_stt_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "detector",
+                    "wait_for": "new"
+                }
+            },
+            {
+                "harmoni_bot_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": "new"
+                }
+            },
+            {
+                "harmoni_tts_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": "new"
+                }
+            },
+            [
+                {
+                    "pc_speaker_default": {
+                        "action_goal": "REQUEST",
+                        "resource_type": "actuator",
+                        "wait_for": "new"
+                    }
+                },
+                {
+                    "pc_face_mouth_default": {
+                        "action_goal": "REQUEST",
+                        "resource_type": "actuator",
+                        "wait_for": "new"
+                    }
+                }
+            ]
+        ]
+    }
+]

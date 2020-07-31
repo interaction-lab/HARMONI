@@ -107,3 +107,12 @@ ENV/
 #**/*.yaml
 #**/*.wav
 **/*.ogg
+**/private-keys.json
+**/asoundrc
+
+*.wav
+dockerfiles/config/asoundrc
+# temporary generated files
+harmoni_core/harmoni_decision/launch/harmoni_service.launch
+harmoni_core/harmoni_decision/launch/pc_service.launch
+harmoni_dialogues/harmoni_bot/config/configuration.yaml

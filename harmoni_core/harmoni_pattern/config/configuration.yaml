@@ -1,2 +1,4 @@
-dialoging_pattern:
-  trigger_intent: "Hey"
+dialogue:
+    default_param:
+        trigger_intent: "Hey"
+        pattern_scripting: /root/harmoni_catkin_ws/src/HARMONI/harmoni_pattern/pattern_scripting/dialogue.json

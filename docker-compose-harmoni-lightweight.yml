@@ -1,0 +1,212 @@
+version: '3.7'
+
+
+services:
+    harmoni_core:
+        container_name: harmoni_core
+        build:
+            context: .
+            dockerfile: dockerfiles/lightweight/harmoni/dockerfile
+            network: host
+        image: cmbirmingham/harmoni-dev:latest
+        init: true
+        environment:
+            DISPLAY: $DISPLAY
+            QT_GRAPHICSSYSTEM: native
+            ROS_DISTRO: kinetic
+            ROS_MASTER_URI: http://172.18.3.4:11311            
+            IS_DOCKER_ENV: "true"
+            ROS_HOSTNAME: harmoni_core
+            CATKIN_WS: harmoni_catkin_ws
+        privileged: true
+        networks:
+            ros_net:
+                ipv4_address: 172.18.3.4
+        hostname: harmoni_core
+        ports:
+            - "11312:11312"
+            - "33691:33691"
+        devices: 
+          - /dev/dri:/dev/dri
+          #- /dev/snd:/dev/snd
+          - /dev/video0:/dev/video0
+        volumes:
+            - harmoni_catkin_ws:/root/harmoni_catkin_ws
+            - ../HARMONI/:/root/local_mount/HARMONI/
+            - ~/.aws:/root/.aws/
+            # Configuration
+            - ./dockerfiles/config/setup_script.sh:/root/.setup_script.sh
+            - ./dockerfiles/config/dev_setup_script.sh:/root/.dev_setup_script.sh
+            # Other
+            - /tmp/.X11-unix:/tmp/.X11-unix
+            - ~/.config/terminator/config:/root/.config/terminator/config
+            - ~/.gitconfig:/root/.gitconfig:ro
+            - ~/.ssh/:/root/.ssh:ro
+            - ~/.vimrc:/root/.vimrc:ro
+            - ~/.vim/:/root/.vim/:ro
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
+        working_dir: /root/harmoni_catkin_ws/src/HARMONI
+        command: bash -c "
+            terminator -ue \"echo 'Entering harmoni_core Container... \\n start with roscore and rlharmoniservices' && bash\""
+
+    ros_w2l:
+        container_name: ros_w2l
+        build:
+            context: .
+            dockerfile: dockerfiles/lightweight/w2l-dev/dockerfile
+            network: host
+        image: cmbirmingham/w2l-dev:latest
+        init: true
+        environment:
+            DISPLAY: $DISPLAY
+            QT_GRAPHICSSYSTEM: native
+            ROS_DISTRO: kinetic
+            IS_DOCKER_ENV: "true"
+            CATKIN_WS: harmoni_catkin_ws
+            ROS_HOSTNAME: ros_w2l
+            ROS_MASTER_URI: http://172.18.3.4:11311
+        depends_on: 
+            - "harmoni_core"
+        privileged: true
+        # network_mode: host
+        networks:
+            ros_net:
+                ipv4_address: 172.18.3.3
+        hostname: ros_w2l
+        ports:
+            - "1022:22"
+        devices: 
+            - /dev/dri:/dev/dri
+            #- /dev/snd:/dev/snd
+            - /dev/video0:/dev/video0
+        volumes:
+            - ../model/w2l:/root/model/w2l/
+            - wav2letter:/root/wav2letter
+            - harmoni_catkin_ws:/root/harmoni_catkin_ws
+            - ../HARMONI/:/root/local_mount/HARMONI/
+            - ../HARMONI-PC/:/root/local_mount/HARMONI-PC/
+            # Configuration
+            - ./dockerfiles/config/setup_script.sh:/root/.setup_script.sh
+            - ./dockerfiles/config/dev_setup_script.sh:/root/.dev_setup_script.sh
+            # Other
+            - /tmp/.X11-unix:/tmp/.X11-unix
+            - ~/.config/terminator/config:/root/.config/terminator/config
+            - ~/.gitconfig:/root/.gitconfig:ro
+            - ~/.ssh/:/root/.ssh:ro
+            - ~/.vimrc:/root/.vimrc:ro
+            - ~/.vim/:/root/.vim/:ro
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
+        working_dir: /root/harmoni_catkin_ws/src/HARMONI
+        command: bash -c "
+            terminator -ue \"echo 'Entering ros_w2l Container... \\n start with rlspeech' && bash\" "
+
+    harmoni_visual_detector:
+        container_name: harmoni_visual_detector
+        build:
+            context: .
+            dockerfile: dockerfiles/lightweight/harmoni-pc-dev/dockerfile
+            network: host
+        image: cmbirmingham/harmoni-pc-dev:latest
+        init: true
+        environment:
+            DISPLAY: $DISPLAY
+            QT_GRAPHICSSYSTEM: native
+            ROS_DISTRO: kinetic
+            IS_DOCKER_ENV: "true"
+            CATKIN_WS: harmoni_catkin_ws
+            ROS_HOSTNAME: harmoni_visual_detector
+            ROS_MASTER_URI: http://172.18.3.4:11311
+        privileged: true
+        networks:
+            ros_net:
+                ipv4_address: 172.18.3.2
+        hostname: harmoni_visual_detector
+        depends_on: 
+            - "harmoni_core"
+            # - "harmoni_pc"
+        devices: 
+            - /dev/dri:/dev/dri
+            #- /dev/snd:/dev/snd
+            - /dev/video0:/dev/video0
+        volumes:
+            - ../HARMONI/:/root/local_mount/HARMONI/
+            - harmoni-pc_catkin_ws:/root/harmoni_catkin_ws
+            - ../HARMONI-PC/:/root/local_mount/HARMONI-PC/
+            # Configuration
+            - ./dockerfiles/config/setup_script.sh:/root/.setup_script.sh
+            - ./dockerfiles/config/dev_setup_script.sh:/root/.dev_setup_script.sh
+            # Other
+            - /tmp/.X11-unix:/tmp/.X11-unix
+            - ~/.config/terminator/config:/root/.config/terminator/config
+            - ~/.gitconfig:/root/.gitconfig:ro
+            - ~/.ssh/:/root/.ssh:ro
+            - ~/.vimrc:/root/.vimrc:ro
+            - ~/.vim/:/root/.vim/:ro
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
+        working_dir: /root/harmoni_catkin_ws/src/HARMONI
+        command: bash -c "
+            terminator -ue \"cd ../HARMONI-PC && echo 'Entering harmoni_visual_detector Container... \\n start with rlfacedetect' && bash\""
+
+    # harmoni_pc:
+    #     container_name: harmoni_pc
+    #     build:
+    #         context: .
+    #         dockerfile: dockerfiles/lightweight/harmoni-pc-dev/dockerfile
+    #         network: host
+    #     image: cmbirmingham/harmoni-pc-dev:latest
+    #     init: true
+    #     environment:
+    #         DISPLAY: $DISPLAY
+    #         QT_GRAPHICSSYSTEM: native
+    #         ROS_DISTRO: kinetic
+    #         IS_DOCKER_ENV: "true"
+    #         CATKIN_WS: harmoni_catkin_ws
+    #         ROS_HOSTNAME: harmoni_pc
+    #         ROS_MASTER_URI: http://172.18.3.4:11311
+    #     privileged: true
+    #     networks:
+    #         ros_net:
+    #             ipv4_address: 172.18.3.5
+    #     hostname: ros_pc
+    #     depends_on: 
+    #         - "harmoni_core"
+    #     devices: 
+    #         - /dev/dri:/dev/dri
+    #         - /dev/snd:/dev/snd
+    #         - /dev/video0:/dev/video0
+    #     volumes:
+    #         - ../HARMONI/:/root/local_mount/HARMONI/
+    #         - ../HARMONI-PC/:/root/local_mount/HARMONI-PC/
+    #         - harmoni-pc_catkin_ws:/root/harmoni_catkin_ws
+    #         # Configuration
+    #         - ./dockerfiles/config/setup_script.sh:/root/.setup_script.sh
+    #         - ./dockerfiles/config/dev_setup_script.sh:/root/.dev_setup_script.sh
+    #         - ./dockerfiles/config/asoundrc:/root/.asoundrc
+    #         # Other
+    #         - /tmp/.X11-unix:/tmp/.X11-unix
+    #         - ~/.config/terminator/config:/root/.config/terminator/config
+    #         - ~/.gitconfig:/root/.gitconfig:ro
+    #         - ~/.ssh/:/root/.ssh:ro
+    #         - ~/.vimrc:/root/.vimrc:ro
+    #         - ~/.vim/:/root/.vim/:ro
+    #         - /etc/timezone:/etc/timezone:ro
+    #         - /etc/localtime:/etc/localtime:ro
+    #     working_dir: /root/harmoni_catkin_ws/src/HARMONI
+    #     command: bash -c "
+    #         terminator -ue \"cd ../HARMONI-PC && echo 'Entering harmoni_pc Container... \\n start with rlpcservices' && bash\""
+
+networks:
+    ros_net:
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+                -  subnet: 172.18.3.0/24
+
+volumes:
+    harmoni_catkin_ws:
+    harmoni-pc_catkin_ws:
+    wav2letter:

@@ -84,15 +84,14 @@ class HarmoniActionServer(object):
     def _goal_received_callback(self, goal):
         """ Save the goal data, set the goal to received, and execute the child callback """
         self.optional_data = goal.optional_data  # input data for the module
-        self.child = goal.resource  # external module that will accomplish the task
         self.condition = (
             goal.condition
         )  # event condition to wait before starting the action
         rospy.loginfo(
-            f"(Server) The goal is a {goal.action_type} request for {goal.resource}"
+            f"(Server) The goal is a {goal.action_type} request"
         )
         self.goal_received = True
-        rospy.loginfo("The goal is: %i" % goal.action_type)
+        # rospy.loginfo("The goal is: %i" % goal.action_type)
         # Perform the callback set by child
         self.execute_goal_received_callback(goal)
         return
