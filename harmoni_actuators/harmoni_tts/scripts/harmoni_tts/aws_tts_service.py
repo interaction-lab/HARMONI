@@ -13,7 +13,7 @@ import sys
 from botocore.exceptions import BotoCoreError, ClientError
 from contextlib import closing
 from harmoni_common_lib.constants import State, RouterActuator
-from harmoni_common_lib.helper_functions import HelperFunctions
+import harmoni_common_lib.helper_functions as hf
 from harmoni_common_lib.child import WebServiceServer
 from harmoni_common_lib.service_manager import HarmoniExternalServiceManager
 
@@ -129,14 +129,14 @@ class AWSTtsService(HarmoniExternalServiceManager):
             args = a[2]
             if a[1] == "web":
                 data.append(
-                {
-                    "start": float(a[0])
-                    + 0.01,  # prevent visemes and actions from being at exactly the same time
-                    "type": "web",
-                    "args": args,
-                    "id": a[1],
-                }
-            )  # End edits
+                    {
+                        "start": float(a[0])
+                        + 0.01,  # prevent visemes and actions from being at exactly the same time
+                        "type": "web",
+                        "args": args,
+                        "id": a[1],
+                    }
+                )  # End edits
             else:
                 data.append(
                     {
@@ -256,19 +256,19 @@ class AWSTtsService(HarmoniExternalServiceManager):
 
 def main():
     service_name = RouterActuator.tts.name
-    name = rospy.get_param("/name_"+service_name+"/")
-    test = rospy.get_param("/test_"+service_name+"/")
-    input_test = rospy.get_param("/input_test_"+service_name+"/")
-    id_test = rospy.get_param("/id_test_"+service_name+"/")
+    name = rospy.get_param("/name_" + service_name + "/")
+    test = rospy.get_param("/test_" + service_name + "/")
+    input_test = rospy.get_param("/input_test_" + service_name + "/")
+    id_test = rospy.get_param("/id_test_" + service_name + "/")
     try:
         rospy.init_node(service_name)
         last_event = ""  # TODO: How to get information about last_event from behavior controller?
-        list_service_names = HelperFunctions.get_child_list(service_name)
+        list_service_names = hf.get_child_list(service_name)
         service_server_list = []
         for service in list_service_names:
-            print(service)
-            service_id = HelperFunctions.get_child_id(service)
-            param = rospy.get_param(name+"/"+ service_id + "_param/")
+            rospy.loginfo(service)
+            service_id = hf.get_child_id(service)
+            param = rospy.get_param(name + "/" + service_id + "_param/")
             s = AWSTtsService(service, param)
             service_server_list.append(
                 WebServiceServer(name=service, service_manager=s)

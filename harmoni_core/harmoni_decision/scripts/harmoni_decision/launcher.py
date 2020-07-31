@@ -9,10 +9,10 @@ import os
 import json
 import ast
 from harmoni_common_lib.constants import RouterDetector
-from harmoni_common_lib.helper_functions import HelperFunctions
+import harmoni_common_lib.helper_functions as hf
 
 
-class Launcher():
+class Launcher:
     """
     Launcher for launching nodes dynamically
     """
@@ -34,7 +34,7 @@ class Launcher():
     def launch_router_ros_api(self):
         """Launch routers """
         repo = "harmoni"
-        routers = HelperFunctions.get_routers()
+        routers = hf.get_routers()
         processes = []
         for rout in routers:
             package = rout
@@ -47,7 +47,9 @@ class Launcher():
 
     def _launch_with_subprocess(self, repo, launch):
         """Launch with subprocess """
-        p = subprocess.Popen("roslaunch harmoni_decision " + repo + "_" + launch + ".launch", shell=True)
+        p = subprocess.Popen(
+            "roslaunch harmoni_decision " + repo + "_" + launch + ".launch", shell=True
+        )
         return p
 
     def _check_if_detector(self, service_name):
@@ -63,17 +65,19 @@ class Launcher():
     def _get_router_pkg(self):
         """Get routers """
         repo = "harmoni"
-        routers = HelperFunctions.get_routers()
+        routers = hf.get_routers()
         pkg_array = []
         exec_array = []
         for router in routers:
             pkg_array.append(router)
             exec_array.append(router + "_router")
-        return(repo, pkg_array, exec_array)
+        return (repo, pkg_array, exec_array)
 
     def _get_service_pkg(self, repo):
         """Get services """
-        [repo_services, services] = HelperFunctions.get_service_list_of_repo(repo)  # read from configuration.yaml
+        [repo_services, services] = hf.get_service_list_of_repo(
+            repo
+        )  # read from configuration.yaml
         pkg_array = []
         exec_array = []
         for serv in repo_services:
@@ -87,14 +91,17 @@ class Launcher():
             if not self._check_if_detector(n):
                 pkg_array.append(n)
                 exec_array.append(n + "_service")
-        return(repo, pkg_array, exec_array)
+        return (repo, pkg_array, exec_array)
 
     def _create_xml_launcher(self, name, repo, package_array, launch_file_array):
         """Create xml launch file """
         root = ET.Element("launch")
         for i in range(0, len(launch_file_array)):
-            ET.SubElement(root, "include",
-                          file=f"$(find {repo}_{package_array[i]})/launch/{launch_file_array[i]}.launch")
+            ET.SubElement(
+                root,
+                "include",
+                file=f"$(find {repo}_{package_array[i]})/launch/{launch_file_array[i]}.launch",
+            )
         tree = ET.ElementTree(root)
         abs_path = os.path.abspath(__file__)
         path = abs_path.split("scripts/")

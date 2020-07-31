@@ -11,7 +11,7 @@ from google.cloud.speech_v1 import enums
 from audio_common_msgs.msg import AudioData
 from std_msgs.msg import String
 from harmoni_common_lib.constants import State, RouterDetector, RouterSensor
-from harmoni_common_lib.helper_functions import HelperFunctions
+import harmoni_common_lib.helper_functions as hf
 from harmoni_common_lib.child import WebServiceServer
 from harmoni_common_lib.service_manager import HarmoniExternalServiceManager
 
@@ -30,7 +30,7 @@ class STTGoogleService(HarmoniExternalServiceManager):
         self.audio_channel = param["audio_channel"]
         self.credential_path = param["credential_path"]
         self.subscriber_id = param["subscriber_id"]
-        self.service_id = HelperFunctions.get_child_id(self.name)
+        self.service_id = hf.get_child_id(self.name)
         """ Setup the google request """
         self.setup_google()
         """Setup the google service as server """
@@ -67,21 +67,24 @@ class STTGoogleService(HarmoniExternalServiceManager):
         encoding = enums.RecognitionConfig.AudioEncoding.LINEAR16
         self.config = {
             "language_code": self.language,
-            "sample_rate_hertz":self.sample_rate,
+            "sample_rate_hertz": self.sample_rate,
             "encoding": encoding,
-            "audio_channel_count":self.audio_channel,
+            "audio_channel_count": self.audio_channel,
         }
         config = types.RecognitionConfig(
             encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
             sample_rate_hertz=RATE,
-            language_code=language_code)
+            language_code=language_code,
+        )
         self.streaming_config = types.StreamingRecognitionConfig(
-        config=config,
-        interim_results=True)
+            config=config, interim_results=True
+        )
         return
 
     def response_update(self, response_received, state, result_msg):
-        super().update(response_received=response_received, state=state, result_msg=result_msg)
+        super().update(
+            response_received=response_received, state=state, result_msg=result_msg
+        )
         return
 
     def test(self):
@@ -92,21 +95,21 @@ class STTGoogleService(HarmoniExternalServiceManager):
 
     def callback(self, data):
         """ Callback function subscribing to the microphone topic"""
-        #data = np.fromstring(data.data, np.uint8)
+        # data = np.fromstring(data.data, np.uint8)
         self.data = self.data.join(data)
         if self.state == State.START:
             self.transcribe_stream_request(self.data)
         else:
             rospy.loginfo("Not Transcribing data")
 
-
-    def transcribe_stream_request(self,data):
+    def transcribe_stream_request(self, data):
         # TODO: streaming transcription
-        requests = (types.StreamingRecognizeRequest(audio_content=content)
-                    for content in audio_generator)
+        requests = (
+            types.StreamingRecognizeRequest(audio_content=content)
+            for content in audio_generator
+        )
         responses = client.streaming_recognize(streaming_config, requests)
         return
-
 
     def transcribe_file_request(self, data):
         rate = ""  # TODO: TBD
@@ -135,7 +138,9 @@ class STTGoogleService(HarmoniExternalServiceManager):
         except rospy.ServiceException:
             self.start = State.FAILED
             rospy.loginfo("Service call failed")
-            self.response_update(response_received=True, state=self.state, result_msg="")
+            self.response_update(
+                response_received=True, state=self.state, result_msg=""
+            )
         return
 
     def request(self, input_data):
@@ -157,17 +162,19 @@ def main():
     id_test = rospy.get_param("/id_test_" + service_name + "/")
     try:
         rospy.init_node(service_name)
-        list_service_names = HelperFunctions.get_child_list(service_name)
+        list_service_names = hf.get_child_list(service_name)
         print(list_service_names)
         service_server_list = []
         last_event = ""  # TODO
         for service in list_service_names:
-            print(service)
-            service_id = HelperFunctions.get_child_id(service)
-            param = rospy.get_param(name+"/"+ service_id + "_param/")
+            rospy.loginfo(service)
+            service_id = hf.get_child_id(service)
+            param = rospy.get_param(name + "/" + service_id + "_param/")
             print(param)
             s = STTGoogleService(service, param)
-            service_server_list.append(WebServiceServer(name=service, service_manager=s))
+            service_server_list.append(
+                WebServiceServer(name=service, service_manager=s)
+            )
             if test and (service_id == id_test):
                 rospy.loginfo("Testing the %s" % (service))
                 data = s.wav_to_data(input_test)
