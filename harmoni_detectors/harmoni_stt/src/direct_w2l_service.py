@@ -17,7 +17,7 @@ import numpy as np
 import ast
 from collections import deque
 from harmoni_common_lib.constants import State, RouterDetector, RouterSensor
-from harmoni_common_lib.helper_functions import HelperFunctions
+import harmoni_common_lib.helper_functions as hf
 from harmoni_common_lib.child import InternalServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 from audio_common_msgs.msg import AudioData
@@ -43,7 +43,7 @@ class SpeechToTextService(HarmoniServiceManager):
                 "W2L model has not been dowloaded", "Try running get_w2l_models.sh"
             )
         self.w2l_bin = param["w2l_bin"]
-        self.service_id = HelperFunctions.get_child_id(self.name)
+        self.service_id = hf.get_child_id(self.name)
 
         """Setup publishers and subscribers"""
         self.text_pub = rospy.Publisher(
@@ -66,7 +66,7 @@ class SpeechToTextService(HarmoniServiceManager):
         self.set_threshold = param["set_threshold"]
         self.file_path = param["test_outdir"]
         self.first_audio_frame = True
-        self.service_id = HelperFunctions.get_child_id(self.name)
+        self.service_id = hf.get_child_id(self.name)
         """ Setup the microphone """
         self.p = pyaudio.PyAudio()
         self.audio_format = (
@@ -153,10 +153,10 @@ class SpeechToTextService(HarmoniServiceManager):
         """
         for i in range(self.p.get_device_count()):
             device = self.p.get_device_info_by_index(i)
-            print(device)
+            rospy.loginfo(device)
             rospy.loginfo(f"Found device with name {self.device_name} at index {i}")
             if device["name"] == self.device_name:
-                print(device)
+                rospy.loginfo(device)
                 self.input_device_index = i
         return
 
@@ -256,11 +256,11 @@ def main():
     id_test = rospy.get_param("/id_test_" + service_name + "/")
     try:
         rospy.init_node(service_name)
-        list_service_names = HelperFunctions.get_child_list(service_name)
+        list_service_names = hf.get_child_list(service_name)
         service_server_list = []
         for service in list_service_names:
-            print(service)
-            service_id = HelperFunctions.get_child_id(service)
+            rospy.loginfo(service)
+            service_id = hf.get_child_id(service)
             param = rospy.get_param(name + "/" + service_id + "_param/")
             s = SpeechToTextService(service, param)
             service_server_list.append(

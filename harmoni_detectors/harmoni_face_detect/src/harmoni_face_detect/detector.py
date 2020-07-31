@@ -13,7 +13,7 @@ import dlib
 import numpy as np
 
 from harmoni_common_lib.constants import State, RouterDetector, RouterSensor
-from harmoni_common_lib.helper_functions import HelperFunctions
+import harmoni_common_lib.helper_functions as hf
 from harmoni_common_lib.child import HarwareReadingServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 from harmoni_common_msgs.msg import Object2D, Object2DArray
@@ -41,7 +41,7 @@ class DlibFaceDetector(HarmoniServiceManager):
         self.subscriber_id = param["subscriber_id"]
         self.update(State.INIT)
         self.detector_threshold = detector_threshold
-        self.service_id = HelperFunctions.get_child_id(self.name)
+        self.service_id = hf.get_child_id(self.name)
         self._image_source = (
             RouterSensor.camera.value + self.subscriber_id + "watching"
         )  # /harmoni/sensing/watching/pc_camera"
@@ -133,12 +133,12 @@ def main():
     try:
         service_name = RouterDetector.face_detect.name
         rospy.init_node(service_name)
-        list_service_names = HelperFunctions.get_child_list(service_name)
+        list_service_names = hf.get_child_list(service_name)
         service_server_list = []
         last_event = ""  # TODO
         for service in list_service_names:
             print("The service is: " + service)
-            service_id = HelperFunctions.get_child_id(service)
+            service_id = hf.get_child_id(service)
             param = rospy.get_param(
                 "/harmoni_face_detect/" + service_id + "_param/"
             )  # TODO: FIX IT WITH ~
