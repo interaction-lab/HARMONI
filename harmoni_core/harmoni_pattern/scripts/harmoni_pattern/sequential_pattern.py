@@ -6,12 +6,11 @@ import roslib
 import rospkg
 import json
 import numpy as np
-from audio_common_msgs.msg import AudioData
 from std_msgs.msg import String
 from harmoni_common_lib.action_client import HarmoniActionClient
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 from harmoni_common_lib.constants import *
-from harmoni_common_lib.helper_functions import HelperFunctions
+import harmoni_common_lib.helper_functions as hf
 from harmoni_common_lib.constants import State, RouterDetector
 from collections import defaultdict
 from collections import deque
@@ -52,13 +51,11 @@ class SequentialPattern(HarmoniServiceManager, object):
         Set up all clients that have been configured in the
         harmoni_decision module
         """
-        list_repos = HelperFunctions.get_all_repos()
+        list_repos = hf.get_all_repos()
         for repo in list_repos:
-            [repo_child_list, child_list] = HelperFunctions.get_service_list_of_repo(
-                repo
-            )
+            [repo_child_list, child_list] = hf.get_service_list_of_repo(repo)
             for child in child_list:
-                self.configured_services.extend(HelperFunctions.get_child_list(child))
+                self.configured_services.extend(hf.get_child_list(child))
 
         for service in self.scripted_services:
             assert (
@@ -105,8 +102,8 @@ class SequentialPattern(HarmoniServiceManager, object):
     def _feedback_callback(self, feedback):
         """ Send the feedback state to the Behavior Pattern tree to decide what to do next """
         rospy.logdebug("The feedback recieved is %s and nothing more" % feedback)
-        #Check if the state is end, stop the behavior pattern
-        #if feedback["state"] == State.END:
+        # Check if the state is end, stop the behavior pattern
+        # if feedback["state"] == State.END:
         #    self.end_pattern = True
         return
 
@@ -136,7 +133,7 @@ class SequentialPattern(HarmoniServiceManager, object):
                     self.script[self.script_set_index]["steps"], looping=True
                 )
             elif self.end_pattern:
-                #for client in self.scripted_services:
+                # for client in self.scripted_services:
                 #    self.stop(client)
                 break
             self.script_set_index += 1
@@ -179,7 +176,7 @@ class SequentialPattern(HarmoniServiceManager, object):
             )
 
             if details["resource_type"] == "detector":
-                # service_id = HelperFunctions.get_child_id(service)
+                # service_id = hf.get_child_id(service)
                 service_list = service.split("_")
                 service_id = "_".join(service_list[1:-1])
                 topic = f"/harmoni/detecting/{service_id}/default"
@@ -321,6 +318,7 @@ class SequentialPattern(HarmoniServiceManager, object):
         )
         # self._result_callback({"do_action": True, "message": result["data"]})
         return result["data"]
+
 
 """
 def main():
