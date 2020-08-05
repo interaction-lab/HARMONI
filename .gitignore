@@ -89,6 +89,7 @@ ENV/
 .ropeproject
 
 .vscode/
+
 **/*.pyc
 **/msg_gen/**
 **/srv_gen/**
@@ -104,6 +105,14 @@ ENV/
 **/build/**
 #**/__*__.py
 #**/*.yaml
-**/*.wav
+#**/*.wav
 **/*.ogg
-cordial_lex/scripts/data/*
+**/private-keys.json
+**/asoundrc
+
+*.wav
+dockerfiles/config/asoundrc
+# temporary generated files
+harmoni_core/harmoni_decision/launch/harmoni_service.launch
+harmoni_core/harmoni_decision/launch/pc_service.launch
+harmoni_dialogues/harmoni_bot/config/configuration.yaml

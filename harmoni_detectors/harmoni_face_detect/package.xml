@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>harmoni_face_detect</name>
+  <version>0.0.0</version>
+  <description>The harmoni_face_detect package</description>
+  <maintainer email="cbirming@usc.edu">Chris Birmingham</maintainer>
+
+
+  <license>MIT</license>
+
+  <!-- Example: -->
+  <!-- <url type="website">http://wiki.ros.org/harmoni_actuator</url> -->
+
+  <author email="cbirming@usc.edu">Chris Birmingham</author>
+<!--author email="rmswan@usc.edu ">Michael Swan</author>
+  <author email="micol.spitale@polimi.it ">Micol Spitale</author-->
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>harmoni_common_msgs</build_depend>
+  <build_depend>harmoni_common_lib</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_export_depend>rospy</build_export_depend>
+  <exec_depend>harmoni_common_msgs</exec_depend>
+  <exec_depend>harmoni_common_lib</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>rospy</exec_depend>
+
+</package>

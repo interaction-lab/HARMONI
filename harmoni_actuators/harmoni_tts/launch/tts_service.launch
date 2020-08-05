@@ -1,0 +1,18 @@
+<!-- This is an example launch file for how a ROS application could use a node -->
+<launch>
+   
+	<arg name="use_aws_tts" default="true"/>
+	<arg name="test" default="false"/>
+	<arg name="input_test" default="'*web container_1 http* My name is HARMONI'"/>
+	<arg name="id_test" default="default"/>
+  	<group if="$(arg use_aws_tts)">
+			<rosparam file="$(find harmoni_tts)/config/configuration.yaml"/>
+			<param name="test_tts" value="$(arg test)"/>
+			<param name="input_test_tts" value="$(arg input_test)"/>
+			<param name="id_test_tts" value="$(arg id_test)"/>
+			<param name="name_tts" value="polly"/>
+			<node pkg="harmoni_tts" type="aws_tts_service.py" name="harmoni_tts_polly" output="screen"/>
+  	</group>
+
+
+</launch>

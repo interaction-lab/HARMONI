@@ -29,14 +29,6 @@ To launch the complete harmoni dev setup in docker:
 
 # Still todo:
 
-- [X] make harmoni public
-- [X] separate the rest of the continers (below)
-- [X] modularize containers and organize dependencies
-- [X] setup cloning harmoni repo and building
-- [X] setup cloning harmoni-[external] repo and building
-- [X] single launch bash script 
-- [X] push images to dockerhub
-- [X] update readme
 
 
 
@@ -79,22 +71,47 @@ All containers are built on Ros Kinetic with python 2.7, but with the catkin-wor
 
 # Building 
 ## Harmoni
-```
-docker build -f dockerfiles/ros-kinetic_harmoni --tag harmoni/ros-kinetic_harmoni:latest --squash .
 
-docker build -f dockerfiles/ros-kinetic_harmoni_harmoni-pc --tag harmoni/ros-kinetic_harmoni_harmoni-pc:latest --squash .
-
-docker build -f dockerfiles/ros-kinetic_harmoni_w2l-inf --tag harmoni/ros-kinetic_harmoni_w2l-inf:latest --squash .
-```
 ## Dev
 ```
-docker build -f dockerfiles/dev/ubuntu16-dev --tag cmbirmingham/ubuntu16-dev:latest --squash .
+docker build -f dockerfiles/dev/ubuntu16/dockerfile --tag cmbirmingham/ubuntu16-dev:latest .
 
-docker build -f dockerfiles/dev/ros-kinetic-dev --tag cmbirmingham/ros-kinetic-dev:latest --squash .
+docker build -f dockerfiles/dev/ros-kinetic/dockerfile --tag cmbirmingham/ros-kinetic-dev:latest .
 
-docker build -f dockerfiles/dev/harmoni-dev --tag cmbirmingham/harmoni-dev:latest --squash .
+docker build -f dockerfiles/dev/harmoni/dockerfile --tag cmbirmingham/harmoni-dev:latest .
 
-docker build -f dockerfiles/dev/harmoni-pc-dev --tag cmbirmingham/harmoni-pc-dev:latest --squash .
+docker build -f dockerfiles/dev/harmoni-pc/dockerfile --tag cmbirmingham/harmoni-pc-dev:latest .
 
-docker build -f dockerfiles/dev/w2l-dev --tag cmbirmingham/w2l-dev:latest --squash .
+docker build -f dockerfiles/dev/w2l/dockerfile --tag cmbirmingham/w2l-dev:latest .
+```
+## Lightweight
+```
+docker build -f dockerfiles/lightweight/ubuntu16/dockerfile --tag cmbirmingham/ubuntu16-lightweight:latest .
+
+docker build -f dockerfiles/lightweight/ros-kinetic/dockerfile --tag cmbirmingham/ros-kinetic-lightweight:latest .
+
+docker build -f dockerfiles/lightweight/harmoni/dockerfile --tag cmbirmingham/harmoni-lightweight:latest .
+
+docker build -f dockerfiles/lightweight/harmoni-pc/dockerfile --tag cmbirmingham/harmoni-pc-lightweight:latest .
+
+docker build -f dockerfiles/lightweight/w2l/dockerfile --tag cmbirmingham/w2l-lightweight:latest .
+```
+
+# Network Notes
+docker run --net mynet123 -h myhostname --ip 172.18.0.22 -it ubuntu bash
+
+Compose example:
+```
+version: "2"
+services:
+  host1:
+    networks:
+      mynet:
+        ipv4_address: 172.25.0.101
+networks:
+  mynet:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 172.25.0.0/24
 ```

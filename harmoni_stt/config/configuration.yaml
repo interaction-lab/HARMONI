@@ -1,5 +1,0 @@
-harmoni_stt:
-    default_param:
-        model_path: /root/model/w2l/
-        w2l_bin: /root/wav2letter/build/inference/inference/examples/simple_streaming_asr_example
-        subscriber_id: "default"

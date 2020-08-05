@@ -13,11 +13,9 @@ alias cbs="roscd; cd ..; catkin build; source devel/setup.bash"
 alias sd="roscd; cd ..; source devel/setup.bash"
 alias rlspeech="roslaunch harmoni_stt stt_service.launch"
 alias rlfacedetect="roslaunch harmoni_face_detect face_detect_service.launch"
-alias rlpcservices="roslaunch harmoni_decision launcher.launch router:=false service:='pc'"
-alias rlharmoniservices="roslaunch harmoni_decision launcher.launch router:=false service:='harmoni'"
-alias rlharmoni="roslaunch harmoni_decision launcher.launch service:='harmoni'"
-alias rlrouter="roslaunch harmoni_decision launcher.launch service:=''"
-alias rlbehavior="roslaunch harmoni_decision behavior_interface.launch"
+alias rlpcservices="roslaunch harmoni_decision launcher.launch service:='pc'"
+alias rlharmoniservices="roslaunch harmoni_decision launcher.launch service:='harmoni'"
+alias rldialoging="roslaunch harmoni_pattern sequence_pattern.launch"
 
 
 # get current branch in git repo

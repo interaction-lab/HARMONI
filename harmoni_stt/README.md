@@ -1,1 +1,0 @@
-Note: Run get_w2l_models.sh before attempting to launch this service.
