@@ -3,7 +3,12 @@
 # Importing the libraries
 import yaml
 import os
-from harmoni_common_lib.constants import Router, RouterDetector, RouterSensor, Resources
+from harmoni_common_lib.constants import (
+    Router,
+    DetectorNameSpace,
+    SensorNameSpace,
+    Resources,
+)
 
 
 PATH_CONFIG = "HARMONI/harmoni_core/harmoni_decision/config/configuration.yaml"
@@ -97,7 +102,7 @@ def get_all_repos():
 
 def check_if_detector(service_name):
     """Check if detector. It returns true if it is a detector """
-    list_detectors = [enum.name for enum in list(RouterDetector)]
+    list_detectors = [enum.name for enum in list(DetectorNameSpace)]
     for d in list_detectors:
         if service_name == d:
             return True
@@ -106,7 +111,7 @@ def check_if_detector(service_name):
 
 def check_if_sensor(service_name):
     """Check if sensor. It returns true if it is a sensor """
-    list_sensors = [enum.name for enum in list(RouterSensor)]
+    list_sensors = [enum.name for enum in list(SensorNameSpace)]
     for d in list_sensors:
         if service_name == d:
             return True

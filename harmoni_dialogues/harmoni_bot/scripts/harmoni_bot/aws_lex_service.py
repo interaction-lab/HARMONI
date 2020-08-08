@@ -1,24 +1,27 @@
 #!/usr/bin/env python3
 
-# Importing the libraries
+# Common Imports
 import rospy
 import roslib
-import boto3
-from harmoni_common_lib.constants import State, RouterDialogue
+
+from harmoni_common_lib.constants import State
+from harmoni_common_lib.service_server import HarmoniServiceServer
+from harmoni_common_lib.service_manager import HarmoniServiceManager
 import harmoni_common_lib.helper_functions as hf
-from harmoni_common_lib.child import WebServiceServer
-from harmoni_common_lib.service_manager import HarmoniExternalServiceManager
+
+# Specific Imports
+from harmoni_common_lib.constants import DialogueNameSpace
+import boto3
 
 
-class AWSLexService(HarmoniExternalServiceManager):
+class AWSLexService(HarmoniServiceManager):
     """
     Amazon Lex service
     """
 
     def __init__(self, name, param):
+        super().__init__(name)
         """ Initialization of variables and lex parameters """
-        rospy.loginfo("AWS Lex initializing")
-        self.name = name
         self.user_id = param["user_id"]
         self.bot_name = param["bot_name"]
         self.bot_alias = param["bot_alias"]
@@ -27,30 +30,15 @@ class AWSLexService(HarmoniExternalServiceManager):
         self.setup_aws_lex()
         """Setup the lex service as server """
         self.state = State.INIT
-        super().__init__(self.state)
         return
 
     def setup_aws_lex(self):
         self.lex_client = boto3.client("lex-runtime", region_name=self.region_name)
         return
 
-    def response_update(self, response_received, state, result_msg):
-        super().update(
-            response_received=response_received, state=state, result_msg=result_msg
-        )
-        return
-
-    def test(self):
-        super().test()
-        rospy.loginfo("Test the %s service" % self.name)
-        success = True
-        return success
-
     def request(self, input_text):
         rospy.loginfo("Start the %s request" % self.name)
         self.state = State.REQUEST
-        rate = ""  # TODO: TBD
-        super().request(rate)
         textdata = input_text
         try:
             lex_response = self.lex_client.post_content(
@@ -64,28 +52,24 @@ class AWSLexService(HarmoniExternalServiceManager):
             self.state = State.SUCCESS
             if "intentName" in lex_response:
                 if lex_response["dialogState"] == "Fulfilled":
-                    print("The dialogue is fulfilled, end the conversation.")
+                    rospy.loginfo("The dialogue is fulfilled, end the conversation.")
             rospy.loginfo("The response is %s" % (lex_response["message"]))
-            self.response_update(
-                response_received=True,
-                state=self.state,
-                result_msg=lex_response["message"],
-            )
+            self.response_received = True
+            self.result_msg = (lex_response["message"],)
         except rospy.ServiceException:
             self.start = State.FAILED
             rospy.loginfo("Service call failed")
-            self.response_update(
-                response_received=True, state=self.state, result_msg=""
-            )
+            self.response_received = True
+            self.result_msg = ""
         return
 
 
 def main():
-    service_name = RouterDialogue.bot.name
+    service_name = DialogueNameSpace.bot.name
     name = rospy.get_param("/name_" + service_name + "/")
     test = rospy.get_param("/test_" + service_name + "/")
-    input_test = rospy.get_param("/input_test_" + service_name + "/")
-    id_test = rospy.get_param("/id_test_" + service_name + "/")
+    test_input = rospy.get_param("/test_input_" + service_name + "/")
+    test_id = rospy.get_param("/test_id_" + service_name + "/")
     try:
         rospy.init_node(service_name)
         list_service_names = hf.get_child_list(service_name)
@@ -98,11 +82,11 @@ def main():
             print(param)
             s = AWSLexService(service, param)
             service_server_list.append(
-                WebServiceServer(name=service, service_manager=s)
+                HarmoniServiceServer(name=service, service_manager=s)
             )
-            if test and (service_id == id_test):
+            if test and (service_id == test_id):
                 rospy.loginfo("Testing the %s" % (service))
-                s.request(input_test)
+                s.request(test_input)
         if not test:
             for server in service_server_list:
                 server.update_feedback()

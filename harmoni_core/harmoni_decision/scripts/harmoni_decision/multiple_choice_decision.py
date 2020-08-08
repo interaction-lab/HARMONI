@@ -5,7 +5,7 @@ import rospy
 import roslib
 import rospkg
 from harmoni_common_lib.action_client import HarmoniActionClient
-from harmoni_common_lib.constants import RouterActuator
+from harmoni_common_lib.constants import ActuatorNameSpace
 from harmoni_pattern.sequential_pattern import SequentialPattern
 from std_msgs.msg import String
 import json
@@ -28,7 +28,7 @@ class MultipleChoiceDecisionManager:
         self.max_index = 18
         self.choice_index = 16
         self.sequence_scenes = []
-        # trigger_intent = rospy.get_param("/input_test_" + pattern_name + "/")
+        # trigger_intent = rospy.get_param("/test_input_" + pattern_name + "/")
         rospack = rospkg.RosPack()
         pck_path = rospack.get_path("harmoni_pattern")
         self.pattern_script_path = pck_path + f"/pattern_scripting/{pattern_name}.json"
@@ -36,7 +36,7 @@ class MultipleChoiceDecisionManager:
             self.script = json.load(read_file)
             print(self.script)
         self.web_sub = rospy.Subscriber(
-            RouterActuator.web.value + self.service_id + "/listen_click_event",
+            ActuatorNameSpace.web.value + self.service_id + "/listen_click_event",
             String,
             self._event_click_callback,
             queue_size=1,

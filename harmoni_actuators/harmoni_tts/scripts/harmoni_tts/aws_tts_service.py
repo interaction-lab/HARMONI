@@ -1,32 +1,35 @@
 #!/usr/bin/env python3
 
-# Importing the libraries
+# Common Imports
 import rospy
 import roslib
+
+from harmoni_common_lib.constants import State
+from harmoni_common_lib.service_server import HarmoniServiceServer
+from harmoni_common_lib.service_manager import HarmoniServiceManager
+import harmoni_common_lib.helper_functions as hf
+
+# Specific Imports
+from harmoni_common_lib.constants import ActuatorNameSpace
+from botocore.exceptions import BotoCoreError, ClientError
+from contextlib import closing
+import soundfile as sf
+import numpy as np
 import boto3
 import re
 import json
 import ast
-import soundfile as sf
-import numpy as np
 import sys
-from botocore.exceptions import BotoCoreError, ClientError
-from contextlib import closing
-from harmoni_common_lib.constants import State, RouterActuator
-import harmoni_common_lib.helper_functions as hf
-from harmoni_common_lib.child import WebServiceServer
-from harmoni_common_lib.service_manager import HarmoniExternalServiceManager
 
 
-class AWSTtsService(HarmoniExternalServiceManager):
+class AWSTtsService(HarmoniServiceManager):
     """
     Amazon tts service
     """
 
     def __init__(self, name, param):
+        super().__init__(name)
         """ Initialization of variables and tts parameters """
-        rospy.loginfo("AWS Polly initializing")
-        self.name = name
         self.region_name = param["region_name"]
         self.voice = param["voice"]
         self.language = param["language"]
@@ -36,7 +39,6 @@ class AWSTtsService(HarmoniExternalServiceManager):
         self.setup_aws_tts()
         """Setup the tts service as server """
         self.state = State.INIT
-        super().__init__(self.state)
         return
 
     def setup_aws_tts(self):
@@ -198,23 +200,9 @@ class AWSTtsService(HarmoniExternalServiceManager):
         }
         return str(response)
 
-    def response_update(self, response_received, state, result_msg):
-        super().update(
-            response_received=response_received, state=state, result_msg=result_msg
-        )
-        return
-
-    def test(self):
-        super().test()
-        rospy.loginfo("Test the %s service" % self.name)
-        success = True
-        return success
-
     def request(self, input_text):
         rospy.loginfo("Start the %s request" % self.name)
         self.state = State.REQUEST
-        rate = ""  # TODO: TBD
-        super().request(rate)
         text = input_text
         [text, actions] = self.get_text_and_actions(text)
         try:
@@ -242,24 +230,22 @@ class AWSTtsService(HarmoniExternalServiceManager):
             audio_data = self.get_audio(ogg_response)
             tts_response = self.get_response(behavior_data, audio_data)
             self.state = State.SUCCESS
-            self.response_update(
-                response_received=True, state=self.state, result_msg=tts_response
-            )
+            self.response_received = True
+            self.result_msg = tts_response
         except (BotoCoreError, ClientError) as error:
             rospy.logerr("The erros is " + str(error))
             self.state = State.FAILED
-            self.response_update(
-                response_received=True, state=self.state, result_msg=""
-            )
+            self.response_received = True
+            self.result_msg = ""
         return
 
 
 def main():
-    service_name = RouterActuator.tts.name
+    service_name = ActuatorNameSpace.tts.name
     name = rospy.get_param("/name_" + service_name + "/")
     test = rospy.get_param("/test_" + service_name + "/")
-    input_test = rospy.get_param("/input_test_" + service_name + "/")
-    id_test = rospy.get_param("/id_test_" + service_name + "/")
+    test_input = rospy.get_param("/test_input_" + service_name + "/")
+    test_id = rospy.get_param("/test_id_" + service_name + "/")
     try:
         rospy.init_node(service_name)
         last_event = ""  # TODO: How to get information about last_event from behavior controller?
@@ -271,11 +257,11 @@ def main():
             param = rospy.get_param(name + "/" + service_id + "_param/")
             s = AWSTtsService(service, param)
             service_server_list.append(
-                WebServiceServer(name=service, service_manager=s)
+                HarmoniServiceServer(name=service, service_manager=s)
             )
-            if test and (service_id == id_test):
+            if test and (service_id == test_id):
                 rospy.loginfo("Testing the %s" % (service))
-                s.request(input_test)
+                s.request(test_input)
         if not test:
             for server in service_server_list:
                 server.update_feedback()
