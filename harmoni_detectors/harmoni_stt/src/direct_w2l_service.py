@@ -1,29 +1,33 @@
 #!/usr/bin/env python3.6
-# NEW
-# Importing the libraries
+
+# Common Imports
+import rospy
+import roslib
+
+from harmoni_common_lib.constants import State
+from harmoni_common_lib.service_server import HarmoniServiceServer
+from harmoni_common_lib.service_manager import HarmoniServiceManager
+import harmoni_common_lib.helper_functions as hf
+
+# Specific Imports
+from harmoni_common_lib.constants import DetectorNameSpace, SensorNameSpace
+from audio_common_msgs.msg import AudioData
+from std_msgs.msg import String
+from multiprocessing import Process
+import multiprocessing as mp
 from subprocess import Popen, PIPE
+from collections import deque
+import numpy as np
 import select
 import pty
 import os
 import time
 import re
-import rospy
-import roslib
 import pyaudio
 import math
 import audioop
 import wave
-import numpy as np
 import ast
-from collections import deque
-from harmoni_common_lib.constants import State, RouterDetector, RouterSensor
-import harmoni_common_lib.helper_functions as hf
-from harmoni_common_lib.child import InternalServiceServer
-from harmoni_common_lib.service_manager import HarmoniServiceManager
-from audio_common_msgs.msg import AudioData
-from std_msgs.msg import String
-from multiprocessing import Process
-import multiprocessing as mp
 
 
 class SpeechToTextService(HarmoniServiceManager):
@@ -33,9 +37,8 @@ class SpeechToTextService(HarmoniServiceManager):
 
     def __init__(self, name, param):
 
+        super().__init__(name)
         """ Initialization of variables and w2l parameters """
-        rospy.loginfo("Wav2Letter initializing")
-        self.name = name
         self.subscriber_id = param["subscriber_id"]
         self.model_path = param["model_path"]
         if not os.path.isdir(self.model_path):
@@ -47,11 +50,9 @@ class SpeechToTextService(HarmoniServiceManager):
 
         """Setup publishers and subscribers"""
         self.text_pub = rospy.Publisher(
-            RouterDetector.stt.value + self.service_id, String, queue_size=10
+            DetectorNameSpace.stt.value + self.service_id, String, queue_size=10
         )
         """Setup the stt service as server """
-        self.state = State.INIT
-        super().__init__(self.state)
 
         self.audio_format_width = param["audio_format_width"]
         self.chunk_size = param["chunk_size"]
@@ -75,49 +76,32 @@ class SpeechToTextService(HarmoniServiceManager):
         self.stream = None
         self.setup_microphone()
 
+        self.state = State.INIT
         return
-
-    def state_update(self):
-        super().update(self.state)
-        return
-
-    def test(self):
-        super().test()
-        rospy.loginfo("Test the %s service" % self.name)
-        success = True
-        return success
 
     def start(self, rate=""):
         rospy.loginfo("Start the %s service" % self.name)
-        super().start(rate)
         if self.state == State.INIT:
             self.state = State.START
-            self.state_update()
             self.open_stream()
             self.transcribe_stream()  # Start the microphone service at the INIT
             self.state = State.FAILED
         else:
             self.state = State.START
-        # self.state_update()
         return
 
     def stop(self):
         rospy.loginfo("Stop the %s service" % self.name)
-        super().stop()
         try:
             self.close_stream()
             self.state = State.SUCCESS
-            self.state_update()
         except:
             self.state = State.FAILED
-            self.state_update()
         return
 
     def pause(self):
         rospy.loginfo("Pause the %s service" % self.name)
-        super().pause()
         self.state = State.SUCCESS
-        self.state_update()
         return
 
     def setup_microphone(self):
@@ -248,12 +232,12 @@ class SpeechToTextService(HarmoniServiceManager):
 
 
 def main():
-    service_name = RouterDetector.stt.name
+    service_name = DetectorNameSpace.stt.name
     name = rospy.get_param("/name_" + service_name + "/")
 
     test = rospy.get_param("/test_" + service_name + "/")
-    input_test = rospy.get_param("/input_test_" + service_name + "/")
-    id_test = rospy.get_param("/id_test_" + service_name + "/")
+    test_input = rospy.get_param("/test_input_" + service_name + "/")
+    test_id = rospy.get_param("/test_id_" + service_name + "/")
     try:
         rospy.init_node(service_name)
         list_service_names = hf.get_child_list(service_name)
@@ -264,9 +248,9 @@ def main():
             param = rospy.get_param(name + "/" + service_id + "_param/")
             s = SpeechToTextService(service, param)
             service_server_list.append(
-                InternalServiceServer(name=service, service_manager=s)
+                HarmoniServiceServer(name=service, service_manager=s)
             )
-            if test and (service_id == id_test):
+            if test and (service_id == test_id):
                 rospy.loginfo("Testing the %s" % (service))
                 s.start()
         if not test:

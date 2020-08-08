@@ -1,22 +1,27 @@
 #!/usr/bin/env python3
 
-# Importing the libraries
+# Common Imports
 import rospy
 import roslib
-import dialogflow
-from google.api_core.exceptions import InvalidArgument
-from harmoni_common_lib.constants import State, RouterDialogue
+
+from harmoni_common_lib.constants import State
+from harmoni_common_lib.service_server import HarmoniServiceServer
+from harmoni_common_lib.service_manager import HarmoniServiceManager
 import harmoni_common_lib.helper_functions as hf
-from harmoni_common_lib.child import WebServiceServer
-from harmoni_common_lib.service_manager import HarmoniExternalServiceManager
+
+# Specific Imports
+from harmoni_common_lib.constants import DialogueNameSpace
+from google.api_core.exceptions import InvalidArgument
+import dialogflow
 
 
-class GoogleService(HarmoniExternalServiceManager):
+class GoogleService(HarmoniServiceManager):
     """
     Google service
     """
 
     def __init__(self, name, param):
+        super().__init__(name)
         """ Initialization of variables and google parameters """
         rospy.loginfo("Google initializing")
         self.name = name
@@ -27,7 +32,6 @@ class GoogleService(HarmoniExternalServiceManager):
         # self.setup_google()
         """Setup the google service as server """
         self.state = State.INIT
-        super().__init__(self.state)
         return
 
     def setup_google(self):
@@ -37,47 +41,35 @@ class GoogleService(HarmoniExternalServiceManager):
         )
         return
 
-    def response_update(self, response_received, state, result_msg):
-        super().update(
-            response_received=response_received, state=state, result_msg=result_msg
-        )
-        return
-
-    def test(self):
-        super().test()
-        rospy.loginfo("Test the %s service" % self.name)
-        success = True
-        return success
-
     def request(self, input_text):
         rospy.loginfo("Start the %s request" % self.name)
         self.state = State.REQUEST
-        rate = ""  # TODO: TBD
-        super().request(rate)
-        # textdata = dialogflow.types.TextInput(text=input_text, language_code=self.language)
-        # query_input = dialogflow.types.QueryInput(text=input_text)
+        textdata = dialogflow.types.TextInput(
+            text=input_text, language_code=self.language
+        )
+        query_input = dialogflow.types.QueryInput(text=input_text)
         try:
             rospy.loginfo("Request to google")
-            # google_response = self.google_client.detect_intent(session=self.google_session, query_input=query_input)
+            google_response = self.google_client.detect_intent(
+                session=self.google_session, query_input=query_input
+            )
 
-            # self.state = State.SUCCESS
-            # rospy.loginfo("The response is %s" % (google_response.fulfillment_text))
-            # self.response_update(response_received=True, state=self.state, result_msg=google_response["message"])
+            self.state = State.SUCCESS
+            rospy.loginfo("The response is %s" % (google_response.fulfillment_text))
+            self.response_received = True
+            self.result_msg = google_response["message"]
         except rospy.ServiceException:
             self.start = State.FAILED
             rospy.loginfo("Service call failed")
-            self.response_update(
-                response_received=True, state=self.state, result_msg=""
-            )
         return
 
 
 def main():
-    service_name = RouterDialogue.bot.name
+    service_name = DialogueNameSpace.bot.name
     name = rospy.get_param("/name_" + service_name + "/")
     test = rospy.get_param("/test_" + service_name + "/")
-    input_test = rospy.get_param("/input_test_" + service_name + "/")
-    id_test = rospy.get_param("/id_test_" + service_name + "/")
+    test_input = rospy.get_param("/test_input_" + service_name + "/")
+    test_id = rospy.get_param("/test_id_" + service_name + "/")
     try:
 
         rospy.init_node(service_name)
@@ -92,11 +84,11 @@ def main():
             print(param)
             s = GoogleService(service, param)
             service_server_list.append(
-                WebServiceServer(name=service, service_manager=s)
+                HarmoniServiceServer(name=service, service_manager=s)
             )
-            if test and (service_id == id_test):
+            if test and (service_id == test_id):
                 rospy.loginfo("Testing the %s" % (service))
-                s.request(input_test)
+                s.request(test_input)
         if not test:
             for server in service_server_list:
                 server.update_feedback()

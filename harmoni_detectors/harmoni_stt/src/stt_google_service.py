@@ -1,30 +1,33 @@
 #!/usr/bin/env python3
 
-# Importing the libraries
+# Common Imports
 import rospy
 import roslib
+
+from harmoni_common_lib.constants import State
+from harmoni_common_lib.service_server import HarmoniServiceServer
+from harmoni_common_lib.service_manager import HarmoniServiceManager
+import harmoni_common_lib.helper_functions as hf
+
+# Specific Imports
+from harmoni_common_lib.constants import State, DetectorNameSpace, SensorNameSpace
+from audio_common_msgs.msg import AudioData
+from google.cloud.speech_v1 import enums
+from google.cloud import speech_v1
+from std_msgs.msg import String
 import numpy as np
 import os
 import io
-from google.cloud import speech_v1
-from google.cloud.speech_v1 import enums
-from audio_common_msgs.msg import AudioData
-from std_msgs.msg import String
-from harmoni_common_lib.constants import State, RouterDetector, RouterSensor
-import harmoni_common_lib.helper_functions as hf
-from harmoni_common_lib.child import WebServiceServer
-from harmoni_common_lib.service_manager import HarmoniExternalServiceManager
 
 
-class STTGoogleService(HarmoniExternalServiceManager):
+class STTGoogleService(HarmoniServiceServer):
     """
     Google service
     """
 
     def __init__(self, name, param):
+        super().__init__(name)
         """ Initialization of variables and google parameters """
-        rospy.loginfo("Google initializing")
-        self.name = name
         self.sample_rate = param["sample_rate"]
         self.language = param["language_id"]
         self.audio_channel = param["audio_channel"]
@@ -35,22 +38,20 @@ class STTGoogleService(HarmoniExternalServiceManager):
         self.setup_google()
         """Setup the google service as server """
         self.state = State.INIT
-        super().__init__(self.state)
         self.response_text = ""
         self.data = b""
         """Setup publishers and subscribers"""
         rospy.Subscriber(
-            RouterSensor.microphone.value + self.subscriber_id,
+            SensorNameSpace.microphone.value + self.subscriber_id,
             AudioData,
             self.callback,
         )
         rospy.Subscriber("/audio/audio", AudioData, self.pause_back)
         self.text_pub = rospy.Publisher(
-            RouterDetector.stt.value + self.service_id, String, queue_size=10
+            DetectorNameSpace.stt.value + self.service_id, String, queue_size=10
         )
         """Setup the stt service as server """
         self.state = State.INIT
-        super().__init__(self.state)
         return
 
     def pause_back(self, data):
@@ -58,7 +59,6 @@ class STTGoogleService(HarmoniExternalServiceManager):
         self.pause()
         rospy.sleep(int(len(data.data) / 30000))  # TODO calibrate this guess
         self.state = State.START
-        self.state_update()
         return
 
     def setup_google(self):
@@ -81,18 +81,6 @@ class STTGoogleService(HarmoniExternalServiceManager):
         )
         return
 
-    def response_update(self, response_received, state, result_msg):
-        super().update(
-            response_received=response_received, state=state, result_msg=result_msg
-        )
-        return
-
-    def test(self):
-        super().test()
-        rospy.loginfo("Test the %s service" % self.name)
-        success = True
-        return success
-
     def callback(self, data):
         """ Callback function subscribing to the microphone topic"""
         # data = np.fromstring(data.data, np.uint8)
@@ -113,7 +101,6 @@ class STTGoogleService(HarmoniExternalServiceManager):
 
     def transcribe_file_request(self, data):
         rate = ""  # TODO: TBD
-        super().request(rate)
         audio = {"content": data}
         try:
             rospy.loginfo("Request to google")
@@ -138,9 +125,8 @@ class STTGoogleService(HarmoniExternalServiceManager):
         except rospy.ServiceException:
             self.start = State.FAILED
             rospy.loginfo("Service call failed")
-            self.response_update(
-                response_received=True, state=self.state, result_msg=""
-            )
+            self.response_received = True
+            self.result_msg = ""
         return
 
     def request(self, input_data):
@@ -155,11 +141,11 @@ class STTGoogleService(HarmoniExternalServiceManager):
 
 
 def main():
-    service_name = RouterDetector.stt.name
+    service_name = DetectorNameSpace.stt.name
     name = rospy.get_param("/name_" + service_name + "/")
     test = rospy.get_param("/test_" + service_name + "/")
-    input_test = rospy.get_param("/input_test_" + service_name + "/")
-    id_test = rospy.get_param("/id_test_" + service_name + "/")
+    test_input = rospy.get_param("/test_input_" + service_name + "/")
+    test_id = rospy.get_param("/test_id_" + service_name + "/")
     try:
         rospy.init_node(service_name)
         list_service_names = hf.get_child_list(service_name)
@@ -173,11 +159,11 @@ def main():
             print(param)
             s = STTGoogleService(service, param)
             service_server_list.append(
-                WebServiceServer(name=service, service_manager=s)
+                HarmoniServiceManager(name=service, service_manager=s)
             )
-            if test and (service_id == id_test):
+            if test and (service_id == test_id):
                 rospy.loginfo("Testing the %s" % (service))
-                data = s.wav_to_data(input_test)
+                data = s.wav_to_data(test_input)
                 s.request(data)
                 s.transcribe_file_request(data)
         if not test:

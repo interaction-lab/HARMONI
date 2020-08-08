@@ -8,7 +8,7 @@ import xml.etree.cElementTree as ET
 import os
 import json
 import ast
-from harmoni_common_lib.constants import RouterDetector
+from harmoni_common_lib.constants import DetectorNameSpace
 import harmoni_common_lib.helper_functions as hf
 
 
@@ -54,7 +54,7 @@ class Launcher:
 
     def _check_if_detector(self, service_name):
         """Check if detector. It returns true if it is a detector """
-        list_detectors = [enum.name for enum in list(RouterDetector)]
+        list_detectors = [enum.name for enum in list(DetectorNameSpace)]
         for d in list_detectors:
             if service_name == d:
                 rospy.loginfo("checking: %s is a detector" % service_name)
