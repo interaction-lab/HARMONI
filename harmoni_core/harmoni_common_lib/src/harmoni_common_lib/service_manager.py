@@ -3,7 +3,9 @@
 # Importing the libraries
 import rospy
 import roslib
-from collections import deque
+from collections import deque, defaultdict
+from harmoni_common_lib.action_client import HarmoniActionClient
+import warnings
 
 
 class HarmoniServiceManager(object):
@@ -93,5 +95,6 @@ class HarmoniServiceManager(object):
         Raises:
             NotImplementedError: To be used, this function should be overwritten by the child class.
         """
-        raise NotImplementedError()
+        rospy.logwarn("Class reset not implemented, add a reset to your node")
         return
+

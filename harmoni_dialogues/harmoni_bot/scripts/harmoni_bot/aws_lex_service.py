@@ -55,7 +55,7 @@ class AWSLexService(HarmoniServiceManager):
                     rospy.loginfo("The dialogue is fulfilled, end the conversation.")
             rospy.loginfo("The response is %s" % (lex_response["message"]))
             self.response_received = True
-            self.result_msg = (lex_response["message"],)
+            self.result_msg = lex_response["message"]
         except rospy.ServiceException:
             self.start = State.FAILED
             rospy.loginfo("Service call failed")

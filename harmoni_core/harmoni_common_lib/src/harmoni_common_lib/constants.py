@@ -9,6 +9,7 @@ class ActionType(IntEnum):
     ON = 1
     PAUSE = 2
     REQUEST = 3
+    DO = 4
 
 
 class State(IntEnum):
