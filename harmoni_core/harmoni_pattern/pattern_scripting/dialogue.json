@@ -39,14 +39,14 @@
             [
                 {
                     "pc_speaker_default": {
-                        "action_goal": "REQUEST",
+                        "action_goal": "DO",
                         "resource_type": "actuator",
                         "wait_for": "v"
                     }
                 },
                 {
                     "pc_face_mouth_default": {
-                        "action_goal": "REQUEST",
+                        "action_goal": "DO",
                         "resource_type": "actuator",
                         "wait_for": "new"
                     }
@@ -59,7 +59,6 @@
         "steps": [
             {
                 "harmoni_stt_default": {
-                    "action_goal": "REQUEST",
                     "resource_type": "detector",
                     "wait_for": "new"
                 }
@@ -81,14 +80,14 @@
             [
                 {
                     "pc_speaker_default": {
-                        "action_goal": "REQUEST",
+                        "action_goal": "DO",
                         "resource_type": "actuator",
                         "wait_for": "new"
                     }
                 },
                 {
                     "pc_face_mouth_default": {
-                        "action_goal": "REQUEST",
+                        "action_goal": "DO",
                         "resource_type": "actuator",
                         "wait_for": "new"
                     }

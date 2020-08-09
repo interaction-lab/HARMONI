@@ -15,8 +15,7 @@ import json
 import numpy as np
 from std_msgs.msg import String
 from harmoni_common_lib.action_client import HarmoniActionClient
-from harmoni_common_lib.constants import DetectorNameSpace
-from collections import defaultdict
+from harmoni_common_lib.constants import DetectorNameSpace, ActionType
 from collections import deque
 from time import time
 import threading
