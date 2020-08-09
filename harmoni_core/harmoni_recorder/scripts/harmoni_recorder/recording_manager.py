@@ -138,7 +138,7 @@ class HarmoniRecordingManager:
             )
         try:
             self.video_data[child].write(self.frame[child])
-        except:
+        except Exception:
             rospy.logdebug("Not writing!!")
         return self.path_video[child]
 

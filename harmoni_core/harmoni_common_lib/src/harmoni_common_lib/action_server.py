@@ -20,26 +20,27 @@ def nop_cb(goal_handle):
     pass
 
 
-## @class HarmoniActionServer
-## @brief The HarmoniActionServer
-## implements a singe goal policy on top of the ActionServer class. The
-## specification of the policy is as follows: only one goal can have an
-## active status at a time, new goals preempt previous goals based on the
-## stamp in their GoalID field (later goals preempt earlier ones), an
-## explicit preempt goal preempts all goals with timestamps that are less
-## than or equal to the stamp associated with the preempt, accepting a new
-## goal implies successful preemption of any old goal and the status of the
-## old goal will be change automatically to reflect this.
-## Built using the SimpleActionServer
+# @class HarmoniActionServer
+# @brief The HarmoniActionServer
+# implements a singe goal policy on top of the ActionServer class. The
+# specification of the policy is as follows: only one goal can have an
+# active status at a time, new goals preempt previous goals based on the
+# stamp in their GoalID field (later goals preempt earlier ones), an
+# explicit preempt goal preempts all goals with timestamps that are less
+# than or equal to the stamp associated with the preempt, accepting a new
+# goal implies successful preemption of any old goal and the status of the
+# old goal will be change automatically to reflect this.
+# Built using the SimpleActionServer
 class HarmoniActionServer(object):
-    ## @brief Constructor for a HarmoniActionServer
-    ## @param name A name for the action server
-    ## @param execute_cb Optional callback that gets called in a separate thread whenever
-    ## a new goal is received, allowing users to have blocking callbacks.
-    ## Adding an execute callback also deactivates the goalCallback.
-    ## @param  auto_start A boolean value that tells the ActionServer wheteher or not to start publishing as soon as it comes up. THIS SHOULD ALWAYS BE SET TO FALSE TO AVOID RACE CONDITIONS and start() should be called after construction of the server.
+    # @brief Constructor for a HarmoniActionServer
+    # @param name A name for the action server
+    # @param execute_cb Optional callback that gets called in a separate thread whenever
+    # a new goal is received, allowing users to have blocking callbacks.
+    # Adding an execute callback also deactivates the goalCallback.
+    # @param  auto_start A boolean value that tells the ActionServer wheteher or not to start publishing as soon as it comes up. THIS SHOULD ALWAYS BE SET TO FALSE TO AVOID RACE CONDITIONS and start() should be called after construction of the server.
     def __init__(self, name, execute_cb=None, auto_start=False):
 
+        self.name = name
         self.new_goal = False
         self.preempt_request = False
         self.new_goal_preempt_request = False
@@ -87,9 +88,7 @@ class HarmoniActionServer(object):
         self.condition = (
             goal.condition
         )  # event condition to wait before starting the action
-        rospy.loginfo(
-            f"(Server) The goal is a {goal.action_type} request"
-        )
+        rospy.loginfo(f"(Server) The goal is a {goal.action_type} request")
         self.goal_received = True
         # rospy.loginfo("The goal is: %i" % goal.action_type)
         # Perform the callback set by child
@@ -112,15 +111,15 @@ class HarmoniActionServer(object):
             preempted = True
         return preempted
 
-    ## @brief Accepts a new goal when one is available The status of this
-    ## goal is set to active upon acceptance, and the status of any
-    ## previously active goal is set to preempted. Preempts received for the
-    ## new goal between checking if isNewGoalAvailable or invokation of a
-    ## goal callback and the acceptNewGoal call will not trigger a preempt
-    ## callback.  This means, isPreemptReqauested should be called after
-    ## accepting the goal even for callback-based implementations to make
-    ## sure the new goal does not have a pending preempt request.
-    ## @return A shared_ptr to the new goal.
+    # @brief Accepts a new goal when one is available The status of this
+    # goal is set to active upon acceptance, and the status of any
+    # previously active goal is set to preempted. Preempts received for the
+    # new goal between checking if isNewGoalAvailable or invokation of a
+    # goal callback and the acceptNewGoal call will not trigger a preempt
+    # callback.  This means, isPreemptReqauested should be called after
+    # accepting the goal even for callback-based implementations to make
+    # sure the new goal does not have a pending preempt request.
+    # @return A shared_ptr to the new goal.
     def accept_new_goal(self):
         with self.action_server.lock, self.lock:
             if not self.new_goal or not self.next_goal.get_goal():
@@ -157,18 +156,18 @@ class HarmoniActionServer(object):
 
             return self.current_goal.get_goal()
 
-    ## @brief Allows  polling implementations to query about the availability of a new goal
-    ## @return True if a new goal is available, false otherwise
+    # @brief Allows  polling implementations to query about the availability of a new goal
+    # @return True if a new goal is available, false otherwise
     def is_new_goal_available(self):
         return self.new_goal
 
-    ## @brief Allows  polling implementations to query about preempt requests
-    ## @return True if a preempt is requested, false otherwise
+    # @brief Allows  polling implementations to query about preempt requests
+    # @return True if a preempt is requested, false otherwise
     def is_preempt_requested(self):
         return self.preempt_request
 
-    ## @brief Allows  polling implementations to query about the status of the current goal
-    ## @return True if a goal is active, false otherwise
+    # @brief Allows  polling implementations to query about the status of the current goal
+    # @return True if a goal is active, false otherwise
     def is_active(self):
         if not self.current_goal.get_goal():
             return False
@@ -186,16 +185,16 @@ class HarmoniActionServer(object):
         )
         return
 
-    ## @brief Sets the status of the active goal to succeeded
-    ## @param  result An optional result to send back to any clients of the goal
+    # @brief Sets the status of the active goal to succeeded
+    # @param  result An optional result to send back to any clients of the goal
     def set_succeeded(self, result=None, text=""):
         with self.action_server.lock, self.lock:
             if not result:
                 result = self.get_default_result()
             self.current_goal.set_succeeded(result, text)
 
-    ## @brief Sets the status of the active goal to aborted
-    ## @param  result An optional result to send back to any clients of the goal
+    # @brief Sets the status of the active goal to aborted
+    # @param  result An optional result to send back to any clients of the goal
     def set_aborted(self, result=None, text=""):
         with self.action_server.lock, self.lock:
             if not result:
@@ -209,16 +208,16 @@ class HarmoniActionServer(object):
         rospy.logdebug("(Server) The feedback is " + str(self._feedback.state))
         return
 
-    ## @brief Publishes feedback for a given goal
-    ## @param  feedback Shared pointer to the feedback to publish
+    # @brief Publishes feedback for a given goal
+    # @param  feedback Shared pointer to the feedback to publish
     def publish_feedback(self, feedback):
         self.current_goal.publish_feedback(feedback)
 
     def get_default_result(self):
         return self.action_server.ActionResultType()
 
-    ## @brief Sets the status of the active goal to preempted
-    ## @param  result An optional result to send back to any clients of the goal
+    # @brief Sets the status of the active goal to preempted
+    # @param  result An optional result to send back to any clients of the goal
     def set_preempted(self, result=None, text=""):
         if not result:
             result = self.get_default_result()
@@ -226,8 +225,8 @@ class HarmoniActionServer(object):
             rospy.logdebug("Setting the current goal as canceled")
             self.current_goal.set_canceled(result, text)
 
-    ## @brief Allows users to register a callback to be invoked when a new goal is available
-    ## @param cb The callback to be invoked
+    # @brief Allows users to register a callback to be invoked when a new goal is available
+    # @param cb The callback to be invoked
     def register_goal_callback(self, cb):
         if self.execute_callback:
             rospy.logwarn(
@@ -236,16 +235,16 @@ class HarmoniActionServer(object):
         else:
             self.goal_callback = cb
 
-    ## @brief Allows users to register a callback to be invoked when a new preempt request is available
-    ## @param cb The callback to be invoked
+    # @brief Allows users to register a callback to be invoked when a new preempt request is available
+    # @param cb The callback to be invoked
     def register_preempt_callback(self, cb):
         self.preempt_callback = cb
 
-    ## @brief Explicitly start the action server, used it auto_start is set to false
+    # @brief Explicitly start the action server, used it auto_start is set to false
     def start(self):
         self.action_server.start()
 
-    ## @brief Callback for when the ActionServer receives a new goal and passes it on
+    # @brief Callback for when the ActionServer receives a new goal and passes it on
     def internal_goal_callback(self, goal):
         self.execute_condition.acquire()
 
@@ -304,7 +303,7 @@ class HarmoniActionServer(object):
             )
             self.execute_condition.release()
 
-    ## @brief Callback for when the ActionServer receives a new preempt and passes it on
+    # @brief Callback for when the ActionServer receives a new preempt and passes it on
     def internal_preempt_callback(self, preempt):
         with self.lock:
             rospy.logdebug("A preempt has been received by the SimpleActionServer")
@@ -324,7 +323,7 @@ class HarmoniActionServer(object):
                 rospy.logdebug("Setting preempt request bit for the next goal to TRUE")
                 self.new_goal_preempt_request = True
 
-    ## @brief Called from a separate thread to call blocking execute calls
+    # @brief Called from a separate thread to call blocking execute calls
     def executeLoop(self):
         loop_duration = rospy.Duration.from_sec(0.1)
 

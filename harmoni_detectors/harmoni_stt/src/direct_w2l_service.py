@@ -95,7 +95,7 @@ class SpeechToTextService(HarmoniServiceManager):
         try:
             self.close_stream()
             self.state = State.SUCCESS
-        except:
+        except Exception:
             self.state = State.FAILED
         return
 
@@ -138,7 +138,7 @@ class SpeechToTextService(HarmoniServiceManager):
         for i in range(self.p.get_device_count()):
             device = self.p.get_device_info_by_index(i)
             rospy.loginfo(device)
-            rospy.loginfo(f"Found device with name {self.device_name} at index {i}")
+            # rospy.loginfo(f"Found device with name {self.device_name} at index {i}")
             if device["name"] == self.device_name:
                 rospy.loginfo(device)
                 self.input_device_index = i
