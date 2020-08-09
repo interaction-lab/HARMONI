@@ -73,7 +73,7 @@ class SpeechToTextService(HarmoniServiceManager):
         try:
             self.close_stream()
             self.state = State.SUCCESS
-        except:
+        except Exception:
             self.state = State.FAILED
         return
 

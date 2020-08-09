@@ -70,7 +70,7 @@ class WebService(HarmoniServiceManager):
                 rospy.sleep(0.2)
             self.state = State.SUCCESS
             self.actuation_completed = True
-        except:
+        except Exception:
             self.state = State.FAILED
             self.actuation_completed = True
         return
