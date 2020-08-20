@@ -97,6 +97,23 @@ docker build -f dockerfiles/lightweight/harmoni-pc/dockerfile --tag cmbirmingham
 docker build -f dockerfiles/lightweight/w2l/dockerfile --tag cmbirmingham/w2l-lightweight:latest .
 ```
 
+## ARM (Rasberri Pi)
+
+[To build any of these images for ARM please start by following the instructions here](https://www.docker.com/blog/getting-started-with-docker-for-arm-on-linux/)
+```
+export DOCKER_CLI_EXPERIMENTAL=enabled
+
+docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/lightweight/ubuntu16/dockerfile --tag cmbirmingham/ubuntu16-lightweight:arm .
+
+docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/lightweight/ros-kinetic/dockerfile --tag cmbirmingham/ros-kinetic-lightweight:arm .
+
+docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/lightweight/harmoni/dockerfile --tag cmbirmingham/harmoni-lightweight:arm .
+
+docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/lightweight/harmoni-pc/dockerfile --tag cmbirmingham/harmoni-pc-lightweight:arm .
+
+docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/lightweight/w2l/dockerfile --tag cmbirmingham/w2l-lightweight:arm .
+```
+
 # Network Notes
 docker run --net mynet123 -h myhostname --ip 172.18.0.22 -it ubuntu bash
 
