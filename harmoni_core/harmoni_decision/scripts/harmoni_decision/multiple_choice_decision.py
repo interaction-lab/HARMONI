@@ -1,40 +1,42 @@
 #!/usr/bin/env python3
 
-# Importing the libraries
+# Common Imports
 import rospy
 import roslib
+
+from harmoni_common_lib.constants import State
+from harmoni_common_lib.service_server import HarmoniServiceServer
+from harmoni_common_lib.service_manager import HarmoniServiceManager
+import harmoni_common_lib.helper_functions as hf
+
+# Specific Imports
 import rospkg
-from harmoni_common_lib.action_client import HarmoniActionClient
-from harmoni_common_lib.constants import ActuatorNameSpace
-from harmoni_pattern.sequential_pattern import SequentialPattern
-from std_msgs.msg import String
 import json
 import inspect
+from std_msgs.msg import String
+from harmoni_common_lib.action_client import HarmoniActionClient
+from harmoni_common_lib.constants import DetectorNameSpace, ActionType, ActuatorNameSpace
+from harmoni_pattern.sequential_pattern import SequentialPattern
+from collections import deque
+from time import time
+import threading
 
-
-class MultipleChoiceDecisionManager:
+class MultipleChoiceDecisionManager(HarmoniServiceManager):
     """Instantiates behaviors and receives commands/data for them.
 
     This class is a singleton ROS node and should only be instantiated once.
     """
 
-    def __init__(self):
-        # TODO this should be a rosparam
-        # pattern_name = "dialogue"
-        pattern_name = "multiple-choice"
-        self.name = pattern_name
-        self.service_id = "default"
+    def __init__(self, name, script, test_id, path):
+        super().__init__(name)
+        self.name = name
+        self.script = script
+        self.service_id  = test_id
+        self.pattern_script_path = path
         self.index = 0
         self.max_index = 18
         self.choice_index = 16
         self.sequence_scenes = []
-        # trigger_intent = rospy.get_param("/test_input_" + pattern_name + "/")
-        rospack = rospkg.RosPack()
-        pck_path = rospack.get_path("harmoni_pattern")
-        self.pattern_script_path = pck_path + f"/pattern_scripting/{pattern_name}.json"
-        with open(self.pattern_script_path, "r") as read_file:
-            self.script = json.load(read_file)
-            print(self.script)
         self.web_sub = rospy.Subscriber(
             ActuatorNameSpace.web.value + self.service_id + "/listen_click_event",
             String,
@@ -43,7 +45,7 @@ class MultipleChoiceDecisionManager:
         )
         self.setup_scene()
 
-    def start_scene(self, index_scene):
+    def start(self, index_scene):
         self.populate_scene(index_scene)
         dp = SequentialPattern(self.name, self.script)
         dp.start()
@@ -147,15 +149,25 @@ class MultipleChoiceDecisionManager:
         if "Target" in data.data:  # IF CORRECT INCREMENT THE INDEX
             self.index += 1
         if self.index < self.max_index:
-            self.start_scene(self.index)
+            self.start(self.index)
 
 
 if __name__ == "__main__":
-    try:
-        rospy.init_node("harmoni/decision")
-        bc = MultipleChoiceDecisionManager()
-        bc.start_scene(0)
-        rospy.loginfo("decision started.")
-        rospy.spin()
-    except rospy.ROSInterruptException:
-        pass
+        pattern_name = rospy.get_param("/pattern_name/")
+        test = rospy.get_param("/test_" + pattern_name + "/")
+        test_input = rospy.get_param("/test_input_" + pattern_name + "/")
+        test_id = rospy.get_param("/test_id_" + pattern_name + "/")
+        rospack = rospkg.RosPack()
+        pck_path = rospack.get_path("harmoni_pattern")
+        pattern_script_path = pck_path + f"/pattern_scripting/{pattern_name}.json"
+        with open(pattern_script_path, "r") as read_file:
+            script = json.load(read_file)
+        try:
+            rospy.init_node(pattern_name)
+            bc = MultipleChoiceDecisionManager(pattern_name, script, test_id, pattern_script_path)
+            rospy.loginfo(f"START from the first step of {pattern_name} pattern.")
+            if test:
+                bc.start(0)
+            rospy.spin()
+        except rospy.ROSInterruptException:
+            pass

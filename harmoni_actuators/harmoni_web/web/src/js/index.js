@@ -59,6 +59,7 @@ function clickListener(clicked_component) {
     }
     console.log("Clicked")
     user_response_publisher.publish({ data: JSON.stringify(clicked_component.getAttribute("value")) })
+    $("#"+selected_item).css("opacity", "1");
     // Send the event clicked to the ROS package
 }
 
