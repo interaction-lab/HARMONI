@@ -142,7 +142,7 @@ class MultipleChoiceDecisionManager:
             json.dump(self.script, json_file)
 
     def _event_click_callback(self, data):
-        "Received data"
+        """Received data"""
         print(data)
         if "Target" in data.data:  # IF CORRECT INCREMENT THE INDEX
             self.index += 1
