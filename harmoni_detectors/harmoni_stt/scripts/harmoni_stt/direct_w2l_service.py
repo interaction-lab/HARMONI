@@ -240,23 +240,19 @@ def main():
     test_id = rospy.get_param("/test_id_" + service_name + "/")
     try:
         rospy.init_node(service_name)
-        list_service_names = hf.get_child_list(service_name)
-        service_server_list = []
-        for service in list_service_names:
-            rospy.loginfo(service)
-            service_id = hf.get_child_id(service)
-            param = rospy.get_param(name + "/" + service_id + "_param/")
-            s = SpeechToTextService(service, param)
-            service_server_list.append(
-                HarmoniServiceServer(name=service, service_manager=s)
-            )
-            if test and (service_id == test_id):
-                rospy.loginfo("Testing the %s" % (service))
-                s.start()
-        if not test:
-            for server in service_server_list:
-                server.update_feedback()
-        rospy.spin()
+        param = rospy.get_param(name + "/" + test_id + "_param/")
+        if not hf.check_if_id_exist(service_name, test_id):
+            rospy.logerr("ERROR: Remember to add your configuration ID also in the harmoni_core config file")
+            return
+        service = hf.set_service_server(service_name, test_id)
+        s = SpeechToTextService(service, param)
+        service_server = HarmoniServiceServer(name=service, service_manager=s)
+        if test:
+            rospy.loginfo("Testing the %s" % (service))
+            s.start()
+        else:
+            service_server.update_feedback()
+            rospy.spin()
     except rospy.ROSInterruptException:
         pass
 
