@@ -13,6 +13,7 @@ import harmoni_common_lib.helper_functions as hf
 from harmoni_common_lib.constants import DialogueNameSpace
 from google.api_core.exceptions import InvalidArgument
 import dialogflow
+import os
 
 
 class GoogleService(HarmoniServiceManager):
@@ -28,15 +29,17 @@ class GoogleService(HarmoniServiceManager):
         self.project_id = param["project_id"]
         self.language = param["language"]
         self.session_id = param["session_id"]
+        self.credential_path = param["credential_path"]
         """ Setup the google request """
-        # self.setup_google()
+        self.setup_google()
         """Setup the google service as server """
         self.state = State.INIT
         return
 
     def setup_google(self):
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = self.credential_path
         self.google_client = dialogflow.SessionsClient()
-        self.google_session = google_client.sessions_path(
+        self.google_session = self.google_client.session_path(
             self.project_id, self.session_id
         )
         return
@@ -47,7 +50,7 @@ class GoogleService(HarmoniServiceManager):
         textdata = dialogflow.types.TextInput(
             text=input_text, language_code=self.language
         )
-        query_input = dialogflow.types.QueryInput(text=input_text)
+        query_input = dialogflow.types.QueryInput(text=textdata)
         try:
             rospy.loginfo("Request to google")
             google_response = self.google_client.detect_intent(
@@ -55,9 +58,9 @@ class GoogleService(HarmoniServiceManager):
             )
 
             self.state = State.SUCCESS
-            rospy.loginfo("The response is %s" % (google_response.fulfillment_text))
+            rospy.loginfo("The response is %s" % (google_response.query_result.fulfillment_text))
             self.response_received = True
-            self.result_msg = google_response["message"]
+            self.result_msg = google_response.query_result.fulfillment_text
         except rospy.ServiceException:
             self.start = State.FAILED
             rospy.loginfo("Service call failed")
@@ -71,28 +74,20 @@ def main():
     test_input = rospy.get_param("/test_input_" + service_name + "/")
     test_id = rospy.get_param("/test_id_" + service_name + "/")
     try:
-
         rospy.init_node(service_name)
-        list_service_names = hf.get_child_list(service_name)
-        print(list_service_names)
-        service_server_list = []
-        last_event = ""  # TODO
-        for service in list_service_names:
-            rospy.loginfo(service)
-            service_id = hf.get_child_id(service)
-            param = rospy.get_param(name + "/" + service_id + "_param/")
-            print(param)
-            s = GoogleService(service, param)
-            service_server_list.append(
-                HarmoniServiceServer(name=service, service_manager=s)
-            )
-            if test and (service_id == test_id):
-                rospy.loginfo("Testing the %s" % (service))
-                s.request(test_input)
-        if not test:
-            for server in service_server_list:
-                server.update_feedback()
-        rospy.spin()
+        param = rospy.get_param(name + "/" + test_id + "_param/")
+        if not hf.check_if_id_exist(service_name, test_id):
+            rospy.logerr("ERROR: Remember to add your configuration ID also in the harmoni_core config file")
+            return
+        service = hf.set_service_server(service_name, test_id)
+        s = GoogleService(service, param)
+        service_server = HarmoniServiceServer(name=service, service_manager=s)
+        if test:
+            rospy.loginfo("Testing the %s" % (service))
+            s.request(test_input)
+        else:
+            service_server.update_feedback()
+            rospy.spin()
     except rospy.ROSInterruptException:
         pass
 
