@@ -1,7 +1,9 @@
 <!-- This is an example launch file for how a ROS application could use a node -->
 <launch>
    
-	<arg name="use_pattern" default="true"/>
+	<arg name="use_pattern_dialogue" default="false"/>
+	<arg name="use_pattern_multiple_choice" default="true"/>
+	<arg name="pattern_name" default="multiple-choice"/>
 	<arg name="test" default="false"/>
 	<arg name="test_input" default="Hey"/>
 	<arg name="test_id" default="default"/>
@@ -11,17 +13,20 @@
 	<arg name="display_input" default="{'component_id':'container_1', 'set_content': 'null'}"/>
 	<arg name="face_input" default="[{'start': 0.075, 'time': 2,'type': 'action', 'id': 'QT/point_front'}, {'start': 0.075,'time': 2, 'type': 'viseme', 'id': 'POSTALVEOLAR'},{'start': 0.006, 'time': 2,  'type': 'action', 'id': 'happy_face'}]"/>
 	<arg name="wav_file" default="/home/micol/catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/temp_data/tts.wav"/>
-  	<group if="$(arg use_pattern)">
+  	<group if="$(arg use_pattern_dialogue)">
 			<rosparam file="$(find harmoni_pattern)/config/configuration.yaml"/>
-			<param name="test_service_dialogue" value="$(arg test_service)"/>
-			<param name="wav_file_dialogue" value="$(arg wav_file)"/>
-			<param name="face_input_dialogue" value="$(arg face_input)"/>
-			<param name="display_input_dialogue" value="$(arg display_input)"/>
-			<param name="tts_input_text_dialogue" value="$(arg tts_input_text)"/>
-			<param name="dialogue_input_text_dialogue" value="$(arg dialogue_input_text)"/>
 			<param name="test_dialogue" value="$(arg test)"/>
 			<param name="test_input_dialogue" value="$(arg test_input)"/>
 			<param name="test_id_dialogue" value="$(arg test_id)"/>
+			<param name="pattern_name" value="dialogue"/>
+			<node pkg="harmoni_pattern" type="sequential_pattern.py" name="harmoni_pattern" output="screen"  args="$(arg test) $(arg test_input) $(arg test_id)"/>
+  	</group>
+	<group if="$(arg use_pattern_multiple_choice)">
+			<rosparam file="$(find harmoni_pattern)/config/configuration.yaml"/>
+			<param name="test_multiple-choice" value="$(arg test)"/>
+			<param name="test_input_multiple-choice" value="$(arg test_input)"/>
+			<param name="test_id_multiple-choice" value="$(arg test_id)"/>
+			<param name="pattern_name" value="multiple-choice"/>
 			<node pkg="harmoni_pattern" type="sequential_pattern.py" name="harmoni_pattern" output="screen"  args="$(arg test) $(arg test_input) $(arg test_id)"/>
   	</group>
 
