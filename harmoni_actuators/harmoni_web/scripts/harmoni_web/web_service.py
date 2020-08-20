@@ -25,6 +25,7 @@ class WebService(HarmoniServiceManager):
     def __init__(self, name, param):
         """ Initialization of variables and web parameters """
         super().__init__(name)
+        self.name = name
         self.user_id = param["user_id"]
         self.timer_interval = param["timer_interval"]
         self.service_id = hf.get_child_id(self.name)

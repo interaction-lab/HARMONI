@@ -18,6 +18,16 @@ def get_routers():
     router_names = [enum.value for enum in list(Router)]
     return router_names
 
+def get_repo_child(child_name):
+    """Get children name without ids from config file"""
+    abs_path = os.path.abspath(__file__)
+    path = abs_path.split("HARMONI/")
+    with open(path[0] + PATH_CONFIG) as file:
+        repos = yaml.load(file, Loader=yaml.FullLoader)
+    for repo in repos:
+        if child_name in repos[repo]:
+            repo_child_name = repo + "_" + child_name
+    return repo_child_name
 
 def get_child_list(child_name):
     """Get children from config file"""
@@ -99,9 +109,16 @@ def get_all_repos():
         repo_list.append(repo)
     return repo_list
 
-def set_service_server(service_name, service_id):
+def set_service_server(service_name, input_id):
     """Set the service server name """
-    service_server = service_name + "_" + service_id
+    if _check_if_resources(service_name):
+        service_server = get_repo_child(service_name) #repo_child
+    else:
+        list_service_names = get_child_list(service_name)
+        for service in list_service_names:
+            service_id = get_child_id(service)
+            if service_id == input_id:
+                service_server = service #repo_child_id
     return service_server
 
 
@@ -125,10 +142,10 @@ def check_if_sensor(service_name):
 
 def _check_if_resources(service):
     """Check if the service contains many resources """
+    has_resources = False
     if service == "face":
-
-        return resource_array
-    return service
+        has_resources = True
+    return has_resources
 
 
 def check_if_id_exist(service, selected_id):
