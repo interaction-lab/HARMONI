@@ -15,7 +15,7 @@ alias rlspeech="roslaunch harmoni_stt stt_service.launch"
 alias rlfacedetect="roslaunch harmoni_face_detect face_detect_service.launch"
 alias rlpcservices="roslaunch harmoni_decision launcher.launch service:='pc'"
 alias rlharmoniservices="roslaunch harmoni_decision launcher.launch service:='harmoni'"
-alias rldialoging="roslaunch harmoni_pattern sequence_pattern.launch"
+alias rlmultiplechoice="roslaunch harmoni_decision harmoni_decision.launch test:=true"
 
 
 # get current branch in git repo
