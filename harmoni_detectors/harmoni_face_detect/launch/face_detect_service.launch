@@ -7,11 +7,10 @@
 	<arg name="test_id" default="default"/>
   	<group if="$(arg use_face_detect)">
 	  		<rosparam file="$(find harmoni_face_detect)/config/configuration.yaml"/>
-	  		<param name="test" value="$(arg test)"/>
-			<param name="test_input" value="$(arg test_input)"/>
-			<param name="test_id" value="$(arg test_id)"/>
+	  		<param name="test_face_detect" value="$(arg test)"/>
+			<param name="test_input_face_detect" value="$(arg test_input)"/>
+			<param name="test_id_face_detect" value="$(arg test_id)"/>
+			<param name="name_face_detect" value="face_detect"/>
 			<node pkg="harmoni_face_detect" type="detector.py" name="face_detect" output="screen"/>
   	</group>
-
-
 </launch>

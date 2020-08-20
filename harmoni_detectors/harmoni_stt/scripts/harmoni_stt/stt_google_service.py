@@ -12,15 +12,15 @@ import harmoni_common_lib.helper_functions as hf
 # Specific Imports
 from harmoni_common_lib.constants import State, DetectorNameSpace, SensorNameSpace
 from audio_common_msgs.msg import AudioData
-from google.cloud.speech_v1 import enums
 from google.cloud import speech_v1
+from google.cloud.speech_v1 import enums
 from std_msgs.msg import String
 import numpy as np
 import os
 import io
 
 
-class STTGoogleService(HarmoniServiceServer):
+class STTGoogleService(HarmoniServiceManager):
     """
     Google service
     """
@@ -71,12 +71,12 @@ class STTGoogleService(HarmoniServiceServer):
             "encoding": encoding,
             "audio_channel_count": self.audio_channel,
         }
-        config = types.RecognitionConfig(
+        config = speech_v1.types.RecognitionConfig(
             encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
-            sample_rate_hertz=RATE,
-            language_code=language_code,
+            sample_rate_hertz=self.sample_rate,
+            language_code=self.language,
         )
-        self.streaming_config = types.StreamingRecognitionConfig(
+        self.streaming_config = speech_v1.types.StreamingRecognitionConfig(
             config=config, interim_results=True
         )
         return
@@ -93,7 +93,7 @@ class STTGoogleService(HarmoniServiceServer):
     def transcribe_stream_request(self, data):
         # TODO: streaming transcription
         requests = (
-            types.StreamingRecognizeRequest(audio_content=content)
+            speech_v1.types.StreamingRecognizeRequest(audio_content=content)
             for content in audio_generator
         )
         responses = client.streaming_recognize(streaming_config, requests)
@@ -148,28 +148,20 @@ def main():
     test_id = rospy.get_param("/test_id_" + service_name + "/")
     try:
         rospy.init_node(service_name)
-        list_service_names = hf.get_child_list(service_name)
-        print(list_service_names)
-        service_server_list = []
-        last_event = ""  # TODO
-        for service in list_service_names:
-            rospy.loginfo(service)
-            service_id = hf.get_child_id(service)
-            param = rospy.get_param(name + "/" + service_id + "_param/")
-            print(param)
-            s = STTGoogleService(service, param)
-            service_server_list.append(
-                HarmoniServiceManager(name=service, service_manager=s)
-            )
-            if test and (service_id == test_id):
-                rospy.loginfo("Testing the %s" % (service))
-                data = s.wav_to_data(test_input)
-                s.request(data)
-                s.transcribe_file_request(data)
-        if not test:
-            for server in service_server_list:
-                server.update_feedback()
-        rospy.spin()
+        param = rospy.get_param(name + "/" + test_id + "_param/")
+        if not hf.check_if_id_exist(service_name, test_id):
+            rospy.logerr("ERROR: Remember to add your configuration ID also in the harmoni_core config file")
+            return
+        service = hf.set_service_server(service_name, test_id)
+        s = STTGoogleService(service, param)
+        service_server = HarmoniServiceServer(name=service, service_manager=s)
+        if test:
+            rospy.loginfo("Testing the %s" % (service))
+            data = s.wav_to_data(test_input)
+            s.transcribe_file_request(data)
+        else:
+            service_server.update_feedback()
+            rospy.spin()
     except rospy.ROSInterruptException:
         pass
 

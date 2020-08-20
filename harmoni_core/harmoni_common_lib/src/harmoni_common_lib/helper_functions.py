@@ -83,7 +83,7 @@ def get_child_id(service_name):
 
 
 def get_service_name(repo_service_id):
-    """Get id of the child from service name"""
+    """Get name of the child from service"""
     service = repo_service_id.split("_")
     name = service[1]
     return name
@@ -98,6 +98,11 @@ def get_all_repos():
     for repo in repos:
         repo_list.append(repo)
     return repo_list
+
+def set_service_server(service_name, service_id):
+    """Set the service server name """
+    service_server = service_name + "_" + service_id
+    return service_server
 
 
 def check_if_detector(service_name):
@@ -124,3 +129,15 @@ def _check_if_resources(service):
 
         return resource_array
     return service
+
+
+def check_if_id_exist(service, selected_id):
+    """Check if the ID of the launching file has been already added to the harmoni_core config file."""
+    exist = False
+    list_service_names = get_child_list(service)
+    service_server_list = []
+    for service in list_service_names:
+        service_id = get_child_id(service)
+        if service_id == selected_id:
+            exist = True
+    return exist
