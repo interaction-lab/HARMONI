@@ -97,7 +97,7 @@ class Launcher:
         """Create xml launch file """
         root = ET.Element("launch")
         for i in range(0, len(launch_file_array)):
-            repo_service_id_list = hf.get_child_list(package_array[i])
+            repo_service_id_list = hf.get_child_list(package_array[i],resources=False)
             for repo_service_id in repo_service_id_list:
                 service_id = hf.get_child_id(repo_service_id)
                 print(service_id, repo_service_id)

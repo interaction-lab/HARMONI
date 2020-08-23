@@ -29,7 +29,7 @@ def get_repo_child(child_name):
             repo_child_name = repo + "_" + child_name
     return repo_child_name
 
-def get_child_list(child_name):
+def get_child_list(child_name, resources=True):
     """Get children from config file"""
     ids_list = []
     existed = False
@@ -51,7 +51,7 @@ def get_child_list(child_name):
     if existed:
         child_repo = repo_child_name.split("_")[0]
         for id_child in repos[child_repo][child_name]:
-            if resource_array != "":
+            if resource_array != "" and resources:
                 for r in resource_array:
                     ids_list.append(
                         child_repo + "_" + child_name + "_" + r + "_" + id_child
