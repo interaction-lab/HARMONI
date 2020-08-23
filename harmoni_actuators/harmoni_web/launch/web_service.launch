@@ -12,8 +12,8 @@
 			<param name="test_input_web" value="$(arg test_input)"/>
 			<param name="test_id_web" value="$(arg test_id)"/>
 			<param name="name_web" value="web"/>
-			<node pkg="harmoni_web" type="http_server_runner.py" name="web_http_server" output="screen" args="$(arg web_directory_path) $(arg port)" />
-			<node pkg="harmoni_web" type="web_service.py" name="harmoni_web" output="screen"/>
+			<node pkg="harmoni_web" type="http_server_runner.py" name="web_http_server_$(arg test_id)" output="screen" args="$(arg web_directory_path) $(arg port)" />
+			<node pkg="harmoni_web" type="web_service.py" name="harmoni_web_$(arg test_id)" output="screen"/>
   			<include ns="bridge_web" file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" />
   	</group>
 </launch>
