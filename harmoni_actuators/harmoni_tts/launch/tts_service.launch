@@ -11,7 +11,7 @@
 			<param name="test_input_tts" value="$(arg test_input)"/>
 			<param name="test_id_tts" value="$(arg test_id)"/>
 			<param name="name_tts" value="polly"/>
-			<node pkg="harmoni_tts" type="aws_tts_service.py" name="harmoni_tts_polly" output="screen"/>
+			<node pkg="harmoni_tts" type="aws_tts_service.py" name="harmoni_tts_polly_$(arg test_id)" output="screen"/>
   	</group>
 
 

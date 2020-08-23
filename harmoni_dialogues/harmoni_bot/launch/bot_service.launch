@@ -12,7 +12,7 @@
 			<param name="test_input_bot" value="$(arg test_input)"/>
 			<param name="test_id_bot" value="$(arg test_id)"/>
 			<param name="name_bot" value="lex"/>
-			<node pkg="harmoni_bot" type="aws_lex_service.py" name="harmoni_bot_lex" output="screen"  args="$(arg test) $(arg test_input) $(arg test_id)"/>
+			<node pkg="harmoni_bot" type="aws_lex_service.py" name="harmoni_bot_lex_$(arg test_id)" output="screen"  args="$(arg test) $(arg test_input) $(arg test_id)"/>
   	</group>
 	<group if="$(arg use_google)">
 			<rosparam file="$(find harmoni_bot)/config/configuration.yaml"/>
@@ -20,6 +20,6 @@
 			<param name="test_input_bot" value="$(arg test_input)"/>
 			<param name="test_id_bot" value="$(arg test_id)"/>
 			<param name="name_bot" value="google"/>
-			<node pkg="harmoni_bot" type="google_service.py" name="harmoni_bot_google" output="screen"  args="$(arg test) $(arg test_input) $(arg test_id)"/>
+			<node pkg="harmoni_bot" type="google_service.py" name="harmoni_bot_google_$(arg test_id)" output="screen"  args="$(arg test) $(arg test_input) $(arg test_id)"/>
   	</group>
 </launch>
