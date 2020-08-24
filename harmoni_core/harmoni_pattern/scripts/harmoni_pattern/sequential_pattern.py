@@ -311,27 +311,28 @@ class SequentialPattern(HarmoniServiceManager):
 
 
 def main():
-    if test:
-        pattern_name = rospy.get_param("/pattern_name/")
-        test = rospy.get_param("/test_" + pattern_name + "/")
-        test_input = rospy.get_param("/test_input_" + pattern_name + "/")
-        test_id = rospy.get_param("/test_id_" + pattern_name + "/")
-        # trigger_intent = rospy.get_param("/test_input_" + pattern_name + "/")
-        rospack = rospkg.RosPack()
-        pck_path = rospack.get_path("harmoni_pattern")
-        pattern_script_path = pck_path + f"/pattern_scripting/{pattern_name}.json"
-        with open(pattern_script_path, "r") as read_file:
-            script = json.load(read_file)
-        try:
-            rospy.init_node(pattern_name)
-            # Initialize the pattern with pattern sequence/loop
-            dp = SequentialPattern(pattern_name, script)
+    pattern_name = rospy.get_param("/pattern_name/")
+    test = rospy.get_param("/test_" + pattern_name + "/")
+    test_input = rospy.get_param("/test_input_" + pattern_name + "/")
+    test_id = rospy.get_param("/test_id_" + pattern_name + "/")
+    # trigger_intent = rospy.get_param("/test_input_" + pattern_name + "/")
+    rospack = rospkg.RosPack()
+    pck_path = rospack.get_path("harmoni_pattern")
+    pattern_script_path = pck_path + f"/pattern_scripting/{pattern_name}.json"
+    with open(pattern_script_path, "r") as read_file:
+        script = json.load(read_file)
+    try:
+        rospy.init_node(pattern_name)
+        # Initialize the pattern with pattern sequence/loop
+        dp = SequentialPattern(pattern_name, script)
+        service_server = HarmoniServiceServer(name=pattern_name, service_manager=dp)
+        if test:
             rospy.loginfo(f"START: Set up. Testing first step of {pattern_name} pattern.")
             dp.start()
-            rospy.spin()
-        except rospy.ROSInterruptException:
-            pass
-    else:
+        else:
+            service_server.update_feedback()
+        rospy.spin()
+    except rospy.ROSInterruptException:
         pass
 
 

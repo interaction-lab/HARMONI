@@ -95,7 +95,11 @@ def get_child_id(service_name):
 def get_service_name(repo_service_id):
     """Get name of the child from service"""
     service = repo_service_id.split("_")
-    name = service[1]
+    name = ""
+    for i in range(0,len(service)):
+        if not i==0 and not i==len(service)-1:
+            name += service[i]
+    print(name)
     return name
 
 

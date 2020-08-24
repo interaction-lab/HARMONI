@@ -7,6 +7,6 @@ harmoni:
   #face_detect: ["default"]
 pc:
   microphone: ["default"]
-  #camera : ["default"]
+  camera : ["default"]
   face: ["default"]
   speaker: ["default"]
