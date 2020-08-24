@@ -44,9 +44,11 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
             queue_size=1,
         )
         self.setup_scene()
+        self.state = State.INIT
 
     def start(self, index_scene):
         self.populate_scene(index_scene)
+        self.state = State.START
         dp = SequentialPattern(self.name, self.script)
         dp.start()
 
@@ -165,9 +167,12 @@ if __name__ == "__main__":
         try:
             rospy.init_node(pattern_name)
             bc = MultipleChoiceDecisionManager(pattern_name, script, test_id, pattern_script_path)
+            service_server = HarmoniServiceServer(name=pattern_name, service_manager=bc)
             rospy.loginfo(f"START from the first step of {pattern_name} pattern.")
             if test:
                 bc.start(0)
+            else:
+                service_server.update_feedback()
             rospy.spin()
         except rospy.ROSInterruptException:
             pass
