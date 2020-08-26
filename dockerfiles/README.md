@@ -99,9 +99,15 @@ docker build -f dockerfiles/lightweight/w2l/dockerfile --tag cmbirmingham/w2l-li
 
 ## ARM (Rasberri Pi)
 
-[To build any of these images for ARM please start by following the instructions here](https://www.docker.com/blog/getting-started-with-docker-for-arm-on-linux/)
+[To build any of these images for ARM please start by following the instructions here](https://www.docker.com/blog/getting-started-with-docker-for-arm-on-linux/)]
+[Check also this link for buildx documentation](https://docs.docker.com/buildx/working-with-buildx/)
 ```
 export DOCKER_CLI_EXPERIMENTAL=enabled
+
+docker buildx create
+
+docker buildx use <name>
+
 
 docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/lightweight/ubuntu16/dockerfile --tag cmbirmingham/ubuntu16-lightweight:arm .
 
