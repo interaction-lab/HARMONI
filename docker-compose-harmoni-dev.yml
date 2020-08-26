@@ -26,7 +26,7 @@ services:
         ports:
             - "11312:11312"
             - "33691:33691"
-            - "8081":"8081"
+            - "8081:8081"
         devices: 
           - /dev/dri:/dev/dri
           #- /dev/snd:/dev/snd

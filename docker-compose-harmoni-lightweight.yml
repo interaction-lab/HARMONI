@@ -54,7 +54,7 @@ services:
         container_name: ros_w2l
         build:
             context: .
-            dockerfile: dockerfiles/lightweight/w2l-dev/dockerfile
+            dockerfile: dockerfiles/lightweight/w2l/dockerfile
             network: host
         image: cmbirmingham/w2l-dev:latest
         init: true
@@ -106,7 +106,7 @@ services:
         container_name: harmoni_visual_detector
         build:
             context: .
-            dockerfile: dockerfiles/lightweight/harmoni-pc-dev/dockerfile
+            dockerfile: dockerfiles/lightweight/harmoni-pc/dockerfile
             network: host
         image: cmbirmingham/harmoni-pc-dev:latest
         init: true
@@ -154,7 +154,7 @@ services:
     #     container_name: harmoni_pc
     #     build:
     #         context: .
-    #         dockerfile: dockerfiles/lightweight/harmoni-pc-dev/dockerfile
+    #         dockerfile: dockerfiles/lightweight/harmoni-pc/dockerfile
     #         network: host
     #     image: cmbirmingham/harmoni-pc-dev:latest
     #     init: true

@@ -1,3 +1,4 @@
+#!/bin/bash
 FROM cmbirmingham/ros-kinetic-lightweight:latest
 
 
@@ -54,7 +55,7 @@ RUN catkin config \
     && \
     catkin build
 
-run mkdir -p /root/local_mount/
+RUN mkdir -p /root/local_mount/
 RUN ln -s /root/harmoni_catkin_ws/src/HARMONI /root/local_mount/
 
 # ==================================================================
