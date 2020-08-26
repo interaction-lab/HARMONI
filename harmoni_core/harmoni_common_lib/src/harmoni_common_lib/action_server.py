@@ -37,7 +37,10 @@ class HarmoniActionServer(object):
     # @param execute_cb Optional callback that gets called in a separate thread whenever
     # a new goal is received, allowing users to have blocking callbacks.
     # Adding an execute callback also deactivates the goalCallback.
-    # @param  auto_start A boolean value that tells the ActionServer wheteher or not to start publishing as soon as it comes up. THIS SHOULD ALWAYS BE SET TO FALSE TO AVOID RACE CONDITIONS and start() should be called after construction of the server.
+    # @param  auto_start A boolean value that tells the ActionServer wheteher or not to start
+    # publishing as soon as it comes up.
+    # THIS SHOULD ALWAYS BE SET TO FALSE TO AVOID RACE CONDITIONS and start() should be
+    # called after construction of the server.
     def __init__(self, name, execute_cb=None, auto_start=False):
 
         self.name = name
@@ -82,18 +85,18 @@ class HarmoniActionServer(object):
         self._result = harmoniResult()
         self.start()
 
-    def _goal_received_callback(self, goal):
-        """ Save the goal data, set the goal to received, and execute the child callback """
-        self.optional_data = goal.optional_data  # input data for the module
-        self.condition = (
-            goal.condition
-        )  # event condition to wait before starting the action
-        rospy.loginfo(f"(Server) The goal is a {goal.action_type} request")
-        self.goal_received = True
-        # rospy.loginfo("The goal is: %i" % goal.action_type)
-        # Perform the callback set by child
-        self.execute_goal_received_callback(goal)
-        return
+    # def _goal_received_callback(self, goal):
+    #     """ Save the goal data, set the goal to received, and execute the child callback """
+    #     self.optional_data = goal.optional_data  # input data for the module
+    #     self.condition = (
+    #         goal.condition
+    #     )  # event condition to wait before starting the action
+    #     rospy.loginfo(f"(Server) The goal is a {goal.action_type} request")
+    #     self.goal_received = True
+    #     # rospy.loginfo("The goal is: %i" % goal.action_type)
+    #     # Perform the callback set by child
+    #     self.execute_goal_received_callback(goal)
+    #     return
 
     def __del__(self):
         if hasattr(self, "execute_callback") and self.execute_callback:
