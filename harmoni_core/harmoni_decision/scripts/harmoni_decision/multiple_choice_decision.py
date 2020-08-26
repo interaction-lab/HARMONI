@@ -27,10 +27,11 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
     This class is a singleton ROS node and should only be instantiated once.
     """
 
-    def __init__(self, name, script, test_id, path):
+    def __init__(self, name, script, test_id, path, url):
         super().__init__(name)
         self.name = name
         self.script = script
+        self.url = url
         self.service_id  = test_id
         self.pattern_script_path = path
         self.index = 0
@@ -60,26 +61,26 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
                     "background_cont": ["container_2", ""],
                     "background": [
                         "img_bkg",
-                        "http://i3lab.elet.polimi.it/letssayresources/img/1_1_"
+                        self.url
                         + str(i)
                         + "_Sfondo.png",
                     ],
                     "text": "Background image",
                     "choice_1": [
                         "img_1",
-                        "http://i3lab.elet.polimi.it/letssayresources/img/1_1_"
+                        self.url
                         + str(i)
                         + "_Comp.png",
                     ],
                     "choice_2": [
                         "img_2",
-                        "http://i3lab.elet.polimi.it/letssayresources/img/1_1_"
+                        self.url
                         + str(i)
                         + "_Distr.png",
                     ],
                     "choice_3": [
                         "img_3",
-                        "http://i3lab.elet.polimi.it/letssayresources/img/1_1_"
+                        self.url
                         + str(i)
                         + "_Target.png",
                     ],
@@ -90,7 +91,7 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
                 "background_cont": ["container_2", ""],
                 "background": [
                     "img_bkg",
-                    "http://i3lab.elet.polimi.it/letssayresources/img/1_1_17_Sfondo.png",
+                    self.url+ "17_Sfondo.png",
                 ],
                 "text": "Background image",
             }
@@ -100,7 +101,7 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
                 "background_cont": ["container_2", ""],
                 "background": [
                     "img_bkg",
-                    "http://i3lab.elet.polimi.it/letssayresources/img/1_1_18_Sfondo.png",
+                    self.url+ "18_Sfondo.png",
                 ],
                 "text": "Background image",
             }
@@ -159,6 +160,7 @@ if __name__ == "__main__":
         test = rospy.get_param("/test_" + pattern_name + "/")
         test_input = rospy.get_param("/test_input_" + pattern_name + "/")
         test_id = rospy.get_param("/test_id_" + pattern_name + "/")
+        url = rospy.get_param("/url" + pattern_name + "/")
         rospack = rospkg.RosPack()
         pck_path = rospack.get_path("harmoni_pattern")
         pattern_script_path = pck_path + f"/pattern_scripting/{pattern_name}.json"
@@ -166,7 +168,7 @@ if __name__ == "__main__":
             script = json.load(read_file)
         try:
             rospy.init_node(pattern_name)
-            bc = MultipleChoiceDecisionManager(pattern_name, script, test_id, pattern_script_path)
+            bc = MultipleChoiceDecisionManager(pattern_name, script, test_id, pattern_script_path, url)
             service_server = HarmoniServiceServer(name=pattern_name, service_manager=bc)
             rospy.loginfo(f"START from the first step of {pattern_name} pattern.")
             if test:
