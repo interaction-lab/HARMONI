@@ -11,18 +11,7 @@ import harmoni_common_lib.helper_functions as hf
 
 # Specific Imports
 from harmoni_common_lib.constants import [name]NameSpace
-# import numpy as np
 
-# FIXING
-# Replace imports
-# Replace manager and server
-# Move/remove super()'s
-# Remove test
-
-# TODO:
-# Update recorder and decision manager to harmoni unit
-# Establish startup pattern
-# Refactor action client and server
 
 class NameService(HarmoniServiceManager):
     """[summary]
@@ -57,7 +46,7 @@ def main():
     test_id = rospy.get_param("/test_id/")
     try:
         service_id = rospy.get_param("/service_id/")
-    except:
+    except Exception:
         service_id = test_id
 
     try:
