@@ -99,25 +99,32 @@ docker build -f dockerfiles/lightweight/w2l/dockerfile --tag cmbirmingham/w2l-li
 
 ## ARM (Rasberri Pi)
 
-[To build any of these images for ARM please start by following the instructions here](https://www.docker.com/blog/getting-started-with-docker-for-arm-on-linux/)]
+[To build any of these images for ARM please start by following the instructions here](https://www.docker.com/blog/getting-started-with-docker-for-arm-on-linux/)
+
 [Check also this link for buildx documentation](https://docs.docker.com/buildx/working-with-buildx/)
+
+(Note: these are the instructions for building on an amd or intel device, to build a docker image on a Pi, just build like normal)
 ```
 export DOCKER_CLI_EXPERIMENTAL=enabled
 
-docker buildx create
+docker run --rm --privileged docker/binfmt:820fdd95a9972a5308930a2bdfb8573dd4447ad3 
 
-docker buildx use <name>
+docker buildx create --name mybuilder
+
+docker buildx use mybuilder
+
+docker buildx inspect --bootstrap
 
 
-docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/lightweight/ubuntu16/dockerfile --tag cmbirmingham/ubuntu16-lightweight:arm .
+docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/arm/ubuntu16/dockerfile --tag cmbirmingham/ubuntu16-lightweight:arm .
 
-docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/lightweight/ros-kinetic/dockerfile --tag cmbirmingham/ros-kinetic-lightweight:arm .
+docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/arm/ros-kinetic/dockerfile --tag cmbirmingham/ros-kinetic-lightweight:arm .
 
-docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/lightweight/harmoni/dockerfile --tag cmbirmingham/harmoni-lightweight:arm .
+docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/arm/harmoni/dockerfile --tag cmbirmingham/harmoni-lightweight:arm .
 
-docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/lightweight/harmoni-pc/dockerfile --tag cmbirmingham/harmoni-pc-lightweight:arm .
+docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/arm/harmoni-pc/dockerfile --tag cmbirmingham/harmoni-pc-lightweight:arm .
 
-docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/lightweight/w2l/dockerfile --tag cmbirmingham/w2l-lightweight:arm .
+docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/arm/w2l/dockerfile --tag cmbirmingham/w2l-lightweight:arm .
 ```
 
 # Network Notes
