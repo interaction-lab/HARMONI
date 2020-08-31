@@ -3,7 +3,7 @@
         "set": "setup",
         "steps": [
             {
-                "pc_microphone_default": {
+                "harmoni_microphone_default": {
                     "action_goal": "ON",
                     "resource_type": "sensor",
                     "wait_for": ""
@@ -38,14 +38,14 @@
             },
             [
                 {
-                    "pc_speaker_default": {
+                    "harmoni_speaker_default": {
                         "action_goal": "DO",
                         "resource_type": "actuator",
                         "wait_for": "v"
                     }
                 },
                 {
-                    "pc_face_mouth_default": {
+                    "harmoni_face_mouth_default": {
                         "action_goal": "DO",
                         "resource_type": "actuator",
                         "wait_for": "new"
@@ -79,14 +79,14 @@
             },
             [
                 {
-                    "pc_speaker_default": {
+                    "harmoni_speaker_default": {
                         "action_goal": "DO",
                         "resource_type": "actuator",
                         "wait_for": "new"
                     }
                 },
                 {
-                    "pc_face_mouth_default": {
+                    "harmoni_face_mouth_default": {
                         "action_goal": "DO",
                         "resource_type": "actuator",
                         "wait_for": "new"

@@ -51,7 +51,6 @@ python3.6 -m pip install -r ./requirements.txt
 
 # Clone the additional repositories
 cd ../..
-git -C src clone -b develop https://github.com/interaction-lab/HARMONI-PC.git 
 git -C src clone -b master https://github.com/ros-drivers/audio_common.git
 # git -C src clone -b $ROS_DISTRO https://github.com/ros-perception/vision_opencv.git
 git -C src clone -b $ROS_DISTRO-devel https://github.com/ROBOTIS-GIT/dynamixel-workbench-msgs.git

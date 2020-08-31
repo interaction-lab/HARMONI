@@ -1,0 +1,17 @@
+<!-- This is an example launch file for how a ROS application could use a node -->
+<launch>
+   
+	<arg name="use_camera" default="true"/>
+	<arg name="test" default="false"/>
+	<arg name="test_input" default=""/>
+	<arg name="test_id" default="default"/>
+  	<group if="$(arg use_camera)">
+			<rosparam file="$(find harmoni_camera)/config/configuration.yaml"/>
+			<param name="test" value="$(arg test)"/>
+			<param name="test_input" value="$(arg test_input)"/>
+			<param name="test_id" value="$(arg test_id)"/>
+			<node pkg="harmoni_camera" type="camera_service.py" name="harmoni_camera" output="screen"/>
+  	</group>
+
+
+</launch>

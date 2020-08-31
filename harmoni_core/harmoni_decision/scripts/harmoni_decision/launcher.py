@@ -97,7 +97,7 @@ class Launcher:
         """Create xml launch file """
         root = ET.Element("launch")
         for i in range(0, len(launch_file_array)):
-            repo_service_id_list = hf.get_child_list(package_array[i],resources=False)
+            repo_service_id_list = hf.get_child_list(package_array[i], resources=False)
             for repo_service_id in repo_service_id_list:
                 service_id = hf.get_child_id(repo_service_id)
                 print(service_id, repo_service_id)
@@ -106,7 +106,7 @@ class Launcher:
                     "include",
                     file=f"$(find {repo}_{package_array[i]})/launch/{launch_file_array[i]}.launch",
                 )
-                args = ET.SubElement(include, "arg", name="test_id", value=service_id) 
+                args = ET.SubElement(include, "arg", name="test_id", value=service_id)
         tree = ET.ElementTree(root)
         abs_path = os.path.abspath(__file__)
         path = abs_path.split("scripts/")
@@ -149,6 +149,9 @@ def main():
         rospy.loginfo(f"Repos to include: {repos}")
         launch = Launcher()
         for repo in repos:
+            if repo == "hardware":
+                # This is a cludge from merging PC TODO fix
+                repo = "harmoni"
             if repo != "":
                 launch.launch_services(repo, launch_params)
         rospy.spin()

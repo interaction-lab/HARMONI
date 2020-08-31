@@ -11,6 +11,13 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     nodejs \
     libffi-dev \
     npm \
+    libboost-all-dev \
+    libgstreamer1.0-0 gstreamer1.0-dev gstreamer1.0-tools gstreamer1.0-doc \
+    gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
+    gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly \
+    gstreamer1.0-libav \
+    gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-pulseaudio \
+    libgstreamer-plugins-base1.0-dev \
     && \
     npm install http-server -g && \
     ln -s /usr/bin/nodejs /usr/bin/node \
@@ -30,6 +37,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     ros-$ROS_DISTRO-audio-common \
     ros-$ROS_DISTRO-dynamixel-msgs \
     build-essential \
+    opencv-python \
     && \
     rm -rf /var/lib/apt/lists/* /tmp/*
 
@@ -44,6 +52,12 @@ RUN git -C src clone \
     -b develop \
     https://github.com/interaction-lab/HARMONI.git 
 
+# RUN ln -s /usr/lib/x86_64-linux-gnu/libboost_python-py35.so /usr/lib/x86_64-linux-gnu/libboost_python3.so
+RUN ln -s libboost_python-py36.so libboost_python3.so 
+
+RUN git -C src clone \
+    -b master \
+    https://github.com/ros-drivers/audio_common.git
 
 # ==================================================================
 # build ros package source

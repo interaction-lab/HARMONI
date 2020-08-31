@@ -1,0 +1,6 @@
+harmoni_speaker:
+  default_param:
+    chunk_size: 512
+    total_channels: 1
+    audio_rate: 22050
+    device_name: "sysdefault"

@@ -28,6 +28,7 @@ import math
 import audioop
 import wave
 import ast
+import samplerate as sr
 
 
 class SpeechToTextService(HarmoniServiceManager):
@@ -68,6 +69,21 @@ class SpeechToTextService(HarmoniServiceManager):
         self.file_path = param["test_outdir"]
         self.first_audio_frame = True
         self.service_id = hf.get_child_id(self.name)
+
+        # self.resample = False
+        self.resample = True
+        if self.resample:
+            self.audio_rate = 48000
+            self.device_name = "TKGOU PnP USB Microphone: Audio (hw:3,0)"
+            self.resampler = sr.Resampler()
+            input_rate = self.audio_rate
+            target_rate = 16000
+            self.ratio = target_rate / input_rate
+            self.chunk_size = int(self.chunk_size / self.ratio)
+        else:
+            self.audio_rate = param["audio_rate"]
+            self.device_name = param["device_name"]
+
         """ Setup the microphone """
         self.p = pyaudio.PyAudio()
         self.audio_format = (
@@ -137,11 +153,15 @@ class SpeechToTextService(HarmoniServiceManager):
         """
         for i in range(self.p.get_device_count()):
             device = self.p.get_device_info_by_index(i)
-            rospy.loginfo(device)
-            # rospy.loginfo(f"Found device with name {self.device_name} at index {i}")
+            # rospy.loginfo(device)
+            rospy.loginfo(
+                f"Found device with name {device['name']} at index {i} with SR {device['defaultSampleRate']}\n"
+            )
+            # if device["name"] == "TKGOU PnP USB Microphone: Audio (hw:3,0)":
             if device["name"] == self.device_name:
                 rospy.loginfo(device)
                 self.input_device_index = i
+        rospy.loginfo(f"setting device to {self.input_device_index}")
         return
 
     def determine_silence_threshold(self, mode):
@@ -176,11 +196,26 @@ class SpeechToTextService(HarmoniServiceManager):
         return
 
     def write_to_w2l(self, w2l_process):
+        rospy.loginfo("Writing to w2l")
         while not rospy.is_shutdown():
+            start = time.time()
             latest_audio_data = self.stream.read(
                 self.chunk_size, exception_on_overflow=False
             )
             raw_audio_bitstream = np.fromstring(latest_audio_data, np.uint8)
+            # 2048 255 0 <class 'numpy.ndarray'> 0.06367087364196777
+
+            if self.resample:
+                # print(len(raw_audio_bitstream))
+                raw_audio_bitstream = self.resampler.process(
+                    raw_audio_bitstream, self.ratio
+                ).astype(np.uint8)
+                # print(len(raw_audio_bitstream))
+                # 2048 255 0 <class 'numpy.ndarray'> 0.06379866600036621
+
+            print(
+                f"{np.mean(raw_audio_bitstream):.2f} {np.var(raw_audio_bitstream):.2f} {type(raw_audio_bitstream)} {type(raw_audio_bitstream[0])} {time.time() - start:.2} "
+            )
             raw_audio = raw_audio_bitstream.tolist()
 
             temp = np.asarray(raw_audio, dtype=np.byte)
