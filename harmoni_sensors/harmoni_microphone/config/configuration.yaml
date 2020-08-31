@@ -1,0 +1,15 @@
+# Configuration file for the microphone
+harmoni_microphone:
+  default_param:
+    audio_format_width: 2
+    chunk_size: 1024
+    total_channels: 1
+    audio_rate: 16000
+    silence_limit_seconds: 1
+    previous_audio_seconds: 2
+    total_silence_samples: 100
+    silence_threshold: 1000
+    device_name: default
+    loudest_sound_value: 5.5
+    set_threshold: "constant" #default if you want to detect the silence, constant if you want to set it to a constant value
+    test_outdir: "/root/harmoni_catkin_ws/src/HARMON/harmoni_sensors/harmoni_microphone/temp_data/test2.wav"

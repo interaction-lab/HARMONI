@@ -1,0 +1,15 @@
+# Configuration file for the microphone
+face:
+  default_param:
+    min_duration_viseme: 0.05 #s
+    speed_viseme: 10 #ms
+    timer_interval: 0.01 #s
+    gaze_speed: 10 #ms
+    mouth:
+      min_duration_viseme: 0.05 #s
+      speed_viseme: 10 #ms
+      timer_interval: 0.01 #s
+    eyes:
+      gaze_speed: 10 #ms
+
+    #shell_command: "firefox http://127.0.0.1:8080/index.html"

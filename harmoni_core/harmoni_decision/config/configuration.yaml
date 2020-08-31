@@ -5,8 +5,8 @@ harmoni:
   web: ["default"]
   stt: ["default"]
   #face_detect: ["default"]
-pc:
+hardware:
   microphone: ["default"]
-  camera : ["default"]
+  camera: ["default"]
   face: ["default"]
   speaker: ["default"]
