@@ -13,7 +13,7 @@ alias cbs="roscd; cd ..; catkin build; source devel/setup.bash"
 alias sd="roscd; cd ..; source devel/setup.bash"
 alias rlspeech="roslaunch harmoni_stt stt_service.launch"
 alias rlfacedetect="roslaunch harmoni_face_detect face_detect_service.launch"
-alias rlpcservices="roslaunch harmoni_decision launcher.launch service:='hardware'"
+alias rlhardwareservices="roslaunch harmoni_decision launcher.launch service:='hardware'"
 alias rlharmoniservices="roslaunch harmoni_decision launcher.launch service:='harmoni'"
 alias rlmultiplechoice="roslaunch harmoni_decision harmoni_decision.launch test:=true"
 
