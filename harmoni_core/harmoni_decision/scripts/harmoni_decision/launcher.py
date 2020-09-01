@@ -104,7 +104,7 @@ class Launcher:
                 include = ET.SubElement(
                     root,
                     "include",
-                    file=f"$(find {repo}_{package_array[i]})/launch/{launch_file_array[i]}.launch",
+                    file=f"$(find harmoni_{package_array[i]})/launch/{launch_file_array[i]}.launch",
                 )
                 args = ET.SubElement(include, "arg", name="test_id", value=service_id)
         tree = ET.ElementTree(root)
@@ -149,9 +149,6 @@ def main():
         rospy.loginfo(f"Repos to include: {repos}")
         launch = Launcher()
         for repo in repos:
-            if repo == "hardware":
-                # This is a cludge from merging PC TODO fix
-                repo = "harmoni"
             if repo != "":
                 launch.launch_services(repo, launch_params)
         rospy.spin()
