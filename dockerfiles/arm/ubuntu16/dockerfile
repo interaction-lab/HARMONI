@@ -1,5 +1,5 @@
 #!/bin/bash
-FROM arm32v7/ubuntu:xenial
+FROM ubuntu:xenial
 
 # ==================================================================
 # Abstractions for apt installation
@@ -88,6 +88,7 @@ RUN \
     #freezegun \
     func_timeout \
     datetimerange \
+    dumb-init \
     #jupyterlab \
     && python3.6 -m pip install --ignore-installed pyyaml \
     && rm -rf /var/lib/apt/lists/* 
@@ -102,6 +103,6 @@ RUN \
 
 
 # ==================================================================
-ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 /usr/local/bin/dumb-init
-RUN chmod +x /usr/local/bin/dumb-init
-ENTRYPOINT ["/usr/local/bin/dumb-init","--rewrite","15:10","--"]
+#ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 /usr/local/bin/dumb-init
+#RUN chmod +x /usr/local/bin/dumb-init
+ENTRYPOINT ["dumb-init","--rewrite","15:10","--"]
