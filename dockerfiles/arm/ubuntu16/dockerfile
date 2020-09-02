@@ -1,5 +1,5 @@
 #!/bin/bash
-FROM ubuntu:xenial
+FROM arm32v7/ubuntu:xenial
 
 # ==================================================================
 # Abstractions for apt installation
