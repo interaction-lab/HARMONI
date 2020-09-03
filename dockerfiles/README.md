@@ -14,17 +14,16 @@ To launch the complete harmoni dev setup in docker:
 3. Launch the desired packages and run the desired scripts in the respective docker containers
 
     For example, to use Wave2Letter (requires running get_w2l_models.sh first):
-    - From harmoni_core, open two terminals and:
+    - From harmoni_core, open a terminal and:
         - ```roscore```
-        - ```roslaunch harmoni_decision services.launch use_harmoni_services:=false```
-        - ```roslaunch harmoni_decision routers.launch```
-        - ```roslaunch harmoni_decision behavior_interface.launch test_service:="$REPO_$SERVER_$ID"```
 
-    - From harmoni_pc:
-        - ``` roslaunch harmoni_decision services.launch use_harmoni_services:=false ```
+    - From harmoni_hardware:
+        - ``` roslaunch harmoni_microphone microphone_service.launch test:=true```
+        - _Note: you can also use the alias ```rlhardwareservices``` we have provided, which will launch the hardware you have set in the configuration_
 
     - From ros_w2l:
         - ```roslaunch harmoni_stt stt_example.launch```
+         - _Note: you can also use the alias ```rlspeech``` we have provided_
 
 ## Why Docker?
 Although Harmoni will work without Docker, Harmoni is intended to be used with Docker to maximize portability and scalability. By using Docker Harmoni is quick and easy to set up on any OS or Hardware which currently supports docker.  We provide pre-built images for development, lightweight images for deployment, and even support for deploying to ARM chipsets.
