@@ -1,4 +1,4 @@
-harmoni_speaker:
+speaker:
   default_param:
     chunk_size: 512
     total_channels: 1

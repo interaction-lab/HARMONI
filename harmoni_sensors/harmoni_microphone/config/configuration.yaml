@@ -1,5 +1,5 @@
 # Configuration file for the microphone
-harmoni_microphone:
+microphone:
   default_param:
     audio_format_width: 2
     chunk_size: 1024

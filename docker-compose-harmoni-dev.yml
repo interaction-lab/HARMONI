@@ -192,7 +192,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
     working_dir: /root/harmoni_catkin_ws/src/HARMONI
     command: bash -c "
-      terminator -ue \"cd ../HARMONI && echo 'Entering harmoni_hardware Container... \\n start with rlpcservices' && bash\""
+      terminator -ue \"cd ../HARMONI && echo 'Entering harmoni_hardware Container... \\n start with rlhardwareservices' && bash\""
 
 networks:
   ros_net:
