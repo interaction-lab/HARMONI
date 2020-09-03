@@ -106,37 +106,31 @@ class SpeakerService(HarmoniServiceManager):
 
 
 def main():
-    print("start")
-    test = rospy.get_param("/test/")
-    test_input = rospy.get_param("/test_input/")
-    test_id = rospy.get_param("/test_id/")
-
+    service_name = ActuatorNameSpace.speaker.name
+    name = rospy.get_param("/name_" + service_name + "/")
+    test = rospy.get_param("/test_" + service_name + "/")
+    test_input = rospy.get_param("/test_input_" + service_name + "/")
+    test_id = rospy.get_param("/test_id_" + service_name + "/")
     try:
-        service_name = ActuatorNameSpace.speaker.name
         rospy.init_node(service_name)
-        last_event = ""  # TODO: How to get information about last_event from behavior controller?
-        list_service_names = hf.get_child_list(service_name)
-        service_server_list = []
-        for service in list_service_names:
-            rospy.loginfo(service)
-            service_id = hf.get_child_id(service)
-            param = rospy.get_param("~" + service_id + "_param/")
-            s = SpeakerService(service, param)
-            service_server_list.append(
-                HarmoniServiceServer(name=service, service_manager=s)
+        param = rospy.get_param(name + "/" + test_id + "_param/")
+        if not hf.check_if_id_exist(service_name, test_id):
+            rospy.logerr(
+                "ERROR: Remember to add your configuration ID also in the harmoni_core config file"
             )
-            if test and (service_id == test_id):
-                rospy.loginfo("0:Testing the %s" % (service))
-                # data = s.wav_to_data(test_input)
-                rospy.sleep(3)
-                rospy.loginfo("1: Testing the %s" % (service))
-                data = s.wav_to_data(test_input)
-                s.audio_publisher.publish(data["audio_data"])
-                rospy.loginfo("1: Testing the %s has been completed!" % (service))
-        if not test:
-            for server in service_server_list:
-                server.update_feedback()
-        rospy.spin()
+            return
+        service = hf.set_service_server(service_name, test_id)
+        s = SpeakerService(service, param)
+        service_server = HarmoniServiceServer(name=service, service_manager=s)
+        if test:
+            rospy.loginfo("Testing the %s" % (service))
+            rospy.sleep(1)
+            data = s.wav_to_data(test_input)
+            s.audio_publisher.publish(data["audio_data"])
+            rospy.loginfo("Testing the %s has been completed!" % (service))
+        else:
+            service_server.update_feedback()
+            rospy.spin()
     except rospy.ROSInterruptException:
         pass
 
