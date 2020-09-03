@@ -1,20 +1,19 @@
 # Configuration file for the microphone
 lex:
-  default_param:
-    user_id : "micol_testing"
+  micol_param:
+    user_id: "micol_testing"
     bot_name: "QTRobot"
-    bot_alias: "qt_robot_test" 
+    bot_alias: "qt_robot_test"
     region_name: "eu-west-2"
-  chris_param:
-    user_id : "chris_testing"
+  default_param:
+    user_id: "chris_testing"
     bot_name: "GreeterPrototype"
-    bot_alias: "test_bot" 
+    bot_alias: "test_bot"
     region_name: "us-west-2"
-
 
 google:
   default_param:
-    project_id : "agent1-ewhnht"
+    project_id: "agent1-ewhnht"
     language: "it"
-    session_id: "test_bot" 
+    session_id: "test_bot"
     credential_path: "/root/harmoni_catkin_ws/src/HARMONI/harmoni_detectors/harmoni_stt/config/private-keys.json"
