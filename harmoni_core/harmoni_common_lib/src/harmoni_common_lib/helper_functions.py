@@ -18,7 +18,7 @@ def get_routers():
     router_names = [enum.value for enum in list(Router)]
     return router_names
 
-def get_repo_child(child_name):
+def get_child(child_name):
     """Get children name without ids from config file"""
     abs_path = os.path.abspath(__file__)
     path = abs_path.split("HARMONI/")
@@ -26,8 +26,8 @@ def get_repo_child(child_name):
         repos = yaml.load(file, Loader=yaml.FullLoader)
     for repo in repos:
         if child_name in repos[repo]:
-            repo_child_name = repo + "_" + child_name
-    return repo_child_name
+            child_name = child_name
+    return child_name
 
 def get_child_list(child_name, resources=True):
     """Get children from config file"""
@@ -54,12 +54,11 @@ def get_child_list(child_name, resources=True):
             if resource_array != "" and resources:
                 for r in resource_array:
                     ids_list.append(
-                        child_repo + "_" + child_name + "_" + r + "_" + id_child
+                        child_name + "_" + r + "_" + id_child
                     )
             else:
-                ids_list.append(child_repo + "_" + child_name + "_" + id_child)
+                ids_list.append(child_name + "_" + id_child)
     return ids_list
-
 
 def get_service_list_of_repo(repository):
     """Get children from config file of a specific repo"""
@@ -115,15 +114,16 @@ def get_all_repos():
 
 def set_service_server(service_name, input_id):
     """Set the service server name """
+    name = ""
     if _check_if_resources(service_name):
-        service_server = get_repo_child(service_name) #repo_child
+        service_server = get_child(service_name) #child
     else:
         list_service_names = get_child_list(service_name)
         for service in list_service_names:
             service_id = get_child_id(service)
             if service_id == input_id:
-                service_server = service #repo_child_id
-    return service_server
+                service_server = service #child_id
+    return (service_server)
 
 
 def check_if_detector(service_name):
