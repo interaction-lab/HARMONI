@@ -109,7 +109,7 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
         return
 
     def populate_scene(self, index_scene):
-        self.script[0]["steps"][0]["harmoni_web_default"]["trigger"] = (
+        self.script[0]["steps"][0]["web_default"]["trigger"] = (
             "[{'component_id':'"
             + self.sequence_scenes[index_scene]["background"][0]
             + "', 'set_content':'"
@@ -120,11 +120,11 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
             + self.sequence_scenes[index_scene]["background_cont"][1]
             + "'}]"
         )
-        self.script[0]["steps"][1]["harmoni_tts_default"][
+        self.script[0]["steps"][1]["tts_default"][
             "trigger"
         ] = self.sequence_scenes[index_scene]["text"]
         if index_scene < self.choice_index:
-            self.script[0]["steps"][3]["harmoni_web_default"]["trigger"] = (
+            self.script[0]["steps"][3]["web_default"]["trigger"] = (
                 "[{'component_id':'"
                 + self.sequence_scenes[index_scene]["choice_1"][0]
                 + "', 'set_content':'"
@@ -160,7 +160,7 @@ if __name__ == "__main__":
         test = rospy.get_param("/test_" + pattern_name + "/")
         test_input = rospy.get_param("/test_input_" + pattern_name + "/")
         test_id = rospy.get_param("/test_id_" + pattern_name + "/")
-        url = rospy.get_param("/url" + pattern_name + "/")
+        url = rospy.get_param("/url_" + pattern_name + "/")
         rospack = rospkg.RosPack()
         pck_path = rospack.get_path("harmoni_pattern")
         pattern_script_path = pck_path + f"/pattern_scripting/{pattern_name}.json"
