@@ -18,6 +18,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     gstreamer1.0-libav \
     gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-pulseaudio \
     libgstreamer-plugins-base1.0-dev \
+    luakit \
     && \
     npm install http-server -g && \
     ln -s /usr/bin/nodejs /usr/bin/node \
@@ -26,7 +27,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     $PIP_INSTALL \
     packaging==19.1 \
     soundfile \
-    dlib \
+    #dlib \
     imutils \
     && \
     # ==================================================================
@@ -80,4 +81,5 @@ RUN \
 # ==================================================================
 # ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 /usr/local/bin/dumb-init
 # RUN chmod +x /usr/local/bin/dumb-init
-ENTRYPOINT ["dumb-init","--rewrite","15:10","--"]
+#ENTRYPOIN["dumb-init","--rewrite","15:10","--"]
+ENTRYPOINT ["bash"]

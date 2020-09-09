@@ -2,5 +2,5 @@ speaker:
   default_param:
     chunk_size: 512
     total_channels: 1
-    audio_rate: 22050
+    audio_rate: 16000
     device_name: "sysdefault"
