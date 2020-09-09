@@ -37,7 +37,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     ros-$ROS_DISTRO-audio-common \
     ros-$ROS_DISTRO-dynamixel-msgs \
     build-essential \
-    opencv-python \
+    #opencv-python \
     && \
     rm -rf /var/lib/apt/lists/* /tmp/*
 
