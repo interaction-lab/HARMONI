@@ -62,7 +62,7 @@ class DlibFaceDetector(HarmoniServiceManager):
         self._cv_bridge = CvBridge()
         self.state = State.INIT
 
-    def start(self, rate):
+    def start(self,rate=None):
         """
         Args:
             rate(int): How often the detector should run per second (Hz).
@@ -70,10 +70,15 @@ class DlibFaceDetector(HarmoniServiceManager):
                 TODO: actually use this rate. Rate currently matches camera publish rate regardless of this setting
         """
         self._rate = rate
-        self._image_sub = rospy.Subscriber(
-            self._image_source, Image, self.detect_callback
-        )
-        self.state = State.START
+        self._image_sub = rospy.Subscriber(self._image_source, Image, self.detect_callback)
+        print(self._image_source)
+        if (self._image_sub != None):
+            self.update(State.START)
+            rospy.loginfo("Face detector started.")
+        else:
+            self.update(State.FAILED)
+            rospy.logerr("Face detector failed to start.")
+        return
 
     def stop(self):
         rospy.loginfo("Face detector stopped.")
