@@ -74,11 +74,13 @@ docker build -f dockerfiles/lightweight/harmoni/dockerfile --tag harmoniteam/lig
 docker build -f dockerfiles/lightweight/w2l/dockerfile --tag harmoniteam/lightweight:w2l .
 ```
 
-## ARM (Rasberri Pi)
+## ARM (Ras[berry Pi)
 
 [To build any of these images for ARM please start by following the instructions here](https://www.docker.com/blog/getting-started-with-docker-for-arm-on-linux/)
 
 [Check also this link for buildx documentation](https://docs.docker.com/buildx/working-with-buildx/)
+
+[Also useful: automate builds on github](https://github.com/marketplace/actions/docker-buildx)
 
 (Note: these are the instructions for building on an amd or intel device, to build a docker image on a Pi, just build like normal)
 ```
