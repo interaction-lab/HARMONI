@@ -1,5 +1,5 @@
 #!/bin/bash
-FROM cmbirmingham/harmoni-lightweight:arm
+FROM harmoniteam/lightweight:harmoni
 
 RUN \
     APT_INSTALL="apt-get install -y --no-install-recommends" && \

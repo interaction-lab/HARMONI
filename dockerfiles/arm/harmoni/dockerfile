@@ -1,5 +1,5 @@
 #!/bin/bash
-FROM cmbirmingham/ros-kinetic-lightweight:arm
+FROM harmoniteam/lightweight:ros-kinetic
 
 
 # ==================================================================

@@ -59,23 +59,19 @@ The list of detector containers will expand over time, but currently includes:
 
 ## Dev
 ```
-docker build -f dockerfiles/dev/ubuntu16/dockerfile --tag cmbirmingham/ubuntu16-dev:latest .
+docker build -f dockerfiles/dev/harmoni/dockerfile --tag harmoniteam/dev:harmoni .
 
-docker build -f dockerfiles/dev/ros-kinetic/dockerfile --tag cmbirmingham/ros-kinetic-dev:latest .
-
-docker build -f dockerfiles/dev/harmoni/dockerfile --tag cmbirmingham/harmoni-dev:latest .
-
-docker build -f dockerfiles/dev/w2l/dockerfile --tag cmbirmingham/w2l-dev:latest .
+docker build -f dockerfiles/dev/w2l/dockerfile --tag harmoniteam/dev:w2l .
 ```
 ## Lightweight
 ```
-docker build -f dockerfiles/lightweight/ubuntu16/dockerfile --tag cmbirmingham/ubuntu16-lightweight:latest .
+docker build -f dockerfiles/lightweight/ubuntu16/dockerfile --tag harmoniteam/lightweight:ubuntu16 .
 
-docker build -f dockerfiles/lightweight/ros-kinetic/dockerfile --tag cmbirmingham/ros-kinetic-lightweight:latest .
+docker build -f dockerfiles/lightweight/ros-kinetic/dockerfile --tag harmoniteam/lightweight:ros-kinetic .
 
-docker build -f dockerfiles/lightweight/harmoni/dockerfile --tag cmbirmingham/harmoni-lightweight:latest .
+docker build -f dockerfiles/lightweight/harmoni/dockerfile --tag harmoniteam/lightweight:harmoni .
 
-docker build -f dockerfiles/lightweight/w2l/dockerfile --tag cmbirmingham/w2l-lightweight:latest .
+docker build -f dockerfiles/lightweight/w2l/dockerfile --tag harmoniteam/lightweight:w2l .
 ```
 
 ## ARM (Rasberri Pi)
@@ -97,13 +93,13 @@ docker buildx use mybuilder
 docker buildx inspect --bootstrap
 
 
-docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/arm/ubuntu16/dockerfile --tag cmbirmingham/ubuntu16-lightweight:arm .
+docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/arm/ubuntu16/dockerfile --tag harmoniteam/lightweight:ubuntu16 .
 
-docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/arm/ros-kinetic/dockerfile --tag cmbirmingham/ros-kinetic-lightweight:arm .
+docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/arm/ros-kinetic/dockerfile --tag harmoniteam/lightweight:ros-kinetic .
 
-docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/arm/harmoni/dockerfile --tag cmbirmingham/harmoni-lightweight:arm .
+docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/arm/harmoni/dockerfile --tag harmoniteam/lightweight:harmoni .
 
-docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/arm/w2l/dockerfile --tag cmbirmingham/w2l-lightweight:arm .
+docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/arm/w2l/dockerfile --tag harmoniteam/lightweight:w2l .
 ```
 
 # Network Notes
