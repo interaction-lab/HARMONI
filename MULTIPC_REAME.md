@@ -78,3 +78,13 @@ There are few different approaches for multi-host container networking we know a
 2. Create a docker stack/compose swarm (e.g. `docker stack deploy -c TEST-docker-compose-harmoni-swarm.yml <stack_name>`). Good: Can start all machines with a hands-off approach. Bad: Cannot specify static ips since this approach assumes you intend to make replicas of containers. This can worked around usually if you go by service name, which will generally provide IPs internally to containers in the same swarm.
 3. Bridge containers to host network and make use of ROS communication methods. This theoretically would work, but it's unclear how you would establish a local IP in the container that could be contacted from another PC on the local network. The macvlan docker network option might work here as it creates a virtual network device. That said, this might not be very portable. Needs research/testing.
 4. Use some other container management solution (Kubernetes, Overnode, etc.). These options might be great, but they require more research/testing.
+
+*Important note:* Volumes are not shared across the network/swarms by default. Mount points are local to the machine they are run from, even when run from the swarm. There are alternate volume drivers from AWS that can do some more distributed data storage type things, but many people opt for a network drive if they want some shared file space.
+
+Some sources:
+https://docs.docker.com/network/network-tutorial-overlay/#use-an-overlay-network-for-standalone-containers
+https://blog.alexellis.io/docker-stacks-attachable-networks/
+https://docs.docker.com/compose/networking/#use-a-pre-existing-network
+https://stackoverflow.com/questions/38088279/communication-between-multiple-docker-compose-projects
+https://stackoverflow.com/questions/45180892/static-ip-address-doesnt-work-in-docker-compose-v3
+https://stackoverflow.com/questions/47756029/how-does-docker-swarm-implement-volume-sharing
