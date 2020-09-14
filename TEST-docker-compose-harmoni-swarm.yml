@@ -1,0 +1,129 @@
+#This is an example of a swarm based compose file that can launch from a single PC. It works, but cannot do static IPs.
+#It may requre setting up your own network and then treating it as an external network.
+#To deploy: docker stack deploy -c TEST-docker-compose-harmoni-swarm.yml <stack_name>
+version: "3.8"
+services:
+  harmoni_core:
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.platform.arch == x86_64
+    container_name: harmoni_core
+    build:
+      context: .
+      dockerfile: dockerfiles/lightweight/harmoni/dockerfile
+      network: host
+    image: cmbirmingham/harmoni-lightweight:latest
+    init: true
+    environment:
+      DISPLAY: $DISPLAY
+      QT_GRAPHICSSYSTEM: native
+      ROS_DISTRO: kinetic
+      ROS_MASTER_URI: http://172.18.3.4:11311
+      IS_DOCKER_ENV: "true"
+      ROS_HOSTNAME: harmoni_core
+      CATKIN_WS: harmoni_catkin_ws
+    privileged: true
+    networks:
+      ros_net:
+        ipv4_address: 172.18.3.4
+    hostname: harmoni_core
+    ports:
+      - "11312:11312"
+      - "33691:33691"
+      - "8081:8081"
+    devices:
+      - /dev/dri:/dev/dri
+      #- /dev/snd:/dev/snd
+      - /dev/video0:/dev/video0
+    volumes:
+      - harmoni_catkin_ws:/root/harmoni_catkin_ws
+      - ~/HARMONI/:/root/local_mount/HARMONI/
+      # IDEs
+      - ~/.aws:/root/.aws/
+      # Configuration
+      - ~/HARMONI/dockerfiles/config/setup_script.sh:/root/setup_script.sh
+      - ~/HARMONI/dockerfiles/config/dev_setup_script.sh:/root/dev_setup_script.sh
+      # Other
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      #- ~/.config/terminator/config:/root/.config/terminator/config
+      # - ~/.gitconfig:/root/.gitconfig:ro
+      # - ~/.ssh/:/root/.ssh:ro
+      # - ~/.vimrc:/root/.vimrc:ro
+      # - ~/.vim/:/root/.vim/:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    working_dir: /root/harmoni_catkin_ws/src/HARMONI
+    entrypoint: /bin/bash --rcfile /root/setup_script.sh 
+    stdin_open: true #get a interactive terminal when attaching.
+    tty: true
+    # command: roscore
+    # command: bash -c "
+    #   terminator -ue \"echo 'Entering harmoni_core Container... \\n start with roscore and rlharmoniservices' && bash\""
+
+  harmoni_hardware:
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.platform.arch == armv7l
+    container_name: harmoni_hardware
+    build:
+      context: .
+      dockerfile: dockerfiles/arm/harmoni/dockerfile
+      network: host
+    image: harmoniteam/lightweight:harmoni
+    init: true #this should handle the zombie reaping problem, so no need for dumb-init...
+    environment:
+      DISPLAY: $DISPLAY
+      QT_GRAPHICSSYSTEM: native
+      ROS_DISTRO: kinetic
+      IS_DOCKER_ENV: "true"
+      CATKIN_WS: harmoni_catkin_ws
+      ROS_HOSTNAME: harmoni_hardware
+      ROS_MASTER_URI: http://172.18.3.4:11311
+    privileged: true
+    networks:
+      ros_net:
+        ipv4_address: 172.18.3.5
+    hostname: ros_hardware
+    # depends_on:
+      # - "harmoni_core"
+    devices:
+      - /dev/dri:/dev/dri
+      - /dev/snd:/dev/snd
+    #  - /dev/video0:/dev/video0
+    volumes:
+      - ~/HARMONI/:/root/local_mount/HARMONI/
+      # Configuration
+      - ~/HARMONI/dockerfiles/config/setup_script.sh:/root/.setup_script.sh
+      - ~/HARMONI/dockerfiles/config/dev_setup_script.sh:/root/.dev_setup_script.sh
+      - ~/HARMONI/dockerfiles/config/asoundrc:/root/.asoundrc
+      # Other
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ~/.config/terminator/config:/root/.config/terminator/config
+      - ~/.gitconfig:/root/.gitconfig:ro
+      - ~/.ssh/:/root/.ssh:ro
+      - ~/.vimrc:/root/.vimrc:ro
+      - ~/.vim/:/root/.vim/:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    working_dir: /root/harmoni_catkin_ws/src/HARMONI
+    #TODO: remove dumb-init and next line
+    entrypoint: /bin/bash --rcfile /root/setup_script.sh 
+    stdin_open: true #get a interactive terminal when attaching.
+    tty: true
+    #command: bash -c "
+    #  terminator -ue \"cd ../HARMONI && echo 'Entering harmoni_hardware Container... \\n start with rlhardwareservices' && bash\"" 
+   
+networks:
+  ros_net:
+    driver: overlay
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.3.0/24
+
+volumes:
+  harmoni_catkin_ws:
