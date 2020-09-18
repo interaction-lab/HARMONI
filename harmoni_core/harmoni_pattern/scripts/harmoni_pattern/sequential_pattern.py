@@ -58,7 +58,7 @@ class SequentialPattern(HarmoniServiceManager):
         for service in self.scripted_services:
             assert (
                 service in self.configured_services
-            ), f"Scripted service: {service}, has not been configured"
+            ), f"Scripted service: {service}, is not listed among configured services: {self.configured_services}"
 
         for client in self.scripted_services:
             self.service_clients[client] = HarmoniActionClient(client)
@@ -162,14 +162,15 @@ class SequentialPattern(HarmoniServiceManager):
 
             self.service_clients[service].send_goal(
                 action_goal=ActionType[details["action_goal"]].value,
-                optional_data="",
+                optional_data="Setup",
                 wait=details["wait_for"],
             )
 
             if details["resource_type"] == "detector":
-                # service_id = hf.get_child_id(service)
+                # Split off last part of node name to get the topic (e.g. stt_default -> stt)
                 service_list = service.split("_")
-                service_id = "_".join(service_list[1:-1])
+                service_id = "_".join(service_list[0:-1])
+
                 topic = f"/harmoni/detecting/{service_id}/default"
                 rospy.loginfo(f"subscribing to {topic}")
                 rospy.Subscriber(
@@ -327,7 +328,9 @@ def main():
         dp = SequentialPattern(pattern_name, script)
         service_server = HarmoniServiceServer(name=pattern_name, service_manager=dp)
         if test:
-            rospy.loginfo(f"START: Set up. Testing first step of {pattern_name} pattern.")
+            rospy.loginfo(
+                f"START: Set up. Testing first step of {pattern_name} pattern."
+            )
             dp.start()
         else:
             service_server.update_feedback()
