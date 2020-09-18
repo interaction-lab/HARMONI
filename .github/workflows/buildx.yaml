@@ -4,17 +4,9 @@ on:
   pull_request:
     branches: develop
   push:
-    branches: feature/refactor-autobuild
+    branches: develop
   workflow_dispatch:
-    # Inputs the workflow accepts.
-    inputs:
-      name:
-        # Friendly description to be shown in the UI instead of 'name'
-        description: 'Person to greet'
-        # Default value if no value is explicitly provided
-        default: 'World'
-        # Input has to be provided for the workflow to run
-        required: true
+    #manual build? (only here for testing)
 
 jobs:
   buildx:
@@ -45,8 +37,8 @@ jobs:
           docker buildx build \
             --platform linux/amd64,linux/arm64,linux/arm/v7 \
             --output "type=image,push=false" \
-            --file ./dockerfiles/arm/ros-kinetic/dockerfile ./dockerfiles/arm/ros-kinetic \
-            --tag harmoniteam/lightweight:ros-kinetic
+            --file ./dockerfiles/arm/harmoni/dockerfile ./dockerfiles/arm/harmoni \
+            --tag harmoniteam/lightweight:harmoni
             
       -
         name: Login to DockerHub
@@ -63,5 +55,5 @@ jobs:
           docker buildx build \
             --output "type=image,push=true" \
             --platform linux/amd64,linux/arm64,linux/arm/v7 \
-            --file ./dockerfiles/ros-kinetic/dockerfile ./dockerfiles/arm/ros-kinetic \
-            --tag harmoniteam/lightweight:ros-kinetic
+            --file ./dockerfiles/harmoni/dockerfile ./dockerfiles/arm/harmoni \
+            --tag harmoniteam/lightweight:harmoni
