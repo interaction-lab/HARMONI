@@ -5,6 +5,12 @@ echo 'Hello, rosmaster'
 source /opt/ros/$ROS_DISTRO/setup.bash 
 source /root/harmoni_catkin_ws/devel/setup.bash
 
+alias gs="git status"
+alias gl="git log --pretty=oneline --graph"
+alias gb="git branch -a"
+alias gg="git gui"
+alias code="code --user-data-dir /root/.visual_code/"
+
 alias rh="roscd; cd .."
 alias rs="roscd; cd ../src"
 alias cm="roscd; cd ..; catkin_make"

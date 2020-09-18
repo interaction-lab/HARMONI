@@ -1,88 +1,99 @@
-FROM cmbirmingham/ros-kinetic-dev:latest
-
+#!/bin/bash
+FROM harmoniteam/lightweight:harmoni
 
 # ==================================================================
-# harmoni packages
-# ------------------------------------------------------------------
-RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
+# Abstractions for apt installation
+RUN \
+    APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-    nodejs \
-    npm \
-    luakit \ 
-    libboost-all-dev \
-    libgstreamer1.0-0 gstreamer1.0-dev gstreamer1.0-tools gstreamer1.0-doc \
-    gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
-    gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly \
-    gstreamer1.0-libav \
-    gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-pulseaudio \
-    libgstreamer-plugins-base1.0-dev \
-    && \
-    npm install http-server -g && \
-    ln -s /usr/bin/nodejs /usr/bin/node \
-    && \
-    PIP_INSTALL="python3.6 -m pip --no-cache-dir install --upgrade" && \
-    $PIP_INSTALL \
-    packaging==19.1 \
-    soundfile \
-    dlib \
-    imutils \
-    google-cloud-speech \
-    dialogflow \
-    google-api-python-client \
-    opencv-python \
-    && \
-    # ==================================================================
-    # install ros packages for harmoni
-    # ------------------------------------------------------------------
-    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-    ros-$ROS_DISTRO-rosbridge-server \
-    ros-$ROS_DISTRO-audio-common \
-    ros-$ROS_DISTRO-dynamixel-msgs \
-    build-essential \
-    && \
-    rm -rf /var/lib/apt/lists/* /tmp/*
+    zsh \
+    unzip \
+    # VERSION CONTROL
+    git-gui \
+    meld \
+    # BASIC EDITORS
+    gedit \
+    vim \
+    fonts-powerline \
+    emacs \
+    nano \
+    nautilus \
+    # TERMINAL TOOLS
+    terminator \
+    tmux \
+    sudo \
+    # MISC. TOOLS
+    htop \
+    vlc \
+    python-keybinder \
+    python-notify \
+    # PYAUDIO
+    portaudio19-dev libportaudio2 libportaudiocpp0\
+    ffmpeg libav-tools \
+    # GRAPHICS UTILS
+    libcanberra-gtk-module \
+    libgl1-mesa-glx \
+    libgl1-mesa-dri \
+    mesa-utils \
+    && sed -i 's/geteuid/getppid/' /usr/bin/vlc \
+    && rm -rf /var/lib/apt/lists/* 
 
-
-
-
-ENV ROS_WS /root/harmoni_catkin_ws
-RUN mkdir -p $ROS_WS/src
-WORKDIR $ROS_WS
-
-RUN git -C src clone \
-    -b develop \
-    https://github.com/interaction-lab/HARMONI.git 
-
-RUN git -C src clone \
-    -b kinetic \
-    https://github.com/ros-perception/vision_opencv.git
-
-RUN ln -s /usr/lib/x86_64-linux-gnu/libboost_python-py35.so /usr/lib/x86_64-linux-gnu/libboost_python3.so
-
-RUN git -C src clone \
-    -b master \
-    https://github.com/ros-drivers/audio_common.git
 
 # ==================================================================
-# build ros package source
-# ------------------------------------------------------------------
-RUN catkin config \
-    --extend /opt/ros/$ROS_DISTRO \
-    -DPYTHON_EXECUTABLE=/usr/bin/python3.6 \
-    -DPYTHON_INCLUDE_DIR=/usr/include/python3.6m \
-    -DPYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.6m.so \
-    && \
-    catkin build
-
-RUN mkdir -p /root/local_mount/
-RUN ln -s /root/harmoni_catkin_ws/src/HARMONI /root/local_mount/
-
-# ==================================================================
+# Setup Python3.6 with pip, virtualenv
 RUN \
-    apt-get update -y && apt-get upgrade -y
+    APT_INSTALL="apt-get install -y --no-install-recommends" \
+    && add-apt-repository -y ppa:deadsnakes/ppa \
+    && apt-get update -y && apt-get upgrade -y \
+    && apt-get install -y \
+    && DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+    python3.6-dev \
+    && python3.6 -m pip install \
+    pyaudio \
+    # ROS
+    pyaml \
+    empy \
+    # AWS
+    boto3 \
+    awscli \
+    # DATA SCIENCE TOOLS
+    numpy \
+    pandas \
+    sklearn \
+    statsmodels \
+    hmmlearn \
+    pmdarima \
+    matplotlib \
+    dill \
+    requests \
+    schedule \
+    freezegun \
+    func_timeout \
+    datetimerange \
+    jupyterlab \
+    && rm -rf /var/lib/apt/lists/* 
+
 
 # ==================================================================
-ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 /usr/local/bin/dumb-init
-RUN chmod +x /usr/local/bin/dumb-init
-ENTRYPOINT ["/usr/local/bin/dumb-init","--rewrite","15:10","--"]
+# Setup Pycharm
+RUN \
+    wget https://download.jetbrains.com/python/pycharm-community-2019.2.5.tar.gz?_ga=2.206607891.1099553149.1574619599-1281313269.1574206878 \
+    && mv pycharm-community-* pycharm-community.tar.gz \
+    && tar xfz pycharm-*.tar.gz -C /opt/ \
+    && rm pycharm-community.tar.gz \
+    && echo 'alias pycharm="/opt/pycharm-community-2019.2.5/bin/pycharm.sh"' >> /root/.bashrc 
+
+# ==================================================================
+# Install Visual Studio Code
+RUN \
+    apt-get update -y \
+    && apt-get install -y \
+    apt-transport-https \
+    ca-certificates \
+    && curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg \
+    && mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg \
+    && sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list' \
+    && apt-get update -y \
+    && apt-get install -y code \
+    && rm -rf /var/lib/apt/lists/* 
