@@ -4,26 +4,26 @@ This walks through an approach of connecting multiple computers each running the
 
 ## Running
 
-Run the following commands. A heading indicating #master or #worker will be included each time context changes. Master will be the ROS Master PC/roscore while worker is the second PC.
+Run the following commands. A heading indicating #manager or #worker will be included each time context changes. Either manager or worker can be the ROS Master/roscore. The current setup assumes the worker is the roscore/ROS master; if they are switched, then the set IPs in the docker compose and the docker run command below will need to change. 
+
+For a QTRobot setup, it is assumed that the Worker & ROS master is the QTRP/RPI, while the docker manager is QTPC/NUC
 
 ```bash
-#--master--
+#--manager--
 docker swarm init
 #copy join command that is displayed and run on worker next
 #--worker--
 docker swarm join --token <bunch of token info>
 
-#--master--
+#--manager--
 docker-compose -f docker-compose-harmoni-lightweight-multipc.yml up
 
 # verify ros_net is listed as a overlay swarm network (optional)
 docker network ls # run in separate host terminal
-#--master-container context--
-roscore
 
 #--worker--
 #this is one command
-docker run -it --name hardware --network ros_net --ip 172.18.3.5 --init \
+docker run -it --name hardware --network ros_net --ip 172.18.3.4 --init \
 --device=/dev/snd:/dev/snd \
 -e ROS_MASTER_URI=http://172.18.3.4:11311 \
 -e ROS_HOSTNAME=harmoni_hardware \
@@ -40,9 +40,15 @@ docker run -it --name hardware --network ros_net --ip 172.18.3.5 --init \
 -v ~/.vim/:/root/.vim/:ro \
 -v /etc/timezone:/etc/timezone:ro \
 -v /etc/localtime:/etc/localtime:ro \
+-p "11312:11312" \
+-p "33691:33691" \
+-p "8081:8081" \
 -w /root/harmoni_catkin_ws/src/HARMONI \
 harmoniteam/lightweight:harmoni bash 
 #cmd end
+
+#--worker-container context--
+roscore
 
 #communication verification (optional):
 #--worker container context--

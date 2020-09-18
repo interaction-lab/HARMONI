@@ -20,7 +20,7 @@ services:
     privileged: true
     networks:
       shared_net:
-        ipv4_address: 172.18.3.4
+        ipv4_address: 172.18.3.5
     hostname: harmoni_core
     ports:
       - "11312:11312"
