@@ -1,1 +1,0 @@
-<launch><include file="$(find pc_face)/launch/face_service.launch" /><include file="$(find pc_speaker)/launch/speaker_service.launch" /></launch>

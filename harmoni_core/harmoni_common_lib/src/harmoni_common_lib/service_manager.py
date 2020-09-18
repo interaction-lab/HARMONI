@@ -3,81 +3,98 @@
 # Importing the libraries
 import rospy
 import roslib
+from collections import deque, defaultdict
+from harmoni_common_lib.action_client import HarmoniActionClient
+import warnings
 
 
 class HarmoniServiceManager(object):
     """
-    Service manager for the harware reading and internal service servers.
-    Individual service managers overwrite the parent public functions.
+    The HarmoniService class implements a template class for interfacing between
+    a service server and the actual implementation of the logic and functionality
+    of a given node, also known as a Harmoni_Unit.
+
+    Children of the service should overwrite the functionality of the parent functions
+    with their own logic and functionality. Not all children should overwrite all functions
+    as it wouldn't make sense for a microphone node to 'do' anything. 
+
     """
 
-    def __init__(self, state):
-        rospy.loginfo("Init the service manager state")
-        self.state = state
+    def __init__(self, name):
+        """ The service setup will instantiate the publishers, subscribers,
+        class variables and clients.
 
-    def update(self, state):
-        self.state = state
-        rospy.loginfo("Update the state to %i" % state)
-        return
+        Args:
+            name (str): Name of the service (useful for logging)
+        """
+        rospy.loginfo(f"Initializing the {name} service")
+        # Default variables
+        self.name = name
+        self.service_clients = defaultdict(HarmoniActionClient)
+        self.configured_services = []  # available services
+        self.client_results = defaultdict(deque)  # store state of the service
 
     def test(self):
-        """ Test the hardware, sending default action """
-        return
-
-    # FIXME this rate is not used and it also depends on being set by HarwareReadingServer which calls the start function without the rate argument.
-    def start(self, rate):
-        """ Start reading or processing data """
-        return
-
-    def pause(self):
-        """ Pause reading or processing data """
-        return
-
-    def stop(self):
-        """ Stop reading or processing data """
-        return
-
-    def reset_init(self):
-        """ Reset harware variables to initial state """
-        return
-
-
-class HarmoniExternalServiceManager(object):
-    """
-    Service manager for the harware control and external service servers.
-    Individual service managers overwrite the parent public functions.
-    """
-
-    def __init__(self, state):
-        rospy.loginfo("Init the direct service manager")
-        self.response_received = False
-        self.actuation_completed = False
-        self.result_msg = ""
-        self.state = state
-
-    def test(self):
-        """ Test the hardware, sending default action """
-        return
-
-    def update(
-        self, state, actuation_completed="", response_received="", result_msg=""
-    ):
-        self.response_received = response_received  # True if action completed
-        self.state = state  # Used IF logic can dictate control flow
-        self.result_msg = result_msg  # String
-        self.actuation_completed = actuation_completed
-        return
+        """ Tests the setup has successfully completed and the unit is ready to
+        be used
+        """
+        rospy.loginfo(f"Sucessfully reached {self.name}")
+        return True
 
     def request(self, rate):
-        """ Do a request """
+        """ Make a request of another service, such as a web service
+
+        Raises:
+            NotImplementedError: To be used, this function should be overwritten by the child class.
+        """
+        raise NotImplementedError()
         return
 
     def do(self, data):
-        """ Do an action """
-        return data
+        """ Will start a atomic action. This could be executing a movement or speech
+        For long actions use do()
+
+        Raises:
+            NotImplementedError: To be used, this function should be overwritten by the child class.
+        """
+        raise NotImplementedError()
+        return
+
+    def start(self):
+        """ Will start a long running action. This could be reading hardware and publishing
+        it to a topic or running a behavior pattern. For atomic actions use do()
+
+        Raises:
+            NotImplementedError: To be used, this function should be overwritten by the child class.
+        """
+        raise NotImplementedError()
+        return
+
+    def pause(self):
+        """ Will interupt the long running action, preventing it from continuing until start
+        is called again.
+
+        Raises:
+            NotImplementedError: To be used, this function should be overwritten by the child class.
+        """
+        raise NotImplementedError()
+        return
+
+    def stop(self):
+        """ Will interupt the long running action
+
+        Raises:
+            NotImplementedError: To be used, this function should be overwritten by the child class.
+        """
+        raise NotImplementedError()
+        return
 
     def reset_init(self):
-        """ Reset harware variables to initial state """
-        self.response_received = False
-        self.result_msg = ""
+        """ Resets variables such that if start is called will start from beginning
+
+        Raises:
+            NotImplementedError: To be used, this function should be overwritten by the child class.
+        """
+        rospy.logwarn("Class reset not implemented, add a reset to your node")
         return
+

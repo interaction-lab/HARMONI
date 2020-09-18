@@ -9,6 +9,7 @@ class ActionType(IntEnum):
     ON = 1
     PAUSE = 2
     REQUEST = 3
+    DO = 4
 
 
 class State(IntEnum):
@@ -27,13 +28,13 @@ class Router(Enum):
     DETECTOR = "detector"
 
 
-class RouterSensor(Enum):
+class SensorNameSpace(Enum):
     microphone = "/harmoni/sensing/microphone/"
     camera = "/harmoni/sensing/camera/"
     ROUTER = "/harmoni/sensing/"
 
 
-class RouterActuator(Enum):
+class ActuatorNameSpace(Enum):
     speaker = "/harmoni/actuating/speaker/"
     face = "/harmoni/actuating/face/"
     tts = "/harmoni/actuating/tts/"
@@ -41,15 +42,16 @@ class RouterActuator(Enum):
     ROUTER = "/harmoni/actuating/"
 
 
-class RouterDialogue(Enum):
+class DialogueNameSpace(Enum):
     bot = "/harmoni/dialoging/bot/"
     ROUTER = "/harmoni/dialoging/"
 
 
-class RouterDetector(Enum):
+class DetectorNameSpace(Enum):
     stt = "/harmoni/detecting/stt/"
     face_detect = "/harmoni/detecting/face_detect/"
     ROUTER = "/harmoni/detecting/"
+
 
 class Resources(Enum):
     face = ["eyes", "mouth"]

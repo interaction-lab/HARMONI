@@ -3,7 +3,12 @@
 # Importing the libraries
 import yaml
 import os
-from harmoni_common_lib.constants import Router, RouterDetector, RouterSensor, Resources
+from harmoni_common_lib.constants import (
+    Router,
+    DetectorNameSpace,
+    SensorNameSpace,
+    Resources,
+)
 
 
 PATH_CONFIG = "HARMONI/harmoni_core/harmoni_decision/config/configuration.yaml"
@@ -13,8 +18,18 @@ def get_routers():
     router_names = [enum.value for enum in list(Router)]
     return router_names
 
+def get_child(child_name):
+    """Get children name without ids from config file"""
+    abs_path = os.path.abspath(__file__)
+    path = abs_path.split("HARMONI/")
+    with open(path[0] + PATH_CONFIG) as file:
+        repos = yaml.load(file, Loader=yaml.FullLoader)
+    for repo in repos:
+        if child_name in repos[repo]:
+            child_name = child_name
+    return child_name
 
-def get_child_list(child_name):
+def get_child_list(child_name, resources=True):
     """Get children from config file"""
     ids_list = []
     existed = False
@@ -36,15 +51,14 @@ def get_child_list(child_name):
     if existed:
         child_repo = repo_child_name.split("_")[0]
         for id_child in repos[child_repo][child_name]:
-            if resource_array != "":
+            if resource_array != "" and resources:
                 for r in resource_array:
                     ids_list.append(
-                        child_repo + "_" + child_name + "_" + r + "_" + id_child
+                        child_name + "_" + r + "_" + id_child
                     )
             else:
-                ids_list.append(child_repo + "_" + child_name + "_" + id_child)
+                ids_list.append(child_name + "_" + id_child)
     return ids_list
-
 
 def get_service_list_of_repo(repository):
     """Get children from config file of a specific repo"""
@@ -78,9 +92,13 @@ def get_child_id(service_name):
 
 
 def get_service_name(repo_service_id):
-    """Get id of the child from service name"""
+    """Get name of the child from service"""
     service = repo_service_id.split("_")
-    name = service[1]
+    name = ""
+    for i in range(0,len(service)):
+        if not i==0 and not i==len(service)-1:
+            name += service[i]
+    print(name)
     return name
 
 
@@ -94,10 +112,23 @@ def get_all_repos():
         repo_list.append(repo)
     return repo_list
 
+def set_service_server(service_name, input_id):
+    """Set the service server name """
+    name = ""
+    if _check_if_resources(service_name):
+        service_server = get_child(service_name) #child
+    else:
+        list_service_names = get_child_list(service_name)
+        for service in list_service_names:
+            service_id = get_child_id(service)
+            if service_id == input_id:
+                service_server = service #child_id
+    return (service_server)
+
 
 def check_if_detector(service_name):
     """Check if detector. It returns true if it is a detector """
-    list_detectors = [enum.name for enum in list(RouterDetector)]
+    list_detectors = [enum.name for enum in list(DetectorNameSpace)]
     for d in list_detectors:
         if service_name == d:
             return True
@@ -106,7 +137,7 @@ def check_if_detector(service_name):
 
 def check_if_sensor(service_name):
     """Check if sensor. It returns true if it is a sensor """
-    list_sensors = [enum.name for enum in list(RouterSensor)]
+    list_sensors = [enum.name for enum in list(SensorNameSpace)]
     for d in list_sensors:
         if service_name == d:
             return True
@@ -115,7 +146,19 @@ def check_if_sensor(service_name):
 
 def _check_if_resources(service):
     """Check if the service contains many resources """
+    has_resources = False
     if service == "face":
+        has_resources = True
+    return has_resources
 
-        return resource_array
-    return service
+
+def check_if_id_exist(service, selected_id):
+    """Check if the ID of the launching file has been already added to the harmoni_core config file."""
+    exist = False
+    list_service_names = get_child_list(service)
+    service_server_list = []
+    for service in list_service_names:
+        service_id = get_child_id(service)
+        if service_id == selected_id:
+            exist = True
+    return exist

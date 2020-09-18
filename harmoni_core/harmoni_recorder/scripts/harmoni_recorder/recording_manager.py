@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
 
-# Importing the libraries
+# Common Imports
 import rospy
 import roslib
+
+from harmoni_common_lib.constants import State, SensorNameSpace
+from harmoni_common_lib.service_server import HarmoniServiceServer
+from harmoni_common_lib.service_manager import HarmoniServiceManager
+import harmoni_common_lib.helper_functions as hf
+
 import pyaudio
 import wave
 import sys
@@ -19,15 +25,16 @@ from audio_common_msgs.msg import AudioData
 from sensor_msgs.msg import Image
 
 
-class HarmoniRecordingManager:
+class RecordingManager(HarmoniServiceManager):
     """
     The recording manager aims at storing the information collected by the sensors
     TODO: fix the topic names
     """
 
-    def __init__(self, manager_name, child_names):
+    def __init__(self, name, child_names):
         """ Init recording manager"""
         rospy.loginfo("Init recording the data from the sensors")
+        super().__init__(name)
         self.outdir = child_names["outdir"]
         self.audio_child = child_names["audio_data"]
         self.video_child = child_names["video_data"]
@@ -44,9 +51,14 @@ class HarmoniRecordingManager:
         format_size = pyaudio.paInt16
         self.cv_bridge = CvBridge()
         """ Init subscribers"""
-        # FIX IT: GET ALL THE TOPICS /HARMONI/SENSING/CAMERA OR /HARMONI/SENSING/MICROPHONE
         for child in self.audio_child:
-            param = rospy.get_param(child + "_param")
+            child_id = hf.get_child_id(child)
+            child_name = hf.get_service_name(child)
+            try:
+                param = rospy.get_param(child_name+"/"+child_id + "_param")
+            except:
+                rospy.logerr("ERR: Remember to run the microphone you want to record")
+                return
             self.audio_children[child] = {
                 "first_frame": True,
                 "channels": param["total_channels"],
@@ -56,7 +68,7 @@ class HarmoniRecordingManager:
             }
             if child == self.merge_child[0]:
                 rospy.Subscriber(
-                    "/harmoni/sensing" + child,
+                    SensorNameSpace.microphone.value + child_id+"/talking",
                     AudioData,
                     self._audio_merge_data_callback,
                     child,
@@ -64,14 +76,20 @@ class HarmoniRecordingManager:
                 )
             else:
                 rospy.Subscriber(
-                    "/harmoni/sensing/microphone",
+                    SensorNameSpace.microphone.value + child_id+"/talking",
                     AudioData,
                     self._audio_data_callback,
                     child,
                     queue_size=1,
                 )
         for child in self.video_child:
-            param = rospy.get_param(child + "_param")
+            child_id = hf.get_child_id(child)
+            child_name = hf.get_service_name(child)
+            try:
+                param = rospy.get_param(child_name+"/"+child_id + "_param")
+            except:
+                rospy.logerr("ERR: Remember to run the camera you want to record")
+                return
             self.video_children[child] = {
                 "first_frame": True,
                 "video_format": param["video_format"],
@@ -79,7 +97,7 @@ class HarmoniRecordingManager:
             }
             if child == self.merge_child[1]:
                 rospy.Subscriber(
-                    "/harmoni/sensing/" + child,
+                    SensorNameSpace.camera.value+child_id+"/watching",
                     Image,
                     self._video_merge_data_callback,
                     child,
@@ -87,12 +105,18 @@ class HarmoniRecordingManager:
                 )
             else:
                 rospy.Subscriber(
-                    "/harmoni/sensing/watching/pc_camera",
+                    SensorNameSpace.camera.value+child_id+"/watching",
                     Image,
                     self._video_data_callback,
                     child,
                     queue_size=1,
                 )
+        self.state = State.INIT
+
+    def start(self):
+        self.state = State.START
+        rospy.loginfo(f"Starting {self.name}")
+        return
 
     def _record_audio(self, data, child):
         """Record audio file"""
@@ -138,7 +162,7 @@ class HarmoniRecordingManager:
             )
         try:
             self.video_data[child].write(self.frame[child])
-        except:
+        except Exception:
             rospy.logdebug("Not writing!!")
         return self.path_video[child]
 
@@ -179,15 +203,24 @@ class HarmoniRecordingManager:
 
 
 def main():
+    name = rospy.get_param("/unit_name/")
+    test = rospy.get_param("/test_" + name + "/")
+    test_input = rospy.get_param("/test_input_" + name + "/")
+    test_id = rospy.get_param("/test_id_" + name + "/")
+    child_names = rospy.get_param("/"+name+"/")
     try:
-        manager_name = "recording"
-        rospy.init_node(manager_name)
-        child_names = rospy.get_param("/harmoni_recorder/")
-        HarmoniRecordingManager(manager_name, child_names)
+        rospy.init_node(name)
+        # Initialize the pattern with pattern sequence/loop
+        rm = RecordingManager(name, child_names)
+        service_server = HarmoniServiceServer(name=name, service_manager=rm)
+        if test:
+            rospy.loginfo(f"START: Set up. Testing first step of {name} pattern.")
+            rm.start()
+        else:
+            service_server.update_feedback()
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
-
 
 if __name__ == "__main__":
     main()

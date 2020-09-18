@@ -3,14 +3,14 @@
         "set": "setup",
         "steps": [
             {
-                "pc_microphone_default": {
+                "microphone_default": {
                     "action_goal": "ON",
                     "resource_type": "sensor",
                     "wait_for": ""
                 }
             },
             {
-                "harmoni_stt_default": {
+                "stt_default": {
                     "action_goal": "ON",
                     "resource_type": "detector",
                     "wait_for": ""
@@ -22,7 +22,7 @@
         "set": "sequence",
         "steps": [
             {
-                "harmoni_bot_default": {
+                "bot_default": {
                     "action_goal": "REQUEST",
                     "resource_type": "service",
                     "wait_for": "new",
@@ -30,7 +30,7 @@
                 }
             },
             {
-                "harmoni_tts_default": {
+                "tts_default": {
                     "action_goal": "REQUEST",
                     "resource_type": "service",
                     "wait_for": "new"
@@ -38,15 +38,15 @@
             },
             [
                 {
-                    "pc_speaker_default": {
-                        "action_goal": "REQUEST",
+                    "speaker_default": {
+                        "action_goal": "DO",
                         "resource_type": "actuator",
                         "wait_for": "v"
                     }
                 },
                 {
-                    "pc_face_mouth_default": {
-                        "action_goal": "REQUEST",
+                    "face_mouth_default": {
+                        "action_goal": "DO",
                         "resource_type": "actuator",
                         "wait_for": "new"
                     }
@@ -58,21 +58,20 @@
         "set": "loop",
         "steps": [
             {
-                "harmoni_stt_default": {
-                    "action_goal": "REQUEST",
+                "stt_default": {
                     "resource_type": "detector",
                     "wait_for": "new"
                 }
             },
             {
-                "harmoni_bot_default": {
+                "bot_default": {
                     "action_goal": "REQUEST",
                     "resource_type": "service",
                     "wait_for": "new"
                 }
             },
             {
-                "harmoni_tts_default": {
+                "tts_default": {
                     "action_goal": "REQUEST",
                     "resource_type": "service",
                     "wait_for": "new"
@@ -80,15 +79,15 @@
             },
             [
                 {
-                    "pc_speaker_default": {
-                        "action_goal": "REQUEST",
+                    "speaker_default": {
+                        "action_goal": "DO",
                         "resource_type": "actuator",
                         "wait_for": "new"
                     }
                 },
                 {
-                    "pc_face_mouth_default": {
-                        "action_goal": "REQUEST",
+                    "face_mouth_default": {
+                        "action_goal": "DO",
                         "resource_type": "actuator",
                         "wait_for": "new"
                     }

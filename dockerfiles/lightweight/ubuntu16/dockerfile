@@ -1,3 +1,4 @@
+#!/bin/bash
 FROM ubuntu:xenial
 
 # ==================================================================
@@ -14,6 +15,9 @@ RUN \
     # BUILD TOOLS
     build-essential \
     ca-certificates \
+    gfortran \
+    libopenblas-dev \
+    liblapack-dev \
     # DOWNLOAD TOOLS
     curl \
     wget \
@@ -56,7 +60,7 @@ RUN \
     python3.6 \
     python3.6-dev \
     python3-pip \
-    python3-virtualenv \
+    #python3-virtualenv \
     # ROS
     python3-yaml \
     && python3.6 -m pip install --upgrade pip \
@@ -75,16 +79,16 @@ RUN \
     awscli \
     # DATA SCIENCE TOOLS
     pandas \
-    sklearn \
-    statsmodels \
-    matplotlib \
+    #sklearn \
+    #statsmodels \
+    #matplotlib \
     dill \
     requests \
     schedule \
-    freezegun \
+    #freezegun \
     func_timeout \
     datetimerange \
-    jupyterlab \
+    #jupyterlab \
     && python3.6 -m pip install --ignore-installed pyyaml \
     && rm -rf /var/lib/apt/lists/* 
 
