@@ -14,59 +14,44 @@ To launch the complete harmoni dev setup in docker:
 3. Launch the desired packages and run the desired scripts in the respective docker containers
 
     For example, to use Wave2Letter (requires running get_w2l_models.sh first):
-    - From harmoni_core, open two terminals and:
+    - From harmoni_core, open a terminal and:
         - ```roscore```
-        - ```roslaunch harmoni_decision services.launch use_pc_services:=false```
-        - ```roslaunch harmoni_decision routers.launch```
-        - ```roslaunch harmoni_decision behavior_interface.launch test_service:="$REPO_$SERVER_$ID"```
 
-    - From harmoni_pc:
-        - ``` roslaunch harmoni_decision services.launch use_harmoni_services:=false ```
+    - From harmoni_hardware:
+        - ``` roslaunch harmoni_microphone microphone_service.launch test:=true```
+        - _Note: you can also use the alias ```rlhardwareservices``` we have provided, which will launch the hardware you have set in the configuration_
 
     - From ros_w2l:
         - ```roslaunch harmoni_stt stt_example.launch```
+         - _Note: you can also use the alias ```rlspeech``` we have provided_
 
+## Why Docker?
+Although Harmoni will work without Docker, Harmoni is intended to be used with Docker to maximize portability and scalability. By using Docker Harmoni is quick and easy to set up on any OS or Hardware which currently supports docker.  We provide pre-built images for development, lightweight images for deployment, and even support for deploying to ARM chipsets.
 
-# Still todo:
-
-
-
-
-# Docker and Harmoni Organization
-
-The center of the Harmoni tool runs on a single core container, which is responsible for the following:
-- Central Control
-    - Harmoni Decision Manager
-    - Harmoni Knowledge Store (Possibly seperate out?)
-    - Harmoni Behavior Patterns
-- Common
-    - Harmoni Common Lib
-    - Harmoni Common Messages
-- Routers
-    - Dialogue
-    - Detectors
-    - Actuators
-    - Sensors
-    - Web
-
-Around that core exists an ecosystem of supporting children, which will live in their own containers and interface with hardware or with custom processes. These children are coupled with the harmoni core libaries to provide standard communication and control methods, making them easy to extend or replace. 
-- Harmoni Dialogue (1 Container Active)
-
-- Harmoni Detectors (N Containers)
-
-- Harmoni [External] (1 Container in individual repo, e.g. Harmoni-PC)
-
-
-
-
-# Docker Containers
-
-We provide two sets of docker containers. The first set is a heavier development set of containers, which are based off of a ubuntu-16 image and contain graphical tools for use in a typical development cycle. These containers are built on top of one another and are named with their development purpose and the suffix -dev.
-
-The second set of containers are for use in deployment or on machines with limited space. These are built on top of the OSRF distribution of ros-kinetic, and have been named according to what was included in the container.
+## Docker Containers
+We provide two sets of docker images. The first set is a heavier development set of images, which are based off of a ubuntu-16 image and contain graphical tools for use in a typical development cycle. These are intended to be helpful for developing interactively on a new machine. We also provide a set of lightweight images for deployment to space constrained machines, as well as images built with the arm architecture. 
 
 All containers are built on Ros Kinetic with python 2.7, but with the catkin-workspace set up to default to python 3.6. In future releases we may build containers entirely without python2.7, including a ros installation that is built on python3.6. We may also choose to jump directly to Ros 2.
 
+## Container Organization
+Harmoni spreads the workload across several containers to maximize CPU usage. This includes a core Harmoni container, a container for interfacing with the hardware, and a container for each detector used.
+
+The core Harmoni container is responsible for the following:
+
+   - Central Control
+   - Recording
+   - IO with external services (e.g. cloud services)
+
+The hardware container is responsible for the following:
+
+   - Reading sensors
+   - Controlling motors
+   - Writing to display devices
+
+The list of detector containers will expand over time, but currently includes:
+
+   - Speech to Text
+   - Face Detection
 
 
 # Building 
@@ -80,8 +65,6 @@ docker build -f dockerfiles/dev/ros-kinetic/dockerfile --tag cmbirmingham/ros-ki
 
 docker build -f dockerfiles/dev/harmoni/dockerfile --tag cmbirmingham/harmoni-dev:latest .
 
-docker build -f dockerfiles/dev/harmoni-pc/dockerfile --tag cmbirmingham/harmoni-pc-dev:latest .
-
 docker build -f dockerfiles/dev/w2l/dockerfile --tag cmbirmingham/w2l-dev:latest .
 ```
 ## Lightweight
@@ -92,9 +75,35 @@ docker build -f dockerfiles/lightweight/ros-kinetic/dockerfile --tag cmbirmingha
 
 docker build -f dockerfiles/lightweight/harmoni/dockerfile --tag cmbirmingham/harmoni-lightweight:latest .
 
-docker build -f dockerfiles/lightweight/harmoni-pc/dockerfile --tag cmbirmingham/harmoni-pc-lightweight:latest .
-
 docker build -f dockerfiles/lightweight/w2l/dockerfile --tag cmbirmingham/w2l-lightweight:latest .
+```
+
+## ARM (Rasberri Pi)
+
+[To build any of these images for ARM please start by following the instructions here](https://www.docker.com/blog/getting-started-with-docker-for-arm-on-linux/)
+
+[Check also this link for buildx documentation](https://docs.docker.com/buildx/working-with-buildx/)
+
+(Note: these are the instructions for building on an amd or intel device, to build a docker image on a Pi, just build like normal)
+```
+export DOCKER_CLI_EXPERIMENTAL=enabled
+
+docker run --rm --privileged docker/binfmt:820fdd95a9972a5308930a2bdfb8573dd4447ad3 
+
+docker buildx create --name mybuilder
+
+docker buildx use mybuilder
+
+docker buildx inspect --bootstrap
+
+
+docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/arm/ubuntu16/dockerfile --tag cmbirmingham/ubuntu16-lightweight:arm .
+
+docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/arm/ros-kinetic/dockerfile --tag cmbirmingham/ros-kinetic-lightweight:arm .
+
+docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/arm/harmoni/dockerfile --tag cmbirmingham/harmoni-lightweight:arm .
+
+docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/arm/w2l/dockerfile --tag cmbirmingham/w2l-lightweight:arm .
 ```
 
 # Network Notes

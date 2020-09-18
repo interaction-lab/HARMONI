@@ -1,41 +1,38 @@
 #!/usr/bin/env python3
 
-# Importing the libraries
+# Common Imports
 import rospy
 import roslib
+
+from harmoni_common_lib.constants import State
+from harmoni_common_lib.service_server import HarmoniServiceServer
+from harmoni_common_lib.service_manager import HarmoniServiceManager
+import harmoni_common_lib.helper_functions as hf
+
+# Specific Imports
 import rospkg
 import json
 import numpy as np
 from std_msgs.msg import String
 from harmoni_common_lib.action_client import HarmoniActionClient
-from harmoni_common_lib.service_manager import HarmoniServiceManager
-from harmoni_common_lib.constants import *
-import harmoni_common_lib.helper_functions as hf
-from harmoni_common_lib.constants import State, RouterDetector
-from collections import defaultdict
+from harmoni_common_lib.constants import DetectorNameSpace, ActionType
 from collections import deque
 from time import time
 import threading
 
 
-class SequentialPattern(HarmoniServiceManager, object):
+class SequentialPattern(HarmoniServiceManager):
     """
     Dialoging pattern class
     """
 
     def __init__(self, name, script):
+        super().__init__(name)
         """Init the behavior pattern and setup the clients"""
-        self.name = name
         self.script = script
         self.end_pattern = False
         self.scripted_services = set()  # services used in this script
-        self.configured_services = []  # available services
-        self.service_clients = defaultdict(HarmoniActionClient)
-        self.client_results = defaultdict(deque)  # store state of the service
         self.script_set_index = 0
-
-        self.state = State.INIT
-        super().__init__(self.state)
 
         self.scripted_services = self._get_services(script)
         self._setup_clients()
@@ -44,6 +41,7 @@ class SequentialPattern(HarmoniServiceManager, object):
             self.setup(script[self.script_set_index]["steps"])
             self.script_set_index += 1
 
+        self.state = State.INIT
         return
 
     def _setup_clients(self):
@@ -117,7 +115,6 @@ class SequentialPattern(HarmoniServiceManager, object):
     def start(self):
         """Send goal request to appropriate child"""
         self.state = State.START
-        super().start(rate=1)
         r = rospy.Rate(1)
         while self.script_set_index < len(self.script) and not rospy.is_shutdown():
             if self.script[self.script_set_index]["set"] == "setup":
@@ -142,7 +139,6 @@ class SequentialPattern(HarmoniServiceManager, object):
 
     def stop(self, service):
         """Stop the Behavior Pattern """
-        super().stop()
         try:
             self.service_clients[client].cancel_goal()
             self.state = State.SUCCESS
@@ -152,11 +148,6 @@ class SequentialPattern(HarmoniServiceManager, object):
 
     def pause(self):
         """Pause the Behavior Pattern """
-        super().pause()
-        return
-
-    def update(self, state):
-        super().update(state)
         return
 
     def setup(self, children):
@@ -290,7 +281,6 @@ class SequentialPattern(HarmoniServiceManager, object):
                     else:
                         return_data = None
 
-        self.update(self.state)
         return return_data
 
     def get_new_result(self, service):
@@ -321,23 +311,26 @@ class SequentialPattern(HarmoniServiceManager, object):
 
 
 def main():
-    # TODO this should be a rosparam
-    pattern_name = "dialogue"
-    # pattern_name = "multiple-choice"
-    # trigger_intent = rospy.get_param("/input_test_" + pattern_name + "/")
+    pattern_name = rospy.get_param("/pattern_name/")
+    test = rospy.get_param("/test_" + pattern_name + "/")
+    test_input = rospy.get_param("/test_input_" + pattern_name + "/")
+    test_id = rospy.get_param("/test_id_" + pattern_name + "/")
+    # trigger_intent = rospy.get_param("/test_input_" + pattern_name + "/")
     rospack = rospkg.RosPack()
     pck_path = rospack.get_path("harmoni_pattern")
     pattern_script_path = pck_path + f"/pattern_scripting/{pattern_name}.json"
-
     with open(pattern_script_path, "r") as read_file:
         script = json.load(read_file)
-
     try:
         rospy.init_node(pattern_name)
         # Initialize the pattern with pattern sequence/loop
         dp = SequentialPattern(pattern_name, script)
-        rospy.loginfo(f"Set up. Starting first step of {pattern_name} pattern.")
-        dp.start()
+        service_server = HarmoniServiceServer(name=pattern_name, service_manager=dp)
+        if test:
+            rospy.loginfo(f"START: Set up. Testing first step of {pattern_name} pattern.")
+            dp.start()
+        else:
+            service_server.update_feedback()
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
@@ -345,4 +338,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

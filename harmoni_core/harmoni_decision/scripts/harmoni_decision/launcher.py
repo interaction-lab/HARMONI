@@ -8,7 +8,7 @@ import xml.etree.cElementTree as ET
 import os
 import json
 import ast
-from harmoni_common_lib.constants import RouterDetector
+from harmoni_common_lib.constants import DetectorNameSpace
 import harmoni_common_lib.helper_functions as hf
 
 
@@ -54,7 +54,7 @@ class Launcher:
 
     def _check_if_detector(self, service_name):
         """Check if detector. It returns true if it is a detector """
-        list_detectors = [enum.name for enum in list(RouterDetector)]
+        list_detectors = [enum.name for enum in list(DetectorNameSpace)]
         for d in list_detectors:
             if service_name == d:
                 rospy.loginfo("checking: %s is a detector" % service_name)
@@ -97,11 +97,15 @@ class Launcher:
         """Create xml launch file """
         root = ET.Element("launch")
         for i in range(0, len(launch_file_array)):
-            ET.SubElement(
-                root,
-                "include",
-                file=f"$(find {repo}_{package_array[i]})/launch/{launch_file_array[i]}.launch",
-            )
+            service_id_list = hf.get_child_list(package_array[i], resources=False)
+            for _service_id in service_id_list:
+                service_id = hf.get_child_id(_service_id)
+                include = ET.SubElement(
+                    root,
+                    "include",
+                    file=f"$(find harmoni_{package_array[i]})/launch/{launch_file_array[i]}.launch",
+                )
+                args = ET.SubElement(include, "arg", name="test_id", value=service_id)
         tree = ET.ElementTree(root)
         abs_path = os.path.abspath(__file__)
         path = abs_path.split("scripts/")
