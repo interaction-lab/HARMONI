@@ -1,5 +1,6 @@
 #!/bin/bash
-FROM cmbirmingham/harmoni-lightweight:latest
+FROM harmoniteam/lightweight:harmoni
+
 
 RUN \
     APT_INSTALL="apt-get install -y --no-install-recommends" && \
@@ -12,7 +13,7 @@ RUN \
     # FFTW
     libfftw3-dev \
     # for kenlm
-    zlib1g-dev libbz2-dev liblzma-dev libboost-all-dev \
+    zlib1g-dev libbz2-dev liblzma-dev \
     # gflags
     libgflags-dev libgflags2v5 \
     && \
@@ -58,8 +59,32 @@ RUN \
     rm -rf /var/lib/apt/lists/* /tmp/*
 
 
+# git clone --recursive https://github.com/arrayfire/arrayfire.git
+# $ git submodule init
+# $ git submodule update
+RUN \
+    APT_INSTALL="apt-get install -y --no-install-recommends" \
+    && add-apt-repository -y ppa:mhier/libboost-latest \
+    && apt-get update -y && apt-get upgrade -y \
+    && apt-get install -y \
+    && DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+    libboost-all-dev \
+    libopenblas-dev libfftw3-dev liblapacke-dev
+
 # ==================================================================
 WORKDIR /root/
+
+RUN git clone --recursive https://github.com/arrayfire/arrayfire.git
+
+RUN export KENLM_ROOT_DIR=/root/kenlm && \
+    export MKLROOT=/opt/intel/mkl && \
+    cd /root/arrayfire && \
+    mkdir -p build && \
+    cd build && \
+    rm -rf * && \
+    cmake .. -DCMAKE_BUILD_TYPE=Release && \
+    make -j$(nproc)
+
 RUN git clone https://github.com/facebookresearch/wav2letter.git
 
 # build w2l
@@ -74,13 +99,10 @@ RUN export KENLM_ROOT_DIR=/root/kenlm && \
 
 
 
-# ==================================================================
-# For convenience add a source script to bashrc and update without clearing
-RUN \
-    apt-get update -y && apt-get upgrade -y
+ENTRYPOINT ["/harmoni_entrypoint.sh"]
+CMD ["bash"]
 
 
-# ==================================================================
-ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 /usr/local/bin/dumb-init
-RUN chmod +x /usr/local/bin/dumb-init
-ENTRYPOINT ["/usr/local/bin/dumb-init","--rewrite","15:10","--"]
+# ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 /usr/local/bin/dumb-init
+# RUN chmod +x /usr/local/bin/dumb-init
+# ENTRYPOINT ["/usr/local/bin/dumb-init","--rewrite","15:10","--"]

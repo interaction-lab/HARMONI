@@ -1,11 +1,22 @@
 #!/bin/bash
 FROM harmoniteam/lightweight:harmoni
 
-RUN \
-    APT_INSTALL="apt-get install -y --no-install-recommends" && \
+RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-    apt-transport-https ca-certificates \
+    build-essential \
+    ca-certificates \
+    wget \
+    git \
+    apt-utils \
+    vim \
+    emacs \
+    nano \
+    htop \
+    g++ \
+    cmake \
+    # for MKL
+    apt-transport-https \
     # for libsndfile
     autoconf automake autogen build-essential libasound2-dev \
     libflac-dev libogg-dev libtool libvorbis-dev pkg-config python \
@@ -15,17 +26,29 @@ RUN \
     zlib1g-dev libbz2-dev liblzma-dev libboost-all-dev \
     # gflags
     libgflags-dev libgflags2v5 \
-    && \
+    # for receipts data processing
+    sox && \
     # ==================================================================
     # python (for receipts data processing)
     # ------------------------------------------------------------------
     PIP_INSTALL="python3 -m pip --no-cache-dir install --upgrade" && \
+    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+    software-properties-common \
+    && \
+    add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+    python3.6-dev \
+    && \
+    $PIP_INSTALL \
+    setuptools \
+    && \
     $PIP_INSTALL \
     sox \
     tqdm \
+    numpy \
     torch==1.2.0 \
-    packaging==19.1 \
-    && \
+    packaging==19.1 && \
     # ==================================================================
     # MKL https://software.intel.com/en-us/mkl
     # ------------------------------------------------------------------
@@ -54,13 +77,12 @@ RUN \
     # ------------------------------------------------------------------
     ldconfig && \
     apt-get clean && \
-    apt-get autoremove -y && \
+    apt-get autoremove && \
     rm -rf /var/lib/apt/lists/* /tmp/*
 
-
-# ==================================================================
 WORKDIR /root/
-RUN git clone https://github.com/facebookresearch/wav2letter.git
+RUN git clone -b v0.2 https://github.com/facebookresearch/wav2letter.git
+
 
 # build w2l
 RUN export KENLM_ROOT_DIR=/root/kenlm && \
@@ -71,16 +93,3 @@ RUN export KENLM_ROOT_DIR=/root/kenlm && \
     rm -rf * && \
     cmake .. -DCMAKE_BUILD_TYPE=Release -DW2L_BUILD_LIBRARIES_ONLY=ON -DW2L_LIBRARIES_USE_CUDA=OFF -DW2L_BUILD_INFERENCE=ON   && \
     make -j$(nproc)
-
-
-
-# ==================================================================
-# For convenience add a source script to bashrc and update without clearing
-RUN \
-    apt-get update -y && apt-get upgrade -y
-
-
-# ==================================================================
-# ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 /usr/local/bin/dumb-init
-# RUN chmod +x /usr/local/bin/dumb-init
-ENTRYPOINT ["dumb-init","--rewrite","15:10","--"]
