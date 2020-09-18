@@ -1,5 +1,5 @@
 #!/bin/bash
-FROM cmbirmingham/ubuntu16-lightweight:arm
+FROM harmoniteam/lightweight:ubuntu16
 
 # ==================================================================
 # install packages
