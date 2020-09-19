@@ -19,9 +19,10 @@ RUN git -C src clone \
     -b master \
     https://github.com/ros-drivers/audio_common.git
 
-RUN git -C src clone \
-    -b kinetic \
-    https://github.com/ros-perception/vision_opencv.git
+# Currently not working with opencv - recommend using noetic if needed
+# RUN git -C src clone \
+#     -b kinetic \
+#     https://github.com/ros-perception/vision_opencv.git
 
 RUN ln -s /usr/lib/x86_64-linux-gnu/libboost_python-py35.so /usr/lib/x86_64-linux-gnu/libboost_python3.so
 

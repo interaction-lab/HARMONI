@@ -30,9 +30,9 @@ RUN git -C src clone \
 # ------------------------------------------------------------------
 RUN catkin config \
     --extend /opt/ros/$ROS_DISTRO \
-    -DPYTHON_EXECUTABLE=/usr/bin/python3.7 \
-    -DPYTHON_INCLUDE_DIR=/usr/include/python3.7m \
-    -DPYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.7m.so \
+    -DPYTHON_EXECUTABLE=/usr/bin/python3.8 \
+    -DPYTHON_INCLUDE_DIR=/usr/include/python3.8m \
+    -DPYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.8m.so \
     && \
     catkin build
 
@@ -51,6 +51,8 @@ RUN \
 COPY ./dockerfiles/config/harmoni_entrypoint.sh /
 COPY ./dockerfiles/config/setup_script.sh /
 
+# roscore needs this
+RUN apt-get install --reinstall python3-pkg-resources
 
 ENTRYPOINT ["/harmoni_entrypoint.sh"]
 CMD ["bash"]

@@ -34,7 +34,7 @@ RUN \
 
 
 # ==================================================================
-# Setup Python3.7 with pip, virtualenv
+# Setup Python3.8 with pip, virtualenv
 # ------------------------------------------------------------------
 RUN \
     APT_INSTALL="apt-get install -y --no-install-recommends" \
@@ -42,17 +42,17 @@ RUN \
     && apt-get update -y && apt-get upgrade -y \
     && apt-get install -y \
     && DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-    python3.7 \
-    python3.7-dev \
+    python3.8 \
+    python3.8-dev \
     python3-pip \
     python3-yaml \
-    && python3.7 -m pip install --upgrade pip wheel \
-    && python3.7 -m pip install setuptools \
-    && python3.7 -m pip install --ignore-installed pyyaml \
-    && python3.7 -m pip install --force-reinstalled numpy \
-    && python3.7 -m pip install --U Pillow \
-    && ln -s /usr/bin/python3.7 /usr/local/bin/python3 \
-    && ln -s /usr/bin/python3.7 /usr/local/bin/python \
+    && python3.8 -m pip install --upgrade pip wheel \
+    && python3.8 -m pip install setuptools \
+    && python3.8 -m pip install --ignore-installed pyyaml \
+    && python3.8 -m pip install --force-reinstall numpy \
+    && pip install -U Pillow \
+    && ln -s /usr/bin/python3.8 /usr/local/bin/python3 \
+    && ln -s /usr/bin/python3.8 /usr/local/bin/python \
     && rm -rf /var/lib/apt/lists/* 
 
 
@@ -93,7 +93,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     gstreamer1.0-libav \
     gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-pulseaudio \
     libgstreamer-plugins-base1.0-dev \
-    --reinstall python3-pkg-resources \
     portaudio19-dev \
     && \
     npm install http-server -g 
@@ -101,7 +100,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # ln -s /usr/bin/nodejs /usr/bin/node
 
 RUN \
-    PIP_INSTALL="python3.7 -m pip --no-cache-dir install --upgrade" && \
+    PIP_INSTALL="python3.8 -m pip --no-cache-dir install --upgrade" && \
     $PIP_INSTALL \
     packaging==19.1 \
     PyAudio \
@@ -116,6 +115,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
     ros-$ROS_DISTRO-rosbridge-server \
     # ros-$ROS_DISTRO-dynamixel-msgs \
+    --reinstall python3-pkg-resources \
     && \
     rm -rf /var/lib/apt/lists/* /tmp/*
 
