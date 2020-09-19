@@ -15,8 +15,6 @@ import sys
 from datetime import datetime
 import numpy as np
 
-sys.path.remove("/opt/ros/kinetic/lib/python2.7/dist-packages")
-sys.path.append("/opt/ros/kinetic/lib/python2.7/dist-packages")
 import cv2
 from cv_bridge import CvBridge, CvBridgeError
 
@@ -55,7 +53,7 @@ class RecordingManager(HarmoniServiceManager):
             child_id = hf.get_child_id(child)
             child_name = hf.get_service_name(child)
             try:
-                param = rospy.get_param(child_name+"/"+child_id + "_param")
+                param = rospy.get_param(child_name + "/" + child_id + "_param")
             except:
                 rospy.logerr("ERR: Remember to run the microphone you want to record")
                 return
@@ -68,7 +66,7 @@ class RecordingManager(HarmoniServiceManager):
             }
             if child == self.merge_child[0]:
                 rospy.Subscriber(
-                    SensorNameSpace.microphone.value + child_id+"/talking",
+                    SensorNameSpace.microphone.value + child_id + "/talking",
                     AudioData,
                     self._audio_merge_data_callback,
                     child,
@@ -76,7 +74,7 @@ class RecordingManager(HarmoniServiceManager):
                 )
             else:
                 rospy.Subscriber(
-                    SensorNameSpace.microphone.value + child_id+"/talking",
+                    SensorNameSpace.microphone.value + child_id + "/talking",
                     AudioData,
                     self._audio_data_callback,
                     child,
@@ -86,7 +84,7 @@ class RecordingManager(HarmoniServiceManager):
             child_id = hf.get_child_id(child)
             child_name = hf.get_service_name(child)
             try:
-                param = rospy.get_param(child_name+"/"+child_id + "_param")
+                param = rospy.get_param(child_name + "/" + child_id + "_param")
             except:
                 rospy.logerr("ERR: Remember to run the camera you want to record")
                 return
@@ -97,7 +95,7 @@ class RecordingManager(HarmoniServiceManager):
             }
             if child == self.merge_child[1]:
                 rospy.Subscriber(
-                    SensorNameSpace.camera.value+child_id+"/watching",
+                    SensorNameSpace.camera.value + child_id + "/watching",
                     Image,
                     self._video_merge_data_callback,
                     child,
@@ -105,7 +103,7 @@ class RecordingManager(HarmoniServiceManager):
                 )
             else:
                 rospy.Subscriber(
-                    SensorNameSpace.camera.value+child_id+"/watching",
+                    SensorNameSpace.camera.value + child_id + "/watching",
                     Image,
                     self._video_data_callback,
                     child,
@@ -207,7 +205,7 @@ def main():
     test = rospy.get_param("/test_" + name + "/")
     test_input = rospy.get_param("/test_input_" + name + "/")
     test_id = rospy.get_param("/test_id_" + name + "/")
-    child_names = rospy.get_param("/"+name+"/")
+    child_names = rospy.get_param("/" + name + "/")
     try:
         rospy.init_node(name)
         # Initialize the pattern with pattern sequence/loop
@@ -221,6 +219,7 @@ def main():
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
+
 
 if __name__ == "__main__":
     main()

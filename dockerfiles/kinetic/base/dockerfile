@@ -1,7 +1,7 @@
 #!/bin/bash
-FROM ros:noetic-ros-base-focal
+FROM ros:kinetic-ros-base-xenial
 
-RUN ROS_DISTRO="noetic"
+RUN ROS_DISTRO="kinetic"
 
 # ==================================================================
 # Ubuntu Setup
@@ -81,7 +81,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
     nodejs \
     npm \
-    vorbis-tools python-pygame python-requests python-serial ros-noetic-tf python-gst-1.0 python-scipy \
+    vorbis-tools python-pygame python-requests python-serial ros-kinetic-tf python-gst-1.0 python-scipy \
     libboost-all-dev \
     # GSTREAMER (needed for audio_common)
     libgstreamer1.0-0 gstreamer1.0-dev gstreamer1.0-tools gstreamer1.0-doc \

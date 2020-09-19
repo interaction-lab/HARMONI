@@ -94,6 +94,6 @@ RUN export KENLM_ROOT_DIR=/root/kenlm && \
     cmake .. -DCMAKE_BUILD_TYPE=Release -DW2L_BUILD_LIBRARIES_ONLY=ON -DW2L_LIBRARIES_USE_CUDA=OFF -DW2L_BUILD_INFERENCE=ON   && \
     make -j$(nproc)
 
-WORKDIR /root/harmoni_catkin_ws
+WORKDIR /root/harmoni_catkin_ws/src/
 
-RUN sh /root/harmoni_catkin_ws/src/HARMONI/harmoni_detectors/harmoni_stt/get_w2l_models.sh
+RUN sh ./HARMONI/harmoni_detectors/harmoni_stt/get_w2l_models.sh

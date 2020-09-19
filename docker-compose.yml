@@ -5,14 +5,14 @@ services:
     container_name: harmoni_core
     build:
       context: .
-      dockerfile: dockerfiles/noetic/harmoni/dockerfile
+      dockerfile: dockerfiles/$ROS_DISTRO/harmoni/dockerfile
       network: host
-    image: harmoniteam/noetic:harmoni
+    image: harmoniteam/$ROS_DISTRO:harmoni
     init: true
     environment:
       DISPLAY: $DISPLAY
       QT_GRAPHICSSYSTEM: native
-      ROS_DISTRO: noetic
+      ROS_DISTRO: $ROS_DISTRO
       ROS_MASTER_URI: http://172.18.3.4:11311
       IS_DOCKER_ENV: "true"
       ROS_HOSTNAME: harmoni_core
@@ -28,7 +28,7 @@ services:
       - "8081:8081"
     devices:
       - /dev/dri:/dev/dri
-      #- /dev/snd:/dev/snd
+      - /dev/snd:/dev/snd
       - /dev/video0:/dev/video0
     volumes:
       # - harmoni_catkin_ws:/root/harmoni_catkin_ws
@@ -42,16 +42,15 @@ services:
     working_dir: /root/harmoni_catkin_ws/src/HARMONI
     command:
       tail -F anything
-      # bash -c "echo 'Entering harmoni_core Container... \\n start with roscore and rlharmoniservices' && bash"
-      # terminator -ue \"echo 'Entering harmoni_core Container... \\n start with roscore and rlharmoniservices' && bash\""
+      #  bash -c "terminator -ue \"echo 'Entering harmoni_core Container... \\n start with roscore and rlharmoniservices' && bash\""
 
-  ros_w2l:
-    container_name: ros_w2l
+  harmoni_w2l:
+    container_name: harmoni_w2l
     build:
       context: .
-      dockerfile: dockerfiles/lightweight/w2l/dockerfile
+      dockerfile: dockerfiles/kinetic/w2l/dockerfile
       network: host
-    image: harmoniteam/lightweight:w2l
+    image: harmoniteam/kinetic:w2l
     init: true
     environment:
       DISPLAY: $DISPLAY
@@ -59,7 +58,7 @@ services:
       ROS_DISTRO: kinetic
       IS_DOCKER_ENV: "true"
       CATKIN_WS: harmoni_catkin_ws
-      ROS_HOSTNAME: ros_w2l
+      ROS_HOSTNAME: harmoni_w2l
       ROS_MASTER_URI: http://172.18.3.4:11311
     depends_on:
       - "harmoni_core"
@@ -68,13 +67,12 @@ services:
     networks:
       ros_net:
         ipv4_address: 172.18.3.3
-    hostname: ros_w2l
+    hostname: harmoni_w2l
     ports:
       - "1022:22"
     devices:
       - /dev/dri:/dev/dri
-      #- /dev/snd:/dev/snd
-      - /dev/video0:/dev/video0
+      - /dev/snd:/dev/snd
     volumes:
       # - harmoni_catkin_ws:/root/harmoni_catkin_ws
       - ../HARMONI/:/root/local_mount/HARMONI/
@@ -87,8 +85,7 @@ services:
     working_dir: /root/harmoni_catkin_ws/src/HARMONI
     command:
       tail -F anything
-      # bash -c "echo 'Entering ros_w2l Container... \\n start with rlspeech' && bash"
-      # terminator -ue \"echo 'Entering ros_w2l Container... \\n start with rlspeech' && bash\" "
+      #  bash -c "terminator -ue \"echo 'Entering harmoni_w2l Container... \\n start with rlspeech' && bash\" "
 
   harmoni_visual_detector:
     container_name: harmoni_visual_detector
@@ -116,7 +113,6 @@ services:
       - "harmoni_hardware"
     devices:
       - /dev/dri:/dev/dri
-      #- /dev/snd:/dev/snd
       - /dev/video0:/dev/video0
     volumes:
       - ../HARMONI/:/root/local_mount/HARMONI/
@@ -129,21 +125,20 @@ services:
     working_dir: /root/harmoni_catkin_ws/src/HARMONI
     command:
       tail -F anything
-      # bash -c "echo 'Entering harmoni_visual_detector Container... \\n start with rlfacedetect' && bash"
-      # terminator -ue \"cd ../HARMONI && echo 'Entering harmoni_visual_detector Container... \\n start with rlfacedetect' && bash\""
+      #  bash -c "terminator -ue \"cd ../HARMONI && echo 'Entering harmoni_visual_detector Container... \\n start with rlfacedetect' && bash\""
 
   harmoni_hardware:
     container_name: harmoni_hardware
     build:
       context: .
-      dockerfile: dockerfiles/noetic/harmoni/dockerfile
+      dockerfile: dockerfiles/$ROS_DISTRO/harmoni/dockerfile
       network: host
-    image: harmoniteam/noetic:harmoni
+    image: harmoniteam/$ROS_DISTRO:harmoni
     init: true
     environment:
       DISPLAY: $DISPLAY
       QT_GRAPHICSSYSTEM: native
-      ROS_DISTRO: noetic
+      ROS_DISTRO: $ROS_DISTRO
       IS_DOCKER_ENV: "true"
       CATKIN_WS: harmoni_catkin_ws
       ROS_HOSTNAME: harmoni_hardware
@@ -170,8 +165,7 @@ services:
     working_dir: /root/harmoni_catkin_ws/src/HARMONI
     command:
       tail -F anything
-      # bash -c "echo 'Entering harmoni_hardware Container... \\n start with rlhardwareservices'"
-      # terminator -ue \"cd ../HARMONI-hardware && echo 'Entering harmoni_hardware Container... \\n start with rlhardwareservices' && bash\""
+      #  bash -c "terminator -ue \"cd ../HARMONI-hardware && echo 'Entering harmoni_hardware Container... \\n start with rlhardwareservices' && bash\""
 
 networks:
   ros_net:

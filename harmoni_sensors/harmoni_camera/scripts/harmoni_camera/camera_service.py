@@ -12,8 +12,8 @@ import harmoni_common_lib.helper_functions as hf
 # Other Imports
 import sys
 
-sys.path.remove("/opt/ros/kinetic/lib/python2.7/dist-packages")
-sys.path.append("/opt/ros/kinetic/lib/python2.7/dist-packages")
+# sys.path.remove("/opt/ros/kinetic/lib/python2.7/dist-packages")
+sys.path.append("/opt/ros/noetic/lib/python2.7/dist-packages")
 from cv_bridge import CvBridge, CvBridgeError
 from harmoni_common_lib.constants import SensorNameSpace
 from sensor_msgs.msg import Image

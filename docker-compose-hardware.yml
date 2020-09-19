@@ -5,25 +5,25 @@ services:
     container_name: harmoni_hardware
     build:
       context: .
-      dockerfile: dockerfiles/arm/harmoni/dockerfile
+      dockerfile: dockerfiles/$ROS_DISTRO/harmoni/dockerfile
       network: host
-    image: harmoniteam/lightweight:harmoni
+    image: harmoniteam/$ROS_DISTRO:harmoni
     init: true
     environment:
       DISPLAY: $DISPLAY
       QT_GRAPHICSSYSTEM: native
-      ROS_DISTRO: kinetic
+      ROS_DISTRO: $ROS_DISTRO
       IS_DOCKER_ENV: "true"
       CATKIN_WS: harmoni_catkin_ws
       ROS_HOSTNAME: harmoni_hardware
-      ROS_MASTER_URI: http://192.168.100.1:11311
+      ROS_MASTER_URI: http://172.18.3.4:11311
     privileged: true
     networks:
       ros_net:
         ipv4_address: 172.18.3.5
     hostname: ros_hardware
-    #depends_on:
-    #  - "harmoni_core"
+    depends_on:
+      - "harmoni_core"
     devices:
       - /dev/dri:/dev/dri
       - /dev/snd:/dev/snd
@@ -31,29 +31,24 @@ services:
     volumes:
       - ../HARMONI/:/root/local_mount/HARMONI/
       # Configuration
-      - ./dockerfiles/config/setup_script.sh:/root/.setup_script.sh
-      - ./dockerfiles/config/dev_setup_script.sh:/root/.dev_setup_script.sh
-      - ./dockerfiles/config/asoundrc:/root/.asoundrc
+      - ~/.aws:/root/.aws/
       # Other
       - /tmp/.X11-unix:/tmp/.X11-unix
-      - ~/.config/terminator/config:/root/.config/terminator/config
-      - ~/.gitconfig:/root/.gitconfig:ro
-      - ~/.ssh/:/root/.ssh:ro
-      - ~/.vimrc:/root/.vimrc:ro
-      - ~/.vim/:/root/.vim/:ro
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     working_dir: /root/harmoni_catkin_ws/src/HARMONI
-    command: bash -c "
-      terminator -ue \"cd ../HARMONI && echo 'Entering harmoni_hardware Container... \\n start with rlhardwareservices' && bash\"" 
-   
+    command:
+      tail -F anything
+      #  bash -c "terminator -ue \"cd ../HARMONI-hardware && echo 'Entering harmoni_hardware Container... \\n start with rlhardwareservices' && bash\""
+
 networks:
   ros_net:
     driver: bridge
     ipam:
-      driver: default#
+      driver: default
       config:
         - subnet: 172.18.3.0/24
 
 volumes:
-  harmoni_catkin_ws:
+  # harmoni_catkin_ws:
+  wav2letter:
