@@ -5,14 +5,14 @@ services:
     container_name: harmoni_core
     build:
       context: .
-      dockerfile: dockerfiles/harmoni/dockerfile
+      dockerfile: dockerfiles/noetic/harmoni/dockerfile
       network: host
-    image: harmoniteam/lightweight:harmoni
+    image: harmoniteam/noetic:harmoni
     init: true
     environment:
       DISPLAY: $DISPLAY
       QT_GRAPHICSSYSTEM: native
-      ROS_DISTRO: kinetic
+      ROS_DISTRO: noetic
       ROS_MASTER_URI: http://172.18.3.4:11311
       IS_DOCKER_ENV: "true"
       ROS_HOSTNAME: harmoni_core
@@ -31,29 +31,25 @@ services:
       #- /dev/snd:/dev/snd
       - /dev/video0:/dev/video0
     volumes:
-      - harmoni_catkin_ws:/root/harmoni_catkin_ws
+      # - harmoni_catkin_ws:/root/harmoni_catkin_ws
       - ../HARMONI/:/root/local_mount/HARMONI/
       # Configuration
       - ~/.aws:/root/.aws/
-      - ./dockerfiles/config/:/root/
       # Other
-      # - ~/.config/terminator/config:/root/.config/terminator/config
-      # - ~/.gitconfig:/root/.gitconfig:ro
-      # - ~/.ssh/:/root/.ssh:ro
-      # - ~/.vimrc:/root/.vimrc:ro
-      # - ~/.vim/:/root/.vim/:ro
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     working_dir: /root/harmoni_catkin_ws/src/HARMONI
-    command: bash -c "
-      terminator -ue \"echo 'Entering harmoni_core Container... \\n start with roscore and rlharmoniservices' && bash\""
+    command:
+      tail -F anything
+      # bash -c "echo 'Entering harmoni_core Container... \\n start with roscore and rlharmoniservices' && bash"
+      # terminator -ue \"echo 'Entering harmoni_core Container... \\n start with roscore and rlharmoniservices' && bash\""
 
   ros_w2l:
     container_name: ros_w2l
     build:
       context: .
-      dockerfile: dockerfiles/detectors/w2l/dockerfile
+      dockerfile: dockerfiles/lightweight/w2l/dockerfile
       network: host
     image: harmoniteam/lightweight:w2l
     init: true
@@ -80,38 +76,32 @@ services:
       #- /dev/snd:/dev/snd
       - /dev/video0:/dev/video0
     volumes:
-      - ../model/w2l:/root/model/w2l/
-      - wav2letter:/root/wav2letter
-      - harmoni_catkin_ws:/root/harmoni_catkin_ws
+      # - harmoni_catkin_ws:/root/harmoni_catkin_ws
       - ../HARMONI/:/root/local_mount/HARMONI/
       # Configuration
       - ~/.aws:/root/.aws/
-      - ./dockerfiles/config/:/root/
       # Other
-      # - ~/.config/terminator/config:/root/.config/terminator/config
-      # - ~/.gitconfig:/root/.gitconfig:ro
-      # - ~/.ssh/:/root/.ssh:ro
-      # - ~/.vimrc:/root/.vimrc:ro
-      # - ~/.vim/:/root/.vim/:ro
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     working_dir: /root/harmoni_catkin_ws/src/HARMONI
-    command: bash -c "
-      terminator -ue \"echo 'Entering ros_w2l Container... \\n start with rlspeech' && bash\" "
+    command:
+      tail -F anything
+      # bash -c "echo 'Entering ros_w2l Container... \\n start with rlspeech' && bash"
+      # terminator -ue \"echo 'Entering ros_w2l Container... \\n start with rlspeech' && bash\" "
 
   harmoni_visual_detector:
     container_name: harmoni_visual_detector
     build:
       context: .
-      dockerfile: dockerfiles/harmoni/dockerfile
+      dockerfile: dockerfiles/noetic/harmoni/dockerfile
       network: host
-    image: harmoniteam/lightweight:harmoni
+    image: harmoniteam/noetic:harmoni
     init: true
     environment:
       DISPLAY: $DISPLAY
       QT_GRAPHICSSYSTEM: native
-      ROS_DISTRO: kinetic
+      ROS_DISTRO: noetic
       IS_DOCKER_ENV: "true"
       CATKIN_WS: harmoni_catkin_ws
       ROS_HOSTNAME: harmoni_visual_detector
@@ -132,32 +122,28 @@ services:
       - ../HARMONI/:/root/local_mount/HARMONI/
       # Configuration
       - ~/.aws:/root/.aws/
-      - ./dockerfiles/config/:/root/
       # Other
-      # - ~/.config/terminator/config:/root/.config/terminator/config
-      # - ~/.gitconfig:/root/.gitconfig:ro
-      # - ~/.ssh/:/root/.ssh:ro
-      # - ~/.vimrc:/root/.vimrc:ro
-      # - ~/.vim/:/root/.vim/:ro
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     working_dir: /root/harmoni_catkin_ws/src/HARMONI
-    command: bash -c "
-      terminator -ue \"cd ../HARMONI && echo 'Entering harmoni_visual_detector Container... \\n start with rlfacedetect' && bash\""
+    command:
+      tail -F anything
+      # bash -c "echo 'Entering harmoni_visual_detector Container... \\n start with rlfacedetect' && bash"
+      # terminator -ue \"cd ../HARMONI && echo 'Entering harmoni_visual_detector Container... \\n start with rlfacedetect' && bash\""
 
   harmoni_hardware:
     container_name: harmoni_hardware
     build:
       context: .
-      dockerfile: dockerfiles/harmoni/dockerfile
+      dockerfile: dockerfiles/noetic/harmoni/dockerfile
       network: host
-    image: harmoniteam/lightweight:harmoni
+    image: harmoniteam/noetic:harmoni
     init: true
     environment:
       DISPLAY: $DISPLAY
       QT_GRAPHICSSYSTEM: native
-      ROS_DISTRO: kinetic
+      ROS_DISTRO: noetic
       IS_DOCKER_ENV: "true"
       CATKIN_WS: harmoni_catkin_ws
       ROS_HOSTNAME: harmoni_hardware
@@ -177,19 +163,15 @@ services:
       - ../HARMONI/:/root/local_mount/HARMONI/
       # Configuration
       - ~/.aws:/root/.aws/
-      - ./dockerfiles/config/:/root/
       # Other
-      # - ~/.config/terminator/config:/root/.config/terminator/config
-      # - ~/.gitconfig:/root/.gitconfig:ro
-      # - ~/.ssh/:/root/.ssh:ro
-      # - ~/.vimrc:/root/.vimrc:ro
-      # - ~/.vim/:/root/.vim/:ro
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     working_dir: /root/harmoni_catkin_ws/src/HARMONI
-    command: bash -c "
-      terminator -ue \"cd ../HARMONI-hardware && echo 'Entering harmoni_hardware Container... \\n start with rlhardwareservices' && bash\""
+    command:
+      tail -F anything
+      # bash -c "echo 'Entering harmoni_hardware Container... \\n start with rlhardwareservices'"
+      # terminator -ue \"cd ../HARMONI-hardware && echo 'Entering harmoni_hardware Container... \\n start with rlhardwareservices' && bash\""
 
 networks:
   ros_net:
@@ -200,5 +182,5 @@ networks:
         - subnet: 172.18.3.0/24
 
 volumes:
-  harmoni_catkin_ws:
+  # harmoni_catkin_ws:
   wav2letter:
