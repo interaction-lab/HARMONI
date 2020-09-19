@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo 'Hello, rosmaster'
+echo 'Hello!'
 
 source /opt/ros/$ROS_DISTRO/setup.bash 
 source /root/harmoni_catkin_ws/devel/setup.bash

@@ -1,0 +1,34 @@
+FROM harmoniteam/noetic:harmoni
+
+
+
+RUN \
+    PIP_INSTALL="python3.7 -m pip --no-cache-dir install --upgrade" && \
+    $PIP_INSTALL \
+    dlib \
+    imutils \
+    opencv-python
+
+# ENV ROS_WS /root/harmoni_catkin_ws/
+# # RUN mkdir -p $ROS_WS/src
+# WORKDIR $ROS_WS
+
+# ENV OpenCV_INCLUDE_DIRS "/usr/include/opencv;/usr/include"
+
+# RUN git -C src clone \
+#     -b kinetic \
+#     https://github.com/ros-perception/vision_opencv.git
+
+# RUN ln -s /usr/lib/x86_64-linux-gnu/libboost_python-py35.so /usr/lib/x86_64-linux-gnu/libboost_python3.so
+
+# # ==================================================================
+# # build ros package source
+# # ------------------------------------------------------------------
+# RUN catkin config \
+#     --extend /opt/ros/kinetic \
+#     -DPYTHON_EXECUTABLE=/usr/bin/python3.6 \
+#     -DPYTHON_INCLUDE_DIR=/usr/include/python3.6m \
+#     -DPYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.6m.so \
+#     # -DCMAKE_PREFIX_PATH="/root/harmoni_catkin_ws/src" \
+#     && \
+#     catkin build

@@ -1,0 +1,113 @@
+#!/bin/bash
+FROM ros:noetic-ros-base-focal
+
+RUN ROS_DISTRO="noetic"
+
+# ==================================================================
+# Ubuntu Setup
+# (If some of these are unecessary - migrate to dev)
+# ------------------------------------------------------------------
+RUN \
+    apt-get update -y && apt-get upgrade -y \
+    && apt-get install -y \
+    software-properties-common \
+    apt-utils \
+    && \
+    APT_INSTALL="apt-get install -y --no-install-recommends" && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+    # BUILD TOOLS
+    build-essential \
+    ca-certificates \
+    # DOWNLOAD TOOLS
+    curl \
+    wget \
+    # COMPILERS
+    g++ \
+    cmake \
+    # VERSION CONTROL
+    git \
+    # NETWORK TOOLS
+    iputils-ping \
+    net-tools \
+    && rm -rf /var/lib/apt/lists/* 
+
+
+# ==================================================================
+# Setup Python3.6 with pip, virtualenv
+# ------------------------------------------------------------------
+RUN \
+    APT_INSTALL="apt-get install -y --no-install-recommends" \
+    && add-apt-repository -y ppa:deadsnakes/ppa \
+    && apt-get update -y && apt-get upgrade -y \
+    && apt-get install -y \
+    && DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+    python3.6 \
+    python3.6-dev \
+    python3-pip \
+    python3-yaml \
+    && python3.6 -m pip install --upgrade pip wheel \
+    && python3.6 -m pip install setuptools \
+    && python3.6 -m pip install --ignore-installed pyyaml \
+    && ln -s /usr/bin/python3.6 /usr/local/bin/python3 \
+    && ln -s /usr/bin/python3.6 /usr/local/bin/python \
+    && rm -rf /var/lib/apt/lists/* 
+
+
+# ==================================================================
+# Install rosbuild/catkin packages
+# ------------------------------------------------------------------
+RUN \
+    PIP_INSTALL="python3 -m pip --no-cache-dir install --upgrade" && \
+    $PIP_INSTALL \
+    rospkg \
+    catkin_pkg \
+    catkin_tools \
+    # AWS
+    boto3 \
+    awscli \
+    google-cloud-speech \
+    dialogflow \
+    google-api-python-client \
+    && rm -rf /var/lib/apt/lists/* 
+
+
+# ==================================================================
+# Harmoni packages
+# - Cordial Prerequisites
+# ------------------------------------------------------------------
+RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+    nodejs \
+    npm \
+    vorbis-tools python-pygame python-requests python-serial ros-noetic-tf python-gst-1.0 python-scipy \
+    libboost-all-dev \
+    # GSTREAMER (needed for audio_common)
+    libgstreamer1.0-0 gstreamer1.0-dev gstreamer1.0-tools gstreamer1.0-doc \
+    gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
+    gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly \
+    gstreamer1.0-libav \
+    gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-pulseaudio \
+    libgstreamer-plugins-base1.0-dev \
+    && \
+    npm install http-server -g && \
+    ln -s /usr/bin/nodejs /usr/bin/node
+
+RUN \
+    PIP_INSTALL="python3.6 -m pip --no-cache-dir install --upgrade" && \
+    $PIP_INSTALL \
+    packaging==19.1 \
+    empy \
+    soundfile
+
+
+# ==================================================================
+# Install the Ros packages needed for Harmoni
+# ------------------------------------------------------------------
+RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
+    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+    ros-$ROS_DISTRO-rosbridge-server \
+    ros-$ROS_DISTRO-dynamixel-msgs \
+    && \
+    rm -rf /var/lib/apt/lists/* /tmp/*

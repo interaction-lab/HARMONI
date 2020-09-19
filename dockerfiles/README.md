@@ -1,5 +1,19 @@
 # Using Harmoni with Docker
 
+Todo
+- Basic testing to see if we need to switch to noetic (as we aren't building ros with py3)
+- Simplify the compose
+- Testing the individual packages
+    - using the testing outlined by Micol
+    - can we remove the package
+- Integration testing
+- Continuous integration
+- Rasa
+- Face tracking
+- Paper
+
+
+
 To launch the complete harmoni dev setup in docker:
 1. In order to run with window forwarding on linux use:
 ```
@@ -65,15 +79,30 @@ docker build -f dockerfiles/dev/w2l/dockerfile --tag harmoniteam/dev:w2l .
 ```
 ## Lightweight
 ```
-docker build -f dockerfiles/lightweight/ubuntu16/dockerfile --tag harmoniteam/lightweight:ubuntu16 .
-
-docker build -f dockerfiles/lightweight/ros-kinetic/dockerfile --tag harmoniteam/lightweight:ros-kinetic .
+docker build -f dockerfiles/lightweight/base/dockerfile --tag harmoniteam/lightweight:base .
 
 docker build -f dockerfiles/lightweight/harmoni/dockerfile --tag harmoniteam/lightweight:harmoni .
 
 docker build -f dockerfiles/lightweight/w2l/dockerfile --tag harmoniteam/lightweight:w2l .
 ```
+## Experimental
+```
+docker build -f dockerfiles/lightweight/harmoni/dockerfile --tag harmoniteam/experimental:harmoni .
 
+docker build -f dockerfiles/lightweight/w2l/dockerfile --tag harmoniteam/experimental:w2l .
+
+docker build -f dockerfiles/lightweight/facedetect/dockerfile --tag harmoniteam/experimental:facedetect .
+```
+## Experimental-Noetic
+```
+docker build -f dockerfiles/noetic/base/dockerfile --tag harmoniteam/noetic:base .
+
+docker build -f dockerfiles/noetic/harmoni/dockerfile --tag harmoniteam/noetic:harmoni .
+
+docker build -f dockerfiles/noetic/w2l/dockerfile --tag harmoniteam/noetic:w2l .
+
+docker build -f dockerfiles/noetic/facedetect/dockerfile --tag harmoniteam/noetic:facedetect .
+```
 ## ARM (Ras[berry Pi)
 
 [To build any of these images for ARM please start by following the instructions here](https://www.docker.com/blog/getting-started-with-docker-for-arm-on-linux/)
@@ -94,14 +123,14 @@ docker buildx use mybuilder
 
 docker buildx inspect --bootstrap
 
-
-docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/arm/ubuntu16/dockerfile --tag harmoniteam/lightweight:ubuntu16 .
-
-docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/arm/ros-kinetic/dockerfile --tag harmoniteam/lightweight:ros-kinetic .
-
 docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/arm/harmoni/dockerfile --tag harmoniteam/lightweight:harmoni .
 
 docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/arm/w2l/dockerfile --tag harmoniteam/lightweight:w2l .
+```
+
+Running and connecting to the terminal
+```
+docker exec -it <containername> bash 
 ```
 
 # Network Notes
@@ -115,6 +144,8 @@ services:
     networks:
       mynet:
         ipv4_address: 172.25.0.101
+...
+...
 networks:
   mynet:
     driver: bridge
