@@ -1,9 +1,9 @@
-FROM harmoniteam/noetic:harmoni
+FROM harmoniteam/harmoni:kinetic-core
 
 
 
 RUN \
-    PIP_INSTALL="python3.8 -m pip --no-cache-dir install --upgrade" && \
+    PIP_INSTALL="python3.6 -m pip --no-cache-dir install --upgrade" && \
     $PIP_INSTALL \
     dlib \
     imutils \

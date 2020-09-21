@@ -5,9 +5,9 @@ services:
     container_name: harmoni_core
     build:
       context: .
-      dockerfile: dockerfiles/$ROS_DISTRO/harmoni/dockerfile
+      dockerfile: dockerfiles/harmoni/$ROS_DISTRO/core/dockerfile
       network: host
-    image: harmoniteam/$ROS_DISTRO:harmoni
+    image: harmoniteam/harmoni:$ROS_DISTRO-core
     init: true
     environment:
       DISPLAY: $DISPLAY
@@ -31,7 +31,6 @@ services:
       - /dev/snd:/dev/snd
       - /dev/video0:/dev/video0
     volumes:
-      # - harmoni_catkin_ws:/root/harmoni_catkin_ws
       - ../HARMONI/:/root/local_mount/HARMONI/
       # Configuration
       - ~/.aws:/root/.aws/
@@ -40,17 +39,15 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     working_dir: /root/harmoni_catkin_ws/src/HARMONI
-    command:
-      tail -F anything
-      #  bash -c "terminator -ue \"echo 'Entering harmoni_core Container... \\n start with roscore and rlharmoniservices' && bash\""
+    command: tail  -f /dev/null
 
   harmoni_w2l:
     container_name: harmoni_w2l
     build:
       context: .
-      dockerfile: dockerfiles/kinetic/w2l/dockerfile
+      dockerfile: dockerfiles/harmoni/kinetic/w2l/dockerfile
       network: host
-    image: harmoniteam/kinetic:w2l
+    image: harmoniteam/harmoni:kinetic-w2l
     init: true
     environment:
       DISPLAY: $DISPLAY
@@ -74,7 +71,6 @@ services:
       - /dev/dri:/dev/dri
       - /dev/snd:/dev/snd
     volumes:
-      # - harmoni_catkin_ws:/root/harmoni_catkin_ws
       - ../HARMONI/:/root/local_mount/HARMONI/
       # Configuration
       - ~/.aws:/root/.aws/
@@ -83,17 +79,15 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     working_dir: /root/harmoni_catkin_ws/src/HARMONI
-    command:
-      tail -F anything
-      #  bash -c "terminator -ue \"echo 'Entering harmoni_w2l Container... \\n start with rlspeech' && bash\" "
+    command: tail  -f /dev/null
 
   harmoni_visual_detector:
     container_name: harmoni_visual_detector
     build:
       context: .
-      dockerfile: dockerfiles/noetic/harmoni/dockerfile
+      dockerfile: dockerfiles/harmoni/noetic/facedetect/dockerfile
       network: host
-    image: harmoniteam/noetic:harmoni
+    image: harmoniteam/harmoni:noetic-facedetect
     init: true
     environment:
       DISPLAY: $DISPLAY
@@ -123,17 +117,15 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     working_dir: /root/harmoni_catkin_ws/src/HARMONI
-    command:
-      tail -F anything
-      #  bash -c "terminator -ue \"cd ../HARMONI && echo 'Entering harmoni_visual_detector Container... \\n start with rlfacedetect' && bash\""
+    command: tail  -f /dev/null
 
   harmoni_hardware:
     container_name: harmoni_hardware
     build:
       context: .
-      dockerfile: dockerfiles/$ROS_DISTRO/harmoni/dockerfile
+      dockerfile: dockerfiles/harmoni/$ROS_DISTRO/core/dockerfile
       network: host
-    image: harmoniteam/$ROS_DISTRO:harmoni
+    image: harmoniteam/harmoni:$ROS_DISTRO-core
     init: true
     environment:
       DISPLAY: $DISPLAY
@@ -163,9 +155,7 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     working_dir: /root/harmoni_catkin_ws/src/HARMONI
-    command:
-      tail -F anything
-      #  bash -c "terminator -ue \"cd ../HARMONI-hardware && echo 'Entering harmoni_hardware Container... \\n start with rlhardwareservices' && bash\""
+    command: tail  -f /dev/null
 
 networks:
   ros_net:
@@ -176,5 +166,4 @@ networks:
         - subnet: 172.18.3.0/24
 
 volumes:
-  # harmoni_catkin_ws:
   wav2letter:
