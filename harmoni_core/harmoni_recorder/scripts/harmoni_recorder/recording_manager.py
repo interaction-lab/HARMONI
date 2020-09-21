@@ -15,6 +15,11 @@ import sys
 from datetime import datetime
 import numpy as np
 
+path = sys.path
+using_kinetic = any([True for p in path if ("kinetic" in p)])
+if using_kinetic:
+    sys.path.remove("/opt/ros/kinetic/lib/python2.7/dist-packages")
+    sys.path.append("/opt/ros/kinetic/lib/python2.7/dist-packages")
 import cv2
 from cv_bridge import CvBridge, CvBridgeError
 

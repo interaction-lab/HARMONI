@@ -63,7 +63,7 @@ RUN catkin config \
 RUN mkdir -p /root/local_mount/
 RUN ln -s /root/harmoni_catkin_ws/src/HARMONI /root/local_mount/
 
-
+pip install 
 # ==================================================================
 # For convenience add a source script to bashrc and update without clearing
 # ------------------------------------------------------------------
