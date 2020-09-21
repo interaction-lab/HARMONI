@@ -1,7 +1,6 @@
-#!/bin/bash
-FROM ros:noetic-perception-focal
+FROM ubuntu:xenial
 
-RUN ROS_DISTRO="noetic"
+RUN ROS_DISTRO="kinetic"
 
 # ==================================================================
 # Ubuntu Setup
@@ -34,7 +33,7 @@ RUN \
 
 
 # ==================================================================
-# Setup Python3.8 with pip, virtualenv
+# Setup Python3.6 with pip, virtualenv
 # ------------------------------------------------------------------
 RUN \
     APT_INSTALL="apt-get install -y --no-install-recommends" \
@@ -42,29 +41,63 @@ RUN \
     && apt-get update -y && apt-get upgrade -y \
     && apt-get install -y \
     && DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-    python3.8 \
-    python3.8-dev \
+    python3.6 \
+    python3.6-dev \
     python3-pip \
     python3-yaml \
-    && python3.8 -m pip install --upgrade pip wheel \
-    && python3.8 -m pip install setuptools \
-    && python3.8 -m pip install --ignore-installed pyyaml \
-    && python3.8 -m pip install --force-reinstall numpy \
-    && pip install -U Pillow \
-    && ln -s /usr/bin/python3.8 /usr/local/bin/python3 \
-    && ln -s /usr/bin/python3.8 /usr/local/bin/python \
+    && python3.6 -m pip install --upgrade pip wheel \
+    && python3.6 -m pip install setuptools \
+    && python3.6 -m pip install --ignore-installed pyyaml \
+    && ln -s /usr/bin/python3.6 /usr/local/bin/python3 \
+    && ln -s /usr/bin/python3.6 /usr/local/bin/python \
     && rm -rf /var/lib/apt/lists/* 
 
 
 # ==================================================================
-# Install rosbuild/catkin packages
+# Install Ros Kinetic
 # ------------------------------------------------------------------
-RUN \
+RUN apt-get update && apt-get install -q -y --no-install-recommends \
+    dirmngr \
+    gnupg2 \
+    && rm -rf /var/lib/apt/lists/*
+
+# setup keys
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+
+# setup sources.list
+RUN echo "deb http://packages.ros.org/ros/ubuntu xenial main" > /etc/apt/sources.list.d/ros1-latest.list
+
+# setup environment
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+
+ENV ROS_DISTRO kinetic
+
+# install ros packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    # ros-kinetic-ros-core=1.3.2-0* \
+    python-rosdep \
+    python-rosinstall \
+    python-vcstools \
+    && rm -rf /var/lib/apt/lists/*
+
+
+# ==================================================================
+# bootstrap rosdep
+RUN rosdep init && \
+    rosdep update --rosdistro $ROS_DISTRO
+
+# install ros packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ros-$ROS_DISTRO-desktop-full=1.3.2-0* \
+    ros-$ROS_DISTRO-rosbridge-server \
+    && \
+    # PYTHON INSTALLS
+    add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get update && \
     PIP_INSTALL="python3 -m pip --no-cache-dir install --upgrade" && \
     $PIP_INSTALL \
-    rospkg \
-    catkin_pkg \
-    # catkin_tools \
+    numpy \
     # AWS
     boto3 \
     awscli \
@@ -83,8 +116,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
     nodejs \
     npm \
-    # vorbis-tools python-pygame python-requests python-serial ros-kinetic-tf python-gst-1.0 python-scipy \
-    vorbis-tools python-pygame \
+    vorbis-tools python-pygame python-requests python-serial ros-kinetic-tf python-gst-1.0 python-scipy \
     libboost-all-dev \
     # GSTREAMER (needed for audio_common)
     libgstreamer1.0-0 gstreamer1.0-dev gstreamer1.0-tools gstreamer1.0-doc \
@@ -93,18 +125,17 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     gstreamer1.0-libav \
     gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-pulseaudio \
     libgstreamer-plugins-base1.0-dev \
-    portaudio19-dev \
     && \
-    npm install http-server -g 
-#&& \
-# ln -s /usr/bin/nodejs /usr/bin/node
+    npm install http-server -g && \
+    ln -s /usr/bin/nodejs /usr/bin/node
 
 RUN \
-    PIP_INSTALL="python3.8 -m pip --no-cache-dir install --upgrade" && \
+    PIP_INSTALL="python3.6 -m pip --no-cache-dir install --upgrade" && \
     $PIP_INSTALL \
     packaging==19.1 \
-    PyAudio \
-    # empy \
+    empy \
+    rospkg \
+    catkin_pkg \
     soundfile
 
 
@@ -114,13 +145,9 @@ RUN \
 RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
     ros-$ROS_DISTRO-rosbridge-server \
-    # ros-$ROS_DISTRO-dynamixel-msgs \
-    --reinstall python3-pkg-resources \
+    ros-$ROS_DISTRO-dynamixel-msgs \
+    python-catkin-tools python3-dev python3-numpy \
     && \
     rm -rf /var/lib/apt/lists/* /tmp/*
 
-WORKDIR /root/
-RUN git clone https://github.com/catkin/catkin_tools.git
-RUN pip install -r catkin_tools/requirements.txt --upgrade
-WORKDIR /root/catkin_tools/
-RUN python setup.py install --record install_manifest.txt
+

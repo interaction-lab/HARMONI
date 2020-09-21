@@ -1,5 +1,4 @@
-#!/bin/bash
-FROM harmoniteam/lightweight:harmoni
+FROM harmoniteam/harmoni:kinetic-core
 
 # ==================================================================
 # Abstractions for apt installation
