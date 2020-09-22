@@ -1,4 +1,4 @@
-gesture:
+qt:
   default_param:
-    robot_name: "QT"
+    path: "/home/qtrobot/robot/data/gestures"
     
