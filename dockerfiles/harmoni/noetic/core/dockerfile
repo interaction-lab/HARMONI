@@ -2,6 +2,16 @@ FROM harmoniteam/harmoni:noetic-base
 
 RUN ROS_DISTRO="noetic"
 
+RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+    python3-osrf-pycommon \
+    python3-catkin-tools \
+    python3-catkin-lint
+# && PIP_INSTALL="python3.8 -m pip --no-cache-dir install --upgrade" && \
+# $PIP_INSTALL \
+# osrf-pycommon
+
 
 # ==================================================================
 # Clone Harmoni and Audio Common
