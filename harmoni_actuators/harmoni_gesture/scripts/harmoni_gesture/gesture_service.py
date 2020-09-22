@@ -10,7 +10,7 @@ from harmoni_common_lib.service_manager import HarmoniServiceManager
 import harmoni_common_lib.helper_functions as hf
 
 # Specific Imports
-from std_msgs.msg import String
+from std_msgs.msg import String, Bool
 import numpy as np
 import ast
 
@@ -26,9 +26,9 @@ class GestureService(HarmoniServiceManager):
         self.gestures_name = []
         self.gestures_duration = []
         self.gesture_list_received = False
+        self.gesture_done = False
         """ Setup Params """
         self.name = name
-        self.robot_name = param["robot_name"]
         self.service_id = hf.get_child_id(self.name)
         """ Setup the gesture """
         self.gesture_pub = rospy.Publisher(ActuatorNameSpace.gesture.value +self.service_id, String, queue_size=1)
@@ -40,7 +40,7 @@ class GestureService(HarmoniServiceManager):
         )
         self.gesture_done_sub = rospy.Subscriber(
             ActuatorNameSpace.gesture.value + self.service_id + "/done",
-            String,
+            Bool,
             self._gesture_done_callback,
             queue_size=1,
         )
@@ -51,6 +51,9 @@ class GestureService(HarmoniServiceManager):
 
     def _gesture_done_callback(self, data):
         """Gesture done """
+        if data.data:
+            self.gesture_done = True
+
 
     def _get_list_callback(self, data):
         """Gesture list """
@@ -64,7 +67,7 @@ class GestureService(HarmoniServiceManager):
         """ Setup the gesture """
         rospy.loginfo("Setting up the %s" % self.name)
         while not self.gesture_list_received:
-            rospy.logwarn("Wait until gesture list received")
+            rospy.logdebug("Wait until gesture list received")
         rospy.loginfo("Received list of gestures")
         return
 
@@ -79,6 +82,8 @@ class GestureService(HarmoniServiceManager):
         try:
             rospy.loginfo(f"length of data is {len(data)}")
             self.gesture_pub(gesture, timing)
+            while not self.gesture_done:
+                self.state= State.REQUEST
             self.state = State.SUCCESS
             self.actuation_completed = True
         except IOError:
