@@ -2,6 +2,9 @@ FROM harmoniteam/harmoni:kinetic-base
 
 RUN ROS_DISTRO="kinetic"
 
+RUN PIP_INSTALL="python3.6 -m pip --no-cache-dir install --upgrade" && \
+    $PIP_INSTALL \
+    opencv-python
 
 # ==================================================================
 # Clone Harmoni and Audio Common
