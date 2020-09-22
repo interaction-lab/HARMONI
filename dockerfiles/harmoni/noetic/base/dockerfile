@@ -29,14 +29,10 @@ RUN \
     # NETWORK TOOLS
     iputils-ping \
     net-tools \
-    && rm -rf /var/lib/apt/lists/* 
-
-
-# ==================================================================
-# Setup Python3.8 with pip
-# ------------------------------------------------------------------
-RUN \
-    APT_INSTALL="apt-get install -y --no-install-recommends" \
+    # ==================================================================
+    # Setup Python3.8 with pip
+    # ------------------------------------------------------------------
+    && APT_INSTALL="apt-get install -y --no-install-recommends" \
     && add-apt-repository -y ppa:deadsnakes/ppa \
     && apt-get update -y && apt-get upgrade -y \
     && apt-get install -y \
@@ -48,19 +44,14 @@ RUN \
     && python3.8 -m pip install --upgrade pip wheel \
     && python3.8 -m pip install setuptools \
     && python3.8 -m pip install --ignore-installed pyyaml \
-    && python3.8 -m pip install --force-reinstall numpy \
-    && pip install -U Pillow \
-    && ln -s /usr/bin/python3.8 /usr/local/bin/python3 \
     && ln -s /usr/bin/python3.8 /usr/local/bin/python \
-    && rm -rf /var/lib/apt/lists/* 
-
-
-# ==================================================================
-# Install rosbuild/catkin packages
-# ------------------------------------------------------------------
-RUN \
-    PIP_INSTALL="python3 -m pip --no-cache-dir install --upgrade" && \
+    && ln -s /usr/bin/python3.8 /usr/local/bin/python3 \
+    # ==================================================================
+    # Install ros/catkin packages
+    # ------------------------------------------------------------------
+    && PIP_INSTALL="python3 -m pip --no-cache-dir install --upgrade" && \
     $PIP_INSTALL \
+    # ROS
     rospkg \
     catkin_pkg \
     # catkin_tools \
@@ -73,16 +64,22 @@ RUN \
     && rm -rf /var/lib/apt/lists/* 
 
 
+WORKDIR /root/
+RUN git clone https://github.com/catkin/catkin_tools.git
+RUN pip install -r catkin_tools/requirements.txt --upgrade
+WORKDIR /root/catkin_tools/
+RUN python setup.py install --record install_manifest.txt
 # ==================================================================
 # Harmoni packages
 # - Cordial Prerequisites
+# - Audio Common Prerequisites
 # ------------------------------------------------------------------
 RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+    # CORIDAL INSTALL
     nodejs \
     npm \
-    # vorbis-tools python-pygame python-requests python-serial ros-kinetic-tf python-gst-1.0 python-scipy \
     vorbis-tools python-pygame \
     libboost-all-dev \
     # GSTREAMER (needed for audio_common)
@@ -92,34 +89,26 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     gstreamer1.0-libav \
     gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-pulseaudio \
     libgstreamer-plugins-base1.0-dev \
-    portaudio19-dev \
-    && \
-    npm install http-server -g 
-#&& \
-# ln -s /usr/bin/nodejs /usr/bin/node
-
-RUN \
-    PIP_INSTALL="python3.8 -m pip --no-cache-dir install --upgrade" && \
+    # PYAUDIO
+    portaudio19-dev ffmpeg \
+    && npm install http-server -g \
+    # && ln -s /usr/bin/nodejs /usr/bin/node \ Already exists
+    && PIP_INSTALL="python3.8 -m pip --no-cache-dir install --upgrade" && \
     $PIP_INSTALL \
     packaging==19.1 \
     soundfile \
-    PyAudio
-# empy \
-
-
-# ==================================================================
-# Install the Ros packages needed for Harmoni
-# ------------------------------------------------------------------
-RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
+    # empy \ Already exists
+    PyAudio \
+    && pip install -U Pillow \
+    && python3.8 -m pip install --force-reinstall numpy \
+    # ==================================================================
+    # Install the Ros packages needed for Harmoni
+    # ------------------------------------------------------------------
+    && APT_INSTALL="apt-get install -y --no-install-recommends" && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
     ros-$ROS_DISTRO-rosbridge-server \
-    # ros-$ROS_DISTRO-dynamixel-msgs \
+    # ros-$ROS_DISTRO-dynamixel-msgs \ Doesn't exist in noetic
+    ros-$ROS_DISTRO-audio-common \
     --reinstall python3-pkg-resources \
     && \
     rm -rf /var/lib/apt/lists/* /tmp/*
-
-WORKDIR /root/
-RUN git clone https://github.com/catkin/catkin_tools.git
-RUN pip install -r catkin_tools/requirements.txt --upgrade
-WORKDIR /root/catkin_tools/
-RUN python setup.py install --record install_manifest.txt
