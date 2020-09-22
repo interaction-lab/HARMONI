@@ -113,6 +113,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rospkg \
     catkin_pkg \
     catkin_tools \
+    scikit-build \
     && rm -rf /var/lib/apt/lists/* 
 
 
@@ -139,6 +140,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     libgstreamer-plugins-base1.0-dev \
     # PYAUDIO
     portaudio19-dev ffmpeg \
+    # NEEDED for cffi needed for... something
+    libffi-dev \
     # GRAPHICS UTILS (don't appear needed)
     # libcanberra-gtk-module libgl1-mesa-glx libgl1-mesa-dri mesa-utils \
     # vlc \
@@ -152,7 +155,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     empy \
     PyAudio \
     imutils \
-    opencv-python \
+    # opencv-python \ Moving to core
     --force-reinstall defusedxml \
     # ==================================================================
     # Install the Ros packages needed for Harmoni

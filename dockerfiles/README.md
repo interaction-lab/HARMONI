@@ -97,15 +97,14 @@ export DOCKER_CLI_EXPERIMENTAL=enabled
 
 docker run --rm --privileged docker/binfmt:820fdd95a9972a5308930a2bdfb8573dd4447ad3 
 
-docker buildx create --name mybuilder
+docker buildx create --name my_builder
 
-docker buildx use mybuilder
+docker buildx use my_builder
 
 docker buildx inspect --bootstrap
 
-docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/arm/harmoni/dockerfile --tag harmoniteam/lightweight:harmoni .
+docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/harmoni/noetic/base/dockerfile --tag harmoniteam/harmoni:noetic-base .
 
-docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/arm/w2l/dockerfile --tag harmoniteam/lightweight:w2l .
 ```
 
 Running and connecting to the terminal
