@@ -1,0 +1,15 @@
+<!-- This is an example launch file for how a ROS application could use a node -->
+<launch>   
+	<arg name="use_gesture" default="true"/>
+	<arg name="test" default="false"/>
+	<arg name="test_input" default="QT/emotions/happy"/>
+	<arg name="test_id" default="default"/>
+	<group if="$(arg use_gesture)">
+			<rosparam file="$(find harmoni_gesture)/config/configuration.yaml"/>
+			<param name="test_gesture" value="$(arg test)"/>
+			<param name="test_input_gesture" value="$(arg test_input)"/>
+			<param name="test_id_gesture" value="$(arg test_id)"/>
+			<param name="name_gesture" value="gesture"/>
+			<node pkg="harmoni_gesture" type="gesture_service.py" name="harmoni_gesture_$(arg test_id)" output="screen"/>
+    </group>
+</launch>
