@@ -1,4 +1,4 @@
-FROM harmoniteam/lightweight:base
+FROM harmoniteam/harmoni:kinetic-base
 
 RUN ROS_DISTRO="kinetic"
 
@@ -7,46 +7,25 @@ RUN ROS_DISTRO="kinetic"
 # Clone Harmoni and Audio Common
 # ------------------------------------------------------------------
 ENV ROS_WS /root/harmoni_catkin_ws
-
-
-# RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
-#     apt-get update && \
-#     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-#     python-catkin-tools python3-dev python3-numpy
-# mkdir ~/catkin_build_ws && cd ~/catkin_build_ws
-
 RUN mkdir -p $ROS_WS/src
 WORKDIR $ROS_WS
-
-# RUN pip install catkin_pkg
-
-# RUN catkin config \
-#     --extend /opt/ros/$ROS_DISTRO \
-#     -DPYTHON_EXECUTABLE=/usr/bin/python3 \
-#     -DPYTHON_INCLUDE_DIR=/usr/include/python3.6m \
-#     -DPYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.6m.so
-
-# RUN catkin config --install
 
 RUN git -C src clone \
     -b develop \
     https://github.com/interaction-lab/HARMONI.git 
 
 RUN git -C src clone \
-    -b master \
-    https://github.com/ros-drivers/audio_common.git
-
-# Currently not working with opencv - recommend using noetic if needed
-# RUN git -C src clone \
-#     -b melodic \
-#     https://github.com/ros-perception/vision_opencv.git
+    -b kinetic \
+    https://github.com/ros-perception/vision_opencv.git
 
 RUN ln -s /usr/lib/x86_64-linux-gnu/libboost_python-py35.so /usr/lib/x86_64-linux-gnu/libboost_python3.so
 
-# RUN rosdep update
+RUN git -C src clone \
+    -b master \
+    https://github.com/ros-drivers/audio_common.git
 
 # ==================================================================
-# Build Harmoni and Audio from source
+# Build Harmoni, Audio, and OpenCV from source
 # ------------------------------------------------------------------
 RUN catkin config \
     --extend /opt/ros/$ROS_DISTRO \
@@ -56,14 +35,10 @@ RUN catkin config \
     && \
     catkin build
 
-# RUN catkin build cv_bridge
-
-# RUN source install/setup.bash --extend
-
 RUN mkdir -p /root/local_mount/
 RUN ln -s /root/harmoni_catkin_ws/src/HARMONI /root/local_mount/
 
-pip install 
+
 # ==================================================================
 # For convenience add a source script to bashrc and update without clearing
 # ------------------------------------------------------------------

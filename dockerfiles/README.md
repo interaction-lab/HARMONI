@@ -75,7 +75,7 @@ docker build -f dockerfiles/harmoni/kinetic/core/dockerfile --tag harmoniteam/ha
 
 docker build -f dockerfiles/harmoni/kinetic/w2l/dockerfile --tag harmoniteam/harmoni:kinetic-w2l .
 
-docker build -f dockerfiles/harmoni/kinetic/facedetect/dockerfile --tag harmoniteam/harmoni:kinetic-facedetect .
+docker build -f dockerfiles/harmoni/kinetic/face_detect/dockerfile --tag harmoniteam/harmoni:kinetic-face_detect .
 ```
 
 ## Dev

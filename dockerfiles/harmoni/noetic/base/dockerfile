@@ -33,7 +33,7 @@ RUN \
 
 
 # ==================================================================
-# Setup Python3.8 with pip, virtualenv
+# Setup Python3.8 with pip
 # ------------------------------------------------------------------
 RUN \
     APT_INSTALL="apt-get install -y --no-install-recommends" \
@@ -102,9 +102,9 @@ RUN \
     PIP_INSTALL="python3.8 -m pip --no-cache-dir install --upgrade" && \
     $PIP_INSTALL \
     packaging==19.1 \
-    PyAudio \
-    # empy \
-    soundfile
+    soundfile \
+    PyAudio
+# empy \
 
 
 # ==================================================================

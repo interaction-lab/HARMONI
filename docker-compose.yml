@@ -81,27 +81,27 @@ services:
     working_dir: /root/harmoni_catkin_ws/src/HARMONI
     command: tail  -f /dev/null
 
-  harmoni_visual_detector:
-    container_name: harmoni_visual_detector
+  harmoni_face_detector:
+    container_name: harmoni_face_detector
     build:
       context: .
-      dockerfile: dockerfiles/harmoni/noetic/facedetect/dockerfile
+      dockerfile: dockerfiles/harmoni/$ROS_DISTRO/face_detect/dockerfile
       network: host
-    image: harmoniteam/harmoni:noetic-facedetect
+    image: harmoniteam/harmoni:$ROS_DISTRO-face_detect
     init: true
     environment:
       DISPLAY: $DISPLAY
       QT_GRAPHICSSYSTEM: native
-      ROS_DISTRO: noetic
+      ROS_DISTRO: $ROS_DISTRO
       IS_DOCKER_ENV: "true"
       CATKIN_WS: harmoni_catkin_ws
-      ROS_HOSTNAME: harmoni_visual_detector
+      ROS_HOSTNAME: harmoni_face_detector
       ROS_MASTER_URI: http://172.18.3.4:11311
     privileged: true
     networks:
       ros_net:
         ipv4_address: 172.18.3.2
-    hostname: harmoni_visual_detector
+    hostname: harmoni_face_detector
     depends_on:
       - "harmoni_core"
       - "harmoni_hardware"

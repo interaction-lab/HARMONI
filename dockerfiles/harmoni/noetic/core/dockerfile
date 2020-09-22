@@ -14,15 +14,15 @@ RUN git -C src clone \
     -b develop \
     https://github.com/interaction-lab/HARMONI.git 
 
-RUN git -C src clone \
-    -b master \
-    https://github.com/ros-drivers/audio_common.git
-
 # RUN git -C src clone \
 #     -b noetic \
 #     https://github.com/ros-perception/vision_opencv.git
 
 # RUN ln -s /usr/lib/x86_64-linux-gnu/libboost_python-py35.so /usr/lib/x86_64-linux-gnu/libboost_python3.so
+
+RUN git -C src clone \
+    -b master \
+    https://github.com/ros-drivers/audio_common.git
 
 # ==================================================================
 # Build Harmoni and Audio from source
@@ -50,8 +50,6 @@ RUN \
 COPY ./dockerfiles/config/harmoni_entrypoint.sh /
 COPY ./dockerfiles/config/setup_script.sh /
 
-# roscore needs this
-RUN apt-get install --reinstall python3-pkg-resources
 
 ENTRYPOINT ["/harmoni_entrypoint.sh"]
 CMD ["bash"]
