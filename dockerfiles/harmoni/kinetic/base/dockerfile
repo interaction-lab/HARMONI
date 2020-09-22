@@ -29,24 +29,10 @@ RUN \
     # NETWORK TOOLS
     iputils-ping \
     net-tools \
-    # PYAUDIO
-    portaudio19-dev libportaudio2 libportaudiocpp0\
-    ffmpeg libav-tools \
-    # GRAPHICS UTILS
-    libcanberra-gtk-module \
-    libgl1-mesa-glx \
-    libgl1-mesa-dri \
-    mesa-utils \
-    vlc \
-    && sed -i 's/geteuid/getppid/' /usr/bin/vlc \
-    && rm -rf /var/lib/apt/lists/* 
-
-
-# ==================================================================
-# Setup Python3.6 with pip
-# ------------------------------------------------------------------
-RUN \
-    APT_INSTALL="apt-get install -y --no-install-recommends" \
+    # ==================================================================
+    # Setup Python3.6 with pip
+    # ------------------------------------------------------------------
+    && APT_INSTALL="apt-get install -y --no-install-recommends" \
     && add-apt-repository -y ppa:deadsnakes/ppa \
     && apt-get update -y && apt-get upgrade -y \
     && apt-get install -y \
@@ -58,21 +44,14 @@ RUN \
     && python3.6 -m pip install --upgrade pip wheel \
     && python3.6 -m pip install setuptools \
     && python3.6 -m pip install --ignore-installed pyyaml \
-    && ln -s /usr/bin/python3.6 /usr/local/bin/python3 \
     && ln -s /usr/bin/python3.6 /usr/local/bin/python \
-    && rm -rf /var/lib/apt/lists/* 
-
-
-# ==================================================================
-# Install rosbuild/catkin packages
-# ------------------------------------------------------------------
-RUN \
-    PIP_INSTALL="python3 -m pip --no-cache-dir install --upgrade" && \
+    && ln -s /usr/bin/python3.6 /usr/local/bin/python3 \
+    # ==================================================================
+    # Install ros/catkin packages
+    # ------------------------------------------------------------------
+    && PIP_INSTALL="python3 -m pip --no-cache-dir install --upgrade" && \
     $PIP_INSTALL \
-    pyaudio \
     # ROS
-    # pyaml \
-    empy \
     rospkg \
     catkin_pkg \
     catkin_tools \
@@ -82,7 +61,6 @@ RUN \
     google-cloud-speech \
     dialogflow \
     google-api-python-client \
-    && python3.6 -m pip install --ignore-installed pyyaml \
     && rm -rf /var/lib/apt/lists/* 
 
 
@@ -141,14 +119,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # ==================================================================
 # Harmoni packages
 # - Cordial Prerequisites
+# - Audio Common Prerequisites
 # ------------------------------------------------------------------
 RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+    # CORIDAL INSTALL
     nodejs \
     npm \
-    vorbis-tools python-pygame python-requests python-serial ros-kinetic-tf python-gst-1.0 python-scipy \
-    luakit \
+    # vorbis-tools python-pygame python-requests python-serial ros-kinetic-tf python-gst-1.0 python-scipy \
+    vorbis-tools python-pygame \
     libboost-all-dev \
     # GSTREAMER (needed for audio_common)
     libgstreamer1.0-0 gstreamer1.0-dev gstreamer1.0-tools gstreamer1.0-doc \
@@ -157,27 +137,30 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     gstreamer1.0-libav \
     gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-pulseaudio \
     libgstreamer-plugins-base1.0-dev \
-    && \
-    npm install http-server -g && \
-    ln -s /usr/bin/nodejs /usr/bin/node
-
-RUN \
-    PIP_INSTALL="python3.6 -m pip --no-cache-dir install --upgrade" && \
+    # PYAUDIO
+    portaudio19-dev ffmpeg \
+    # GRAPHICS UTILS (don't appear needed)
+    # libcanberra-gtk-module libgl1-mesa-glx libgl1-mesa-dri mesa-utils \
+    # vlc \
+    # && sed -i 's/geteuid/getppid/' /usr/bin/vlc \
+    && npm install http-server -g \
+    && ln -s /usr/bin/nodejs /usr/bin/node \
+    && PIP_INSTALL="python3.6 -m pip --no-cache-dir install --upgrade" && \
     $PIP_INSTALL \
     packaging==19.1 \
     soundfile \
-    dlib \
+    empy \
+    PyAudio \
     imutils \
     opencv-python \
-    --force-reinstall defusedxml
-
-# ==================================================================
-# Install the Ros packages needed for Harmoni
-# ------------------------------------------------------------------
-RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
+    --force-reinstall defusedxml \
+    # ==================================================================
+    # Install the Ros packages needed for Harmoni
+    # ------------------------------------------------------------------
+    && APT_INSTALL="apt-get install -y --no-install-recommends" && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
     ros-$ROS_DISTRO-rosbridge-server \
-    ros-$ROS_DISTRO-audio-common \
     ros-$ROS_DISTRO-dynamixel-msgs \
+    ros-$ROS_DISTRO-audio-common \
     && \
     rm -rf /var/lib/apt/lists/* /tmp/*
