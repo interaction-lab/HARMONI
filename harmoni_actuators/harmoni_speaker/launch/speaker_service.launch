@@ -15,7 +15,7 @@
 			<param name="test_input_speaker" value="$(arg test_input)"/>
 			<param name="test_id_speaker" value="$(arg test_id)"/>
 			<param name="name_speaker" value="speaker"/>
-			<node pkg="harmoni_speaker" type="speaker_service.py" name="harmoni_speaker" output="screen"/>
+			<node pkg="harmoni_speaker" type="speaker_service.py" name="harmoni_speaker_$(arg test_id)" output="screen"/>
     </group>
     <include file="$(find audio_play)/launch/play.launch">
         <arg name="do_timestamp" value = "false"/> 

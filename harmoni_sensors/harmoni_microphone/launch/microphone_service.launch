@@ -11,7 +11,7 @@
 			<param name="test_input_microphone" value="$(arg test_input)"/>
 			<param name="test_id_microphone" value="$(arg test_id)"/>
 			<param name="name_microphone" value="microphone"/>
-			<node pkg="harmoni_microphone" type="microphone_service.py" name="harmoni_microphone" output="screen"/>
+			<node pkg="harmoni_microphone" type="microphone_service.py" name="harmoni_microphone_$(arg test_id)" output="screen"/>
   			
    </group>
 
