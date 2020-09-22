@@ -7,6 +7,8 @@ RUN \
     $PIP_INSTALL \
     dlib \
     imutils \
+    facenet-pytorch \
+    Pillow \
     opencv-python
 
 # ENV ROS_WS /root/harmoni_catkin_ws/

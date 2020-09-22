@@ -29,11 +29,21 @@ RUN \
     # NETWORK TOOLS
     iputils-ping \
     net-tools \
+    # PYAUDIO
+    portaudio19-dev libportaudio2 libportaudiocpp0\
+    ffmpeg libav-tools \
+    # GRAPHICS UTILS
+    libcanberra-gtk-module \
+    libgl1-mesa-glx \
+    libgl1-mesa-dri \
+    mesa-utils \
+    vlc \
+    && sed -i 's/geteuid/getppid/' /usr/bin/vlc \
     && rm -rf /var/lib/apt/lists/* 
 
 
 # ==================================================================
-# Setup Python3.6 with pip, virtualenv
+# Setup Python3.6 with pip
 # ------------------------------------------------------------------
 RUN \
     APT_INSTALL="apt-get install -y --no-install-recommends" \
@@ -50,6 +60,29 @@ RUN \
     && python3.6 -m pip install --ignore-installed pyyaml \
     && ln -s /usr/bin/python3.6 /usr/local/bin/python3 \
     && ln -s /usr/bin/python3.6 /usr/local/bin/python \
+    && rm -rf /var/lib/apt/lists/* 
+
+
+# ==================================================================
+# Install rosbuild/catkin packages
+# ------------------------------------------------------------------
+RUN \
+    PIP_INSTALL="python3 -m pip --no-cache-dir install --upgrade" && \
+    $PIP_INSTALL \
+    pyaudio \
+    # ROS
+    # pyaml \
+    empy \
+    rospkg \
+    catkin_pkg \
+    catkin_tools \
+    # AWS
+    boto3 \
+    awscli \
+    google-cloud-speech \
+    dialogflow \
+    google-api-python-client \
+    && python3.6 -m pip install --ignore-installed pyyaml \
     && rm -rf /var/lib/apt/lists/* 
 
 
@@ -71,11 +104,12 @@ RUN echo "deb http://packages.ros.org/ros/ubuntu xenial main" > /etc/apt/sources
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
 
+# ros kinetic setup
 ENV ROS_DISTRO kinetic
 
 # install ros packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    # ros-kinetic-ros-core=1.3.2-0* \
+    ros-kinetic-ros-core=1.3.2-0* \
     python-rosdep \
     python-rosinstall \
     python-vcstools \
@@ -98,12 +132,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     PIP_INSTALL="python3 -m pip --no-cache-dir install --upgrade" && \
     $PIP_INSTALL \
     numpy \
-    # AWS
-    boto3 \
-    awscli \
-    google-cloud-speech \
-    dialogflow \
-    google-api-python-client \
+    rospkg \
+    catkin_pkg \
+    catkin_tools \
     && rm -rf /var/lib/apt/lists/* 
 
 
@@ -117,6 +148,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     nodejs \
     npm \
     vorbis-tools python-pygame python-requests python-serial ros-kinetic-tf python-gst-1.0 python-scipy \
+    luakit \
     libboost-all-dev \
     # GSTREAMER (needed for audio_common)
     libgstreamer1.0-0 gstreamer1.0-dev gstreamer1.0-tools gstreamer1.0-doc \
@@ -133,11 +165,11 @@ RUN \
     PIP_INSTALL="python3.6 -m pip --no-cache-dir install --upgrade" && \
     $PIP_INSTALL \
     packaging==19.1 \
-    empy \
-    rospkg \
-    catkin_pkg \
-    soundfile
-
+    soundfile \
+    dlib \
+    imutils \
+    opencv-python \
+    --force-reinstall defusedxml
 
 # ==================================================================
 # Install the Ros packages needed for Harmoni
@@ -145,9 +177,7 @@ RUN \
 RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
     ros-$ROS_DISTRO-rosbridge-server \
+    ros-$ROS_DISTRO-audio-common \
     ros-$ROS_DISTRO-dynamixel-msgs \
-    python-catkin-tools python3-dev python3-numpy \
     && \
     rm -rf /var/lib/apt/lists/* /tmp/*
-
-

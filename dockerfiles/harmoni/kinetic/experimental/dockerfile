@@ -16,21 +16,14 @@ RUN \
     ca-certificates \
     # DOWNLOAD TOOLS
     curl \
-    # wget \
-    # zsh \
-    # unzip \
     # COMPILERS
     g++ \
     cmake \
     # VERSION CONTROL
     git \
-    # git-gui \
-    # meld \
-    # MISC. TOOLS
-    # htop \
     vlc \
-    python-keybinder \
-    python-notify \
+    # python-keybinder \
+    # python-notify \
     # PYAUDIO
     portaudio19-dev libportaudio2 libportaudiocpp0\
     ffmpeg libav-tools \
@@ -54,7 +47,7 @@ RUN \
     python3.6 \
     python3.6-dev \
     python3-pip \
-    python3-virtualenv \
+    # python3-virtualenv \
     # ROS
     python3-yaml \
     && python3.6 -m pip install --upgrade pip \
@@ -71,19 +64,12 @@ RUN \
     boto3 \
     awscli \
     # DATA SCIENCE TOOLS
-    # pandas \
-    # sklearn \
-    # statsmodels \
-    # hmmlearn \
-    # pmdarima \
-    # matplotlib \
-    dill \
-    requests \
-    schedule \
-    freezegun \
-    func_timeout \
-    datetimerange \
-    # jupyterlab \
+    # dill \
+    # requests \
+    # schedule \
+    # freezegun \
+    # func_timeout \
+    # datetimerange \
     && python3.6 -m pip install --ignore-installed pyyaml \
     && rm -rf /var/lib/apt/lists/* 
 
