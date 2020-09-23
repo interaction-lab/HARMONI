@@ -43,7 +43,7 @@ jobs:
             --cache-to "type=local,dest=/tmp/.buildx-cache" \
             --platform linux/amd64 \
             --output "type=image,push=false" \
-            --file ./dockerfiles/harmoni/kinetic/core/dockerfile ./dockerfiles/harmoni/kinetic/core \
+            --file ./dockerfiles/harmoni/kinetic/core/dockerfile . \
             --tag harmoniteam/harmoni:kinetic-core \
             --tag harmoniteam/harmoni:kinetic-latest
 
@@ -61,7 +61,7 @@ jobs:
             --cache-from "type=local,src=/tmp/.buildx-cache" \
             --output "type=image,push=true" \
             --platform linux/amd64 \
-            --file ./dockerfiles/harmoni/kinetic/core/dockerfile ./dockerfiles/harmoni/kinetic/core \
+            --file ./dockerfiles/harmoni/kinetic/core/dockerfile . \
             --tag harmoniteam/harmoni:kinetic-core \
             --tag harmoniteam/harmoni:kinetic-latest
       - name: Inspect image
@@ -76,7 +76,7 @@ jobs:
             --cache-to "type=local,dest=/tmp/.buildx-cache" \
             --platform linux/amd64 \
             --output "type=image,push=false" \
-            --file ./dockerfiles/harmoni/noetic/core/dockerfile ./dockerfiles/harmoni/noetic/core \
+            --file ./dockerfiles/harmoni/noetic/core/dockerfile . \
             --tag harmoniteam/harmoni:noetic-core \
             --tag harmoniteam/harmoni:noetic-latest
 
@@ -94,7 +94,7 @@ jobs:
             --cache-from "type=local,src=/tmp/.buildx-cache" \
             --output "type=image,push=true" \
             --platform linux/amd64 \
-            --file ./dockerfiles/harmoni/noetic/core/dockerfile ./dockerfiles/harmoni/noetic/core \
+            --file ./dockerfiles/harmoni/noetic/core/dockerfile . \
             --tag harmoniteam/harmoni:noetic-core \
             --tag harmoniteam/harmoni:noetic-latest
       - name: Inspect image
