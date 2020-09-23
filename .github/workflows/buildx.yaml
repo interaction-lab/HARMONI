@@ -21,8 +21,16 @@ jobs:
         uses: crazy-max/ghaction-docker-buildx@v3
         with:
           buildx-version: latest
-          skip-cache: false
           qemu-version: latest
+
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        id: cache
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
 
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
