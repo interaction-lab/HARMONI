@@ -25,7 +25,7 @@ To launch the complete harmoni dev setup in docker:
 ## Why Docker?
 Although Harmoni will work without Docker, Harmoni is intended to be used with Docker to maximize portability and scalability. By using Docker Harmoni is quick and easy to set up on any OS or Hardware which currently supports docker.  We provide pre-built images for development, lightweight images for deployment, and even support for deploying to ARM chipsets.
 
-Docker also allows us to (mostly) mix and match OS/ROS versions in different containers. For instance we use noetic with vision containers because of the python3-opencv integration but we use kinetic with w2l because facebook doesn't support w2l on 20.04 yet. This works for communication with standard messages and harmoni messages but may cause issues with other message types. [See here for more information.]()
+Docker also allows us to (mostly) mix and match OS/ROS versions in different containers. For instance we use noetic with vision containers because of the python3-opencv integration but we use kinetic with w2l because facebook doesn't support w2l on 20.04 yet. This works for communication with standard messages and harmoni messages but may cause issues with other message types. [See here for more information.](https://answers.ros.org/question/45153/ros-fuerte-node-communicating-with-ros-electric-node/?answer=45160#post-id-45160)
 
 ## Docker Containers
 We currently support development on ROS1 Noetic (passing) and Kinetic (broken - fix incoming). We also provide a development container with additional tools and ML libraries.
