@@ -27,13 +27,13 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
 
-      # Build the Kinetic images
+      # Build the Kinetic images (excluding linux/arm/v7,linux/arm64 for now)
       - name: Run Buildx
         run: |
           docker buildx build \
             --cache-from "type=local,src=/tmp/.buildx-cache" \
             --cache-to "type=local,dest=/tmp/.buildx-cache" \
-            --platform linux/amd64,linux/arm64,linux/arm/v7 \
+            --platform linux/amd64\
             --output "type=image,push=false" \
             --file ./dockerfiles/harmoni/kinetic/core/dockerfile ./dockerfiles/harmoni/kinetic/core \
             --tag harmoniteam/harmoni:kinetic-core \
@@ -52,7 +52,7 @@ jobs:
           docker buildx build \
             --cache-from "type=local,src=/tmp/.buildx-cache" \
             --output "type=image,push=true" \
-            --platform linux/amd64,linux/arm64,linux/arm/v7 \
+            --platform linux/amd64\
             --file ./dockerfiles/harmoni/kinetic/core/dockerfile ./dockerfiles/harmoni/kinetic/core \
             --tag harmoniteam/harmoni:kinetic-core \
             --tag harmoniteam/harmoni:kinetic-latest
@@ -66,7 +66,7 @@ jobs:
           docker buildx build \
             --cache-from "type=local,src=/tmp/.buildx-cache" \
             --cache-to "type=local,dest=/tmp/.buildx-cache" \
-            --platform linux/amd64,linux/arm64,linux/arm/v7 \
+            --platform linux/amd64\
             --output "type=image,push=false" \
             --file ./dockerfiles/harmoni/noetic/core/dockerfile ./dockerfiles/harmoni/noetic/core \
             --tag harmoniteam/harmoni:noetic-core \
@@ -85,7 +85,7 @@ jobs:
           docker buildx build \
             --cache-from "type=local,src=/tmp/.buildx-cache" \
             --output "type=image,push=true" \
-            --platform linux/amd64,linux/arm64,linux/arm/v7 \
+            --platform linux/amd64\
             --file ./dockerfiles/harmoni/noetic/core/dockerfile ./dockerfiles/harmoni/noetic/core \
             --tag harmoniteam/harmoni:noetic-core \
             --tag harmoniteam/harmoni:noetic-latest
