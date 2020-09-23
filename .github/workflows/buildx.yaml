@@ -3,8 +3,8 @@ name: buildx
 on:
   pull_request:
     branches: develop
-  push:
-    branches: develop
+  # push:
+  #   branches: develop
   workflow_dispatch:
     #manual build? (only here for testing)
 
@@ -41,7 +41,7 @@ jobs:
           docker buildx build \
             --cache-from "type=local,src=/tmp/.buildx-cache" \
             --cache-to "type=local,dest=/tmp/.buildx-cache" \
-            --platform linux/amd64\
+            --platform linux/amd64 \
             --output "type=image,push=false" \
             --file ./dockerfiles/harmoni/kinetic/core/dockerfile ./dockerfiles/harmoni/kinetic/core \
             --tag harmoniteam/harmoni:kinetic-core \
@@ -60,7 +60,7 @@ jobs:
           docker buildx build \
             --cache-from "type=local,src=/tmp/.buildx-cache" \
             --output "type=image,push=true" \
-            --platform linux/amd64\
+            --platform linux/amd64 \
             --file ./dockerfiles/harmoni/kinetic/core/dockerfile ./dockerfiles/harmoni/kinetic/core \
             --tag harmoniteam/harmoni:kinetic-core \
             --tag harmoniteam/harmoni:kinetic-latest
@@ -74,7 +74,7 @@ jobs:
           docker buildx build \
             --cache-from "type=local,src=/tmp/.buildx-cache" \
             --cache-to "type=local,dest=/tmp/.buildx-cache" \
-            --platform linux/amd64\
+            --platform linux/amd64 \
             --output "type=image,push=false" \
             --file ./dockerfiles/harmoni/noetic/core/dockerfile ./dockerfiles/harmoni/noetic/core \
             --tag harmoniteam/harmoni:noetic-core \
@@ -93,7 +93,7 @@ jobs:
           docker buildx build \
             --cache-from "type=local,src=/tmp/.buildx-cache" \
             --output "type=image,push=true" \
-            --platform linux/amd64\
+            --platform linux/amd64 \
             --file ./dockerfiles/harmoni/noetic/core/dockerfile ./dockerfiles/harmoni/noetic/core \
             --tag harmoniteam/harmoni:noetic-core \
             --tag harmoniteam/harmoni:noetic-latest
