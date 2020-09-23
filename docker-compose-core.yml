@@ -10,7 +10,6 @@ services:
     image: harmoniteam/harmoni:$ROS_DISTRO-core
     init: true
     environment:
-      DISPLAY: $DISPLAY
       QT_GRAPHICSSYSTEM: native
       ROS_DISTRO: $ROS_DISTRO
       ROS_MASTER_URI: http://172.18.3.4:11311
