@@ -1,4 +1,4 @@
 qt:
   default_param:
-    path: "/home/qtrobot/robot/data/gestures"
+    path: "/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_gesture/data"
     
