@@ -77,8 +77,9 @@ class GestureService(HarmoniServiceManager):
         self.actuation_completed = False
         if type(data) == str:
             data = ast.literal_eval(data)
-        gesture = data["gesture"]
-        timing = data["timing"]
+        gesture_data = self._get_gesture_data(data)
+        gesture = gesture_data["gesture"]
+        timing = gesture_data["timing"]
         try:
             rospy.loginfo(f"length of data is {len(data)}")
             self.gesture_pub(gesture, timing)
@@ -91,6 +92,52 @@ class GestureService(HarmoniServiceManager):
             self.state = State.FAILED
             self.actuation_completed = True
         return
+
+    def _get_gesture_data(data):
+        """ Get only gesture data"""
+        if type(data) == str:
+            data = ast.literal_eval(data)
+        behavior_data = ast.literal_eval(data["behavior_data"])
+        behavior_set = []
+        sentence = []
+        for b in behavior_data:
+            if "id" in b.keys():
+                if b["id"] in self.gestures_name:
+                    behavior_set.append(b)
+            if "character" in b.keys():
+                sentence.append(b["value"])
+        ordered_gesture_data = list(
+            sorted(behavior_set, key=lambda face: face["start"])
+        )
+        validated_gesture = []
+        for fexp in ordered_facial_data:
+            validated_gesture.append(self.gestures_name[fexp["id"]])
+        if ordered_behaviors == []:
+			rospy.loginfo("No gestures")
+            return False
+        #TODO!
+		timing_word_behaviors = word_timing + gesture_behaviors
+		ordered_timing_word_behaviors = sorted(timing_word_behaviors, key=lambda behavior: behavior["start"])
+		start_time = rospy.Time.now()
+		for index, behav in enumerate(ordered_timing_word_behaviors[:-1]):
+			print(ordered_timing_word_behaviors[index])
+			if behav["type"] != "word":
+				print("Here")
+				while rospy.Time.now()-start_time < rospy.Duration.from_sec(behav["start"]):
+					pass
+				gesture_timing = float(ordered_timing_word_behaviors[index +1]["start"]) #you cannot have a behavior sets at the end of the sentence
+				rospy.loginfo("Play " + str(behav["id"]) + " at time:" + str(behav["start"]) + " with a duration of: " + str(gesture_timing))
+				self.gesture_publisher.publish(gesture_timing, behav["id"])
+
+		if ordered_timing_word_behaviors[len(ordered_timing_word_behaviors)-1]:
+			if ordered_timing_word_behaviors[len(ordered_timing_word_behaviors)-1]["type"] != "word":
+				print("Here")
+				while rospy.Time.now()-start_time < rospy.Duration.from_sec(ordered_timing_word_behaviors[len(ordered_timing_word_behaviors)-1]["start"]):
+					pass
+				gesture_timing = float(ordered_timing_word_behaviors[len(ordered_timing_word_behaviors)-1]["start"]) #you cannot have a behavior sets at the end of the sentence
+				rospy.loginfo("Play " + str(ordered_timing_word_behaviors[len(ordered_timing_word_behaviors)-1]["id"]) + " at time:" + str(ordered_timing_word_behaviors[len(ordered_timing_word_behaviors)-1]["start"]) + " with a duration of: " + str(gesture_timing))
+				self.gesture_pub.publish(gesture_timing, ordered_timing_word_behaviors[len(ordered_timing_word_behaviors)-1]["id"])
+			
 
 
 def main():
