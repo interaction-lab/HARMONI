@@ -171,14 +171,11 @@ class EyesService(HarmoniServiceManager):
             if "character" in b.keys():
                 sentence.append(b["value"])
         # viseme = list(filter(lambda b: b["id"] in self.visemes, data))
-
         # facial_expression = list(filter(lambda b: b["id"] in self.face_expression_names, data))
         rospy.loginfo("These facial expressions include %s" % facial_expression)
-
         ordered_facial_data = list(
             sorted(facial_expression, key=lambda face: face["start"])
         )
-
         validated_face_expr = []
         for fexp in ordered_facial_data:
             validated_face_expr.append(self.face_expression[fexp["id"]])
