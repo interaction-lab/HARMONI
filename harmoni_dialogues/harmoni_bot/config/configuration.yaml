@@ -20,5 +20,5 @@ google:
   en_param:
     project_id: "interactivecanvas-ee969"
     language: "en"
-    session_id: "test_bot"
+    session_id: "testing"
     credential_path: "/root/harmoni_catkin_ws/src/HARMONI/harmoni_dialogues/harmoni_bot/config/private-keys_en.json"
