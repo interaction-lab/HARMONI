@@ -10,8 +10,8 @@ from harmoni_common_lib.service_manager import HarmoniServiceManager
 import harmoni_common_lib.helper_functions as hf
 
 # Specific Imports
-from qt_gesture_controller.srv import *
-from std_msgs.msg import String
+#from qt_gesture_controller.srv import *
+from std_msgs.msg import String, Bool
 import numpy as np
 import ast
 import sys
@@ -25,20 +25,23 @@ class GestureInterface(HarmoniServiceManager):
     """
 
     def __init__(self, name, param):
-        """ """
+        """ Gesture"""
         super().__init__(name)
         self.gestures_name = []
         self.gestures_duration = []
+        self.gesture_list = []
         self.read_gesture_done = False
         """ Setup Params """
         self.name = name
         self.path = param["path"]
         self.service_id = hf.get_child_id(self.name)
         """ Setup the gesture """
+        #rospy.wait_for_service("qt_robot/gesture/play")
+        self.gesture_service = rospy.Publisher("qt_robot/gesture/play", String, queue_size = 1)
         self.gesture_sub = rospy.Subscriber(ActuatorNameSpace.gesture.value +self.service_id, String, self._handle_gesture_callback, queue_size=1)
         self.gesture_pub = rospy.Publisher(
             ActuatorNameSpace.gesture.value + self.service_id + "/done",
-            String,
+            Bool,
             queue_size=1,
         )
         self.gesture_list_pub = rospy.Publisher(
@@ -53,43 +56,44 @@ class GestureInterface(HarmoniServiceManager):
     def _handle_gesture_callback(self, data):
         """Gesture callback """
         done = False
-        if type(data) == str:
-            data = ast.literal_eval(data)
+        #if type(data) == str:
+        data = ast.literal_eval(data.data) 
+        print(data["gesture"], data["timing"])
         done = self.gesture_to_act(data["gesture"], data["timing"])
         while not done:
             rospy.logdebug("Wait until gesture is done")
-        self.gesture_pub(True)
+        self.gesture_pub.publish(True)
 
     def gesture_to_act(self, gesture, timing):
         for i in range(len(self.gestures_name)):
-            if self.gestures_name[i]['name'] == gesture:
-                gesture_time_duration = self.gestures_duration[i]['duration']
+            if self.gestures_name[i] == gesture:
+                gesture_time_duration = self.gestures_duration[i]
                 for j in range(1,5):
                     gesture_time_duration_x = float(gesture_time_duration)/(j)
-                    if timing < gesture_time_duration_x:
+                    if float(timing) < gesture_time_duration_x:
                         speed = j
                     else:
                         speed = 2 # the default speed value
-                rospy.loginfo("The speed of the gesture " + str(self.gestures_name[i]['name']) + " is: " + str(speed))
+                rospy.loginfo("The speed of the gesture " + str(self.gestures_name[i]) + " is: " + str(speed))
                 # I calibrated the speed according to the gesture duration and the timing of the word
-                resp = self.gesture_service(self.gestures_name[i]['name'], speed)
+                resp = self.gesture_service.publish(self.gestures_name[i])
         return resp
 
     def get_files(self, dirName):
     	# create a list of file and sub directories 
     	# names in the given directory 
-    	listOfFile = os.listdir(dirName)
-    	allFiles = list()
-    	# Iterate over all the entries
-    	for entry in listOfFile:
-        	# Create full path
-        	fullPath = os.path.join(dirName, entry)
-        	# If entry is a directory then get the list of files in this directory 
-        	if os.path.isdir(fullPath):
-            		allFiles = allFiles + self.get_files(fullPath)
-        	else:
-            		allFiles.append(fullPath)            
-    	return allFiles  
+        listOfFile = os.listdir(dirName)
+        allFiles = list()
+        # Iterate over all the entries
+        for entry in listOfFile:
+                # Create full path
+                fullPath = os.path.join(dirName, entry)
+                # If entry is a directory then get the list of files in this directory 
+                if os.path.isdir(fullPath):
+                        allFiles = allFiles + self.get_files(fullPath)
+                else:
+                        allFiles.append(fullPath)            
+        return allFiles  
 
 
     def read_gestures(self, path):
@@ -97,7 +101,7 @@ class GestureInterface(HarmoniServiceManager):
                 all_files = self.get_files(path)
                 for filename in all_files:
                         if not filename.endswith('.xml'): continue
-                    fullname = filename
+                        fullname = filename
                         tree = ET.parse(fullname)
                         root = tree.getroot()
                         for child in root:
@@ -105,10 +109,10 @@ class GestureInterface(HarmoniServiceManager):
                                     self.gestures_duration.append(child.text)
                             elif child.tag == 'name':
                                     self.gestures_name.append(child.text)    
-            for index, el in enumerate(self.gestures_name):
-                self.gesture_list.append({'name': str(el), 'duration': self.gestures_duration[index] })
-            self.read_gesture_done = True
-        self.gesture_list_pub.publish(str(self.gesture_list))
+                for index, el in enumerate(self.gestures_name):
+                       self.gesture_list.append({'name': str(el), 'duration': self.gestures_duration[index] })
+                self.read_gesture_done = True
+                self.gesture_list_pub.publish(str(self.gesture_list))
 
 
 

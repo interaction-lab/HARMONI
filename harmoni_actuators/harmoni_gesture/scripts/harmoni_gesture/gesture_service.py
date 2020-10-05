@@ -21,7 +21,7 @@ class GestureService(HarmoniServiceManager):
     """
 
     def __init__(self, name, param):
-        """ """
+        """ Gesture"""
         super().__init__(name)
         self.gestures_name = []
         self.gestures_duration = []
@@ -58,7 +58,7 @@ class GestureService(HarmoniServiceManager):
     def _get_list_callback(self, data):
         """Gesture list """
         if self.gestures_name == []:
-            data = ast.literal_eval(data)
+            data = ast.literal_eval(data.data)
             self.gestures_name = filter(lambda b: b["name"], data)
             self.gestures_duration = filter(lambda b: b["duration"], data)
             self.gesture_list_received = True
@@ -160,7 +160,7 @@ def main():
         if test:
             rospy.loginfo("Testing the %s" % (service))
             rospy.sleep(1)
-            s.do(test_input)
+            s.gesture_pub.publish(test_input)
             rospy.loginfo("Testing the %s has been completed!" % (service))
         else:
             service_server.update_feedback()
