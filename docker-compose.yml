@@ -35,9 +35,9 @@ services:
       # Configuration
       - ~/.aws:/root/.aws/
       # Other
-      - /tmp/.X11-unix:/tmp/.X11-unix
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
+      #- /tmp/.X11-unix:/tmp/.X11-unix
+      #- /etc/timezone:/etc/timezone:ro
+      #- /etc/localtime:/etc/localtime:ro
     working_dir: /root/harmoni_catkin_ws/src/HARMONI
     command: tail  -f /dev/null
 
@@ -75,9 +75,9 @@ services:
       # Configuration
       - ~/.aws:/root/.aws/
       # Other
-      - /tmp/.X11-unix:/tmp/.X11-unix
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
+      #- /tmp/.X11-unix:/tmp/.X11-unix
+      #- /etc/timezone:/etc/timezone:ro
+      #- /etc/localtime:/etc/localtime:ro
     working_dir: /root/harmoni_catkin_ws/src/HARMONI
     command: tail  -f /dev/null
 
@@ -113,9 +113,9 @@ services:
       # Configuration
       - ~/.aws:/root/.aws/
       # Other
-      - /tmp/.X11-unix:/tmp/.X11-unix
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
+      #- /tmp/.X11-unix:/tmp/.X11-unix
+      #- /etc/timezone:/etc/timezone:ro
+      #- /etc/localtime:/etc/localtime:ro
     working_dir: /root/harmoni_catkin_ws/src/HARMONI
     command: tail  -f /dev/null
 
@@ -151,9 +151,9 @@ services:
       # Configuration
       - ~/.aws:/root/.aws/
       # Other
-      - /tmp/.X11-unix:/tmp/.X11-unix
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
+      #- /tmp/.X11-unix:/tmp/.X11-unix
+      #- /etc/timezone:/etc/timezone:ro
+      #- /etc/localtime:/etc/localtime:ro
     working_dir: /root/harmoni_catkin_ws/src/HARMONI
     command: tail  -f /dev/null
 
