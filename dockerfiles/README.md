@@ -7,6 +7,8 @@ To launch the complete harmoni dev setup in docker:
 ```bash
     sh run_compose.sh
 ```
+If you are not launching with display, you will need to connect to the containers with the following:
+```docker exec -it [container_name] bash ```
 
 2. Launch the desired packages and run the desired scripts in the respective docker containers
 
