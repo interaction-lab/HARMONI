@@ -1,8 +1,7 @@
-<!-- This is an example launch file for how a ROS application could use a node -->
-<launch>   
+<!-- This is an example launch file for how a ROS application could use a node --> <launch>
 	<arg name="use_gesture" default="true"/>
 	<arg name="test" default="false"/>
-	<arg name="test_input" default="[{'start': 0.06, 'time': 2,'type': 'action', 'id': 'QT/point_front'}, {'start': 0.075,'time': 2, 'type': 'word', 'id': 'hi'},{'start': 0.08, 'time': 2,  'type': 'action', 'id': 'QT/emotions/happy'},{'start': 0.1,'time': 2, 'type': 'word', 'id': 'hi'}]"/>
+	<arg name="test_input" default="{'gesture':'QT/bye', 'timing': 0.5}"/>
 	<arg name="test_id" default="default"/>
 	<arg name="robot_name" default="qt"/>
 	<group if="$(arg use_gesture)">
@@ -12,6 +11,6 @@
 			<param name="test_id_gesture" value="$(arg test_id)"/>
 			<param name="name_gesture" value="$(arg robot_name)"/>
 			<node pkg="harmoni_gesture" type="gesture_service.py" name="harmoni_gesture_$(arg test_id)" output="screen"/>
-			<!--<node pkg="harmoni_gesture" type="$(arg robot_name)_gesture_interface.py" name="harmoni_gesture_$(arg robot_name)_$(arg test_id)" output="screen"/>-->
+			<node pkg="harmoni_gesture" type="$(arg robot_name)_gesture_interface.py" name="harmoni_gesture_$(arg robot_name)_$(arg test_id)" output="screen"/>
     </group>
 </launch>
