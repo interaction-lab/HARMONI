@@ -59,9 +59,11 @@ class GestureService(HarmoniServiceManager):
         """Gesture list """
         if self.gestures_name == []:
             data = ast.literal_eval(data.data)
-            self.gestures_name = filter(lambda b: b["name"], data)
-            self.gestures_duration = filter(lambda b: b["duration"], data)
+            for item in data:
+                self.gestures_name.append(item["name"])
+                self.gestures_duration.append(item["duration"])
             self.gesture_list_received = True
+            print(self.gestures_name)
 
     def setup_gesture(self):
         """ Setup the gesture """
@@ -94,11 +96,10 @@ class GestureService(HarmoniServiceManager):
 
     def _get_gesture_data(self, data):
         """ Get only gesture data"""
-        print(data)
         if type(data) == str:
             data = ast.literal_eval(data)
         behavior_data = ast.literal_eval(data["behavior_data"])
-        words_data = filter(lambda b: b["type"] == "word", behavior_data)
+        words_data = list(filter(lambda b: b["type"] == "word", behavior_data))
         behavior_set = []
         sentence = []
         for b in behavior_data:
@@ -110,14 +111,15 @@ class GestureService(HarmoniServiceManager):
         ordered_gesture_data = list(
             sorted(behavior_set, key=lambda face: face["start"])
         )
+        print(ordered_gesture_data)
         validated_gesture = []
         for gest in ordered_gesture_data:
-            validated_gesture.append(self.gestures_name[gest["id"]])
+            validated_gesture.append(gest["id"])
         if ordered_gesture_data == []:
             rospy.loginfo("No gestures")
             return False
         timing_word_behaviors = words_data + ordered_gesture_data
-        ordered_timing_word_behaviors = sorted(timing_word_behaviors, key=lambda behavior: behavior["start"])
+        ordered_timing_word_behaviors = list(sorted(timing_word_behaviors, key=lambda behavior: behavior["start"]))
         start_time = rospy.Time.now()
         for index, behav in enumerate(ordered_timing_word_behaviors[:-1]):
             print(ordered_timing_word_behaviors[index])
@@ -127,7 +129,8 @@ class GestureService(HarmoniServiceManager):
                     pass
                 gesture_timing = float(ordered_timing_word_behaviors[index +1]["start"]) #you cannot have a behavior sets at the end of the sentence
                 rospy.loginfo("Play " + str(behav["id"]) + " at time:" + str(behav["start"]) + " with a duration of: " + str(gesture_timing))
-                self.gesture_publisher.publish(gesture_timing, behav["id"])
+                data={"gesture":behav["id"], "timing":gesture_timing}
+                self.gesture_pub.publish(str(data))
 
         if ordered_timing_word_behaviors[len(ordered_timing_word_behaviors)-1]:
             if ordered_timing_word_behaviors[len(ordered_timing_word_behaviors)-1]["type"] != "word":
@@ -136,7 +139,8 @@ class GestureService(HarmoniServiceManager):
                     pass
                 gesture_timing = float(ordered_timing_word_behaviors[len(ordered_timing_word_behaviors)-1]["start"]) #you cannot have a behavior sets at the end of the sentence
                 rospy.loginfo("Play " + str(ordered_timing_word_behaviors[len(ordered_timing_word_behaviors)-1]["id"]) + " at time:" + str(ordered_timing_word_behaviors[len(ordered_timing_word_behaviors)-1]["start"]) + " with a duration of: " + str(gesture_timing))
-                self.gesture_pub.publish(gesture_timing, ordered_timing_word_behaviors[len(ordered_timing_word_behaviors)-1]["id"])
+                data = {"gesture":ordered_timing_word_behaviors[len(ordered_timing_word_behaviors)-1]["id"], "timing": gesture_timing}
+                self.gesture_pub.publish(str(data))
         return True
 
 
