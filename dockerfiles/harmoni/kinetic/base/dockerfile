@@ -23,12 +23,23 @@ RUN \
     wget \
     # COMPILERS
     g++ \
-    cmake \
     # VERSION CONTROL
     git \
     # NETWORK TOOLS
     iputils-ping \
     net-tools \
+    # ==================================================================
+    # Compile and install latest cmake
+    # ------------------------------------------------------------------
+    && version=3.18 \
+    && build=4  \
+    && wget https://cmake.org/files/v$version/cmake-$version.$build.tar.gz \
+    && tar -xzvf cmake-$version.$build.tar.gz \
+    && cd cmake-$version.$build/ \
+    && ./bootstrap \
+    && make -j$(nproc) \
+    && make install \
+    && cmake --version \
     # ==================================================================
     # Setup Python3.6 with pip
     # ------------------------------------------------------------------
@@ -155,7 +166,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     empy \
     PyAudio \
     imutils \
-    # opencv-python \ Moving to core
+    opencv-python \
     --force-reinstall defusedxml \
     # ==================================================================
     # Install the Ros packages needed for Harmoni
