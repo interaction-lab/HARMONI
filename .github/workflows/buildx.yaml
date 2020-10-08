@@ -41,7 +41,7 @@ jobs:
           docker buildx build \
             --cache-from "type=local,src=/tmp/.buildx-cache" \
             --cache-to "type=local,dest=/tmp/.buildx-cache" \
-            --platform linux/amd64 \
+            --platform linux/amd64,linux/arm64,linux/arm/v7 \
             --output "type=image,push=false" \
             --file ./dockerfiles/harmoni/kinetic/core/dockerfile . \
             --tag harmoniteam/harmoni:kinetic-core \
@@ -62,7 +62,7 @@ jobs:
           docker buildx build \
             --cache-from "type=local,src=/tmp/.buildx-cache" \
             --output "type=image,push=true" \
-            --platform linux/amd64 \
+            --platform linux/amd64,linux/arm64,linux/arm/v7 \
             --file ./dockerfiles/harmoni/kinetic/core/dockerfile . \
             --tag harmoniteam/harmoni:kinetic-core \
             --tag harmoniteam/harmoni:kinetic-latest
@@ -76,7 +76,7 @@ jobs:
           docker buildx build \
             --cache-from "type=local,src=/tmp/.buildx-cache" \
             --cache-to "type=local,dest=/tmp/.buildx-cache" \
-            --platform linux/amd64 \
+            --platform linux/amd64,linux/arm64,linux/arm/v7 \
             --output "type=image,push=false" \
             --file ./dockerfiles/harmoni/noetic/core/dockerfile . \
             --tag harmoniteam/harmoni:noetic-core \
@@ -97,7 +97,7 @@ jobs:
           docker buildx build \
             --cache-from "type=local,src=/tmp/.buildx-cache" \
             --output "type=image,push=true" \
-            --platform linux/amd64 \
+            --platform linux/amd64,linux/arm64,linux/arm/v7 \
             --file ./dockerfiles/harmoni/noetic/core/dockerfile . \
             --tag harmoniteam/harmoni:noetic-core \
             --tag harmoniteam/harmoni:noetic-latest
