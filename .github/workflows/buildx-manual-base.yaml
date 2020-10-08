@@ -36,7 +36,7 @@ jobs:
           docker buildx build \
             --cache-from "type=local,src=/tmp/.buildx-cache" \
             --cache-to "type=local,dest=/tmp/.buildx-cache" \
-            --platform linux/arm/v7 \
+            --platform linux/amd64,linux/arm64,linux/arm/v7 \
             --output "type=image,push=false" \
             --file ./dockerfiles/harmoni/kinetic/base/dockerfile . \
             --tag harmoniteam/harmoni:kinetic-base
@@ -51,13 +51,12 @@ jobs:
 
       - name: Docker Buildx (push)
         # if: success() && github.event_name != 'pull_request'
-        # --platform linux/amd64,linux/arm64,linux/arm/v7 \
         if: success()
         run: |
           docker buildx build \
             --cache-from "type=local,src=/tmp/.buildx-cache" \
             --output "type=image,push=true" \
-            --platform linux/arm/v7 \
+            --platform linux/amd64,linux/arm64,linux/arm/v7 \
             --file ./dockerfiles/harmoni/kinetic/base/dockerfile . \
             --tag harmoniteam/harmoni:kinetic-base
       - name: Inspect image
@@ -70,7 +69,7 @@ jobs:
           docker buildx build \
             --cache-from "type=local,src=/tmp/.buildx-cache" \
             --cache-to "type=local,dest=/tmp/.buildx-cache" \
-            --platform linux/arm/v7 \
+            --platform linux/amd64,linux/arm64,linux/arm/v7 \
             --output "type=image,push=false" \
             --file ./dockerfiles/harmoni/noetic/base/dockerfile . \
             --tag harmoniteam/harmoni:noetic-base
@@ -90,7 +89,7 @@ jobs:
           docker buildx build \
             --cache-from "type=local,src=/tmp/.buildx-cache" \
             --output "type=image,push=true" \
-            --platform linux/arm/v7 \
+            --platform linux/amd64,linux/arm64,linux/arm/v7 \
             --file ./dockerfiles/harmoni/noetic/base/dockerfile . \
             --tag harmoniteam/harmoni:noetic-base
       - name: Inspect image
