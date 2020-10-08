@@ -18,27 +18,33 @@ RUN \
     # BUILD TOOLS
     build-essential \
     ca-certificates \
+    libssl-dev \
+    apt-transport-https \
+    gnupg \
     # DOWNLOAD TOOLS
     curl \
     wget \
     # COMPILERS
     g++ \
+    cmake \
     # VERSION CONTROL
     git \
     # NETWORK TOOLS
     iputils-ping \
     net-tools \
     # ==================================================================
-    # Compile and install latest cmake
+    # Compile and install latest cmake (note there will be two versions installed)
     # ------------------------------------------------------------------
     && version=3.18 \
     && build=4  \
     && wget https://cmake.org/files/v$version/cmake-$version.$build.tar.gz \
-    && tar -xzvf cmake-$version.$build.tar.gz \
+    && tar -xzf cmake-$version.$build.tar.gz \
     && cd cmake-$version.$build/ \
     && ./bootstrap \
     && make -j$(nproc) \
     && make install \
+    && cd ../ \
+    && rm -r cmake-$version.$build.tar.gz cmake-$version.$build \
     && cmake --version \
     # ==================================================================
     # Setup Python3.6 with pip
