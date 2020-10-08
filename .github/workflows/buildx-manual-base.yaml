@@ -36,7 +36,7 @@ jobs:
           docker buildx build \
             --cache-from "type=local,src=/tmp/.buildx-cache" \
             --cache-to "type=local,dest=/tmp/.buildx-cache" \
-            --platform linux/amd64,linux/arm64,linux/arm/v7 \
+            --platform linux/arm/v7 \
             --output "type=image,push=false" \
             --file ./dockerfiles/harmoni/kinetic/base/dockerfile . \
             --tag harmoniteam/harmoni:kinetic-base
