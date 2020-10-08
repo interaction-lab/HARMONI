@@ -1,10 +1,10 @@
 # ==================================================================
-# OpenCV build
+# OpenCV build, based on this repo: https://github.com/regzon/docker-opencv-arm
 # ------------------------------------------------------------------
 ARG PYTHON_VERSION_SHORT=3.6
 ARG OPENCV_VERSION=4.4.0
 ARG CPU_CORES=4
-
+# base image guided by info here: https://askubuntu.com/a/445496
 FROM python:3.6-stretch AS cv
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -41,7 +41,7 @@ RUN set -e; \
         libv4l-dev \
         libdc1394-22-dev; \
     # Clear apt cache
-    rm -rf /var/lib/apt/lists/*
+    rm -rf -- /var/lib/apt/lists/*
 
 RUN pip install numpy
 
@@ -106,7 +106,7 @@ RUN set -e; \
     # Clean up
     make clean; \
     cd /tmp; \
-    rm -rf /tmp/* \
+    rm -rf -- /tmp/* \
     #make sure python will see the package. NOTE: this step needs to run on the destination container
 CMD ["/bin/bash"]
 
@@ -179,7 +179,7 @@ RUN \
     google-cloud-speech \
     dialogflow \
     google-api-python-client \
-    && rm -rf /var/lib/apt/lists/* 
+    && rm -rf -- /var/lib/apt/lists/* 
 
 
 # ==================================================================
@@ -188,7 +188,7 @@ RUN \
 RUN apt-get update && apt-get install -q -y --no-install-recommends \
     dirmngr \
     gnupg2 \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf -- /var/lib/apt/lists/*
 
 # setup keys
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
@@ -209,7 +209,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python-rosdep \
     python-rosinstall \
     python-vcstools \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf -- /var/lib/apt/lists/*
 
 
 # ==================================================================
@@ -232,7 +232,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     catkin_pkg \
     catkin_tools \
     scikit-build \
-    && rm -rf /var/lib/apt/lists/* 
+    && rm -rf -- /var/lib/apt/lists/* 
 
 
 # ==================================================================
@@ -283,7 +283,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     ros-$ROS_DISTRO-dynamixel-msgs \
     ros-$ROS_DISTRO-audio-common \
     && \
-    rm -rf /var/lib/apt/lists/* /tmp/*
+    rm -rf -- /var/lib/apt/lists/* /tmp/*
 
     # ==================================================================
     # Install Built OpenCV
