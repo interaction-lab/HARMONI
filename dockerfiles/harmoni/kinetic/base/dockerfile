@@ -105,8 +105,6 @@ RUN set -e; \
     ldconfig; \
     # Clean up
     make clean; \
-    cd /tmp; \
-    rm -rf -- /tmp/* \
     #make sure python will see the package. NOTE: this step needs to run on the destination container
 CMD ["/bin/bash"]
 
@@ -288,6 +286,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     # ==================================================================
     # Install Built OpenCV
     # ------------------------------------------------------------------
-    COPY --from=cv /opt/opencv /opt/opencv
-    #make sure python will see the package.
-    RUN ln -s /opt/opencv/lib/python3.6/site-packages/cv2 /usr/local/lib/python3.6/site-packages/cv2 
+COPY --from=cv /opt/opencv /opt/opencv
+RUN mkdir -p /usr/local/lib/python3.6/site-packages \
+    && ln -s /opt/opencv/lib/python3.6/site-packages/cv2 /usr/local/lib/python3.6/site-packages/cv2 
