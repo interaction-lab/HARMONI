@@ -54,7 +54,6 @@ class EyesService(HarmoniServiceManager):
                 self.face_request = FaceRequest(
                     visemes=viseme_ids, viseme_ms=self.speed_viseme, times=viseme_times
                 )
-
                 t = Timer(self.timer_interval, self.send_face_request)
                 t.start()
                 start_time = rospy.Time.now()

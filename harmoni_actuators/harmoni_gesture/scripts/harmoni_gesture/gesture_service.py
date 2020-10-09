@@ -63,7 +63,6 @@ class GestureService(HarmoniServiceManager):
                 self.gestures_name.append(item["name"])
                 self.gestures_duration.append(item["duration"])
             self.gesture_list_received = True
-            print(self.gestures_name)
 
     def setup_gesture(self):
         """ Setup the gesture """
