@@ -289,3 +289,5 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 COPY --from=cv /opt/opencv /opt/opencv
 RUN mkdir -p /usr/local/lib/python3.6/site-packages \
     && ln -s /opt/opencv/lib/python3.6/site-packages/cv2 /usr/local/lib/python3.6/site-packages/cv2 
+
+CMD ["bash"]
