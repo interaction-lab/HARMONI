@@ -1,9 +1,13 @@
 <!-- This is an example launch file for how a ROS application could use a node --> <launch>
 	<arg name="use_gesture" default="true"/>
+	<arg name="use_simulator" default="true"/>
+	<arg name="use_simulator_with_robot" default="false"/>
 	<arg name="test" default="false"/>
 	<arg name="test_input" default="{'gesture':'QT/bye', 'timing': 0.5}"/>
 	<arg name="test_id" default="default"/>
 	<arg name="robot_name" default="qt"/>
+	<arg name="robot_joints" default="qt_robot/joints/state_rad"/>
+	<arg name="simulated_joints" default="simulated_joints"/>
 	<group if="$(arg use_gesture)">
 			<rosparam file="$(find harmoni_gesture)/config/configuration.yaml"/>
 			<param name="test_gesture" value="$(arg test)"/>
@@ -13,4 +17,27 @@
 			<node pkg="harmoni_gesture" type="gesture_service.py" name="harmoni_gesture_$(arg test_id)" output="screen"/>
 			<node pkg="harmoni_gesture" type="$(arg robot_name)_gesture_interface.py" name="harmoni_gesture_$(arg robot_name)_$(arg test_id)" output="screen"/>
     </group>
+	<group if="$(arg use_simulator)">
+	<!-- Load the urdf into the parameter server. -->
+		<arg name="model" default="$(find harmoni_gesture)/urdf/$(arg robot_name).urdf"/>
+		<arg name="rvizconfig" default="$(find urdf_tutorial)/rviz/urdf.rviz" />
+		<param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)" />
+		<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+		<node pkg="harmoni_gesture" type="$(arg robot_name)_joint_state_publisher.py" name="robot_joint_state_publisher_$(arg test_id)" output="screen"/>
+		<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher">
+			<remap from="joint_states" to="$(arg simulated_joints)"/>
+		</node>
+		<node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+	</group>
+	<group if="$(arg use_simulator_with_robot)">
+	<!-- Load the urdf into the parameter server. -->
+		<arg name="model" default="$(find harmoni_gesture)/urdf/$(arg robot_name).urdf"/>
+		<arg name="rvizconfig" default="$(find urdf_tutorial)/rviz/urdf.rviz" />
+		<param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)" />
+		<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+		<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher">
+			<remap from="joint_states" to="$(arg robot_joints)"/>
+		</node>
+		<node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+	</group>
 </launch>

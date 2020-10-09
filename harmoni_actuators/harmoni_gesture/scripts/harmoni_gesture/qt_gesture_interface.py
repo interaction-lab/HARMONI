@@ -12,10 +12,12 @@ import harmoni_common_lib.helper_functions as hf
 # Specific Imports
 #from qt_gesture_controller.srv import *
 from std_msgs.msg import String, Bool
+from sensor_msgs.msg import JointState
 import numpy as np
 import ast
 import sys
 import os
+import math
 import xml.etree.ElementTree as ET
 
 
@@ -34,10 +36,12 @@ class GestureInterface(HarmoniServiceManager):
         """ Setup Params """
         self.name = name
         self.path = param["path"]
+        self.joint_sub_topic = param["robot_joint_topic"]
+        self.joint_pub_topic = param["robot_joint_radians_topic"]
+        self.gesture_topic = param["robot_gesture_topic"]
         self.service_id = hf.get_child_id(self.name)
         """ Setup the gesture """
-        #rospy.wait_for_service("qt_robot/gesture/play")
-        self.gesture_service = rospy.Publisher("qt_robot/gesture/play", String, queue_size = 1)
+        self.gesture_service = rospy.Publisher(self.gesture_topic, String, queue_size = 1)
         self.gesture_sub = rospy.Subscriber(ActuatorNameSpace.gesture.value +self.service_id, String, self._handle_gesture_callback, queue_size=1)
         self.gesture_pub = rospy.Publisher(
             ActuatorNameSpace.gesture.value + self.service_id + "/done",
@@ -49,14 +53,26 @@ class GestureInterface(HarmoniServiceManager):
             String,
             queue_size=1,
         )
+        self.joint_sub = rospy.Subscriber(self.joint_sub_topic, JointState, self._handle_degree)
+        self.joint_pub = rospy.Publisher(self.joint_pub_topic, JointState, queue_size = 1)
         """Setup the gesture service as server """
         self.state = State.INIT
         return
 
+    def _handle_degree(self, data):
+        degrees = data.position
+        radians = [math.radians(d) for d in degrees]
+        joint_rad = JointState()
+        joint_rad.position = radians
+        joint_rad.name = data.name
+        joint_rad.velocity = data.velocity
+        joint_rad.effort = data.effort
+        joint_rad.header = data.header
+        self.joint_pub.publish(joint_rad)
+
     def _handle_gesture_callback(self, data):
         """Gesture callback """
         done = False
-        #if type(data) == str:
         data = ast.literal_eval(data.data) 
         print(data["gesture"], data["timing"])
         done = self.gesture_to_act(data["gesture"], data["timing"])
