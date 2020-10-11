@@ -262,5 +262,5 @@ RUN set -e; \
     cd /; \
     rm -rf -- /tmp/*
 
-ENV PYTHONPATH=/opt/opencv/lib/python3.6/site-packages
+ENV PYTHONPATH=/opt/opencv/lib/python3.6/dist-packages
 CMD ["/bin/bash"]
