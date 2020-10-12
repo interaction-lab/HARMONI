@@ -44,14 +44,15 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
         echo >&2 'linking for x86/amd64'; \
         archPath='x86_64-linux-gnu'; \
     fi; \
-    && ln -s /usr/lib/$archPath/libboost_python-py35.so /usr/lib/$archPath/libboost_python3.so \
-    && catkin config \
+    \
+    ln -vs /usr/lib/$archPath/libboost_python-py35.so /usr/lib/$archPath/libboost_python3.so; \
+    \
+    catkin config \
     --extend /opt/ros/$ROS_DISTRO \
     -DPYTHON_EXECUTABLE=/usr/bin/python3.6 \
     -DPYTHON_INCLUDE_DIR=/usr/include/python3.6m \
-    -DPYTHON_LIBRARY=/usr/lib/$archPath/libpython3.6m.so \
-    && \
-    catkin build
+    -DPYTHON_LIBRARY=/usr/lib/$archPath/libpython3.6m.so; \
+    catkin build;
 
 RUN mkdir -p /root/local_mount/
 RUN ln -s /root/harmoni_catkin_ws/src/HARMONI /root/local_mount/
