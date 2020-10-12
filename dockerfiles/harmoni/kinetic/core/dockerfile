@@ -16,21 +16,40 @@ RUN git -C src clone \
 RUN git -C src clone \
     -b kinetic \
     https://github.com/ros-perception/vision_opencv.git
-
-RUN ln -s /usr/lib/x86_64-linux-gnu/libboost_python-py35.so /usr/lib/x86_64-linux-gnu/libboost_python3.so
-
+    
 RUN git -C src clone \
     -b master \
     https://github.com/ros-drivers/audio_common.git
 
 # ==================================================================
-# Build Harmoni, Audio, and OpenCV from source
+# Build Harmoni, Audio, and OpenCV bridge from source (with Python3)
+# ARCH section handles building for different architectures.
 # ------------------------------------------------------------------
-RUN catkin config \
+RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
+    && case "${dpkgArch##*-}" in \
+    amd64) ARCH='x64';; \
+    arm64) ARCH='arm64';; \
+    armhf) ARCH='armv7';; \
+    i386) ARCH='x86';; \
+    *) echo "unsupported architecture"; exit 1 ;; \
+    esac; \
+    \
+    if [ "$ARCH" = 'arm64' ]; then \
+        echo >&2 'linking for arm64.'; \
+        archPath='aarch64-linux-gnu'; \
+    elif [ "$ARCH" = 'armv7' ]; then \
+        echo >&2 'linking for armv7 '; \
+        archPath='arm-linux-gnueabihf'; \
+    else \
+        echo >&2 'linking for x86/amd64'; \
+        archPath='x86_64-linux-gnu'; \
+    fi; \
+    && ln -s /usr/lib/$archPath/libboost_python-py35.so /usr/lib/$archPath/libboost_python3.so \
+    && catkin config \
     --extend /opt/ros/$ROS_DISTRO \
     -DPYTHON_EXECUTABLE=/usr/bin/python3.6 \
     -DPYTHON_INCLUDE_DIR=/usr/include/python3.6m \
-    -DPYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.6m.so \
+    -DPYTHON_LIBRARY=/usr/lib/$archPath/libpython3.6m.so \
     && \
     catkin build
 
