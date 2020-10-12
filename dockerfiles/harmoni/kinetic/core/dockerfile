@@ -2,8 +2,27 @@ FROM harmoniteam/harmoni:kinetic-base
 
 RUN ROS_DISTRO="kinetic"
 
+
 # ==================================================================
-# Clone Harmoni and Audio Common
+# Install any extra ROS C++ or Python2 dependenencies 
+# ------------------------------------------------------------------
+RUN \
+    apt-get update -y && apt-get upgrade -y \
+    && apt-get install -y \
+    software-properties-common \
+    apt-utils \
+    && \
+    APT_INSTALL="apt-get install -y --no-install-recommends" && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+    # EXTRAS
+    ros-kinetic-joint-state-publisher-gui \
+    # CLEANUP
+    && rm -rf -- /var/lib/apt/lists/* 
+
+
+# ==================================================================
+# Clone Harmoni and Other ROS Python3 dependencies
 # ------------------------------------------------------------------
 ENV ROS_WS /root/harmoni_catkin_ws
 RUN mkdir -p $ROS_WS/src
@@ -20,6 +39,10 @@ RUN git -C src clone \
 RUN git -C src clone \
     -b master \
     https://github.com/ros-drivers/audio_common.git
+
+RUN git -C src clone \
+    -b kinetic-devel \
+    https://github.com/ros/robot_state_publisher.git
 
 # ==================================================================
 # Build Harmoni, Audio, and OpenCV bridge from source (with Python3)
