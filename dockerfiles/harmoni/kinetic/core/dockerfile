@@ -7,11 +7,6 @@ RUN ROS_DISTRO="kinetic"
 # Install any extra ROS C++ or Python2 dependenencies 
 # ------------------------------------------------------------------
 RUN \
-    apt-get update -y && apt-get upgrade -y \
-    && apt-get install -y \
-    software-properties-common \
-    apt-utils \
-    && \
     APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
@@ -75,7 +70,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     -DPYTHON_EXECUTABLE=/usr/bin/python3.6 \
     -DPYTHON_INCLUDE_DIR=/usr/include/python3.6m \
     -DPYTHON_LIBRARY=/usr/lib/$archPath/libpython3.6m.so; \
-    catkin build;
+    catkin build --limit-status-rate 0.1;
 
 RUN mkdir -p /root/local_mount/
 RUN ln -s /root/harmoni_catkin_ws/src/HARMONI /root/local_mount/
