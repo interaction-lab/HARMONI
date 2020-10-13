@@ -17,27 +17,28 @@ RUN \
 
 
 # ==================================================================
-# Clone Harmoni and Other ROS Python3 dependencies
+# Clone Harmoni and Other ROS Python3 dependencies (kinetic package repository
+# versions are python2)
 # ------------------------------------------------------------------
 ENV ROS_WS /root/harmoni_catkin_ws
 RUN mkdir -p $ROS_WS/src
 WORKDIR $ROS_WS
 
 RUN git -C src clone \
-    -b develop \
-    https://github.com/interaction-lab/HARMONI.git 
-
-RUN git -C src clone \
     -b kinetic \
-    https://github.com/ros-perception/vision_opencv.git
-    
-RUN git -C src clone \
+    https://github.com/ros-perception/vision_opencv.git \
+    && git -C src clone \
     -b master \
-    https://github.com/ros-drivers/audio_common.git
-
-RUN git -C src clone \
+    https://github.com/ros-drivers/audio_common.git \
+    && git -C src clone \
     -b kinetic-devel \
     https://github.com/ros/robot_state_publisher.git
+
+#caching protection for Harmoni
+ADD https://api.github.com/repos/interaction-lab/HARMONI/git/refs/heads/develop /root/version.json
+RUN git -C src clone \
+    -b develop \
+    https://github.com/interaction-lab/HARMONI.git 
 
 # ==================================================================
 # Build Harmoni, Audio, and OpenCV bridge from source (with Python3)
@@ -72,8 +73,8 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     -DPYTHON_LIBRARY=/usr/lib/$archPath/libpython3.6m.so; \
     catkin build --limit-status-rate 0.1;
 
-RUN mkdir -p /root/local_mount/
-RUN ln -s /root/harmoni_catkin_ws/src/HARMONI /root/local_mount/
+RUN mkdir -p /root/local_mount/ \
+    && ln -vs /root/harmoni_catkin_ws/src/HARMONI /root/local_mount/
 
 
 # ==================================================================
