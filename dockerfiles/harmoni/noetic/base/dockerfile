@@ -1,4 +1,4 @@
-FROM ros:noetic-perception-focal
+FROM ros:noetic-perception
 
 RUN ROS_DISTRO="noetic"
 

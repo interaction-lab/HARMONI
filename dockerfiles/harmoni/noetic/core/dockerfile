@@ -7,46 +7,66 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
     python3-osrf-pycommon \
     python3-catkin-tools \
-    python3-catkin-lint
+    python3-catkin-lint \
+    # EXTRAS
+    ros-noetic-robot-state-publisher \
+    ros-noetic-joint-state-publisher-gui \
+    ros-noetic-audio-common \
+    # CLEANUP
+    && rm -rf -- /var/lib/apt/lists/* 
 # && PIP_INSTALL="python3.8 -m pip --no-cache-dir install --upgrade" && \
 # $PIP_INSTALL \
 # osrf-pycommon
 
 
 # ==================================================================
-# Clone Harmoni and Audio Common
+# Clone Harmoni
 # ------------------------------------------------------------------
 ENV ROS_WS /root/harmoni_catkin_ws
 RUN mkdir -p $ROS_WS/src
 WORKDIR $ROS_WS
 
+#caching protection for Harmoni
+ADD https://api.github.com/repos/interaction-lab/HARMONI/git/refs/heads/develop /root/version.json
 RUN git -C src clone \
     -b develop \
     https://github.com/interaction-lab/HARMONI.git 
 
-# RUN git -C src clone \
-#     -b noetic \
-#     https://github.com/ros-perception/vision_opencv.git
-
-# RUN ln -s /usr/lib/x86_64-linux-gnu/libboost_python-py35.so /usr/lib/x86_64-linux-gnu/libboost_python3.so
-
-RUN git -C src clone \
-    -b master \
-    https://github.com/ros-drivers/audio_common.git
-
 # ==================================================================
-# Build Harmoni and Audio from source
+# Build Harmoni from source
+# ARCH section handles building for different architectures.
 # ------------------------------------------------------------------
-RUN catkin config \
+RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
+    && case "${dpkgArch##*-}" in \
+    amd64) ARCH='x64';; \
+    arm64) ARCH='arm64';; \
+    armhf) ARCH='armv7';; \
+    i386) ARCH='x86';; \
+    *) echo "unsupported architecture"; exit 1 ;; \
+    esac; \
+    \
+    if [ "$ARCH" = 'arm64' ]; then \
+        echo >&2 'linking for arm64.'; \
+        archPath='aarch64-linux-gnu'; \
+    elif [ "$ARCH" = 'armv7' ]; then \
+        echo >&2 'linking for armv7 '; \
+        archPath='arm-linux-gnueabihf'; \
+    else \
+        echo >&2 'linking for x86/amd64'; \
+        archPath='x86_64-linux-gnu'; \
+    fi; \
+    \
+    ln -vs /usr/lib/$archPath/libboost_python-py38.so /usr/lib/$archPath/libboost_python3.so; \
+    \
+    catkin config \
     --extend /opt/ros/$ROS_DISTRO \
     -DPYTHON_EXECUTABLE=/usr/bin/python3.8 \
     -DPYTHON_INCLUDE_DIR=/usr/include/python3.8m \
-    -DPYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.8m.so \
-    && \
-    catkin build
+    -DPYTHON_LIBRARY=/usr/lib/$archPath/libpython3.8m.so; \
+    catkin build --limit-status-rate 0.1;
 
-RUN mkdir -p /root/local_mount/
-RUN ln -s /root/harmoni_catkin_ws/src/HARMONI /root/local_mount/
+RUN mkdir -p /root/local_mount/ \
+    && ln -vs /root/harmoni_catkin_ws/src/HARMONI /root/local_mount/
 
 
 # ==================================================================
