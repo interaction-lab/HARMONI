@@ -3,9 +3,9 @@ name: buildx-manual-base
 on:
   workflow_dispatch:
     inputs:
-      ros-version: 'ROS Version to build towards'
-      required: true
-      default: 'noetic'
+      - ros-version: 'ROS Version to build towards'
+      - required: true
+      - default: 'noetic'
 
 jobs:
   buildx:
