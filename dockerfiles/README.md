@@ -67,7 +67,6 @@ docker build -f dockerfiles/harmoni/noetic/facedetect/dockerfile --tag harmonite
 ```
 
 ## Kinetic
-Note - Currently not functional
 ```bash
 docker build -f dockerfiles/harmoni/kinetic/base/dockerfile --tag harmoniteam/harmoni:kinetic-base .
 
@@ -95,15 +94,12 @@ docker build -f dockerfiles/harmoni-dev/core/dockerfile --tag harmoniteam/harmon
 ```bash
 export DOCKER_CLI_EXPERIMENTAL=enabled
 
-docker run --rm --privileged docker/binfmt:820fdd95a9972a5308930a2bdfb8573dd4447ad3 
-
-docker buildx create --name my_builder
-
-docker buildx use my_builder
-
+docker run --privileged --rm tonistiigi/binfmt --install all
+docker buildx create --name mybuilder
+docker buildx use mybuilder
 docker buildx inspect --bootstrap
 
-docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/harmoni/noetic/base/dockerfile --tag harmoniteam/harmoni:noetic-base .
+docker buildx build --cache-from "type=local,src=/tmp/.buildx-cache" --cache-to "type=local,dest=/tmp/.buildx-cache" --output "type=image,push=true" --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfiles/harmoni/noetic/base/dockerfile --tag harmoniteam/harmoni:noetic-base .
 
 ```
 
