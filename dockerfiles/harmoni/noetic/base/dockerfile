@@ -63,6 +63,37 @@ RUN \
     google-api-python-client \
     && rm -rf /var/lib/apt/lists/* 
 
+# ==================================================================
+# Cmake Setup
+# (only needed for armv7 due to cmake bug with qemu. Future cmake >= 3.19
+# may fix this without source rebuild once its available on the ubuntu repo.)
+# See: https://gitlab.kitware.com/cmake/cmake/-/issues/20568
+# ------------------------------------------------------------------
+RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
+    && case "${dpkgArch##*-}" in \
+    amd64) ARCH='x64';; \
+    arm64) ARCH='arm64';; \
+    armhf) ARCH='armv7';; \
+    i386) ARCH='x86';; \
+    *) echo "unsupported architecture"; exit 1 ;; \
+    esac; \
+    \
+    if [ "$ARCH" = 'armv7' ]; then \
+        export CFLAGS="-D_FILE_OFFSET_BITS=64"; \
+        export CXXFLAGS="-D_FILE_OFFSET_BITS=64"; \
+        version=3.18; \
+        build=4; \
+        cd '/tmp'; \
+        wget https://cmake.org/files/v$version/cmake-$version.$build.tar.gz; \
+        tar -xzf cmake-$version.$build.tar.gz; \
+        cd cmake-$version.$build/; \
+        ./bootstrap; \
+        make -j$(nproc); \
+        make install; \
+        cd ../; \
+        rm -r cmake-$version.$build.tar.gz cmake-$version.$build; \
+        cmake --version; \
+    fi;
 
 WORKDIR /root/
 RUN git clone https://github.com/catkin/catkin_tools.git
