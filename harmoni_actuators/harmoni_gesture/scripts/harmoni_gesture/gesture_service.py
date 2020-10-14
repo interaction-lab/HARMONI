@@ -51,13 +51,15 @@ class GestureService(HarmoniServiceManager):
 
     def _gesture_done_callback(self, data):
         """Gesture done """
-        if data.data:
+        if data:
             self.gesture_done = True
 
 
     def _get_list_callback(self, data):
         """Gesture list """
+        print("List callback")
         if self.gestures_name == []:
+            rospy.loginfo("Gesture list received")
             data = ast.literal_eval(data.data)
             for item in data:
                 self.gestures_name.append(item["name"])
@@ -68,13 +70,14 @@ class GestureService(HarmoniServiceManager):
         """ Setup the gesture """
         rospy.loginfo("Setting up the %s" % self.name)
         while not self.gesture_list_received:
-            rospy.logdebug("Wait until gesture list received")
+            rospy.sleep(0.1)
         rospy.loginfo("Received list of gestures")
         #self._get_list_callback("{'name':'QT/point_front', 'duration':'4'}")
         return
 
     def do(self, data):
-        """ Do the speak """
+        """ Do the gesture """
+        print("Do the gesture")
         self.state = State.REQUEST
         self.actuation_completed = False
         if type(data) == str:

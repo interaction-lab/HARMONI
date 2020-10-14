@@ -169,7 +169,7 @@ def main():
         rospy.init_node(service_name+"_"+name+"_simulator")
         param = rospy.get_param(name + "/" + test_id + "_param/")
         service = hf.set_service_server(service_name, test_id)
-        s = QTSimulatorJoint(service, param)
+        s = QTSimulatorJoint(service+"_"+name+"_simulator", param)
         #service_server = HarmoniServiceServer(name=service, service_manager=s)
         rospy.spin()
     except rospy.ROSInterruptException:

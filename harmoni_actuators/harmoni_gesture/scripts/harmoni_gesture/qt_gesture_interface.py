@@ -28,7 +28,7 @@ class GestureInterface(HarmoniServiceManager):
 
     def __init__(self, name, param):
         """ Gesture"""
-        super().__init__(name)
+        super().__init__(name+"_qt")
         self.gestures_name = []
         self.gestures_duration = []
         self.gesture_list = []
@@ -56,6 +56,7 @@ class GestureInterface(HarmoniServiceManager):
         self.joint_sub = rospy.Subscriber(self.joint_sub_topic, JointState, self._handle_degree)
         self.joint_pub = rospy.Publisher(self.joint_pub_topic, JointState, queue_size = 1)
         """Setup the gesture service as server """
+        self.read_gestures(param["path"])
         self.state = State.INIT
         return
 
@@ -81,6 +82,7 @@ class GestureInterface(HarmoniServiceManager):
         self.gesture_pub.publish(True)
 
     def gesture_to_act(self, gesture, timing):
+        resp = False
         for i in range(len(self.gestures_name)):
             if self.gestures_name[i] == gesture:
                 gesture_time_duration = self.gestures_duration[i]
@@ -92,7 +94,8 @@ class GestureInterface(HarmoniServiceManager):
                         speed = 2 # the default speed value
                 rospy.loginfo("The speed of the gesture " + str(self.gestures_name[i]) + " is: " + str(speed))
                 # I calibrated the speed according to the gesture duration and the timing of the word
-                resp = self.gesture_service.publish(self.gestures_name[i])
+                self.gesture_service.publish(self.gestures_name[i])
+                resp = True
         return resp
 
     def get_files(self, dirName):
@@ -114,23 +117,22 @@ class GestureInterface(HarmoniServiceManager):
 
     def read_gestures(self, path):
         if not self.read_gesture_done:
-                all_files = self.get_files(path)
-                for filename in all_files:
-                        if not filename.endswith('.xml'): continue
-                        fullname = filename
-                        tree = ET.parse(fullname)
-                        root = tree.getroot()
-                        for child in root:
-                            if child.tag == 'duration':
-                                    self.gestures_duration.append(child.text)
-                            elif child.tag == 'name':
-                                    self.gestures_name.append(child.text)    
-                for index, el in enumerate(self.gestures_name):
-                       self.gesture_list.append({'name': str(el), 'duration': self.gestures_duration[index] })
-                self.read_gesture_done = True
-                self.gesture_list_pub.publish(str(self.gesture_list))
-
-
+            all_files = self.get_files(path)
+            for filename in all_files:
+                    if not filename.endswith('.xml'): continue
+                    fullname = filename
+                    tree = ET.parse(fullname)
+                    root = tree.getroot()
+                    for child in root:
+                        if child.tag == 'duration':
+                                self.gestures_duration.append(child.text)
+                        elif child.tag == 'name':
+                                self.gestures_name.append(child.text)    
+            for index, el in enumerate(self.gestures_name):
+                    self.gesture_list.append({'name': str(el), 'duration': self.gestures_duration[index] })
+            self.read_gesture_done = True
+            self.gesture_list_pub.publish(str(self.gesture_list))
+            self.read_gestures(path)
 
 def main():
     service_name = ActuatorNameSpace.gesture.name
@@ -144,7 +146,6 @@ def main():
         service = hf.set_service_server(service_name, test_id)
         s = GestureInterface(service, param)
         #service_server = HarmoniServiceServer(name=service, service_manager=s)
-        s.read_gestures(param["path"])
         rospy.spin()
     except rospy.ROSInterruptException:
         pass

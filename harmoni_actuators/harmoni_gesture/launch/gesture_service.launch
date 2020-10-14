@@ -16,19 +16,20 @@
 			<param name="name_gesture" value="$(arg robot_name)"/>
 			<node pkg="harmoni_gesture" type="gesture_service.py" name="harmoni_gesture_$(arg test_id)" output="screen"/>
 			<node pkg="harmoni_gesture" type="$(arg robot_name)_gesture_interface.py" name="harmoni_gesture_$(arg robot_name)_$(arg test_id)" output="screen"/>
-    </group>
+	</group>
 	<group if="$(arg use_simulator)">
 	<!-- Load the urdf into the parameter server. -->
-		<arg name="model" default="$(find harmoni_gesture)/urdf/$(arg robot_name).urdf"/>
-		<arg name="rvizconfig" default="$(find urdf_tutorial)/rviz/urdf.rviz" />
-		<param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)" />
 		<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
 		<node pkg="harmoni_gesture" type="$(arg robot_name)_joint_state_publisher.py" name="robot_joint_state_publisher_$(arg test_id)" output="screen"/>
 		<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher">
 			<remap from="joint_states" to="$(arg simulated_joints)"/>
 		</node>
+		<arg name="rvizconfig" default="$(find urdf_tutorial)/rviz/urdf.rviz" />
+		<arg name="model" default="$(find harmoni_gesture)/urdf/$(arg robot_name).urdf"/>
+		<param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)" />
 		<node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
 	</group>
+	
 	<group if="$(arg use_simulator_with_robot)">
 	<!-- Load the urdf into the parameter server. -->
 		<arg name="model" default="$(find harmoni_gesture)/urdf/$(arg robot_name).urdf"/>
