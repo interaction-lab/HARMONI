@@ -1,4 +1,4 @@
-FROM harmoniteam/harmoni:noetic-core
+FROM harmoniteam/harmoni:noetic-full
 
 RUN \
     PIP_INSTALL="python3.8 -m pip --no-cache-dir install --upgrade" && \

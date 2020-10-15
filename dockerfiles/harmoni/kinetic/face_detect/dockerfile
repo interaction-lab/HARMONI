@@ -1,4 +1,4 @@
-FROM harmoniteam/harmoni:kinetic-core
+FROM harmoniteam/harmoni:kinetic-full
 
 RUN \
     PIP_INSTALL="python3.6 -m pip --no-cache-dir install --upgrade" && \
