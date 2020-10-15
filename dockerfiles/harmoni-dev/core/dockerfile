@@ -1,4 +1,4 @@
-FROM harmoniteam/harmoni:kinetic-core
+FROM harmoniteam/harmoni:kinetic-full
 
 # ==================================================================
 # Abstractions for apt installation

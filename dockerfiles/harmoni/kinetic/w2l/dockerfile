@@ -1,4 +1,4 @@
-FROM harmoniteam/harmoni:kinetic-core
+FROM harmoniteam/harmoni:kinetic-full
 
 RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-get update && \
