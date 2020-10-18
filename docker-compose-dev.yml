@@ -181,6 +181,7 @@ services:
       - ./dockerfiles/config/setup_script.sh:/root/.setup_script.sh
       - ./dockerfiles/config/dev_setup_script.sh:/root/.dev_setup_script.sh
       - ./dockerfiles/config/asoundrc:/root/.asoundrc
+      - ./dockerfiles/config/private-keys.json:/root/private-keys.json
       # Other
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ~/.config/terminator/config:/root/.config/terminator/config
