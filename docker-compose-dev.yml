@@ -33,6 +33,7 @@ services:
     volumes:
       - harmoni_catkin_ws:/root/harmoni_catkin_ws
       - ../HARMONI/:/root/local_mount/HARMONI/
+      - ./dockerfiles/config/private-keys.json:/root/private-keys.json
       # IDEs
       - ~/.aws:/root/.aws/
       # Configuration
@@ -181,7 +182,6 @@ services:
       - ./dockerfiles/config/setup_script.sh:/root/.setup_script.sh
       - ./dockerfiles/config/dev_setup_script.sh:/root/.dev_setup_script.sh
       - ./dockerfiles/config/asoundrc:/root/.asoundrc
-      - ./dockerfiles/config/private-keys.json:/root/private-keys.json
       # Other
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ~/.config/terminator/config:/root/.config/terminator/config
