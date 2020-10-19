@@ -1,17 +1,17 @@
 #!/bin/bash
 
-docker push cmbirmingham/ubuntu16-dev:latest
+docker push harmoniteam/harmoni:kinetic-base
 
-docker push cmbirmingham/ros-kinetic-dev:latest
+docker push harmoniteam/harmoni:kinetic-full
 
-docker push cmbirmingham/harmoni-dev:latest
+docker push harmoniteam/harmoni:kinetic-w2l
 
-docker push cmbirmingham/w2l-dev:latest
+docker push harmoniteam/harmoni:kinetic-face_detect
 
-docker push cmbirmingham/ubuntu16-lightweight:latest
+docker push harmoniteam/harmoni:noetic-base
 
-docker push cmbirmingham/ros-kinetic-lightweight:latest
+docker push harmoniteam/harmoni:noetic-full
 
-docker push cmbirmingham/harmoni-lightweight:latest
+# docker push harmoniteam/harmoni:noetic-w2l
 
-docker push cmbirmingham/w2l-lightweight:latest
+docker push harmoniteam/harmoni:noetic-face_detect

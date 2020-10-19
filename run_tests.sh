@@ -1,3 +1,5 @@
+# This is a script of example tests you can run in the command line
+
 roslaunch harmoni_tts tts_service.launch test:=true
 
 roslaunch harmoni_bot bot_service.launch test:=true
