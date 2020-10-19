@@ -1021,7 +1021,7 @@ function doIdle() {
         }
     }
     if ((Math.floor((Math.random() * 500)) == 0 && now - last_blink > 2000) || now - last_blink > 8000) {
-        console.log('blinky')
+        //console.log('blinky')
         blink(300);
         last_blink = now;
     }

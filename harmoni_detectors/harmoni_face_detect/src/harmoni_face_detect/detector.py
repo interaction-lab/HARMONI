@@ -13,11 +13,14 @@ import harmoni_common_lib.helper_functions as hf
 # Specific Imports
 from harmoni_common_lib.constants import DetectorNameSpace, SensorNameSpace
 from harmoni_common_msgs.msg import Object2D, Object2DArray
-from sensor_msgs.msg import Image
+
 import sys
 
-sys.path.remove("/opt/ros/kinetic/lib/python2.7/dist-packages")
-sys.path.append("/opt/ros/kinetic/lib/python2.7/dist-packages")
+path = sys.path
+using_kinetic = any([True for p in path if ("kinetic" in p)])
+if using_kinetic:
+    sys.path.remove("/opt/ros/kinetic/lib/python2.7/dist-packages")
+    sys.path.append("/opt/ros/kinetic/lib/python2.7/dist-packages")
 import cv2
 from cv_bridge import CvBridge, CvBridgeError
 import dlib
@@ -62,7 +65,7 @@ class DlibFaceDetector(HarmoniServiceManager):
         self._cv_bridge = CvBridge()
         self.state = State.INIT
 
-    def start(self,rate=None):
+    def start(self, rate=None):
         """
         Args:
             rate(int): How often the detector should run per second (Hz).
@@ -70,9 +73,11 @@ class DlibFaceDetector(HarmoniServiceManager):
                 TODO: actually use this rate. Rate currently matches camera publish rate regardless of this setting
         """
         self._rate = rate
-        self._image_sub = rospy.Subscriber(self._image_source, Image, self.detect_callback)
+        self._image_sub = rospy.Subscriber(
+            self._image_source, Image, self.detect_callback
+        )
         print(self._image_source)
-        if (self._image_sub != None):
+        if self._image_sub != None:
             self.update(State.START)
             rospy.loginfo("Face detector started.")
         else:

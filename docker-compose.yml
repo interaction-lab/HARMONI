@@ -1,0 +1,169 @@
+version: "3.7"
+
+services:
+  harmoni_core:
+    container_name: harmoni_core
+    build:
+      context: .
+      dockerfile: dockerfiles/harmoni/$ROS_DISTRO/core/dockerfile
+      network: host
+    image: harmoniteam/harmoni:$ROS_DISTRO-core
+    init: true
+    environment:
+      DISPLAY: $DISPLAY
+      QT_GRAPHICSSYSTEM: native
+      ROS_DISTRO: $ROS_DISTRO
+      ROS_MASTER_URI: http://172.18.3.4:11311
+      IS_DOCKER_ENV: "true"
+      ROS_HOSTNAME: harmoni_core
+      CATKIN_WS: harmoni_catkin_ws
+    privileged: true
+    networks:
+      ros_net:
+        ipv4_address: 172.18.3.4
+    hostname: harmoni_core
+    ports:
+      - "11312:11312"
+      - "33691:33691"
+      - "8081:8081"
+    devices:
+      - /dev/dri:/dev/dri
+      - /dev/snd:/dev/snd
+      - /dev/video0:/dev/video0
+    volumes:
+      - ../HARMONI/:/root/local_mount/HARMONI/
+      # Configuration
+      - ~/.aws:/root/.aws/
+      # Other
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    working_dir: /root/harmoni_catkin_ws/src/HARMONI
+    command: tail  -f /dev/null
+
+  harmoni_w2l:
+    container_name: harmoni_w2l
+    build:
+      context: .
+      dockerfile: dockerfiles/harmoni/kinetic/w2l/dockerfile
+      network: host
+    image: harmoniteam/harmoni:kinetic-w2l
+    init: true
+    environment:
+      DISPLAY: $DISPLAY
+      QT_GRAPHICSSYSTEM: native
+      ROS_DISTRO: kinetic
+      IS_DOCKER_ENV: "true"
+      CATKIN_WS: harmoni_catkin_ws
+      ROS_HOSTNAME: harmoni_w2l
+      ROS_MASTER_URI: http://172.18.3.4:11311
+    depends_on:
+      - "harmoni_core"
+    privileged: true
+    # network_mode: host
+    networks:
+      ros_net:
+        ipv4_address: 172.18.3.3
+    hostname: harmoni_w2l
+    ports:
+      - "1022:22"
+    devices:
+      - /dev/dri:/dev/dri
+      - /dev/snd:/dev/snd
+    volumes:
+      - ../HARMONI/:/root/local_mount/HARMONI/
+      # Configuration
+      - ~/.aws:/root/.aws/
+      # Other
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    working_dir: /root/harmoni_catkin_ws/src/HARMONI
+    command: tail  -f /dev/null
+
+  harmoni_face_detector:
+    container_name: harmoni_face_detector
+    build:
+      context: .
+      dockerfile: dockerfiles/harmoni/$ROS_DISTRO/face_detect/dockerfile
+      network: host
+    image: harmoniteam/harmoni:$ROS_DISTRO-face_detect
+    init: true
+    environment:
+      DISPLAY: $DISPLAY
+      QT_GRAPHICSSYSTEM: native
+      ROS_DISTRO: $ROS_DISTRO
+      IS_DOCKER_ENV: "true"
+      CATKIN_WS: harmoni_catkin_ws
+      ROS_HOSTNAME: harmoni_face_detector
+      ROS_MASTER_URI: http://172.18.3.4:11311
+    privileged: true
+    networks:
+      ros_net:
+        ipv4_address: 172.18.3.2
+    hostname: harmoni_face_detector
+    depends_on:
+      - "harmoni_core"
+      - "harmoni_hardware"
+    devices:
+      - /dev/dri:/dev/dri
+      - /dev/video0:/dev/video0
+    volumes:
+      - ../HARMONI/:/root/local_mount/HARMONI/
+      # Configuration
+      - ~/.aws:/root/.aws/
+      # Other
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    working_dir: /root/harmoni_catkin_ws/src/HARMONI
+    command: tail  -f /dev/null
+
+  harmoni_hardware:
+    container_name: harmoni_hardware
+    build:
+      context: .
+      dockerfile: dockerfiles/harmoni/$ROS_DISTRO/core/dockerfile
+      network: host
+    image: harmoniteam/harmoni:$ROS_DISTRO-core
+    init: true
+    environment:
+      DISPLAY: $DISPLAY
+      QT_GRAPHICSSYSTEM: native
+      ROS_DISTRO: $ROS_DISTRO
+      IS_DOCKER_ENV: "true"
+      CATKIN_WS: harmoni_catkin_ws
+      ROS_HOSTNAME: harmoni_hardware
+      ROS_MASTER_URI: http://172.18.3.4:11311
+    privileged: true
+    networks:
+      ros_net:
+        ipv4_address: 172.18.3.5
+    hostname: ros_hardware
+    depends_on:
+      - "harmoni_core"
+    devices:
+      - /dev/dri:/dev/dri
+      - /dev/snd:/dev/snd
+      - /dev/video0:/dev/video0
+    volumes:
+      - ../HARMONI/:/root/local_mount/HARMONI/
+      # Configuration
+      - ~/.aws:/root/.aws/
+      # Other
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    working_dir: /root/harmoni_catkin_ws/src/HARMONI
+    command: tail  -f /dev/null
+
+networks:
+  ros_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.3.0/24
+
+volumes:
+  wav2letter:

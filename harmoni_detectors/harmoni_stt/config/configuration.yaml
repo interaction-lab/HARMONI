@@ -10,4 +10,4 @@ google:
         sample_rate: 16000 #44100 for wav audio file
         audio_channel: 1
         subscriber_id: "default"
-        credential_path: "/root/harmoni_catkin_ws/src/HARMONI/harmoni_detectors/harmoni_stt/config/private-keys.json"
+        credential_path: "/root/private-keys.json" #path where private keys are mounted

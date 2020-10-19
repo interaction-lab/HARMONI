@@ -2,7 +2,7 @@
 <launch>
     
     <arg name="web_directory_path" value="$(find harmoni_face)/web"/>
-    <arg name="port" default="8080"/>
+    <arg name="port" default="8081"/>
 	<arg name="use_face" default="true"/>
 	<arg name="test" default="false"/>
 	<arg name="test_input" default="[{'start': 0.075, 'time': 2,'type': 'action', 'id': 'QT/point_front'}, {'start': 0.075,'time': 2, 'type': 'viseme', 'id': 'POSTALVEOLAR'},{'start': 0.006, 'time': 2,  'type': 'action', 'id': 'happy_face'}]"/>
@@ -14,7 +14,7 @@
 			<param name="test_id_face" value="$(arg test_id)"/>
 			<param name="name_face" value="face"/>
 			<node pkg="harmoni_face" type="http_server_runner.py" name="face_http_server" output="screen" args="$(arg web_directory_path) $(arg port)" />
-			<node pkg="harmoni_face" type="face_service.py" name="harmoni_face" output="screen"/>
+			<node pkg="harmoni_face" type="face_service.py" name="harmoni_face_$(arg test_id)" output="screen"/>
 			<include ns="bridge_face" file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
   	</group>
 
