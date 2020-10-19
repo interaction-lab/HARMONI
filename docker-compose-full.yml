@@ -5,13 +5,13 @@ services:
     container_name: harmoni_full
     build:
       context: .
-      dockerfile: dockerfiles/harmoni/$ROS_DISTRO/full/dockerfile
+      dockerfile: dockerfiles/harmoni/kinetic/full/dockerfile #substitute $ROS_DISTRO with kinetic for now.
       network: host
-    image: harmoniteam/harmoni:$ROS_DISTRO-full
+    image: harmoniteam/harmoni:kinetic-full
     init: true
     environment:
       QT_GRAPHICSSYSTEM: native
-      ROS_DISTRO: $ROS_DISTRO
+      ROS_DISTRO: kinetic
       ROS_MASTER_URI: http://172.18.3.4:11311
       IS_DOCKER_ENV: "true"
       ROS_HOSTNAME: harmoni_full
@@ -24,7 +24,8 @@ services:
     ports:
       - "11312:11312"
       - "33691:33691"
-      - "8081:8081"
+      - "8081:8081" #harmoni_face
+      - "8082:8082" #harmoni_web
     devices:
       - /dev/dri:/dev/dri
       - /dev/snd:/dev/snd
@@ -34,6 +35,7 @@ services:
       - ../HARMONI/:/root/local_mount/HARMONI/
       # Configuration
       - ~/.aws:/root/.aws/
+      - ./dockerfiles/config/.asoundrc:/root/.asoundrc
       # Other
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /etc/timezone:/etc/timezone:ro
