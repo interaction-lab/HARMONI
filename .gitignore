@@ -111,7 +111,7 @@ ENV/
 **/private-keys_en.json
 
 *.wav
-dockerfiles/config/asoundrc
+dockerfiles/config/.asoundrc
 # temporary generated files
 harmoni_core/harmoni_decision/launch/hardware_service.launch
 harmoni_core/harmoni_decision/launch/harmoni_service.launch
