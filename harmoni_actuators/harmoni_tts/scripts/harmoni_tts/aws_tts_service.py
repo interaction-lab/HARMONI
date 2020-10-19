@@ -232,6 +232,7 @@ class AWSTtsService(HarmoniServiceManager):
             self.state = State.SUCCESS
             self.response_received = True
             self.result_msg = tts_response
+            rospy.loginfo("Request successfully completed")
         except (BotoCoreError, ClientError) as error:
             rospy.logerr("The erros is " + str(error))
             self.state = State.FAILED
@@ -250,7 +251,9 @@ def main():
         rospy.init_node(service_name)
         param = rospy.get_param(name + "/" + test_id + "_param/")
         if not hf.check_if_id_exist(service_name, test_id):
-            rospy.logerr("ERROR: Remember to add your configuration ID also in the harmoni_core config file")
+            rospy.logerr(
+                "ERROR: Remember to add your configuration ID also in the harmoni_core config file"
+            )
             return
         service = hf.set_service_server(service_name, test_id)
         s = AWSTtsService(service, param)

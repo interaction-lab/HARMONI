@@ -1,26 +1,26 @@
 version: "3.7"
 
 services:
-  harmoni_core:
-    container_name: harmoni_core
+  harmoni_full:
+    container_name: harmoni_full
     build:
       context: .
-      dockerfile: dockerfiles/harmoni/$ROS_DISTRO/core/dockerfile
+      dockerfile: dockerfiles/harmoni/$ROS_DISTRO/full/dockerfile
       network: host
-    image: harmoniteam/harmoni:$ROS_DISTRO-core
+    image: harmoniteam/harmoni:$ROS_DISTRO-full
     init: true
     environment:
       QT_GRAPHICSSYSTEM: native
       ROS_DISTRO: $ROS_DISTRO
       ROS_MASTER_URI: http://172.18.3.4:11311
       IS_DOCKER_ENV: "true"
-      ROS_HOSTNAME: harmoni_core
+      ROS_HOSTNAME: harmoni_full
       CATKIN_WS: harmoni_catkin_ws
     privileged: true
     networks:
       ros_net:
         ipv4_address: 172.18.3.4
-    hostname: harmoni_core
+    hostname: harmoni_full
     ports:
       - "11312:11312"
       - "33691:33691"
@@ -41,7 +41,7 @@ services:
     working_dir: /root/harmoni_catkin_ws/src/HARMONI
     command:
       tail  -f /dev/null
-      #  bash -c "terminator -ue \"echo 'Entering harmoni_core Container... \\n start with roscore and rlharmoniservices' && bash\""
+      #  bash -c "terminator -ue \"echo 'Entering harmoni_full Container... \\n start with roscore and rlharmoniservices' && bash\""
 
 networks:
   ros_net:

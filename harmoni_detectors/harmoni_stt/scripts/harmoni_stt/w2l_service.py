@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python
 
 # Common Imports
 import rospy
@@ -148,7 +148,9 @@ def main():
         rospy.init_node(service_name)
         param = rospy.get_param(name + "/" + test_id + "_param/")
         if not hf.check_if_id_exist(service_name, test_id):
-            rospy.logerr("ERROR: Remember to add your configuration ID also in the harmoni_core config file")
+            rospy.logerr(
+                "ERROR: Remember to add your configuration ID also in the harmoni_core config file"
+            )
             return
         service = hf.set_service_server(service_name, test_id)
         s = SpeechToTextService(service, param)

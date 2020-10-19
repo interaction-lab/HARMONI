@@ -11,7 +11,7 @@ To launch the complete harmoni dev setup in docker:
 2. Launch the desired packages and run the desired scripts in the respective docker containers
 
     For example, to use Wave2Letter:
-    - From harmoni_core, open a terminal and:
+    - From harmoni_full, open a terminal and:
         - ```roscore```
 
     - From harmoni_hardware:
@@ -31,9 +31,9 @@ Docker also allows us to (mostly) mix and match OS/ROS versions in different con
 We currently support development on ROS1 Noetic (passing) and Kinetic (broken - fix incoming). We also provide a development container with additional tools and ML libraries.
 
 ## Container Organization
-Harmoni spreads the workload across several containers to maximize CPU usage. This includes a core Harmoni container, a container for interfacing with the hardware, and a container for each detector used.
+Harmoni spreads the workload across several containers to maximize CPU usage. This includes a full Harmoni container, a container for interfacing with the hardware, and a container for each detector used.
 
-The core Harmoni container is responsible for the following:
+The full Harmoni container is responsible for the following:
 
    - Central Control
    - Recording
@@ -51,16 +51,15 @@ The list of detector containers will expand over time, but currently includes:
    - Face Detection
 
 
-# Building 
-
-## Harmoni
+# Building Harmoni
 
 ## Noetic
 ```bash
 docker build -f dockerfiles/harmoni/noetic/base/dockerfile --tag harmoniteam/harmoni:noetic-base .
 
-docker build -f dockerfiles/harmoni/noetic/core/dockerfile --tag harmoniteam/harmoni:noetic-core .
+docker build -f dockerfiles/harmoni/noetic/full/dockerfile --tag harmoniteam/harmoni:noetic-full .
 
+# W2L is not currently supported on Ubuntu 20.04
 # docker build -f dockerfiles/harmoni/noetic/w2l/dockerfile --tag harmoniteam/harmoni:noetic-w2l .
 
 docker build -f dockerfiles/harmoni/noetic/facedetect/dockerfile --tag harmoniteam/harmoni:noetic-facedetect .
@@ -70,7 +69,7 @@ docker build -f dockerfiles/harmoni/noetic/facedetect/dockerfile --tag harmonite
 ```bash
 docker build -f dockerfiles/harmoni/kinetic/base/dockerfile --tag harmoniteam/harmoni:kinetic-base .
 
-docker build -f dockerfiles/harmoni/kinetic/core/dockerfile --tag harmoniteam/harmoni:kinetic-core .
+docker build -f dockerfiles/harmoni/kinetic/full/dockerfile --tag harmoniteam/harmoni:kinetic-full .
 
 docker build -f dockerfiles/harmoni/kinetic/w2l/dockerfile --tag harmoniteam/harmoni:kinetic-w2l .
 
@@ -79,7 +78,7 @@ docker build -f dockerfiles/harmoni/kinetic/face_detect/dockerfile --tag harmoni
 
 ## Dev
 ```bash
-docker build -f dockerfiles/harmoni-dev/core/dockerfile --tag harmoniteam/harmoni-dev:kinetic-harmoni .
+docker build -f dockerfiles/harmoni-dev/full/dockerfile --tag harmoniteam/harmoni-dev:kinetic-harmoni .
 ```
 
 ## MultiArchitecture (ARM/Rasberry Pi)
