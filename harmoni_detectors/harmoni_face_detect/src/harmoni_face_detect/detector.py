@@ -14,6 +14,8 @@ import harmoni_common_lib.helper_functions as hf
 from harmoni_common_lib.constants import DetectorNameSpace, SensorNameSpace
 from harmoni_common_msgs.msg import Object2D, Object2DArray
 
+import sys
+
 path = sys.path
 using_kinetic = any([True for p in path if ("kinetic" in p)])
 if using_kinetic:

@@ -5,11 +5,11 @@
 	<arg name="test_input" default="/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/temp_data/tts.wav"/>
 	<arg name="test_id" default="default"/>
 	<group if="$(arg use_speaker)">
-			<include file="/root/harmoni_catkin_ws/src/audio_common/audio_play/launch/play.launch">
+			<!--<include file="/root/harmoni_catkin_ws/src/audio_common/audio_play/launch/play.launch">
 				<arg name="do_timestamp" value="false"/>
 				<arg name="format" value="wave"/>
 				<arg name="sample_rate" value="22050"/>
-			</include>
+			</include>-->
 			<rosparam file="$(find harmoni_speaker)/config/configuration.yaml"/>
 			<param name="test_speaker" value="$(arg test)"/>
 			<param name="test_input_speaker" value="$(arg test_input)"/>
@@ -17,8 +17,9 @@
 			<param name="name_speaker" value="speaker"/>
 			<node pkg="harmoni_speaker" type="speaker_service.py" name="harmoni_speaker" output="screen"/>
     </group>
-    <!--<include file="$(find audio_play)/launch/play.launch">
+    <include file="$(find audio_play)/launch/play.launch">
         <arg name="do_timestamp" value = "false"/> 
         <arg name="format" value = "wave"/>
-    </include>-->
+        <arg name="sample_rate" value="22050"/>
+    </include>
 </launch>
