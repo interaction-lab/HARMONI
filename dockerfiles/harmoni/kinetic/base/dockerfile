@@ -1,0 +1,266 @@
+FROM ubuntu:xenial
+
+RUN ROS_DISTRO="kinetic"
+
+# ==================================================================
+# Ubuntu Setup
+# (If some of these are unecessary - migrate to dev)
+# ------------------------------------------------------------------
+
+# Installing build tools and dependencies.
+# More about dependencies here: https://docs.opencv.org/4.0.0/d2/de6/tutorial_py_setup_in_ubuntu.html
+RUN \
+    apt-get update -y && apt-get upgrade -y \
+    && apt-get install -y \
+    software-properties-common \
+    apt-utils \
+    && \
+    APT_INSTALL="apt-get install -y --no-install-recommends" && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+    # BUILD TOOLS
+    build-essential \
+    ca-certificates \
+    libssl-dev \
+    apt-transport-https \
+    gnupg \
+    # DOWNLOAD TOOLS
+    curl \
+    wget \
+    unzip \
+    # COMPILERS
+    g++ \
+    cmake \
+    gcc \
+    # VERSION CONTROL
+    git \
+    # NETWORK TOOLS
+    iputils-ping \
+    net-tools \
+    #OpenCV dependencies
+    python-numpy \
+    libavcodec-dev \
+    libavformat-dev \
+    libswscale-dev \
+    libgstreamer-plugins-base1.0-dev \
+    libtbb2 \
+    libtbb-dev \
+    libjpeg-dev \
+    libpng-dev \
+    libopenexr-dev \
+    libtiff-dev \
+    libwebp-dev \
+    # Video device drivers
+    libv4l-dev \
+    libdc1394-22-dev \
+    # ==================================================================
+    # Setup Python3.6 with pip
+    # ------------------------------------------------------------------
+    && APT_INSTALL="apt-get install -y --no-install-recommends" \
+    && add-apt-repository -y ppa:deadsnakes/ppa \
+    && apt-get update -y && apt-get upgrade -y \
+    && apt-get install -y \
+    && DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+    python3.6 \
+    python3.6-dev \
+    python3-pip \
+    python3-yaml \
+    && python3.6 -m pip install --upgrade pip wheel \
+    && python3.6 -m pip install setuptools \
+    && python3.6 -m pip install --ignore-installed pyyaml \
+    && ln -s /usr/bin/python3.6 /usr/local/bin/python \
+    && ln -s /usr/bin/python3.6 /usr/local/bin/python3 \
+    # ==================================================================
+    # Install ros/catkin packages
+    # ------------------------------------------------------------------
+    && PIP_INSTALL="python3 -m pip --no-cache-dir install --upgrade" && \
+    $PIP_INSTALL \
+    # ROS
+    rospkg \
+    catkin_pkg \
+    catkin_tools \
+    # AWS
+    boto3 \
+    awscli \
+    google-cloud-speech \
+    dialogflow \
+    google-api-python-client \
+    && rm -rf -- /var/lib/apt/lists/* 
+
+
+# ==================================================================
+# Install Ros Kinetic
+# ------------------------------------------------------------------
+RUN apt-get update && apt-get install -q -y --no-install-recommends \
+    dirmngr \
+    gnupg2 \
+    && rm -rf -- /var/lib/apt/lists/*
+
+# setup keys
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+
+# setup sources.list
+RUN echo "deb http://packages.ros.org/ros/ubuntu xenial main" > /etc/apt/sources.list.d/ros1-latest.list
+
+# setup environment
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+
+# ros kinetic setup
+ENV ROS_DISTRO kinetic
+
+# install ros packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ros-kinetic-ros-core=1.3.2-0* \
+    python-rosdep \
+    python-rosinstall \
+    python-vcstools \
+    && rm -rf -- /var/lib/apt/lists/*
+
+# ==================================================================
+# bootstrap rosdep
+RUN rosdep init && \
+    rosdep update --rosdistro $ROS_DISTRO
+
+# install ros packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ros-$ROS_DISTRO-desktop-full=1.3.2-0* \
+    ros-$ROS_DISTRO-rosbridge-server \
+    && \
+    # PYTHON INSTALLS
+    add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get update && \
+    PIP_INSTALL="python3 -m pip --no-cache-dir install --upgrade" && \
+    $PIP_INSTALL \
+    numpy \
+    rospkg \
+    catkin_pkg \
+    catkin_tools \
+    scikit-build \
+    && rm -rf -- /var/lib/apt/lists/* 
+
+
+# ==================================================================
+# Harmoni packages
+# - Cordial Prerequisites
+# - Audio Common Prerequisites
+# ------------------------------------------------------------------
+RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+    # CORIDAL INSTALL
+    nodejs \
+    npm \
+    # vorbis-tools python-pygame python-requests python-serial ros-kinetic-tf python-gst-1.0 python-scipy \
+    vorbis-tools python-pygame \
+    libboost-all-dev \
+    # GSTREAMER (needed for audio_common)
+    libgstreamer1.0-0 gstreamer1.0-dev gstreamer1.0-tools gstreamer1.0-doc \
+    gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
+    gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly \
+    gstreamer1.0-libav \
+    gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-pulseaudio \
+    libgstreamer-plugins-base1.0-dev \
+    # PYAUDIO
+    portaudio19-dev ffmpeg \
+    # NEEDED for cffi needed for... something
+    libffi-dev \
+    # GRAPHICS UTILS (don't appear needed)
+    # libcanberra-gtk-module libgl1-mesa-glx libgl1-mesa-dri mesa-utils \
+    # vlc \
+    # && sed -i 's/geteuid/getppid/' /usr/bin/vlc \
+    && npm install http-server -g \
+    && ln -s /usr/bin/nodejs /usr/bin/node \
+    && PIP_INSTALL="python3.6 -m pip --no-cache-dir install --upgrade" && \
+    $PIP_INSTALL \
+    packaging==19.1 \
+    soundfile \
+    empy \
+    PyAudio \
+    imutils \
+    --force-reinstall defusedxml \
+    # ==================================================================
+    # Install the Ros packages needed for Harmoni
+    # ------------------------------------------------------------------
+    && APT_INSTALL="apt-get install -y --no-install-recommends" && \
+    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+    ros-$ROS_DISTRO-rosbridge-server \
+    ros-$ROS_DISTRO-dynamixel-msgs \
+    ros-$ROS_DISTRO-audio-common \
+    && \
+    rm -rf -- /var/lib/apt/lists/* /tmp/*
+
+# ==================================================================
+# OpenCV build, based on this repo: https://github.com/regzon/docker-opencv-arm
+# ------------------------------------------------------------------
+ARG PYTHON_VERSION_SHORT=3.6
+ARG OPENCV_VERSION=4.4.0
+ARG CPU_CORES=8
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+ARG OPENCV_VERSION
+ENV OPENCV_VERSION=$OPENCV_VERSION
+
+# Download latest source and contrib
+RUN set -e; \
+    cd /tmp; \
+    wget -c -nv -O opencv.zip https://github.com/opencv/opencv/archive/$OPENCV_VERSION.zip; \
+    unzip opencv.zip; \
+    wget -c -nv -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/$OPENCV_VERSION.zip; \
+    unzip opencv_contrib.zip
+
+ARG PYTHON_VERSION_SHORT
+ENV PYTHON_VERSION=$PYTHON_VERSION_SHORT
+
+ARG CPU_CORES
+
+# Build opencv
+RUN set -e; \
+    cd /tmp/opencv-$OPENCV_VERSION; \
+    mkdir build; \
+    cd build; \
+    mkdir /opt/opencv; \
+    cmake -D CMAKE_BUILD_TYPE=RELEASE \
+        -D OPENCV_EXTRA_MODULES_PATH=/tmp/opencv_contrib-$OPENCV_VERSION/modules \
+        -D CMAKE_INSTALL_PREFIX=/opt/opencv \
+        # Build without GUI support
+        -D WITH_QT=OFF \
+        -D WITH_GTK=OFF \
+        # Build without GPU support
+        -D WITH_OPENCL=OFF \
+        -D WITH_CUDA=OFF \
+        -D BUILD_opencv_gpu=OFF \
+        -D BUILD_opencv_gpuarithm=OFF \
+        -D BUILD_opencv_gpubgsegm=OFF \
+        -D BUILD_opencv_gpucodec=OFF \
+        -D BUILD_opencv_gpufeatures2d=OFF \
+        -D BUILD_opencv_gpufilters=OFF \
+        -D BUILD_opencv_gpuimgproc=OFF \
+        -D BUILD_opencv_gpulegacy=OFF \
+        -D BUILD_opencv_gpuoptflow=OFF \
+        -D BUILD_opencv_gpustereo=OFF \
+        -D BUILD_opencv_gpuwarping=OFF \
+        # Build with python
+        -D BUILD_opencv_python3=ON \
+        -D BUILD_opencv_python2=OFF \
+        -D PYTHON_DEFAULT_EXECUTABLE=$(which python${PYTHON_VERSION}) \
+        # Ignore all unnecessary stages
+        -D BUILD_opencv_apps=OFF \
+        -D BUILD_EXAMPLES=OFF \
+        -D INSTALL_C_EXAMPLES=OFF \
+        -D INSTALL_PYTHON_EXAMPLES=OFF \
+        -D BUILD_DOCS=OFF \
+        -D BUILD_PERF_TESTS=OFF \
+        -D BUILD_TESTS=OFF \
+        ..; \
+    make -j$CPU_CORES; \
+    make install; \
+    ldconfig; \
+    # Clean up
+    make clean; \
+    cd /; \
+    rm -rf -- /tmp/*
+
+ENV PYTHONPATH=/opt/opencv/lib/python3.6/dist-packages
+CMD ["/bin/bash"]

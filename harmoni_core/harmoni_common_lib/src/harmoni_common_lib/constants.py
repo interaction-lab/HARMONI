@@ -39,6 +39,7 @@ class ActuatorNameSpace(Enum):
     face = "/harmoni/actuating/face/"
     tts = "/harmoni/actuating/tts/"
     web = "/harmoni/actuating/web/"
+    gesture = "/harmoni/actuating/gesture/"
     ROUTER = "/harmoni/actuating/"
 
 

@@ -54,7 +54,6 @@ class EyesService(HarmoniServiceManager):
                 self.face_request = FaceRequest(
                     visemes=viseme_ids, viseme_ms=self.speed_viseme, times=viseme_times
                 )
-
                 t = Timer(self.timer_interval, self.send_face_request)
                 t.start()
                 start_time = rospy.Time.now()
@@ -171,14 +170,11 @@ class EyesService(HarmoniServiceManager):
             if "character" in b.keys():
                 sentence.append(b["value"])
         # viseme = list(filter(lambda b: b["id"] in self.visemes, data))
-
         # facial_expression = list(filter(lambda b: b["id"] in self.face_expression_names, data))
         rospy.loginfo("These facial expressions include %s" % facial_expression)
-
         ordered_facial_data = list(
             sorted(facial_expression, key=lambda face: face["start"])
         )
-
         validated_face_expr = []
         for fexp in ordered_facial_data:
             validated_face_expr.append(self.face_expression[fexp["id"]])

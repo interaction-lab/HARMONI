@@ -1,9 +1,15 @@
 #!/bin/bash
 
-echo 'Hello, rosmaster'
+echo 'Hello! Welcome to Harmoni'
 
 source /opt/ros/$ROS_DISTRO/setup.bash 
 source /root/harmoni_catkin_ws/devel/setup.bash
+
+alias gs="git status"
+alias gl="git log --pretty=oneline --graph"
+alias gb="git branch -a"
+alias gg="git gui"
+alias code="code --user-data-dir /root/.visual_code/"
 
 alias rh="roscd; cd .."
 alias rs="roscd; cd ../src"
@@ -16,7 +22,7 @@ alias rlfacedetect="roslaunch harmoni_face_detect face_detect_service.launch"
 alias rlhardwareservices="roslaunch harmoni_decision launcher.launch service:='hardware'"
 alias rlharmoniservices="roslaunch harmoni_decision launcher.launch service:='harmoni'"
 alias rlmultiplechoice="roslaunch harmoni_decision harmoni_decision.launch test:=true"
-alias rldialog="roslaunch harmoni_pattern sequence_pattern.launch test:=true use_pattern_dialogue:=true use_pattern_multiple_choice:=false"
+alias rldialog="roslaunch harmoni_pattern sequence_pattern.launch pattern_name:='dialogue' test:=true use_pattern_dialogue:=true use_pattern_multiple_choice:=false"
 
 
 # get current branch in git repo

@@ -1,7 +1,7 @@
 # Configuration file for the microphone
 lex:
   micol_param:
-    user_id: "micol_testing"
+    user_id: "micol_testing_1"
     bot_name: "QTRobot"
     bot_alias: "qt_robot_test"
     region_name: "eu-west-2"
@@ -17,3 +17,8 @@ google:
     language: "it"
     session_id: "test_bot"
     credential_path: "/root/harmoni_catkin_ws/src/HARMONI/harmoni_detectors/harmoni_stt/config/private-keys.json"
+  en_param:
+    project_id: "interactivecanvas-ee969"
+    language: "en"
+    session_id: "testing"
+    credential_path: "/root/harmoni_catkin_ws/src/HARMONI/harmoni_dialogues/harmoni_bot/config/private-keys_en.json"

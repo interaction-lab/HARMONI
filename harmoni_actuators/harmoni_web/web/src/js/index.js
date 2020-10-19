@@ -1,5 +1,5 @@
 var page = "pageContent2";
-//var view = "container_1";
+//var view = "container_2";
 
 $(document).ready(function () {
 
@@ -21,6 +21,9 @@ $(document).ready(function () {
         .done(function () {
             //$("#"+view).show();
             $("button").on("click", function () {
+                var value_item = $(this).closest('container').find('div.button');
+                var value = value_item.prevObject.prevObject[0].previousSibling
+                setValueButton(this, value);
                 clickListener(this);
             });
             $("a").on("click", function () {
@@ -51,6 +54,14 @@ function viewListener(view) {
     $("#" + component).show();
 };
 
+function setValueButton(clicked_button, value_item){
+    console.log(value_item)
+    var selected_butt = clicked_button.id;
+    var input_value = document.getElementById(value_item.id).value;
+    //$("#"+value_item).attr("value")
+    $("#"+selected_butt).attr("value",input_value);
+}
+
 function clickListener(clicked_component) {
     var selected_item = clicked_component.id;
     $("#"+selected_item).css("opacity", "0.5");
@@ -58,8 +69,8 @@ function clickListener(clicked_component) {
         var selected_item = clicked_component.value;
     }
     console.log("Clicked")
-    user_response_publisher.publish({ data: JSON.stringify(clicked_component.getAttribute("value")) })
     $("#"+selected_item).css("opacity", "1");
+    user_response_publisher.publish({ data: JSON.stringify(clicked_component.getAttribute("value")) })
     // Send the event clicked to the ROS package
 }
 
@@ -108,8 +119,11 @@ function createComponent(component, content, id) {
                 var html = "<div class='title' id=" + id + "></div>";
             }
             break;
+        case "input_text":
+                var html = "<input id="+ id +" type='text' name='inputext'>";
+                break;
         case "button":
-            var html = "<button id=" + id + ">" + content + "</button>";
+            var html = "<button id=" + id + " value= ''>" + content + "</button>";
             break;
         case "row":
             var html = "<div class='row' id=" + id + "></div>";

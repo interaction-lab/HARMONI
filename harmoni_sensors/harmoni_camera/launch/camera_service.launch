@@ -11,7 +11,7 @@
 			<param name="test_input_camera" value="$(arg test_input)"/>
 			<param name="test_id_camera" value="$(arg test_id)"/>
 			<param name="name_camera" value="camera"/>
-			<node pkg="harmoni_camera" type="camera_service.py" name="harmoni_camera" output="screen"/>
+			<node pkg="harmoni_camera" type="camera_service.py" name="harmoni_camera_$(arg test_id)" output="screen"/>
   	</group>
 
 
