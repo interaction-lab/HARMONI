@@ -63,7 +63,7 @@ class TypeDialogueDecisionManager(HarmoniServiceManager):
         return
 
     def populate_scene(self, text_input):
-        self.script[0]["steps"][0]["bot_micol"]["trigger"] = (
+        self.script[0]["steps"][0]["bot_default"]["trigger"] = (
             text_input
         )
         with open(self.pattern_script_path, "w") as json_file:

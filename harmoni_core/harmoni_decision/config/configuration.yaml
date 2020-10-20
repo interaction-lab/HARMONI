@@ -1,8 +1,8 @@
 # This is a configuration file describing the id of the child of each repo
 harmoni:
-  bot: ["micol"]
+  bot: ["default"]
   tts: ["default"]
-  #web: ["default"]
+  web: ["default"]
   stt: ["default"]
   #face_detect: ["default"]
 hardware:
@@ -10,4 +10,4 @@ hardware:
   #camera: ["default"]
   face: ["default"]
   speaker: ["default"]
-  gesture: ["default"]
+  #gesture: ["default"]
