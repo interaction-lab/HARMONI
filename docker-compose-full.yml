@@ -36,7 +36,7 @@ services:
       # Configuration
       - ~/.aws:/root/.aws/
       - ./dockerfiles/config/.asoundrc:/root/.asoundrc
-      - ./dockerfiles/config/private-keys.json:/root/private-keys.json
+      - ~/.gcp/private-keys.json:/root/private-keys.json
       # Other
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /etc/timezone:/etc/timezone:ro
@@ -53,7 +53,6 @@ networks:
       driver: default
       config:
         - subnet: 172.18.3.0/24
-
-volumes:
-  # harmoni_catkin_ws:
-  wav2letter:
+# volumes:
+# harmoni_catkin_ws:
+# wav2letter:
