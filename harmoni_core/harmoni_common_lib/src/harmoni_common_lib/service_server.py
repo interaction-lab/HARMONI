@@ -39,13 +39,15 @@ class HarmoniServiceServer(HarmoniActionServer, object):
         Args:
             rate (float, optional): Rate feedback on state is sent (hz). Defaults to .2.
         """
+        #TODO make this rate a class variable that gets used instead of creating it here.
+        r = rospy.Rate(0.2)
         rospy.loginfo("HardwareControlServer start continuously updating the feedback")
         while not rospy.is_shutdown():
             # if state has failed the node should be restarted
             if self.service_manager.state != State.FAILED:
                 if self.service_manager.state != State.INIT:
                     self.send_feedback(self.service_manager.state)
-                rospy.Rate(0.2)
+                r.sleep()
             else:
                 break
         return
