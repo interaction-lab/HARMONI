@@ -1,1 +1,38 @@
-[{"set": "sequence", "steps": [{"bot_micol": {"action_goal": "REQUEST", "resource_type": "service", "wait_for": "new", "trigger": "\"hey\""}}, {"tts_default": {"action_goal": "REQUEST", "resource_type": "service", "wait_for": "new"}}, [{"face_mouth_default": {"action_goal": "DO", "resource_type": "actuator", "wait_for": "v"}}, {"speaker_default": {"action_goal": "DO", "resource_type": "actuator", "wait_for": "new"}}]]}]
+[
+    {
+        "set": "sequence",
+        "steps": [
+            {
+                "bot_micol": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": "new",
+                    "trigger": "\"hey\""
+                }
+            },
+            {
+                "tts_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": "new"
+                }
+            },
+            [
+                {
+                    "face_mouth_default": {
+                        "action_goal": "DO",
+                        "resource_type": "actuator",
+                        "wait_for": "v"
+                    }
+                },
+                {
+                    "speaker_default": {
+                        "action_goal": "DO",
+                        "resource_type": "actuator",
+                        "wait_for": "new"
+                    }
+                }
+            ]
+        ]
+    }
+]
