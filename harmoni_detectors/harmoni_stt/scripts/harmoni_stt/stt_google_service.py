@@ -12,8 +12,7 @@ import harmoni_common_lib.helper_functions as hf
 # Specific Imports
 from harmoni_common_lib.constants import State, DetectorNameSpace, SensorNameSpace
 from audio_common_msgs.msg import AudioData
-from google.cloud import speech_v1
-from google.cloud.speech_v1 import enums
+from google.cloud import speech
 from std_msgs.msg import String
 import numpy as np
 import os
@@ -63,20 +62,21 @@ class STTGoogleService(HarmoniServiceManager):
 
     def setup_google(self):
         os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = self.credential_path
-        self.client = speech_v1.SpeechClient()
-        encoding = enums.RecognitionConfig.AudioEncoding.LINEAR16
-        self.config = {
-            "language_code": self.language,
-            "sample_rate_hertz": self.sample_rate,
-            "encoding": encoding,
-            "audio_channel_count": self.audio_channel,
-        }
-        config = speech_v1.types.RecognitionConfig(
-            encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
+        self.client = speech.SpeechClient()
+        rospy.loginfo(self.client)
+        encoding = speech.RecognitionConfig.AudioEncoding.LINEAR16
+        self.config = speech.RecognitionConfig(
+            encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
+            sample_rate_hertz=self.sample_rate,
+            language_code=self.language,
+            audio_channel_count= self.audio_channel,
+        )
+        config = speech.RecognitionConfig(
+            encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
             sample_rate_hertz=self.sample_rate,
             language_code=self.language,
         )
-        self.streaming_config = speech_v1.types.StreamingRecognitionConfig(
+        self.streaming_config = speech.StreamingRecognitionConfig(
             config=config, interim_results=True
         )
         return
@@ -93,7 +93,7 @@ class STTGoogleService(HarmoniServiceManager):
     def transcribe_stream_request(self, data):
         # TODO: streaming transcription
         requests = (
-            speech_v1.types.StreamingRecognizeRequest(audio_content=content)
+            speech.StreamingRecognizeRequest(audio_content=content)
             for content in audio_generator
         )
         responses = client.streaming_recognize(streaming_config, requests)
@@ -104,7 +104,7 @@ class STTGoogleService(HarmoniServiceManager):
         audio = {"content": data}
         try:
             rospy.loginfo("Request to google")
-            operation = self.client.long_running_recognize(self.config, audio)
+            operation = self.client.long_running_recognize(config=self.config, audio=audio)
             rospy.loginfo("Waiting for the operation to complete.")
             self.state = State.PAUSE
             response = operation.result()
