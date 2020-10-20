@@ -1,7 +1,7 @@
 <!-- This is an example launch file for how a ROS application could use a node -->
 <launch>
     <arg name="web_directory_path" value="$(find harmoni_web)/web"/>
-    <arg name="port" default="8081"/>
+    <arg name="port" default="8082"/>
 	<arg name="use_web" default="true"/>
 	<arg name="test" default="false"/>
 	<arg name="test_input" default="{'component_id':'container_1', 'set_content': ''}"/>
