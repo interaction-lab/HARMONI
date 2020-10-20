@@ -3,7 +3,7 @@
         "set": "sequence",
         "steps": [
             {
-                "bot_micol": {
+                "bot_default": {
                     "action_goal": "REQUEST",
                     "resource_type": "service",
                     "wait_for": "new",
