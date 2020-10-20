@@ -38,10 +38,10 @@ if __name__ == "__main__":
     else:
         raise ValueError("Invalid directory input")
 
-    command = ["http-server"]
+    command = ["python3","-m","http.server"]
     if is_int(args[PORT_IDX]):
         port = args[PORT_IDX]
-        command += ["-p", port]
+        command += [port]
 
     p = subprocess.Popen(command)
     atexit.register(p.terminate)
