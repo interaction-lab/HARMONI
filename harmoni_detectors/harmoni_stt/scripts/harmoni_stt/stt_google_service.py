@@ -63,7 +63,6 @@ class STTGoogleService(HarmoniServiceManager):
     def setup_google(self):
         os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = self.credential_path
         self.client = speech.SpeechClient()
-        rospy.loginfo(self.client)
         encoding = speech.RecognitionConfig.AudioEncoding.LINEAR16
         self.config = speech.RecognitionConfig(
             encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
@@ -91,12 +90,25 @@ class STTGoogleService(HarmoniServiceManager):
             rospy.loginfo("Not Transcribing data")
 
     def transcribe_stream_request(self, data):
-        # TODO: streaming transcription
+        # TODO: streaming transcription https://github.com/googleapis/python-speech/blob/master/samples/microphone/transcribe_streaming_infinite.py
+        stream = data
         requests = (
-            speech.StreamingRecognizeRequest(audio_content=content)
-            for content in audio_generator
+            speech.StreamingRecognizeRequest(audio_content=chunk)
+            for chunk in stream
         )
-        responses = client.streaming_recognize(streaming_config, requests)
+        responses = self.client.streaming_recognize(config=self.streaming_config, requests=requests)
+        for response in responses:
+            # Once the transcription has settled, the first result will contain the
+            # is_final result. The other results will be for subsequent portions of
+            # the audio.
+            for result in response.results:
+                print("Finished: {}".format(result.is_final))
+                print("Stability: {}".format(result.stability))
+                alternatives = result.alternatives
+                # The alternatives are ordered from most likely to least.
+                for alternative in alternatives:
+                    print("Confidence: {}".format(alternative.confidence))
+                    print(u"Transcript: {}".format(alternative.transcript))
         return
 
     def transcribe_file_request(self, data):
