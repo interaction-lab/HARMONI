@@ -122,7 +122,7 @@ class HarmoniActionClient(object):
 
         self.result_cb_fnc = result_cb_fnc
         self.feedback_cb_fnc = feedback_cb_fnc
-        rospy.loginfo("action_client {action_type} server connected.")
+        rospy.loginfo(f"action_client {action_type} server connected.")
         return
 
     def wait_for_server(self, timeout=rospy.Duration()):
