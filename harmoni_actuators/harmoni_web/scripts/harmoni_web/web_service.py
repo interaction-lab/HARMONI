@@ -75,7 +75,7 @@ class WebService(HarmoniServiceManager):
                 self.send_request(data)
                 rospy.sleep(0.2)
             while not rospy.is_shutdown() and not self.result_msg:
-                rospy.loginfo("Waiting for user")
+                rospy.logdebug("Waiting for user")
                 rospy.sleep(0.2)
             rospy.loginfo(
                 f"Message Recieved {self.result_msg}"
