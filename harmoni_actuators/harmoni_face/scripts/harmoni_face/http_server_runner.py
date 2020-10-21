@@ -43,7 +43,6 @@ if __name__ == "__main__":
         port = args[PORT_IDX]
         command += ["-p", port]
 
-
     p = subprocess.Popen(command)
     atexit.register(p.terminate)
 

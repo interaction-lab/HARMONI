@@ -33,12 +33,14 @@ class STTGoogleService(HarmoniServiceManager):
         self.credential_path = param["credential_path"]
         self.subscriber_id = param["subscriber_id"]
         self.service_id = hf.get_child_id(self.name)
+
         """ Setup the google request """
         self.setup_google()
+
         """Setup the google service as server """
-        self.state = State.INIT
         self.response_text = ""
         self.data = b""
+
         """Setup publishers and subscribers"""
         rospy.Subscriber(
             SensorNameSpace.microphone.value + self.subscriber_id,
@@ -68,7 +70,7 @@ class STTGoogleService(HarmoniServiceManager):
             encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
             sample_rate_hertz=self.sample_rate,
             language_code=self.language,
-            audio_channel_count= self.audio_channel,
+            audio_channel_count=self.audio_channel,
         )
         config = speech.RecognitionConfig(
             encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
@@ -82,8 +84,9 @@ class STTGoogleService(HarmoniServiceManager):
 
     def callback(self, data):
         """ Callback function subscribing to the microphone topic"""
-        # data = np.fromstring(data.data, np.uint8)
-        self.data = self.data.join(data)
+        data = np.fromstring(data.data, np.uint8)
+        # self.data = self.data.join(data)
+        # self.data = data.data
         if self.state == State.START:
             self.transcribe_stream_request(self.data)
         else:
@@ -92,12 +95,16 @@ class STTGoogleService(HarmoniServiceManager):
     def transcribe_stream_request(self, data):
         # TODO: streaming transcription https://github.com/googleapis/python-speech/blob/master/samples/microphone/transcribe_streaming_infinite.py
         stream = data
+        rospy.loginfo("Transcribing Stream")
         requests = (
-            speech.StreamingRecognizeRequest(audio_content=chunk)
-            for chunk in stream
+            speech.StreamingRecognizeRequest(audio_content=chunk) for chunk in stream
         )
-        responses = self.client.streaming_recognize(config=self.streaming_config, requests=requests)
+        responses = self.client.streaming_recognize(
+            config=self.streaming_config, requests=requests
+        )
+        rospy.loginfo(f"Responses: {responses}")
         for response in responses:
+            rospy.loginfo(f"Response items: {response}")
             # Once the transcription has settled, the first result will contain the
             # is_final result. The other results will be for subsequent portions of
             # the audio.
@@ -108,7 +115,7 @@ class STTGoogleService(HarmoniServiceManager):
                 # The alternatives are ordered from most likely to least.
                 for alternative in alternatives:
                     print("Confidence: {}".format(alternative.confidence))
-                    print(u"Transcript: {}".format(alternative.transcript))
+                    print("Transcript: {}".format(alternative.transcript))
         return
 
     def transcribe_file_request(self, data):
@@ -116,7 +123,9 @@ class STTGoogleService(HarmoniServiceManager):
         audio = {"content": data}
         try:
             rospy.loginfo("Request to google")
-            operation = self.client.long_running_recognize(config=self.config, audio=audio)
+            operation = self.client.long_running_recognize(
+                config=self.config, audio=audio
+            )
             rospy.loginfo("Waiting for the operation to complete.")
             self.state = State.PAUSE
             response = operation.result()
@@ -142,14 +151,39 @@ class STTGoogleService(HarmoniServiceManager):
         return
 
     def request(self, input_data):
+        self.data = self.data.join(input_data)
         rospy.loginfo("Start the %s request" % self.name)
         self.state = State.START
+        self.transcribe_stream_request(self.data)
         return
 
     def wav_to_data(self, path):
         with io.open(path, "rb") as f:
             content = f.read()
         return content
+
+    def start(self, rate=""):
+        rospy.loginfo("Start the %s service" % self.name)
+        if self.state == State.INIT:
+            self.state = State.START
+            # self.transcribe_stream()  # Start the microphone service at the INIT
+        else:
+            self.state = State.START
+        return
+
+    def stop(self):
+        rospy.loginfo("Stop the %s service" % self.name)
+        try:
+            # self.close_stream()
+            self.state = State.SUCCESS
+        except Exception:
+            self.state = State.FAILED
+        return
+
+    def pause(self):
+        rospy.loginfo("Pause the %s service" % self.name)
+        self.state = State.SUCCESS
+        return
 
 
 def main():
@@ -162,7 +196,9 @@ def main():
         rospy.init_node(service_name)
         param = rospy.get_param(name + "/" + test_id + "_param/")
         if not hf.check_if_id_exist(service_name, test_id):
-            rospy.logerr("ERROR: Remember to add your configuration ID also in the harmoni_core config file")
+            rospy.logerr(
+                "ERROR: Remember to add your configuration ID also in the harmoni_core config file"
+            )
             return
         service = hf.set_service_server(service_name, test_id)
         s = STTGoogleService(service, param)

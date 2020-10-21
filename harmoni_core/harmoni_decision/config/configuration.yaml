@@ -6,8 +6,8 @@ harmoni:
   stt: ["default"]
   #face_detect: ["default"]
 hardware:
-  #microphone: ["default"]
+  microphone: ["default"]
   #camera: ["default"]
   face: ["default"]
   speaker: ["default"]
-  #gesture: ["default"]
+  # gesture: ["default"]

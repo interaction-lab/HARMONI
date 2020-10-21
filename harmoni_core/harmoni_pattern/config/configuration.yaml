@@ -1,9 +1,14 @@
 dialogue:
-    default_param:
-        trigger_intent: "Hey"
-        pattern_scripting: /root/harmoni_catkin_ws/src/HARMONI/harmoni_pattern/pattern_scripting/dialogue.json
+  default_param:
+    trigger_intent: "Hey"
+    pattern_scripting: /root/harmoni_catkin_ws/src/HARMONI/harmoni_pattern/pattern_scripting/dialogue.json
 
 multiple-choice:
-    default_param:
-        trigger_intent: "Hey"
-        pattern_scripting: /root/harmoni_catkin_ws/src/HARMONI/harmoni_pattern/pattern_scripting/multiple-choice.json
+  default_param:
+    trigger_intent: "Hey"
+    pattern_scripting: /root/harmoni_catkin_ws/src/HARMONI/harmoni_pattern/pattern_scripting/multiple-choice.json
+
+type_dialogue:
+  default_param:
+    trigger_intent: "Hey"
+    pattern_scripting: /root/harmoni_catkin_ws/src/HARMONI/harmoni_pattern/pattern_scripting/type_dialogue.json

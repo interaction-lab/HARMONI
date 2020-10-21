@@ -39,6 +39,7 @@ class SpeechToTextService(HarmoniServiceManager):
         self.w2l_bin = param["w2l_bin"]
         self.service_id = hf.get_child_id(self.name)
         self.w2l_process = None
+
         """Setup publishers and subscribers"""
         rospy.Subscriber(
             SensorNameSpace.microphone.value + self.subscriber_id,
@@ -54,12 +55,14 @@ class SpeechToTextService(HarmoniServiceManager):
         return
 
     def pause_back(self, data):
+        # Sleeps when data is being published to the speaker
         rospy.loginfo(f"pausing for data: {len(data.data)}")
         self.pause()
         rospy.sleep(int(len(data.data) / 30000))  # TODO calibrate this guess
         self.state = State.START
 
     def start(self, rate=""):
+        # Startup stream if not started
         rospy.loginfo("Start the %s service" % self.name)
         if self.state == State.INIT:
             self.state = State.START
@@ -71,7 +74,7 @@ class SpeechToTextService(HarmoniServiceManager):
     def stop(self):
         rospy.loginfo("Stop the %s service" % self.name)
         try:
-            self.close_stream()
+            # self.close_stream()
             self.state = State.SUCCESS
         except Exception:
             self.state = State.FAILED
@@ -83,6 +86,7 @@ class SpeechToTextService(HarmoniServiceManager):
         return
 
     def callback(self, data):
+        # Sends recieved data to w2l process
         # rospy.loginfo("The state is %s" % self.state)
         if self.state == State.START:
             if not self.w2l_process:
@@ -95,6 +99,7 @@ class SpeechToTextService(HarmoniServiceManager):
         return
 
     def transcribe_stream(self):
+        # Setup W2L Process and read results as available
         rospy.loginfo("Openning up W2L process")
         self.w2l_process = Popen(
             ["{} --input_files_base_path={}".format(self.w2l_bin, self.model_path)],
