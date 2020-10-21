@@ -22,7 +22,7 @@
                     "face_mouth_default": {
                         "action_goal": "DO",
                         "resource_type": "actuator",
-                        "wait_for": "v"
+                        "wait_for": ""
                     }
                 },
                 {
@@ -32,7 +32,15 @@
                         "wait_for": "new"
                     }
                 }
-            ]
+            ],
+            {
+                "web_default": {
+                    "action_goal": "DO",
+                    "resource_type": "actuator",
+                    "wait_for": "new",
+                    "trigger": "[{'component_id':'container_2', 'set_content':''}]"
+                }
+            }
         ]
     }
 ]
