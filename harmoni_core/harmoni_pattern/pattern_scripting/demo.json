@@ -7,7 +7,7 @@
                     "action_goal": "REQUEST",
                     "resource_type": "service",
                     "wait_for": "new",
-                    "trigger": "\"hey\""
+                    "trigger": "hey"
                 }
             },
             {
@@ -19,14 +19,14 @@
             },
             [
                 {
-                    "face_mouth_default": {
+                    "speaker_default": {
                         "action_goal": "DO",
                         "resource_type": "actuator",
                         "wait_for": ""
                     }
                 },
                 {
-                    "speaker_default": {
+                    "face_mouth_default": {
                         "action_goal": "DO",
                         "resource_type": "actuator",
                         "wait_for": "new"
@@ -35,12 +35,42 @@
             ],
             {
                 "web_default": {
-                    "action_goal": "DO",
-                    "resource_type": "actuator",
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
                     "wait_for": "new",
                     "trigger": "[{'component_id':'container_2', 'set_content':''}]"
                 }
-            }
+            },
+            {
+                "bot_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": "new"
+                }
+            },
+            {
+                "tts_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": "new"
+                }
+            },
+            [
+                {
+                    "speaker_default": {
+                        "action_goal": "DO",
+                        "resource_type": "actuator",
+                        "wait_for": "new"
+                    }
+                },
+                {
+                    "face_mouth_default": {
+                        "action_goal": "DO",
+                        "resource_type": "actuator",
+                        "wait_for": "new"
+                    }
+                }
+            ]
         ]
     }
 ]
