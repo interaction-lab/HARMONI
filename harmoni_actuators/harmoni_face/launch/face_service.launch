@@ -15,7 +15,9 @@
 			<param name="name_face" value="face"/>
 			<node pkg="harmoni_face" type="http_server_runner.py" name="face_http_server" output="screen" args="$(arg web_directory_path) $(arg port)" />
 			<node pkg="harmoni_face" type="face_service.py" name="harmoni_face_$(arg test_id)" output="screen"/>
-			<include ns="bridge_face" file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
+			<include ns="bridge_face" file="$(find rosbridge_server)/launch/rosbridge_websocket.launch">
+				<arg name="port" value="9000"/>
+			</include>
   	</group>
 
 

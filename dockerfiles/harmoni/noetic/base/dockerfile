@@ -58,7 +58,7 @@ RUN \
     # AWS
     boto3 \
     awscli \
-    google-cloud-speech \
+    google-cloud-speech==1.3.2 \
     dialogflow \
     google-api-python-client \
     && rm -rf /var/lib/apt/lists/* 

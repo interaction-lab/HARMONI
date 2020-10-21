@@ -22,7 +22,8 @@ alias rlfacedetect="roslaunch harmoni_face_detect face_detect_service.launch"
 alias rlhardwareservices="roslaunch harmoni_decision launcher.launch service:='hardware'"
 alias rlharmoniservices="roslaunch harmoni_decision launcher.launch service:='harmoni'"
 alias rlmultiplechoice="roslaunch harmoni_decision harmoni_decision.launch test:=true"
-alias rldemo="roslaunch harmoni_decision harmoni_decision.launch test:=true pattern_name:='demo'"
+alias rldemo="roslaunch harmoni_pattern sequence_pattern.launch pattern_name:='demo' test:=true use_pattern_dialogue:=true use_pattern_multiple_choice:=false"
+#alias rldemo="roslaunch harmoni_decision harmoni_decision.launch pattern_name:='demo' test:=true"
 alias rldialog="roslaunch harmoni_pattern sequence_pattern.launch pattern_name:='dialogue' test:=true use_pattern_dialogue:=true use_pattern_multiple_choice:=false"
 
 

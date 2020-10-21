@@ -1,13 +1,13 @@
 version: "3.7"
 
 services:
-  harmoni_core:
-    container_name: harmoni_core
+  harmoni_full:
+    container_name: harmoni_full
     build:
       context: .
-      dockerfile: dockerfiles/harmoni/$ROS_DISTRO/core/dockerfile
+      dockerfile: dockerfiles/harmoni/$ROS_DISTRO/full/dockerfile
       network: host
-    image: harmoniteam/harmoni:$ROS_DISTRO-core
+    image: harmoniteam/harmoni:$ROS_DISTRO-full
     init: true
     environment:
       DISPLAY: $DISPLAY
@@ -15,13 +15,13 @@ services:
       ROS_DISTRO: $ROS_DISTRO
       ROS_MASTER_URI: http://172.18.3.4:11311
       IS_DOCKER_ENV: "true"
-      ROS_HOSTNAME: harmoni_core
+      ROS_HOSTNAME: harmoni_full
       CATKIN_WS: harmoni_catkin_ws
     privileged: true
     networks:
       ros_net:
         ipv4_address: 172.18.3.4
-    hostname: harmoni_core
+    hostname: harmoni_full
     ports:
       - "11312:11312"
       - "33691:33691"
@@ -34,6 +34,7 @@ services:
       - ../HARMONI/:/root/local_mount/HARMONI/
       # Configuration
       - ~/.aws:/root/.aws/
+      - ~/.gcp/private-keys.json:/root/private-keys.json
       # Other
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /etc/timezone:/etc/timezone:ro
@@ -58,7 +59,7 @@ services:
       ROS_HOSTNAME: harmoni_w2l
       ROS_MASTER_URI: http://172.18.3.4:11311
     depends_on:
-      - "harmoni_core"
+      - "harmoni_full"
     privileged: true
     # network_mode: host
     networks:
@@ -74,6 +75,7 @@ services:
       - ../HARMONI/:/root/local_mount/HARMONI/
       # Configuration
       - ~/.aws:/root/.aws/
+      - ~/.gcp/private-keys.json:/root/private-keys.json
       # Other
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /etc/timezone:/etc/timezone:ro
@@ -103,7 +105,7 @@ services:
         ipv4_address: 172.18.3.2
     hostname: harmoni_face_detector
     depends_on:
-      - "harmoni_core"
+      - "harmoni_full"
       - "harmoni_hardware"
     devices:
       - /dev/dri:/dev/dri
@@ -112,6 +114,7 @@ services:
       - ../HARMONI/:/root/local_mount/HARMONI/
       # Configuration
       - ~/.aws:/root/.aws/
+      - ~/.gcp/private-keys.json:/root/private-keys.json
       # Other
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /etc/timezone:/etc/timezone:ro
@@ -123,9 +126,9 @@ services:
     container_name: harmoni_hardware
     build:
       context: .
-      dockerfile: dockerfiles/harmoni/$ROS_DISTRO/core/dockerfile
+      dockerfile: dockerfiles/harmoni/$ROS_DISTRO/full/dockerfile
       network: host
-    image: harmoniteam/harmoni:$ROS_DISTRO-core
+    image: harmoniteam/harmoni:$ROS_DISTRO-full
     init: true
     environment:
       DISPLAY: $DISPLAY
@@ -141,7 +144,7 @@ services:
         ipv4_address: 172.18.3.5
     hostname: ros_hardware
     depends_on:
-      - "harmoni_core"
+      - "harmoni_full"
     devices:
       - /dev/dri:/dev/dri
       - /dev/snd:/dev/snd
@@ -150,6 +153,7 @@ services:
       - ../HARMONI/:/root/local_mount/HARMONI/
       # Configuration
       - ~/.aws:/root/.aws/
+      - ~/.gcp/private-keys.json:/root/private-keys.json
       # Other
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /etc/timezone:/etc/timezone:ro

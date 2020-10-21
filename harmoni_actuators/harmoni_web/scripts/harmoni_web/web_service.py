@@ -10,7 +10,7 @@ from harmoni_common_lib.service_manager import HarmoniServiceManager
 import harmoni_common_lib.helper_functions as hf
 
 # Specific Imports
-from harmoni_common_lib.constants import ActuatorNameSpace
+from harmoni_common_lib.constants import ActuatorNameSpace, DetectorNameSpace
 from std_msgs.msg import String
 import boto3
 import json
@@ -43,8 +43,12 @@ class WebService(HarmoniServiceManager):
             String,
             queue_size=1,
         )
+        self.text_pub = rospy.Publisher(
+            DetectorNameSpace.stt.value + self.service_id, String, queue_size=10
+        )
         """ Setup the web request """
         self.setup_web()
+        self.result = None
         """Setup the web service as server """
         self.state = State.INIT
         return
@@ -56,6 +60,32 @@ class WebService(HarmoniServiceManager):
             ActuatorNameSpace.web.value + self.service_id + "/is_connected"
         )
         rospy.loginfo("Done, web is connected to ROS websocket")
+        return
+
+    def request(self, data):
+        """ Do the display view"""
+        rospy.loginfo("Start the %s do" % self.name)
+        self.state = State.REQUEST
+        self.actuation_completed = False
+        self.result_msg = None
+        data_array = self._get_web_data(data)
+        try:
+            rospy.sleep(1)
+            for data in data_array:
+                self.send_request(data)
+                rospy.sleep(0.2)
+            while not rospy.is_shutdown() and not self.result_msg:
+                rospy.logdebug("Waiting for user")
+                rospy.sleep(0.2)
+            rospy.loginfo(
+                f"Message Recieved {self.result_msg}"
+            )  # "\"My name is chris\""
+            self.state = State.SUCCESS
+            self.actuation_completed = True
+            self.response_received = True
+        except Exception:
+            self.state = State.FAILED
+            self.actuation_completed = True
         return
 
     def do(self, data):
@@ -115,6 +145,9 @@ class WebService(HarmoniServiceManager):
     def _event_click_callback(self, event):
         """Callback for subscription to the web page"""
         rospy.loginfo("Received an event from the webpage")
+        print(type(event.data))
+        # self.result_msg = str(event)[2:-2]
+        self.result_msg = event.data
         return
 
 
@@ -128,7 +161,9 @@ def main():
         rospy.init_node(service_name)
         param = rospy.get_param(name + "/" + test_id + "_param/")
         if not hf.check_if_id_exist(service_name, test_id):
-            rospy.logerr("ERROR: Remember to add your configuration ID also in the harmoni_core config file")
+            rospy.logerr(
+                "ERROR: Remember to add your configuration ID also in the harmoni_core config file"
+            )
             return
         service = hf.set_service_server(service_name, test_id)
         s = WebService(service, param)
