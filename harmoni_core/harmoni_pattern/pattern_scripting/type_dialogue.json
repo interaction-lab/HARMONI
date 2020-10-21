@@ -7,7 +7,7 @@
                     "action_goal": "REQUEST",
                     "resource_type": "service",
                     "wait_for": "new",
-                    "trigger": "\"hey\""
+                    "trigger": "hey"
                 }
             },
             {
@@ -19,28 +19,63 @@
             },
             [
                 {
+                    "speaker_default": {
+                        "action_goal": "DO",
+                        "resource_type": "actuator",
+                        "wait_for": "v"
+                    }
+                },
+                {
                     "face_mouth_default": {
                         "action_goal": "DO",
                         "resource_type": "actuator",
-                        "wait_for": ""
+                        "wait_for": "new"
                     }
-                },
+                }
+            ]
+        ]
+    },
+    {
+        "set": "loop",
+        "steps": [
+            {
+                "web_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": "new",
+                    "trigger": "[{'component_id':'container_2', 'set_content':''}]"
+                }
+            },
+            {
+                "bot_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": "new"
+                }
+            },
+            {
+                "tts_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": "new"
+                }
+            },
+            [
                 {
                     "speaker_default": {
                         "action_goal": "DO",
                         "resource_type": "actuator",
                         "wait_for": "new"
                     }
+                },
+                {
+                    "face_mouth_default": {
+                        "action_goal": "DO",
+                        "resource_type": "actuator",
+                        "wait_for": "new"
+                    }
                 }
-            ],
-            {
-                "web_default": {
-                    "action_goal": "DO",
-                    "resource_type": "actuator",
-                    "wait_for": "new",
-                    "trigger": "[{'component_id':'container_2', 'set_content':''}]"
-                }
-            }
+            ]
         ]
     }
 ]
