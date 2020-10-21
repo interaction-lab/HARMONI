@@ -10,6 +10,7 @@ services:
     image: harmoniteam/harmoni:kinetic-full
     init: true
     environment:
+      DISPLAY: $DISPLAY
       QT_GRAPHICSSYSTEM: native
       ROS_DISTRO: kinetic
       ROS_MASTER_URI: http://172.18.3.4:11311
