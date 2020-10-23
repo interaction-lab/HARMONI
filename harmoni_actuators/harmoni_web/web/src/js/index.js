@@ -1,4 +1,4 @@
-var page = "pageContent2";
+var page = "pageContent";
 //var view = "container_2";
 
 $(document).ready(function () {
@@ -64,13 +64,17 @@ function setValueButton(clicked_button, value_item){
 
 function clickListener(clicked_component) {
     var selected_item = clicked_component.id;
-    $("#"+selected_item).css("opacity", "0.5");
+    var selected_item_id = selected_item
+    //$("#"+selected_item).css("opacity", "0.5");
     if (selected_item.includes("img")){
         var selected_item = clicked_component.value;
+        var selected_item_id = clicked_component.id;
     }
     console.log("Clicked")
-    $("#"+selected_item).css("opacity", "1");
-    user_response_publisher.publish({ data: JSON.stringify(clicked_component.getAttribute("value")) })
+    //$("#"+selected_item).css("opacity", "1");
+    var body =  {component_id:selected_item_id , set_view:clicked_component.getAttribute("value")}
+    console.log("The response is", body)
+    user_response_publisher.publish({data: JSON.stringify(body)})
     // Send the event clicked to the ROS package
 }
 
@@ -100,7 +104,7 @@ function createComponent(component, content, id) {
             var html = "<div class ='container' id=" + id + "></div>";
             break;
         case "click_img":
-            var html = "<a id=" + id + "><img src=" + content + "></a>";
+            var html = "<a id=" + id +"><img  src=" + content + "></a>";
             break;
         case "img":
             var html = "<img src=" + content + " id=" + id + ">";

@@ -64,11 +64,13 @@ class WebService(HarmoniServiceManager):
 
     def request(self, data):
         """ Do the display view"""
-        rospy.loginfo("Start the %s do" % self.name)
+        rospy.loginfo("Start the %s request" % self.name)
         self.state = State.REQUEST
         self.actuation_completed = False
         self.result_msg = None
-        data_array = self._get_web_data(data)
+        data_array = []
+        if data!="":
+            data_array = self._get_web_data(data)
         try:
             rospy.sleep(1)
             for data in data_array:
@@ -78,7 +80,7 @@ class WebService(HarmoniServiceManager):
                 rospy.logdebug("Waiting for user")
                 rospy.sleep(0.2)
             rospy.loginfo(
-                f"Message Recieved {self.result_msg}"
+                f"Message Received {self.result_msg}"
             )  # "\"My name is chris\""
             self.state = State.SUCCESS
             self.actuation_completed = True
@@ -107,8 +109,9 @@ class WebService(HarmoniServiceManager):
         return
 
     def _get_web_data(self, data):
-        data = ast.literal_eval(data)
         web_array = []
+        data = ast.literal_eval(data)
+        rospy.loginfo("Data received are"+str(data))
         if not isinstance(data, list):
             if "behavior_data" in data.keys():
                 behavior_data = ast.literal_eval(data["behavior_data"])
@@ -145,7 +148,7 @@ class WebService(HarmoniServiceManager):
     def _event_click_callback(self, event):
         """Callback for subscription to the web page"""
         rospy.loginfo("Received an event from the webpage")
-        print(type(event.data))
+        print(event.data)
         # self.result_msg = str(event)[2:-2]
         self.result_msg = event.data
         return

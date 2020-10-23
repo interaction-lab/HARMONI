@@ -43,7 +43,7 @@
                     "action_goal": "REQUEST",
                     "resource_type": "service",
                     "wait_for": "new",
-                    "trigger": "[{'component_id':'container_2', 'set_content':''}]"
+                    "trigger": "[{'component_id':'type_dialogue_container', 'set_content':''}]"
                 }
             },
             {

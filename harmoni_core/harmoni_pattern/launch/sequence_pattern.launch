@@ -1,9 +1,6 @@
 <!-- This is an example launch file for how a ROS application could use a node -->
 <launch>
-   
-	<arg name="use_pattern_dialogue" default="false"/>
 	<arg name="use_sequential_pattern" default="true"/>
-	<arg name="use_pattern_multiple_choice" default="false"/>
 	<arg name="pattern_name" default="multiple_choice"/>
 	<arg name="test" default="false"/>
 	<arg name="test_input" default="Hey"/>

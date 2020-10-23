@@ -4,7 +4,7 @@
     <arg name="port" default="8082"/>
 	<arg name="use_web" default="true"/>
 	<arg name="test" default="false"/>
-	<arg name="test_input" default="{'component_id':'container_1', 'set_content': ''}"/>
+	<arg name="test_input" default="{'component_id':'test_container', 'set_content': ''}"/>
 	<arg name="test_id" default="default"/>
   	<group if="$(arg use_web)">
 			<rosparam file="$(find harmoni_web)/config/configuration.yaml"/>

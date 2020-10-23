@@ -33,7 +33,7 @@ class SequentialPattern(HarmoniServiceManager):
         self.end_pattern = False
         self.scripted_services = set()  # services used in this script
         self.script_set_index = 0
-
+        self.name = name
         self.scripted_services = self._get_services(script)
         self._setup_clients()
 
@@ -86,7 +86,7 @@ class SequentialPattern(HarmoniServiceManager):
         return service_names
 
     def _result_callback(self, result):
-        """ Recieve and store result with timestamp """
+        """ Receive and store result with timestamp """
         rospy.loginfo("The result of the request has been received")
         rospy.loginfo(
             f"The result callback message from {result['service']} was {len(result['message'])} long"
@@ -94,6 +94,7 @@ class SequentialPattern(HarmoniServiceManager):
         self.client_results[result["service"]].append(
             {"time": time(), "data": result["message"]}
         )
+        
         # TODO add handling of errors and continue=False
         return
 
@@ -130,11 +131,43 @@ class SequentialPattern(HarmoniServiceManager):
                     self.script[self.script_set_index]["steps"], looping=True
                 )
             elif self.end_pattern:
-                # for client in self.scripted_services:
+                #for client in self.scripted_services:
                 #    self.stop(client)
                 break
             self.script_set_index += 1
             r.sleep()
+        return
+
+    def request(self, data):
+        """Send goal request to appropriate child"""
+        rospy.loginfo("Start the %s request" % self.name)
+        self.state = State.REQUEST
+        r = rospy.Rate(1)
+        while self.script_set_index < len(self.script) and not rospy.is_shutdown():
+            if self.script[self.script_set_index]["set"] == "setup":
+                self.setup(self.script[self.script_set_index]["steps"])
+
+            elif self.script[self.script_set_index]["set"] == "sequence":
+                self.count = -1
+                self.do_sequence(self.script[self.script_set_index]["steps"])
+
+            elif self.script[self.script_set_index]["set"] == "loop":
+                self.count = -1
+                self.do_sequence(
+                    self.script[self.script_set_index]["steps"], looping=True
+                )
+            elif self.end_pattern:
+                ##TODO
+                break
+            self.script_set_index += 1
+            r.sleep()
+        rospy.loginfo("_________SEQUENCE PATTERN END__________")
+        self.response_received = True
+        self.actuation_completed = True
+        prepared = [dict(zip(cl, self.client_results[cl])) for cl in self.client_results]
+        j = json.dumps(prepared)
+        self.result_msg = str(j)
+        self.state = State.SUCCESS
         return
 
     def stop(self, service):
@@ -307,6 +340,7 @@ class SequentialPattern(HarmoniServiceManager):
         rospy.loginfo(
             f"Recieved result message length ({len(result['data'])}) from service {service}"
         )
+        self.client_results[service].appendleft({"time": result["time"], "data": result["data"]})
         # self._result_callback({"do_action": True, "message": result["data"]})
         return result["data"]
 
