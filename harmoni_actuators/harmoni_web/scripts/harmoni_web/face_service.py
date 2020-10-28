@@ -381,31 +381,26 @@ class MouthService(HarmoniServiceManager):
 
 
 def main():
-    service_name = ActuatorNameSpace.face.name
+    service_name = ActuatorNameSpace.web.name
     name = rospy.get_param("/name_" + service_name + "/")
     test = rospy.get_param("/test_" + service_name + "/")
     test_input = rospy.get_param("/test_input_" + service_name + "/")
     test_id = rospy.get_param("/test_id_" + service_name + "/")
     try:
-        rospy.init_node(service_name)
+        rospy.init_node(service_name+"_face")
         param_eyes = rospy.get_param(name + "/" + test_id + "_param/eyes/")
         param_mouth = rospy.get_param(name + "/" + test_id + "_param/mouth/")
-        if not hf.check_if_id_exist(service_name, test_id):
-            rospy.logerr(
-                "ERROR: Remember to add your configuration ID also in the harmoni_core config file"
-            )
-            return
         service = hf.set_service_server(service_name, test_id)
-        s_eyes = EyesService(service + "_eyes_" + test_id, param_eyes)
-        s_mouth = MouthService(service + "_mouth_" + test_id, param_mouth)
+        s_eyes = EyesService(service + "_face_eyes_" + test_id, param_eyes)
+        s_mouth = MouthService(service + "_face_mouth_" + test_id, param_mouth)
         service_server_eyes = HarmoniServiceServer(
-            name=service + "_eyes_" + test_id, service_manager=s_eyes
+            name=service + "_face_eyes_" + test_id, service_manager=s_eyes
         )
         service_server_mouth = HarmoniServiceServer(
-            name=service + "_mouth_" + test_id, service_manager=s_mouth
+            name=service + "_face_mouth_" + test_id, service_manager=s_mouth
         )
         if test:
-            rospy.loginfo("Testing the %s" % (service + "_mouth"))
+            rospy.loginfo("Testing the %s" % (service + "_face_mouth"))
             rospy.sleep(1)
             s_mouth.do(str({"behavior_data": str(test_input)}))
         else:

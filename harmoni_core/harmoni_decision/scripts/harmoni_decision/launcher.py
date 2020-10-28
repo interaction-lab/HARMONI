@@ -31,20 +31,6 @@ class Launcher:
         process.stop()
         return
 
-    def launch_router_ros_api(self):
-        """Launch routers """
-        repo = "harmoni"
-        routers = hf.get_routers()
-        processes = []
-        for rout in routers:
-            package = rout
-            executable = rout + "_router"
-            p = self._launch_with_subprocess(repo, package)
-            processes.append(p)
-        for cp in processes:
-            cp.wait()
-        return
-
     def _launch_with_subprocess(self, repo, launch):
         """Launch with subprocess """
         p = subprocess.Popen(
@@ -62,16 +48,6 @@ class Launcher:
         rospy.loginfo("checking: %s is not a detector" % service_name)
         return False
 
-    def _get_router_pkg(self):
-        """Get routers """
-        repo = "harmoni"
-        routers = hf.get_routers()
-        pkg_array = []
-        exec_array = []
-        for router in routers:
-            pkg_array.append(router)
-            exec_array.append(router + "_router")
-        return (repo, pkg_array, exec_array)
 
     def _get_service_pkg(self, repo):
         """Get services """
@@ -112,17 +88,6 @@ class Launcher:
         file_name = repo + "_" + name + ".launch"
         tree.write(path[0] + "launch/" + file_name)
         rospy.loginfo(f"Created the launch file {file_name}")
-        return
-
-    def launch_router(self, launch):
-        """Create a launch file of routers and then launch the routers with said launch file """
-        name = "router"
-        [repo, pkg, exb] = self._get_router_pkg()
-        rospy.loginfo(f"Launching routers: {pkg} from repo: {repo}")
-        self._create_xml_launcher(name, repo, pkg, exb)
-        if launch:
-            self._launch_with_subprocess(repo, name)
-        rospy.loginfo(f"Done spawning routers: {pkg} from repo: {repo}")
         return
 
     def launch_services(self, repo, launch):

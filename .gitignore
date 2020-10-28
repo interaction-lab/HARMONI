@@ -116,4 +116,6 @@ dockerfiles/config/private-keys.json
 # temporary generated files
 harmoni_core/harmoni_decision/launch/hardware_service.launch
 harmoni_core/harmoni_decision/launch/harmoni_service.launch
+**/harmoni_core/harmoni_decision/launch/hardware_service.launch
+**/harmoni_core/harmoni_decision/launch/harmoni_service.launch
 harmoni_dialogues/harmoni_bot/config/configuration.yaml

@@ -149,8 +149,9 @@ class WebService(HarmoniServiceManager):
         """Callback for subscription to the web page"""
         rospy.loginfo("Received an event from the webpage")
         print(event.data)
+        data = ast.literal_eval(event.data)
         # self.result_msg = str(event)[2:-2]
-        self.result_msg = event.data
+        self.result_msg = data["set_view"]
         return
 
 
@@ -169,8 +170,8 @@ def main():
             )
             return
         service = hf.set_service_server(service_name, test_id)
-        s = WebService(service, param)
-        service_server = HarmoniServiceServer(name=service, service_manager=s)
+        s = WebService(service + "_page_" + test_id, param)
+        service_server = HarmoniServiceServer(name=service + "_page_" + test_id, service_manager=s)
         if test:
             rospy.loginfo("Testing the %s" % (service))
             rospy.sleep(2)

@@ -6,4 +6,4 @@ roscore \
   & sleep 3 \
 && roslaunch harmoni_decision launcher.launch service:='hardware' \
   & sleep 3 \
-&& roslaunch harmoni_pattern sequence_pattern.launch pattern_name:='demo' test:=true use_pattern_dialogue:=true use_pattern_multiple_choice:=false
+&& roslaunch harmoni_pattern sequence_pattern.launch pattern_name:='demo' test:=true

@@ -2,4 +2,15 @@ web:
   default_param:
     user_id: "user_id"
     timer_interval: 0.01 #s
+    min_duration_viseme: 0.05 #s
+    speed_viseme: 10 #ms
+    timer_interval: 0.01 #s
+    gaze_speed: 10 #ms
+    mouth:
+      min_duration_viseme: 0.05 #s
+      speed_viseme: 10 #ms
+      timer_interval: 0.01 #s
+    eyes:
+      gaze_speed: 10 #ms
+
   

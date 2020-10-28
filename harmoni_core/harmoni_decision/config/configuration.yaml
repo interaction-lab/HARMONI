@@ -8,6 +8,5 @@ harmoni:
 hardware:
   microphone: ["default"]
   #camera: ["default"]
-  face: ["default"]
   speaker: ["default"]
   # gesture: ["default"]

@@ -14,10 +14,6 @@ from harmoni_common_lib.constants import (
 PATH_CONFIG = "HARMONI/harmoni_core/harmoni_decision/config/configuration.yaml"
 
 
-def get_routers():
-    router_names = [enum.value for enum in list(Router)]
-    return router_names
-
 def get_child(child_name):
     """Get children name without ids from config file"""
     abs_path = os.path.abspath(__file__)
@@ -118,12 +114,15 @@ def set_service_server(service_name, input_id):
     name = ""
     if _check_if_resources(service_name):
         service_server = get_child(service_name) #child
+        print(service_server)
     else:
         list_service_names = get_child_list(service_name)
         for service in list_service_names:
             service_id = get_child_id(service)
             if service_id == input_id:
                 service_server = service #child_id
+            else:
+                service_server = ""
     return (service_server)
 
 
@@ -148,7 +147,7 @@ def check_if_sensor(service_name):
 def _check_if_resources(service):
     """Check if the service contains many resources """
     has_resources = False
-    if service == "face":
+    if service == "web":
         has_resources = True
     return has_resources
 
