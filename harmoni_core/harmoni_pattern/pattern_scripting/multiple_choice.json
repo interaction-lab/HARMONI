@@ -8,7 +8,7 @@
                     "action_goal": "REQUEST",
                     "resource_type": "service",
                     "wait_for": "new",
-                    "trigger": "Background image"
+                    "trigger":"This is a sunny day"
                 }
             },
             [
@@ -20,7 +20,7 @@
                     }
                 },
                 {
-                    "face_mouth_default": {
+                    "web_face_mouth_default": {
                         "action_goal": "DO",
                         "resource_type": "actuator",
                         "wait_for": "new"
@@ -28,7 +28,7 @@
                 }
             ],
             {
-                "web_default": {
+                "web_page_default": {
                     "action_goal": "REQUEST",
                     "resource_type": "actuator",
                     "wait_for": "new",

@@ -11,7 +11,7 @@ import harmoni_common_lib.helper_functions as hf
 
 # Specific Imports
 from harmoni_common_lib.constants import ActuatorNameSpace
-from harmoni_face.msg import FaceRequest
+from harmoni_web.msg import FaceRequest
 from threading import Timer
 import json
 import ast

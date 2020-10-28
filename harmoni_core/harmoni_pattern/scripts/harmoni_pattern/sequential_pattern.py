@@ -141,6 +141,7 @@ class SequentialPattern(HarmoniServiceManager):
     def request(self, data):
         """Send goal request to appropriate child"""
         rospy.loginfo("Start the %s request" % self.name)
+        rospy.loginfo(data)
         self.state = State.REQUEST
         r = rospy.Rate(1)
         while self.script_set_index < len(self.script) and not rospy.is_shutdown():

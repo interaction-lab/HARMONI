@@ -39,8 +39,8 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
         self.choice_index = 16
         self.sequence_scenes = []
         self.scripted_services = ["multiple_choice"] #get the json names
-        self._setup_clients()
         self.setup_scene()
+        self._setup_clients()
         self.state = State.INIT
         
 
@@ -63,15 +63,14 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
         return
 
 
-    def start(self):
-        optional_data = "TRY"
+    def start(self, index):
         self.state = State.START
         for service in self.scripted_services:
             service = "multiple_choice"
-            rospy.loginfo(service)
+            rospy.loginfo(self.sequence_scenes[index]["text"])
             self.service_clients[service].send_goal(
                         action_goal=ActionType.REQUEST,
-                        optional_data=optional_data,
+                        optional_data="CIAO",
                         wait=True,
                     )
             rospy.loginfo(f"Goal sent to {service}")
@@ -91,6 +90,8 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
             if "w" in data:
                 web_result = data["w"]
         if "Target" in web_result:
+            rospy.loginfo(web_result)
+            self.start()
             # send to next
         # TODO add handling of errors and continue=False
         return
@@ -174,7 +175,7 @@ if __name__ == "__main__":
             service_server = HarmoniServiceServer(name=pattern_name+"_decision", service_manager=bc)
             rospy.loginfo(f"START from the first step of {pattern_name} pattern.")
             if test:
-                bc.start()
+                bc.start(0)
             else:
                 service_server.update_feedback()
             rospy.spin()

@@ -204,7 +204,7 @@ function startFace(
     listener = new ROSLIB.Topic({
         ros: ros,
         name: '/harmoni/actuating/face/default/expressing',
-        messageType: 'harmoni_face/FaceRequest'
+        messageType: 'harmoni_web/FaceRequest'
     });
     listener.subscribe(get_goal);
 

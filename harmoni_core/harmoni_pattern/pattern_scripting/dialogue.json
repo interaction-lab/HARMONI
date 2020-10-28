@@ -45,7 +45,7 @@
                     }
                 },
                 {
-                    "face_mouth_default": {
+                    "web_face_mouth_default": {
                         "action_goal": "DO",
                         "resource_type": "actuator",
                         "wait_for": "new"
@@ -86,7 +86,7 @@
                     }
                 },
                 {
-                    "face_mouth_default": {
+                    "web_face_mouth_default": {
                         "action_goal": "DO",
                         "resource_type": "actuator",
                         "wait_for": "new"
