@@ -7,8 +7,7 @@
                 "tts_default": {
                     "action_goal": "REQUEST",
                     "resource_type": "service",
-                    "wait_for": "new",
-                    "trigger":"This is a sunny day"
+                    "wait_for": "new"
                 }
             },
             [

@@ -19,6 +19,7 @@ from harmoni_common_lib.constants import DetectorNameSpace, ActionType
 from collections import deque
 from time import time
 import threading
+import ast
 
 
 class SequentialPattern(HarmoniServiceManager):
@@ -142,6 +143,7 @@ class SequentialPattern(HarmoniServiceManager):
         """Send goal request to appropriate child"""
         rospy.loginfo("Start the %s request" % self.name)
         rospy.loginfo(data)
+        data = ast.literal_eval(data)
         self.state = State.REQUEST
         r = rospy.Rate(1)
         while self.script_set_index < len(self.script) and not rospy.is_shutdown():
@@ -150,12 +152,12 @@ class SequentialPattern(HarmoniServiceManager):
 
             elif self.script[self.script_set_index]["set"] == "sequence":
                 self.count = -1
-                self.do_sequence(self.script[self.script_set_index]["steps"])
+                self.do_sequence(self.script[self.script_set_index]["steps"],data=data)
 
             elif self.script[self.script_set_index]["set"] == "loop":
                 self.count = -1
                 self.do_sequence(
-                    self.script[self.script_set_index]["steps"], looping=True
+                    self.script[self.script_set_index]["steps"], looping=True, data=data
                 )
             elif self.end_pattern:
                 ##TODO
@@ -217,7 +219,7 @@ class SequentialPattern(HarmoniServiceManager):
 
         return
 
-    def do_sequence(self, sequence, looping=False):
+    def do_sequence(self, sequence, looping=False, data=None):
         """
         Do sequence, Update state and send the goal according to the current state
 
@@ -234,6 +236,7 @@ class SequentialPattern(HarmoniServiceManager):
                 rospy.loginfo(f"with prior result length ({len(result)})")
             else:
                 rospy.loginfo("no prior result")
+                result=data
             result = self.request_step(step, result)
             rospy.loginfo(f"************* End of sequence step: {cnt} *************")
 
@@ -297,6 +300,8 @@ class SequentialPattern(HarmoniServiceManager):
                     optional_data = details["trigger"]
                 elif not optional_data:
                     optional_data = ""
+                elif service in optional_data:
+                    optional_data=optional_data[service]
                 rospy.loginfo(
                     f"Sending goal to {service} optional_data len {len(optional_data)}"
                 )
