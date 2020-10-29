@@ -3,7 +3,37 @@
         "set": "sequence",
         "steps": [
             {
-                "web_page_default": {
+                "web_page_default": { 
+                    "action_goal": "DO",
+                    "resource_type": "actuator",
+                    "wait_for": ""
+                }
+            },
+            {
+                "tts_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": "new"
+                }
+            },
+            [
+                {
+                    "speaker_default": {
+                        "action_goal": "DO",
+                        "resource_type": "actuator",
+                        "wait_for": ""
+                    }
+                },
+                {
+                    "web_face_mouth_default": {
+                        "action_goal": "DO",
+                        "resource_type": "actuator",
+                        "wait_for": "new"
+                    }
+                }
+            ],
+            {
+                "web_page_default": { 
                     "action_goal": "DO",
                     "resource_type": "actuator",
                     "wait_for": ""
