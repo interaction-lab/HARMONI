@@ -30,8 +30,7 @@
                 "web_page_default": {
                     "action_goal": "REQUEST",
                     "resource_type": "actuator",
-                    "wait_for": "new",
-                    "trigger": "[{'component_id':'img_bkg', 'set_content':'http://i3lab.elet.polimi.it/letssayresources/img/1_1_1_Sfondo.png'},{'component_id':'img_1', 'set_content':'http://i3lab.elet.polimi.it/letssayresources/img/1_1_1_Comp.png'},{'component_id':'img_2', 'set_content':'http://i3lab.elet.polimi.it/letssayresources/img/1_1_1_Distr.png'},{'component_id':'img_3', 'set_content':'http://i3lab.elet.polimi.it/letssayresources/img/1_1_1_Target.png'}, {'component_id':'multiple_choice_container', 'set_content':''}]"
+                    "wait_for": "new"
                 }
             }
         ]

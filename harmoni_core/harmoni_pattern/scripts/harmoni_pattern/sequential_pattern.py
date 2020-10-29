@@ -45,6 +45,13 @@ class SequentialPattern(HarmoniServiceManager):
         self.state = State.INIT
         return
 
+    def reset_init(self):
+        self.script_set_index = 0
+        for client in self.scripted_services:
+            self.client_results[client] = deque()
+        self.state = State.INIT
+
+
     def _setup_clients(self):
         """
         Set up all clients that have been configured in the

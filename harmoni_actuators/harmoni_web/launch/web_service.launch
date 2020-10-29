@@ -18,11 +18,6 @@
 		<node pkg="harmoni_web" type="http_server_runner.py" name="web_http_server_$(arg test_id)" output="screen" args="$(arg web_directory_path) $(arg port_web)" />
 		<node pkg="harmoni_web" type="web_service.py" name="harmoni_web_$(arg test_id)" output="screen"/>
 		<include ns="bridge_web" file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" /> 
-		<!--	<arg name="port" value="9000"/>
-		</include>
-			<include  file="$(find rosbridge_server)/launch/rosbridge_websocket.launch">
-			<arg name="port" value="9000"/>
-		</include/>-->
   	</group>
   	<group if="$(arg use_face)">
 			<rosparam file="$(find harmoni_web)/config/configuration.yaml"/>

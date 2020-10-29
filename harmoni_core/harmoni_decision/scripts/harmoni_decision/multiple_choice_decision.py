@@ -64,10 +64,11 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
 
 
     def start(self, index):
+        rospy.loginfo("_____START STEP "+str(index)+" DECISION MANAGER_______")
         self.state = State.START
         for service in self.scripted_services:
             service = "multiple_choice"
-            optional_data = {"tts_default": self.sequence_scenes[index]["text"], "web_page_default":"[{'component_id':"+self.sequence_scenes[index]["background"][0]+", 'set_content':"+self.sequence_scenes[index]["background"][1]+"},{'component_id':"+self.sequence_scenes[index]["choice_1"][0]+", 'set_content':"+self.sequence_scenes[index]["choice_1"][1]+"},{'component_id':"+self.sequence_scenes[index]["choice_2"][0]+", 'set_content':"+self.sequence_scenes[index]["choice_2"][1]+"},{'component_id':"+self.sequence_scenes[index]["choice_3"][0]+", 'set_content':"+self.sequence_scenes[index]["choice_3"][1]+"}, {'component_id':'multiple_choice_container', 'set_content':''}]"}
+            optional_data = {"tts_default": self.sequence_scenes[index]["text"], "web_page_default":"[{'component_id':'"+self.sequence_scenes[index]["background"][0]+"', 'set_content':'"+self.sequence_scenes[index]["background"][1]+"'},{'component_id':'"+self.sequence_scenes[index]["choice_1"][0]+"', 'set_content':'"+self.sequence_scenes[index]["choice_1"][1]+"'},{'component_id':'"+self.sequence_scenes[index]["choice_2"][0]+"', 'set_content':'"+self.sequence_scenes[index]["choice_2"][1]+"'},{'component_id':'"+self.sequence_scenes[index]["choice_3"][0]+"', 'set_content':'"+self.sequence_scenes[index]["choice_3"][1]+"'}, {'component_id':'multiple_choice_container', 'set_content':''}]"}
             #optional_data=self.sequence_scenes[index]["text"]
             self.service_clients[service].send_goal(
                         action_goal=ActionType.REQUEST,
@@ -75,6 +76,16 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
                         wait=True,
                     )
             rospy.loginfo(f"Goal sent to {service}")
+            rospy.loginfo("_____END STEP "+str(index)+" DECISION MANAGER_______")
+        return
+
+    def stop(self, service):
+        """Stop the Behavior Pattern """
+        try:
+            self.service_clients[service].cancel_goal()
+            self.state = State.SUCCESS
+        except Exception as E:
+            self.state = State.FAILED
         return
 
     def _result_callback(self, result):
@@ -87,13 +98,15 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
             {"time": time(), "data": result["message"]}
         )
         result_data = ast.literal_eval(result["message"])
+        web_result = []
         for data in result_data:
             if "w" in data:
-                web_result = data["w"]
-        if "Target" in web_result:
-            self.index+=1
-            rospy.loginfo(web_result)
-            self.start(self.index)
+                web_result.append(data["w"]["data"])
+        for res in web_result:
+            if "Target" in res:
+                self.index+=1
+                rospy.loginfo(web_result)
+                self.start(self.index)
             # send to next
         # TODO add handling of errors and continue=False
         return
