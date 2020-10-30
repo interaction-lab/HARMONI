@@ -77,7 +77,7 @@
         },
         {
             "component": "container",
-            "id": "multiple_choice_container",
+            "id": "multiple_choice_full_container",
             "children": [
                 {
                     "component": "row",
@@ -85,8 +85,8 @@
                     "children": [
                         {
                             "component": "img",
-                            "id": "main_img",
-                            "children": "../assets/imgs/test.jpg"
+                            "id": "main_img_full",
+                            "children": ""
                         }
                     ]
                 },
@@ -96,22 +96,77 @@
                     "children": [
                         {
                             "component": "click_img",
-                            "children": "../assets/imgs/test.jpg",
-                            "id": "target_img"
+                            "children": "",
+                            "id": "target_img_full"
                         },
                         {
                             "component": "click_img",
-                            "children": "../assets/imgs/test.jpg",
-                            "id": "comp_img"
+                            "children": "",
+                            "id": "comp_img_full"
                         },
                         {
                             "component": "click_img",
-                            "children": "../assets/imgs/test.jpg",
-                            "id": "distr_img"
+                            "children": "",
+                            "id": "distr_img_full"
                         }
                     ]
                 }
             ]
-        }
+        },
+        {
+            "component": "container",
+            "id": "multiple_choice_choices_container",
+            "children": [
+                {
+                    "component": "row",
+                    "id": "row_options_choices",
+                    "children": [
+                        {
+                            "component": "click_img",
+                            "children": "",
+                            "id": "target_img_choices"
+                        },
+                        {
+                            "component": "click_img",
+                            "children": "",
+                            "id": "comp_img_choices"
+                        },
+                        {
+                            "component": "click_img",
+                            "children": "",
+                            "id": "distr_img_choices"
+                        }
+                    ]
+                }
+                
+            ]
+        },
+        {
+            "component": "container",
+            "id": "multiple_choice_composed_container",
+            "children": [
+                {
+                    "component": "row",
+                    "id": "row_options_composed",
+                    "children": [
+                        {
+                            "component": "click_img",
+                            "children": "../assets/imgs/test.jpg",
+                            "id": "first_img"
+                        },
+                        {
+                            "component": "click_img",
+                            "children": "../assets/imgs/test.jpg",
+                            "id": "second_img"
+                        },
+                        {
+                            "component": "click_img",
+                            "children": "../assets/imgs/test.jpg",
+                            "id": "third_img"
+                        }
+                    ]
+                }
+        ]
+    }
     ]
 }

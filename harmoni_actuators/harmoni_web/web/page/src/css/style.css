@@ -40,6 +40,7 @@ img{
     margin: auto;
     text-align: center;
     vertical-align: auto;
+    width: 100%;
     height: 100%;
 }
 
@@ -66,4 +67,9 @@ img:hover {
     font-size: 3vmin;
     text-align: center;
     color: aliceblue;
+}
+
+#first_img, #second_img, #third_img{
+    margin: 0;
+    display: inherit;
 }

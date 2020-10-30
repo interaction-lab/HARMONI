@@ -4,7 +4,7 @@
 	<arg name="use_decision" default="true"/>
 	<arg name="pattern_name" default="multiple_choice"/>
 	<arg name="test" default="false"/>
-	<arg name="test_input" default="{'activity_type':'Training', 'structure':'Clitici e Passivi', 'name':'Le avventure della scimmia Sofia', 'episode':'Sulla spiaggia'}"/>
+	<arg name="test_input" default="{'activity_type':'Training', 'structure':'Relative', 'name':'Gino il pompiere', 'episode':'Episodio 1'}"/>
 	<arg name="test_id" default="default"/>
 	<arg name="url" default="http://i3lab.elet.polimi.it/letssayresources/img/"/>
   	<group if="$(arg use_decision)">

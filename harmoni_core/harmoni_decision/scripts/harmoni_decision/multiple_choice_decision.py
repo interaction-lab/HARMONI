@@ -67,21 +67,22 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
         return
 
 
-    def start(self, index):
+    def start(self, index, service="multiple_choice"):
         rospy.loginfo("_____START STEP "+str(index)+" DECISION MANAGER_______")
         self.state = State.START
+        optional_data=""
         if self.type_web=="full":
-            service = "multiple_choice"
-            optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'main_img', 'set_content':'"+self.url + self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'target_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["target_img"]+".png'},{'component_id':'comp_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["comp_img"]+".png'},{'component_id':'distr_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["distr_img"]+".png'}, {'component_id':'multiple_choice_container', 'set_content':''}]"}
+            optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'main_img_full', 'set_content':'"+self.url + self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'target_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["target_img"]+".png'},{'component_id':'comp_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["comp_img"]+".png'},{'component_id':'distr_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["distr_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
         elif self.type_web=="choices":
-            service = "multiple_choice"
-            optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'target_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["target_img"]+".png'},{'component_id':'comp_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["comp_img"]+".png'},{'component_id':'distr_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["distr_img"]+".png'}, {'component_id':'multiple_choice_container', 'set_content':''}]"}
+            optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'target_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["target_img"]+".png'},{'component_id':'comp_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["comp_img"]+".png'},{'component_id':'distr_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["distr_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
         elif self.type_web=="composed":
-            service = "multiple_choice"
-            optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'target_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["target_img"]+".png'},{'component_id':'comp_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["comp_img"]+".png'},{'component_id':'distr_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["distr_img"]+".png'}, {'component_id':'multiple_choice_container', 'set_content':''}]"}
+            optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'first_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["first_img"]+".png'},{'component_id':'second_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["second_img"]+".png'},{'component_id':'third_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["third_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
         elif self.type_web=="alt":
             service = "double_choice"
-            optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'target_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["target_img"]+".png'},{'component_id':'comp_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["comp_img"]+".png'},{'component_id':'distr_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["distr_img"]+".png'}, {'component_id':'multiple_choice_container', 'set_content':''}]"}
+            optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'main_img', 'set_content':''},{'component_id':'target_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["target_img"]+".png'},{'component_id':'comp_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["comp_img"]+".png'},{'component_id':'distr_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["distr_img"]+".png'}, {'component_id':'multiple_choice_container', 'set_content':''}]"}
+        else:
+            rospy.loginfo("Not existing activity")
+            return
         self.service_clients[service].send_goal(
                     action_goal=ActionType.REQUEST,
                     optional_data=str(optional_data),
@@ -115,11 +116,20 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
             if "w" in data:
                 web_result.append(data["w"]["data"])
         rospy.loginfo("_____END STEP "+str(self.index)+" DECISION MANAGER_______")
+        rospy.loginfo(web_result)
         for res in web_result:
             if self.index < len(self.sequence_scenes["tasks"]):
                 if "Target" in res:
                     self.index+=1
-                self.start(self.index)
+                    self.start(self.index)
+                    rospy.loginfo("Correct")
+                elif res == "":
+                    rospy.loginfo("Not doing anything")
+                elif "Comp" or "Distr" in res:
+                    self.start(self.index)
+                    rospy.loginfo("Wrong")
+            else:
+                rospy.loginfo("End of activity")
         return
 
     def _feedback_callback(self, feedback):
@@ -155,59 +165,7 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
                                         if activity_episode in ep:
                                             self.sequence_scenes = ep[activity_episode]
                                 else:
-                                    self.sequence_scenes=nam[activity_name]["content"]
-        return
-
-    def old_setup_scene(self):
-        #TODO:DO IT ACCORDING TO JSON FILE!
-        for i in range(1, 16):
-            self.sequence_scenes.append(
-                {
-                    "background": [
-                        "img_bkg",
-                        self.url
-                        + str(i)
-                        + "_Sfondo.png",
-                    ],
-                    "text": "Today it is a sunny day",
-                    "choice_1": [
-                        "img_1",
-                        self.url
-                        + str(i)
-                        + "_Comp.png",
-                    ],
-                    "choice_2": [
-                        "img_2",
-                        self.url
-                        + str(i)
-                        + "_Distr.png",
-                    ],
-                    "choice_3": [
-                        "img_3",
-                        self.url
-                        + str(i)
-                        + "_Target.png",
-                    ],
-                }
-            )
-        self.sequence_scenes.append(
-            {
-                "background": [
-                    "img_bkg",
-                    self.url+ "17_Sfondo.png",
-                ],
-                "text": "Almost ended",
-            }
-        )
-        self.sequence_scenes.append(
-            {
-                "background": [
-                    "img_bkg",
-                    self.url+ "18_Sfondo.png",
-                ],
-                "text": "The end",
-            }
-        )
+                                    self.sequence_scenes=nam[activity_name]
         return
 
 if __name__ == "__main__":

@@ -109,7 +109,7 @@ function createComponent(component, content, id) {
             var html = "<a id=" + id +"><img  src=" + content + "></a>";
             break;
         case "img":
-            var html = "<img src=" + content + " id=" + id + ">";
+            var html = "<img src='" + content + "' id=" + id + ">";
             break;
         case "text":
             if (!Array.isArray(content)) {
