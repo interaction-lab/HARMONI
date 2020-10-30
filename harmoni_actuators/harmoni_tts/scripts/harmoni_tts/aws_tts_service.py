@@ -51,6 +51,7 @@ class AWSTtsService(HarmoniServiceManager):
             "t": "DENTAL_ALVEOLAR",
             "S": "POSTALVEOLAR",
             "r": "POSTALVEOLAR",
+            "J": "POSTALVEOLAR",
             "k": "VELAR_GLOTTAL",
             "i": "CLOSE_FRONT_VOWEL",
             "u": "CLOSE_BACK_VOWEL",

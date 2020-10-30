@@ -12,6 +12,7 @@ import harmoni_common_lib.helper_functions as hf
 # Specific Imports
 import rospkg
 import json
+import os
 import inspect
 import ast
 from std_msgs.msg import String
@@ -27,18 +28,21 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
     This class is a singleton ROS node and should only be instantiated once.
     """
 
-    def __init__(self, name, script, test_id, path, url):
+    def __init__(self, name, script, test_id, path, url, test_input):
         super().__init__(name)
         self.name = name
         self.script = script
         self.url = url
         self.service_id  = test_id
         self.pattern_script_path = path
+        self.activity_selected = ast.literal_eval(test_input)
+        rospy.loginfo(self.activity_selected)
         self.index = 0
         self.max_index = 18
         self.choice_index = 16
-        self.sequence_scenes = []
-        self.scripted_services = ["multiple_choice", "double_choice"] #get the json names
+        self.sequence_scenes = {}
+        self.type_web = ""
+        self.scripted_services = ["multiple_choice"] #get the json names
         self.setup_scene()
         self._setup_clients()
         self.state = State.INIT
@@ -63,50 +67,28 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
         return
 
 
-    def start(self, index, activity_type):
+    def start(self, index):
         rospy.loginfo("_____START STEP "+str(index)+" DECISION MANAGER_______")
         self.state = State.START
-        self.activity_type = activity_type
-        if activity_type=="full":
+        if self.type_web=="full":
             service = "multiple_choice"
-            optional_data = {"tts_default": self.sequence_scenes[index]["text"], "web_page_default":"[{'component_id':'"+self.sequence_scenes[index]["background"][0]+"', 'set_content':'"+self.sequence_scenes[index]["background"][1]+"'},{'component_id':'"+self.sequence_scenes[index]["choice_1"][0]+"', 'set_content':'"+self.sequence_scenes[index]["choice_1"][1]+"'},{'component_id':'"+self.sequence_scenes[index]["choice_2"][0]+"', 'set_content':'"+self.sequence_scenes[index]["choice_2"][1]+"'},{'component_id':'"+self.sequence_scenes[index]["choice_3"][0]+"', 'set_content':'"+self.sequence_scenes[index]["choice_3"][1]+"'}, {'component_id':'multiple_choice_container', 'set_content':''}]"}
-            self.service_clients[service].send_goal(
-                        action_goal=ActionType.REQUEST,
-                        optional_data=str(optional_data),
-                        wait=True,
-                    )
-            rospy.loginfo(f"Goal sent to {service}")
-            rospy.loginfo("_____END STEP "+str(index)+" DECISION MANAGER_______")
-        else if activity_type=="choices"::
+            optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'main_img', 'set_content':'"+self.url + self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'target_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["target_img"]+".png'},{'component_id':'comp_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["comp_img"]+".png'},{'component_id':'distr_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["distr_img"]+".png'}, {'component_id':'multiple_choice_container', 'set_content':''}]"}
+        elif self.type_web=="choices":
             service = "multiple_choice"
-            optional_data = {"tts_default": self.sequence_scenes[index]["text"], "web_page_default":"[{'component_id':'"+self.sequence_scenes[index]["choice_1"][0]+"', 'set_content':'"+self.sequence_scenes[index]["choice_1"][1]+"'},{'component_id':'"+self.sequence_scenes[index]["choice_2"][0]+"', 'set_content':'"+self.sequence_scenes[index]["choice_2"][1]+"'},{'component_id':'"+self.sequence_scenes[index]["choice_3"][0]+"', 'set_content':'"+self.sequence_scenes[index]["choice_3"][1]+"'}, {'component_id':'multiple_choice_container', 'set_content':''}]"}
-            self.service_clients[service].send_goal(
-                        action_goal=ActionType.REQUEST,
-                        optional_data=str(optional_data),
-                        wait=True,
-                    )
-            rospy.loginfo(f"Goal sent to {service}")
-            rospy.loginfo("_____END STEP "+str(index)+" DECISION MANAGER_______")
-        else if activity_type=="composed"::
+            optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'target_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["target_img"]+".png'},{'component_id':'comp_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["comp_img"]+".png'},{'component_id':'distr_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["distr_img"]+".png'}, {'component_id':'multiple_choice_container', 'set_content':''}]"}
+        elif self.type_web=="composed":
             service = "multiple_choice"
-            optional_data = {"tts_default": self.sequence_scenes[index]["text"], "web_page_default":"[{'component_id':'"+self.sequence_scenes[index]["choice_1"][0]+"', 'set_content':'"+self.sequence_scenes[index]["choice_1"][1]+"'},{'component_id':'"+self.sequence_scenes[index]["choice_2"][0]+"', 'set_content':'"+self.sequence_scenes[index]["choice_2"][1]+"'},{'component_id':'"+self.sequence_scenes[index]["choice_3"][0]+"', 'set_content':'"+self.sequence_scenes[index]["choice_3"][1]+"'}, {'component_id':'multiple_choice_container', 'set_content':''}]"}
-            self.service_clients[service].send_goal(
-                        action_goal=ActionType.REQUEST,
-                        optional_data=str(optional_data),
-                        wait=True,
-                    )
-            rospy.loginfo(f"Goal sent to {service}")
-            rospy.loginfo("_____END STEP "+str(index)+" DECISION MANAGER_______")
-        else if activity_type=="alt"::
+            optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'target_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["target_img"]+".png'},{'component_id':'comp_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["comp_img"]+".png'},{'component_id':'distr_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["distr_img"]+".png'}, {'component_id':'multiple_choice_container', 'set_content':''}]"}
+        elif self.type_web=="alt":
             service = "double_choice"
-            optional_data = {"tts_default": self.sequence_scenes[index]["text"], "web_page_default":"[{'component_id':'"+self.sequence_scenes[index]["choice_1"][0]+"', 'set_content':'"+self.sequence_scenes[index]["choice_1"][1]+"'},{'component_id':'"+self.sequence_scenes[index]["choice_2"][0]+"', 'set_content':'"+self.sequence_scenes[index]["choice_2"][1]+"'},{'component_id':'"+self.sequence_scenes[index]["choice_3"][0]+"', 'set_content':'"+self.sequence_scenes[index]["choice_3"][1]+"'}, {'component_id':'multiple_choice_container', 'set_content':''}]"}
-            self.service_clients[service].send_goal(
-                        action_goal=ActionType.REQUEST,
-                        optional_data=str(optional_data),
-                        wait=True,
-                    )
-            rospy.loginfo(f"Goal sent to {service}")
-            rospy.loginfo("_____END STEP "+str(index)+" DECISION MANAGER_______")
+            optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'target_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["target_img"]+".png'},{'component_id':'comp_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["comp_img"]+".png'},{'component_id':'distr_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["distr_img"]+".png'}, {'component_id':'multiple_choice_container', 'set_content':''}]"}
+        self.service_clients[service].send_goal(
+                    action_goal=ActionType.REQUEST,
+                    optional_data=str(optional_data),
+                    wait=False,
+                )
+        rospy.loginfo(f"Goal sent to {service}")
+        
         return
 
     def stop(self, service):
@@ -132,13 +114,12 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
         for data in result_data:
             if "w" in data:
                 web_result.append(data["w"]["data"])
+        rospy.loginfo("_____END STEP "+str(self.index)+" DECISION MANAGER_______")
         for res in web_result:
-            if "Target" in res and self.index != self.choice_index:
-                self.index+=1
-                rospy.loginfo(web_result)
-                self.start(self.index, self.activity_type)
-            # send to next
-        # TODO add handling of errors and continue=False
+            if self.index < len(self.sequence_scenes["tasks"]):
+                if "Target" in res:
+                    self.index+=1
+                self.start(self.index)
         return
 
     def _feedback_callback(self, feedback):
@@ -150,6 +131,34 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
         return
 
     def setup_scene(self):
+        """Setup the scene """
+        activity_episode = ""
+        base_dir = os.path.dirname(__file__)
+        activity_name = self.activity_selected["name"]
+        activity_structure = self.activity_selected["structure"]
+        activity_type = self.activity_selected["activity_type"]
+        if "episode" in self.activity_selected:
+            activity_episode = self.activity_selected["episode"]
+        with open(
+            base_dir + "/resources/multiple_choice_setup.json", "r"
+        ) as json_file:
+            data = json.load(json_file)
+        for typ in data:
+            if activity_type in typ:
+                for struct in typ[activity_type]:
+                    if activity_structure in struct:
+                        for nam in struct[activity_structure]:
+                            if activity_name in nam:
+                                self.type_web = nam[activity_name]["activity_type"]
+                                if activity_episode!="":
+                                    for ep in nam[activity_name]["content"]:
+                                        if activity_episode in ep:
+                                            self.sequence_scenes = ep[activity_episode]
+                                else:
+                                    self.sequence_scenes=nam[activity_name]["content"]
+        return
+
+    def old_setup_scene(self):
         #TODO:DO IT ACCORDING TO JSON FILE!
         for i in range(1, 16):
             self.sequence_scenes.append(
@@ -214,11 +223,11 @@ if __name__ == "__main__":
             script = json.load(read_file)
         try:
             rospy.init_node(pattern_name)
-            bc = MultipleChoiceDecisionManager(pattern_name, script, test_id, pattern_script_path, url)
+            bc = MultipleChoiceDecisionManager(pattern_name, script, test_id, pattern_script_path, url, test_input)
             service_server = HarmoniServiceServer(name=pattern_name+"_decision", service_manager=bc)
             rospy.loginfo(f"START from the first step of {pattern_name} pattern.")
             if test:
-                bc.start(0, "full")
+                bc.start(0)
             else:
                 service_server.update_feedback()
             rospy.spin()

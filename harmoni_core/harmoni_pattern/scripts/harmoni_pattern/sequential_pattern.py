@@ -152,7 +152,7 @@ class SequentialPattern(HarmoniServiceManager):
         rospy.loginfo(data)
         data = ast.literal_eval(data)
         self.state = State.REQUEST
-        r = rospy.Rate(1)
+        r = rospy.Rate(10)
         while self.script_set_index < len(self.script) and not rospy.is_shutdown():
             if self.script[self.script_set_index]["set"] == "setup":
                 self.setup(self.script[self.script_set_index]["steps"])
@@ -172,11 +172,11 @@ class SequentialPattern(HarmoniServiceManager):
             self.script_set_index += 1
             r.sleep()
         rospy.loginfo("_________SEQUENCE PATTERN END__________")
-        self.response_received = True
-        self.actuation_completed = True
         prepared = [dict(zip(cl, self.client_results[cl])) for cl in self.client_results]
         j = json.dumps(prepared)
         self.result_msg = str(j)
+        self.response_received = True
+        self.actuation_completed = True
         self.state = State.SUCCESS
         return
 

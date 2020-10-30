@@ -85,7 +85,7 @@
                     "children": [
                         {
                             "component": "img",
-                            "id": "img_bkg",
+                            "id": "main_img",
                             "children": "../assets/imgs/test.jpg"
                         }
                     ]
@@ -97,17 +97,17 @@
                         {
                             "component": "click_img",
                             "children": "../assets/imgs/test.jpg",
-                            "id": "img_1"
+                            "id": "target_img"
                         },
                         {
                             "component": "click_img",
                             "children": "../assets/imgs/test.jpg",
-                            "id": "img_2"
+                            "id": "comp_img"
                         },
                         {
                             "component": "click_img",
                             "children": "../assets/imgs/test.jpg",
-                            "id": "img_3"
+                            "id": "distr_img"
                         }
                     ]
                 }

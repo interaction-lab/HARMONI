@@ -1,7 +1,7 @@
 <!-- This is an example launch file for how a ROS application could use a node -->
 <launch>
-    <arg name="web_directory_path" value="$(find harmoni_web)/web"/>
-	<arg name="face_directory_path" value="$(find harmoni_web)/web_face"/>
+    <arg name="web_directory_path" value="$(find harmoni_web)/web/page"/>
+	<arg name="face_directory_path" value="$(find harmoni_web)/web/face"/>
     <arg name="port_face" default="8081"/>
 	<arg name="port_web" default="8082"/>
 	<arg name="use_web" default="true"/>

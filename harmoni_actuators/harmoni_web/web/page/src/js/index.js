@@ -44,6 +44,7 @@ function viewListener(view) {
             $("#" + component).attr("src", content);
             $("#" + component).attr("value", content);
             $('img', "#"+component).attr('src', content);
+            $("#"+ component).children().unbind('click');
         }
         else {
             $("#" + component).html(content)
@@ -52,6 +53,7 @@ function viewListener(view) {
         $(".container").hide()
     }
     $("#" + component).show();
+    setTimeout(function(){ $("#"+ component).children().bind('click'); }, 3000);
 };
 
 function setValueButton(clicked_button, value_item){
