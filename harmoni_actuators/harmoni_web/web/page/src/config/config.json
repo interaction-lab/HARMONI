@@ -112,6 +112,44 @@
                     ]
                 }
             ]
+        },{
+            "component": "container",
+            "id": "multiple_choice_alt_container",
+            "children": [
+                {
+                    "component": "row",
+                    "id": "row_options",
+                    "children": [
+                        {
+                            "component": "click_img",
+                            "children": "",
+                            "id": "target_img_alt"
+                        },
+                        {
+                            "component": "click_img",
+                            "children": "",
+                            "id": "comp_img_alt"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "component": "container",
+            "id": "display_image_container",
+            "children": [
+                {
+                    "component": "row",
+                    "id": "row_main_alt",
+                    "children": [
+                        {
+                            "component": "img",
+                            "children": "",
+                            "id": "main_img_alt"
+                        }
+                    ]
+                }
+            ]
         },
         {
             "component": "container",

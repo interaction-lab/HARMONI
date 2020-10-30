@@ -38,8 +38,6 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
         self.activity_selected = ast.literal_eval(test_input)
         rospy.loginfo(self.activity_selected)
         self.index = 0
-        self.max_index = 18
-        self.choice_index = 16
         self.sequence_scenes = {}
         self.type_web = ""
         self.scripted_services = ["multiple_choice"] #get the json names
@@ -60,37 +58,18 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
         rospy.loginfo(
             f"{self.name} Decision manager needs these services: {self.scripted_services}"
         )
-
         for cl, client in self.service_clients.items():
             client.setup_client(cl, self._result_callback, self._feedback_callback)
         rospy.loginfo("Decision interface action clients have been set up!")
         return
 
 
-    def start(self, index, service="multiple_choice"):
+    def start(self, service="multiple_choice"):
         rospy.loginfo("_____START STEP "+str(index)+" DECISION MANAGER_______")
         self.state = State.START
-        optional_data=""
-        if self.type_web=="full":
-            optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'main_img_full', 'set_content':'"+self.url + self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'target_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["target_img"]+".png'},{'component_id':'comp_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["comp_img"]+".png'},{'component_id':'distr_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["distr_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
-        elif self.type_web=="choices":
-            optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'target_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["target_img"]+".png'},{'component_id':'comp_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["comp_img"]+".png'},{'component_id':'distr_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["distr_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
-        elif self.type_web=="composed":
-            optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'first_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["first_img"]+".png'},{'component_id':'second_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["second_img"]+".png'},{'component_id':'third_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["third_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
-        elif self.type_web=="alt":
-            service = "double_choice"
-            optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'main_img', 'set_content':''},{'component_id':'target_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["target_img"]+".png'},{'component_id':'comp_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["comp_img"]+".png'},{'component_id':'distr_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["distr_img"]+".png'}, {'component_id':'multiple_choice_container', 'set_content':''}]"}
-        else:
-            rospy.loginfo("Not existing activity")
-            return
-        self.service_clients[service].send_goal(
-                    action_goal=ActionType.REQUEST,
-                    optional_data=str(optional_data),
-                    wait=False,
-                )
-        rospy.loginfo(f"Goal sent to {service}")
-        
+        self.do_request(0,service)
         return
+
 
     def stop(self, service):
         """Stop the Behavior Pattern """
@@ -100,6 +79,33 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
         except Exception as E:
             self.state = State.FAILED
         return
+
+    def do_request(self, index, service):
+        self.state = State.REQUEST
+        optional_data=""
+        if service=="multiple_choice":
+            if self.type_web=="full":
+                optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'main_img_full', 'set_content':'"+self.url + self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'target_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["target_img"]+".png'},{'component_id':'comp_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["comp_img"]+".png'},{'component_id':'distr_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["distr_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
+            elif self.type_web=="choices":
+                optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'target_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["target_img"]+".png'},{'component_id':'comp_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["comp_img"]+".png'},{'component_id':'distr_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["distr_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
+            elif self.type_web=="composed":
+                optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'first_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["first_img"]+".png'},{'component_id':'second_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["second_img"]+".png'},{'component_id':'third_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["third_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
+            elif self.type_web=="alt":
+                optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'target_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["target_img"]+".png'},{'component_id':'comp_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["comp_img"]+".png'}, {'component_id':'display_image_"+self.type_web+"_container', 'set_content':''}]"}
+            else:
+                rospy.loginfo("Not existing activity")
+                return
+        elif service=="display_image":
+            if self.type_web=="alt":
+                optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'main_img_full', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
+        self.service_clients[service].send_goal(
+                    action_goal=ActionType.REQUEST,
+                    optional_data=str(optional_data),
+                    wait=False,
+                )
+        rospy.loginfo(f"Goal sent to {service}")
+        return
+
 
     def _result_callback(self, result):
         """ Recieve and store result with timestamp """
@@ -119,16 +125,21 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
         rospy.loginfo(web_result)
         for res in web_result:
             if self.index < len(self.sequence_scenes["tasks"]):
+                service = "multiple_choice"
                 if "Target" in res:
                     self.index+=1
-                    self.start(self.index)
+                    self.start(self.index,service)
+                    self.state = State.SUCCESS
                     rospy.loginfo("Correct")
                 elif res == "":
                     rospy.loginfo("Not doing anything")
                 elif "Comp" or "Distr" in res:
-                    self.start(self.index)
+                    self.do_request(self.index,service)
                     rospy.loginfo("Wrong")
+                    self.state = State.FAILED
+                    #TODO: do something if it is wrong
             else:
+                service = "display_image"
                 rospy.loginfo("End of activity")
         return
 
@@ -185,7 +196,7 @@ if __name__ == "__main__":
             service_server = HarmoniServiceServer(name=pattern_name+"_decision", service_manager=bc)
             rospy.loginfo(f"START from the first step of {pattern_name} pattern.")
             if test:
-                bc.start(0)
+                bc.start()
             else:
                 service_server.update_feedback()
             rospy.spin()
