@@ -28,19 +28,16 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
     This class is a singleton ROS node and should only be instantiated once.
     """
 
-    def __init__(self, name, script, test_id, path, url, test_input):
+    def __init__(self, name,  test_id, url, test_input):
         super().__init__(name)
         self.name = name
-        self.script = script
         self.url = url
         self.service_id  = test_id
-        self.pattern_script_path = path
         self.activity_selected = ast.literal_eval(test_input)
-        rospy.loginfo(self.activity_selected)
         self.index = 0
         self.sequence_scenes = {}
         self.type_web = ""
-        self.scripted_services = ["multiple_choice"] #get the json names
+        self.scripted_services = ["multiple_choice","display_image"] #get the json names
         self.setup_scene()
         self._setup_clients()
         self.state = State.INIT
@@ -65,8 +62,9 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
 
 
     def start(self, service="multiple_choice"):
-        rospy.loginfo("_____START STEP "+str(index)+" DECISION MANAGER_______")
         self.state = State.START
+        if self.type_web=="alt":
+            service = "display_image"
         self.do_request(0,service)
         return
 
@@ -81,6 +79,7 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
         return
 
     def do_request(self, index, service):
+        rospy.loginfo("_____START STEP "+str(index)+" DECISION MANAGER_______")
         self.state = State.REQUEST
         optional_data=""
         if service=="multiple_choice":
@@ -91,13 +90,16 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
             elif self.type_web=="composed":
                 optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'first_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["first_img"]+".png'},{'component_id':'second_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["second_img"]+".png'},{'component_id':'third_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["third_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
             elif self.type_web=="alt":
-                optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'target_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["target_img"]+".png'},{'component_id':'comp_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["comp_img"]+".png'}, {'component_id':'display_image_"+self.type_web+"_container', 'set_content':''}]"}
+                if self.sequence_scenes["tasks"][index]["text"]=="":
+                    service = "display_image"
+                else:
+                    optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'target_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["target_img"]+".png'},{'component_id':'comp_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["comp_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
             else:
                 rospy.loginfo("Not existing activity")
                 return
         elif service=="display_image":
             if self.type_web=="alt":
-                optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'main_img_full', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
+                optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'main_img_alt', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'display_image_container', 'set_content':''}]"}
         self.service_clients[service].send_goal(
                     action_goal=ActionType.REQUEST,
                     optional_data=str(optional_data),
@@ -123,24 +125,37 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
                 web_result.append(data["w"]["data"])
         rospy.loginfo("_____END STEP "+str(self.index)+" DECISION MANAGER_______")
         rospy.loginfo(web_result)
-        for res in web_result:
-            if self.index < len(self.sequence_scenes["tasks"]):
-                service = "multiple_choice"
-                if "Target" in res:
+        result_empty = True
+        if self.index < len(self.sequence_scenes["tasks"]):
+            if result['service']=="multiple_choice":
+                for res in web_result:
+                        service = "multiple_choice"
+                        if res == "":
+                            rospy.loginfo("Not doing anything")
+                            result_empty = True
+                        elif "Target" or "target" in res:
+                            self.index+=1
+                            if self.type_web=="alt":
+                                service="display_image"
+                            self.do_request(self.index,service)
+                            self.state = State.SUCCESS
+                            rospy.loginfo("Correct")
+                            result_empty = False
+                        elif "Comp" or "Distr" or "comp" in res:
+                            self.do_request(self.index,service)
+                            rospy.loginfo("Wrong")
+                            self.state = State.FAILED
+                            result_empty = False
+                   
+            elif result['service'] == "display_image":
+                if self.type_web=="alt":
+                    rospy.loginfo("Here")
+                    service = "multiple_choice"
                     self.index+=1
-                    self.start(self.index,service)
-                    self.state = State.SUCCESS
-                    rospy.loginfo("Correct")
-                elif res == "":
-                    rospy.loginfo("Not doing anything")
-                elif "Comp" or "Distr" in res:
                     self.do_request(self.index,service)
-                    rospy.loginfo("Wrong")
-                    self.state = State.FAILED
-                    #TODO: do something if it is wrong
-            else:
-                service = "display_image"
-                rospy.loginfo("End of activity")
+        else:
+            service = "display_image"
+            rospy.loginfo("End of activity")
         return
 
     def _feedback_callback(self, feedback):
@@ -180,21 +195,16 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
         return
 
 if __name__ == "__main__":
-        pattern_name = rospy.get_param("/pattern_name/")
-        test = rospy.get_param("/test_" + pattern_name + "/")
-        test_input = rospy.get_param("/test_input_" + pattern_name + "/")
-        test_id = rospy.get_param("/test_id_" + pattern_name + "/")
-        url = rospy.get_param("/url_" + pattern_name + "/")
-        rospack = rospkg.RosPack()
-        pck_path = rospack.get_path("harmoni_pattern")
-        pattern_script_path = pck_path + f"/pattern_scripting/{pattern_name}.json"
-        with open(pattern_script_path, "r") as read_file:
-            script = json.load(read_file)
+        name = rospy.get_param("/name/")
+        test = rospy.get_param("/test_" + name + "/")
+        test_input = rospy.get_param("/test_input_" + name + "/")
+        test_id = rospy.get_param("/test_id_" + name + "/")
+        url = rospy.get_param("/url_" + name + "/")
         try:
-            rospy.init_node(pattern_name)
-            bc = MultipleChoiceDecisionManager(pattern_name, script, test_id, pattern_script_path, url, test_input)
-            service_server = HarmoniServiceServer(name=pattern_name+"_decision", service_manager=bc)
-            rospy.loginfo(f"START from the first step of {pattern_name} pattern.")
+            rospy.init_node(name+"_decision")
+            bc = MultipleChoiceDecisionManager(name, test_id, url, test_input)
+            service_server = HarmoniServiceServer(name=name+"_decision", service_manager=bc)
+            rospy.loginfo(f"START from the first step of {name} decision.")
             if test:
                 bc.start()
             else:

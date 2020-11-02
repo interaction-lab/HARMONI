@@ -11,7 +11,7 @@
 			<param name="test_input_$(arg pattern_name)" value="$(arg test_input)"/>
 			<param name="test_id_$(arg pattern_name)" value="$(arg test_id)"/>
 			<param name="pattern_name" value="$(arg pattern_name)"/>
-			<node pkg="harmoni_pattern" type="sequential_pattern.py" name="harmoni_pattern" output="screen"  args="$(arg test) $(arg test_input) $(arg test_id)"/>
+			<node pkg="harmoni_pattern" type="sequential_pattern.py" name="harmoni_pattern_$(arg pattern_name)" output="screen"  args="$(arg test) $(arg test_input) $(arg test_id)"/>
   	</group>
 
 </launch>

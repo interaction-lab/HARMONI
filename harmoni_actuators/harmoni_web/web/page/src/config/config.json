@@ -118,7 +118,7 @@
             "children": [
                 {
                     "component": "row",
-                    "id": "row_options",
+                    "id": "row_options_alt",
                     "children": [
                         {
                             "component": "click_img",

@@ -2877,7 +2877,6 @@
                                 {"audio":"Wp_00a","text":"Quali signori asciuga la bambina?","main_img":"","first_img":"Wp_00a_Target","second_img":"Wp_00a_Distr","third_img":"Wp_00a_Comp"},
                                 {"audio":"Wp_00b","text":"Quale principessa copre i soldati?","main_img":"","first_img":"Wp_00b_Comp","second_img":"Wp_00b_Distr","third_img":"Wp_00b_Target"},
                                 {"audio":"Wp_00c","text":"Quale nonna salutano i bambini?","main_img":"","first_img":"Wp_00c_Comp","second_img":"Wp_00c_Distr","third_img":"Wp_00c_Target"},
-                                {"audio":"Wp_00d","text":"","main_img":"next","first_img":"","second_img":"","third_img":""},
                                 {"audio":"W_1_1","text":"Quale leone è seduto?","main_img":"","first_img":"W_1_1_Target","second_img":"W_1_1_Distr","third_img":"W_1_1_Comp"},
                                 {"audio":"W_1_2","text":"Quali leoni picchia il cavallo?","main_img":"","first_img":"W_1_2_Target","second_img":"W_1_2_Distr","third_img":"W_1_2_Comp"},
                                 {"audio":"W_1_3","text":"Quale mucca sporca i cani?","main_img":"","first_img":"W_1_3_Comp","second_img":"W_1_3_Distr","third_img":"W_1_3_Target"},
@@ -2909,7 +2908,6 @@
                                 {"audio":"W_00a","text":"Quali signori asciuga la bambina?","main_img":"","first_img":"W_00a_Target","second_img":"W_00a_Distr","third_img":"W_00a_Comp"},
                                 {"audio":"W_00b","text":"Quale principessa copre i soldati?","main_img":"","first_img":"W_00b_Comp","second_img":"W_00b_Distr","third_img":"W_00b_Target"},
                                 {"audio":"W_00c","text":"Quale nonna salutano i bambini?","main_img":"","first_img":"W_00c_Comp","second_img":"W_00c_Distr","third_img":"W_00c_Target"},
-                                {"audio":"W_00d","text":"","main_img":"next","first_img":"","second_img":"","third_img":""},
                                 {"audio":"W_2_1","text":"Quale mucca è nera?","main_img":"","first_img":"W_2_1_Comp","second_img":"W_2_1_Distr","third_img":"W_2_1_Target"},
                                 {"audio":"W_2_2","text":"Quale cavallo è grigio?","main_img":"","first_img":"W_2_2_Comp","second_img":"W_2_2_Distr","third_img":"W_2_2_Target"},
                                 {"audio":"W_2_3","text":"Quale asino sporca i maiali?","main_img":"","first_img":"W_2_3_Target","second_img":"W_2_3_Distr","third_img":"W_2_3_Comp"},
@@ -2945,7 +2943,6 @@
                                 {"audio":"Rp_00a","text":"i signori che asciugano la bambina","main_img":"","first_img":"Rp_00a_Comp","second_img":"Rp_00a_Distr","third_img":"Rp_00a_Target"},
                                 {"audio":"Rp_00b","text":"la principessa che i soldati coprono","main_img":"","first_img":"Rp_00b_Target","second_img":"Rp_00b_Distr","third_img":"Rp_00b_Comp"},
                                 {"audio":"Rp_00c","text":"la signora che è salutata dai bambini","main_img":"","first_img":"Rp_00c_Comp","second_img":"Rp_00c_Distr","third_img":"Rp_00c_Target"},
-                                {"audio":"Rp_00d","text":"","main_img":"next","first_img":"","second_img":"","third_img":""},
                                 {"audio":"R_1_1","text":"l'asino che sporca i maiali","main_img":"","first_img":"R_1_1_Target","second_img":"R_1_1_Distr","third_img":"R_1_1_Comp"},
                                 {"audio":"R_1_2","text":"la mucca seduta","main_img":"","first_img":"R_1_2_Target","second_img":"R_1_2_Distr","third_img":"R_1_2_Comp"},
                                 {"audio":"R_1_3","text":"il leone più scuro","main_img":"","first_img":"R_1_3_Comp","second_img":"R_1_3_Distr","third_img":"R_1_3_Target"},
@@ -2987,7 +2984,6 @@
                                 {"audio":"R_00a","text":"i signori che asciugano la bambina","main_img":"","first_img":"R_00a_Comp","second_img":"R_00a_Distr","third_img":"R_00a_Target"},
                                 {"audio":"R_00b","text":"la principessa che i soldati coprono","main_img":"","first_img":"R_00b_Target","second_img":"R_00b_Distr","third_img":"R_00b_Comp"},
                                 {"audio":"R_00c","text":"la signora che è salutata dai bambini","main_img":"","first_img":"R_00c_Comp","second_img":"R_00c_Distr","third_img":"R_00c_Target"},
-                                {"audio":"R_00d","text":"","main_img":"next","first_img":"","second_img":"","third_img":""},
                                 {"audio":"R_2_1","text":"l'asino sporco","main_img":"","first_img":"R_2_1_Comp","second_img":"R_2_1_Distr","third_img":"R_2_1_Target"},
                                 {"audio":"R_2_2","text":"la mucca che sporca i cani","main_img":"","first_img":"R_2_2_Comp","second_img":"R_2_2_Distr","third_img":"R_2_2_Target"},
                                 {"audio":"R_2_3","text":"il leone più chiaro","main_img":"","first_img":"R_2_3_Target","second_img":"R_2_3_Distr","third_img":"R_2_3_Comp"},
@@ -3059,13 +3055,6 @@
                                     "comp_img": "Cp_00b_comp"
                                 },
                                 {
-                                    "audio": "Cp_00c",
-                                    "text": "",
-                                    "main_img": "Cp_00c",
-                                    "target_img": "",
-                                    "comp_img": ""
-                                },
-                                {
                                     "audio": "Cp_00d_intro",
                                     "text": "In questa storia ci sono una farfalla e una fragola",
                                     "main_img": "Cp_00d_intro",
@@ -3120,13 +3109,6 @@
                                     "main_img": "",
                                     "target_img": "Cp_00g_target",
                                     "comp_img": "Cp_00g_comp"
-                                },
-                                {
-                                    "audio": "Cp_00h",
-                                    "text": "",
-                                    "main_img": "Cp_00h",
-                                    "target_img": "",
-                                    "comp_img": ""
                                 },
                                 {
                                     "audio": "C_1_1_intro",
