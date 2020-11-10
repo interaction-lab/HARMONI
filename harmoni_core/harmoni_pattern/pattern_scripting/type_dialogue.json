@@ -7,7 +7,7 @@
                     "action_goal": "REQUEST",
                     "resource_type": "service",
                     "wait_for": "new",
-                    "trigger": "hey"
+                    "trigger": "ciao"
                 }
             },
             {
@@ -26,7 +26,7 @@
                     }
                 },
                 {
-                    "face_mouth_default": {
+                    "web_face_mouth_default": {
                         "action_goal": "DO",
                         "resource_type": "actuator",
                         "wait_for": "new"
@@ -39,7 +39,7 @@
         "set": "loop",
         "steps": [
             {
-                "web_default": {
+                "web_page_default": {
                     "action_goal": "REQUEST",
                     "resource_type": "service",
                     "wait_for": "new",
@@ -69,7 +69,7 @@
                     }
                 },
                 {
-                    "face_mouth_default": {
+                    "web_face_mouth_default": {
                         "action_goal": "DO",
                         "resource_type": "actuator",
                         "wait_for": "new"

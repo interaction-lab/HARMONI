@@ -333,7 +333,7 @@ class SequentialPattern(HarmoniServiceManager):
     def get_new_result(self, service):
         rospy.loginfo("getting result from the service")
         rospy.loginfo(f"Queue size is {len(self.client_results[service])}")
-        rospy.loginfo(f"Queue is {self.client_results[service]}")
+        rospy.logdebug(f"Queue is {self.client_results[service]}")
 
         call_time = time()
         result = {"time": 0, "data": "_the_queue_is_empty"}
