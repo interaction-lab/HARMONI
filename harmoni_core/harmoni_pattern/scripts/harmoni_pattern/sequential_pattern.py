@@ -343,7 +343,7 @@ class SequentialPattern(HarmoniServiceManager):
 
         r = rospy.Rate(10)
         while result["time"] < call_time and not rospy.is_shutdown():
-            rospy.loginfo(f"got old message length ({len(result['data'])})")
+            rospy.logdebug(f"got old message length ({len(result['data'])})")
             if len(self.client_results[service]) > 0:
                 result = self.client_results[service].popleft()
             r.sleep()

@@ -1,0 +1,46 @@
+#back_video, #back_video_idle {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+  }
+
+
+#insert_code, #idle_div{
+    text-align: center;
+    margin: 15vmin 0 15vmin 0;
+}
+
+
+.overlay{
+    position: fixed;
+    color: #f1f1f1;
+    width: 100%;
+    margin: auto;
+}
+
+p{
+    font-size: 7vmin;
+    margin: auto;
+}
+
+input{
+    border-radius: 2em;
+    border-color: black;
+    width: 10vmin;
+    height: 7vmin;
+    text-align: center;
+    font-size: 3vmin;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}

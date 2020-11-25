@@ -151,7 +151,10 @@ class WebService(HarmoniServiceManager):
         print(event.data)
         data = ast.literal_eval(event.data)
         # self.result_msg = str(event)[2:-2]
-        self.result_msg = data["set_view"]
+        if hasattr(data, 'set_view'):
+            self.result_msg = data["set_view"]
+        elif hasattr(data, 'patient_id'):
+            self.result_msg = data["patient_id"]
         return
 
 
