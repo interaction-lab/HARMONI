@@ -15,6 +15,7 @@ function addCode(){
                 }
                 //connect websocket and send
                 body={patient_id: code}
+                console.log("The response is" + body)
                 user_response_publisher.publish({data: JSON.stringify(body)})
             }
             while (next = next.nextElementSibling) {

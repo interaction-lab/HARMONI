@@ -18,17 +18,14 @@ class HarmoniInterfaceManager(object):
 
     """
 
-    def __init__(self, name):
+    def __init__(self):
         """ The service setup will instantiate the publishers, subscribers,
         class variables and clients.
-
-        Args:
-            name (str): Name of the service (useful for logging)
         """
-        rospy.loginfo(f"Initializing the {name} service")
+        rospy.loginfo(f"Initializing the interface manager")
         # Default variables
 
-   def open(self, message):
+    def open(self, message):
         """ Make a request of another service, such as a web service
 
         Raises:

@@ -11,15 +11,14 @@ import harmoni_common_lib.helper_functions as hf
 
 
 class HarmoniClientInterface(HarmoniWebsocketClient, object):
-    def __init__(self, ip, port="", secure=False, message="Hello", client_manager):
+
+    def __init__(self, ip, client_manager, port="", secure=False, message="Hello"):
         self.ip = ip
         self.port = port
         self.secure = secure
         self.message = message
         self.patient_id = ""
         self.client_manager = client_manager
-        #rospy.Subscriber("/harmoni/actuating/web/default/listen_click_event", String, self.start, queue_size=1)
-        #self.web_pub = rospy.Publisher('/harmoni/actuating/web/default/set_view', String, queue_size=1)
         rospy.loginfo("Initializing client. Wait for opening socket.")
 
 
@@ -48,7 +47,8 @@ class HarmoniClientInterface(HarmoniWebsocketClient, object):
         return
 
     def _handle_message(self, message):
-        message=ast.literal_eval(message)
+        if isinstance(message, str):
+            message=ast.literal_eval(message)
         rospy.loginfo("The request received is " + message["action"])
         request = message["action"]
         switcher = {

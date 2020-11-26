@@ -25,7 +25,7 @@ class HarmoniWebsocketClient(object):
             secure (bool): if the server is https (true) or not (false)
         """
         self.message = json.dumps(openmessage)
-        websocket.enableTrace(True)
+        #websocket.enableTrace(True)
         if port=="":
             
             if secure:
@@ -49,7 +49,7 @@ class HarmoniWebsocketClient(object):
 
     def on_message(self, message):
         rospy.loginfo("Receving the message {message}")
-        return message
+        return
 
     def on_error(self, error):
         rospy.loginfo(error)

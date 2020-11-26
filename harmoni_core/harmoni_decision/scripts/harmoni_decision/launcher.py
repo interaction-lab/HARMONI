@@ -90,6 +90,24 @@ class Launcher:
         rospy.loginfo(f"Created the launch file {file_name}")
         return
 
+    def _create_xml_launcher_pattern(self, name, repo, package_array, launch_file_array):
+        """Create xml launch file """
+        root = ET.Element("launch")
+        for i in range(0, len(launch_file_array)):
+            include = ET.SubElement(
+                root,
+                "include",
+                file=f"$(find harmoni_{name})/launch/sequence_pattern.launch",
+            )
+            args = ET.SubElement(include, "arg", name="pattern_name", value=package_array[i])
+        tree = ET.ElementTree(root)
+        abs_path = os.path.abspath(__file__)
+        path = abs_path.split("scripts/")
+        file_name = "harmoni_" + name + ".launch"
+        tree.write(path[0] + "launch/" + file_name)
+        rospy.loginfo(f"Created the launch file {file_name}")
+        return
+
     def launch_services(self, repo, launch):
         """Launch services """
         name = "service"
@@ -98,6 +116,17 @@ class Launcher:
         self._create_xml_launcher(name, repo, pkg, exb)
         if launch:
             self._launch_with_subprocess(repo, name)
+        rospy.loginfo(f"Done spawning services: {pkg} from repo {repo}")
+        return
+
+    def launch_pattern(self, repo, launch):
+        """Launch services """
+        name = repo
+        [repo, pkg, exb] = self._get_service_pkg(repo)
+        rospy.loginfo(f"Launching services: {pkg} from repo {repo}")
+        self._create_xml_launcher_pattern(name, repo, pkg, exb)
+        if launch:
+            self._launch_with_subprocess("harmoni", name)
         rospy.loginfo(f"Done spawning services: {pkg} from repo {repo}")
         return
 
@@ -113,8 +142,10 @@ def main():
         rospy.loginfo(f"Repos to include: {repos}")
         launch = Launcher()
         for repo in repos:
-            if repo != "":
+            if repo != "" and repo!="pattern":
                 launch.launch_services(repo, launch_params)
+            elif repo=="pattern":
+                launch.launch_pattern(repo, launch_params)
         rospy.spin()
     except rospy.ROSInterruptException:
         pass

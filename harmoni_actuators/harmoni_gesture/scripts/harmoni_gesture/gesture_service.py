@@ -60,7 +60,8 @@ class GestureService(HarmoniServiceManager):
         print("List callback")
         if self.gestures_name == []:
             rospy.loginfo("Gesture list received")
-            data = ast.literal_eval(data.data)
+            if isinstance(data, str):
+                data = ast.literal_eval(data.data)
             for item in data:
                 self.gestures_name.append(item["name"])
                 self.gestures_duration.append(item["duration"])

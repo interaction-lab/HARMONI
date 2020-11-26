@@ -23,9 +23,12 @@ $(document).ready(function () {
     })
         .done(function () {
             if(view.includes("code")){
+                console.log("Added code script")
                 addCode()
             }
-            $("#"+view).show();
+            if(show){
+                $("#"+view).show();
+            }
             // ADD HERE the event click event
             $("button").on("click", function () {
                 var value_item = $(this).closest('container').find('div.button');

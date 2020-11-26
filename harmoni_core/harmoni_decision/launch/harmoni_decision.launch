@@ -2,7 +2,7 @@
 <launch>
    
 	<arg name="use_decision" default="true"/>
-	<arg name="name" default="multiple_choice"/>
+	<arg name="name" default="linguistic"/>
 	<arg name="test" default="false"/>
 	<arg name="test_input" default="{'activity_type':'Assessment', 'structure':'Relative', 'name':'Pre-test'}"/>
 	<arg name="test_id" default="default"/>

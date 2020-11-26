@@ -153,9 +153,9 @@ class EyesService(HarmoniServiceManager):
     def get_face_data(self, data):
         """ Get the validated data of the face"""
         # rospy.loginfo("The face expressions available are %s" % self.face_expression)
-
-        data = ast.literal_eval(data)
-        behavior_data = ast.literal_eval(data["behavior_data"])
+        if isinstance(data, str):
+            data = ast.literal_eval(data)
+            behavior_data = ast.literal_eval(data["behavior_data"])
         # print(data)
 
         viseme_set = []
@@ -335,9 +335,9 @@ class MouthService(HarmoniServiceManager):
     def get_face_data(self, data):
         """ Get the validated data of the face"""
         # rospy.loginfo("The face expressions available are %s" % self.face_expression)
-
-        data = ast.literal_eval(data)
-        behavior_data = ast.literal_eval(data["behavior_data"])
+        if isinstance(data, str):
+            data = ast.literal_eval(data)
+            behavior_data = ast.literal_eval(data["behavior_data"])
 
         viseme_set = []
         facial_expression = []

@@ -1,0 +1,1 @@
+<launch><include file="$(find harmoni_pattern)/launch/sequence_pattern.launch"><arg name="pattern_name" value="idle" /></include><include file="$(find harmoni_pattern)/launch/sequence_pattern.launch"><arg name="pattern_name" value="code" /></include></launch>

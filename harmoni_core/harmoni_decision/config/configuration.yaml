@@ -10,3 +10,7 @@ hardware:
   #camera: ["default"]
   speaker: ["default"]
   # gesture: ["default"]
+
+pattern:
+  idle: ["default"]
+  code: ["default"]

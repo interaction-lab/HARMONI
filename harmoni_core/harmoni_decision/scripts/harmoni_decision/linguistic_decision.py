@@ -7,7 +7,8 @@ import roslib
 from harmoni_common_lib.constants import State
 from harmoni_common_lib.service_server import HarmoniServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
-from harmoni_common_lib.client_interface import HarmoniClientInterface
+from harmoni_common_lib.interface_client import HarmoniClientInterface
+from harmoni_common_lib.interface_manager import HarmoniInterfaceManager
 import harmoni_common_lib.helper_functions as hf
 
 # Specific Imports
@@ -18,13 +19,12 @@ import inspect
 import ast
 from std_msgs.msg import String
 from harmoni_common_lib.action_client import HarmoniActionClient
-from harmoni_common_lib.client_interface import HarmoniClientInterface
 from harmoni_common_lib.constants import DetectorNameSpace, ActionType, ActuatorNameSpace
 from collections import deque
 from time import time
 import threading
 
-class MultipleChoiceDecisionManager(HarmoniServiceManager, HarmoniClientInterface):
+class LinguisticDecisionManager(HarmoniServiceManager, HarmoniInterfaceManager):
     """Instantiates behaviors and receives commands/data for them.
 
     This class is a singleton ROS node and should only be instantiated once.
@@ -35,30 +35,42 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager, HarmoniClientInterfac
         self.name = name
         self.url = url
         self.service_id  = test_id
-        self.activity_selected = ast.literal_eval(test_input)
+        if isinstance(test_input, str):
+            self.activity_selected = ast.literal_eval(test_input)
         self.index = 0
         self.sequence_scenes = {}
         self.type_web = ""
         self.patient_id =""
-        self.scripted_services = ["code", "multiple_choice","display_image"] #get the json names
+        #self.scripted_services = ["code", "multiple_choice","display_image"] #get the json names
+        self.scripted_services = ["code","idle"]
         self.setup_scene()
         self._setup_clients()
         self.state = State.INIT
 
-    def connect_socket(self, data):
-        rospy.loginfo(data.data)
-        data = data.data
-        data = ast.literal_eval(data)
-        rospy.loginfo(data)
-        patient_id = data["patient_id"]
+    def connect_socket(self, patient_id):
         self.message={"action":"OPEN", "patientId": patient_id}
         self.patient_id = int(patient_id)
-        #start WebSocket connection
-        super().open_connect(self.message)
+        rospy.loginfo("Connection to the socket")
 
-    def open(message):
-        rospy.log(message)
-        
+    def open(self, message):
+        rospy.loginfo(message)
+        if isinstance(message, str):
+            message = ast.literal_eval(message)
+        if message["patientId"] == self.patient_id:
+            rospy.loginfo("Pairing works")
+            # set activity to idle
+            self.do_request(0,"idle")
+        else:
+            rospy.loginfo("Wrong code")
+            # rewrite the code
+            self.do_request(0,"code")
+        return
+
+    def play(self,message):
+        rospy.loginfo("The play message is " + message)
+        if isinstance(message, str):
+            message = ast.literal_eval(message)
+        return
 
     def _setup_clients(self):
         """
@@ -98,7 +110,7 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager, HarmoniClientInterfac
     def do_request(self, index, service):
         rospy.loginfo("_____START STEP "+str(index)+" DECISION MANAGER_______")
         self.state = State.REQUEST
-        optional_data=""
+        optional_data=None
         if service=="multiple_choice":
             if self.type_web=="full":
                 optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'main_img_full', 'set_content':'"+self.url + self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'target_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["target_img"]+".png'},{'component_id':'comp_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["comp_img"]+".png'},{'component_id':'distr_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["distr_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
@@ -119,9 +131,11 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager, HarmoniClientInterfac
                 optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'main_img_alt', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'display_image_container', 'set_content':''}]"}
         elif service=="code":
             optional_data = {"web_page_default":"[{'component_id':'"+service+"_container', 'set_content':''}]"}
+        if optional_data!="":
+            optional_data = str(optional_data)
         self.service_clients[service].send_goal(
                     action_goal=ActionType.REQUEST,
-                    optional_data=str(optional_data),
+                    optional_data=optional_data,
                     wait=False,
                 )
         rospy.loginfo(f"Goal sent to {service}")
@@ -137,7 +151,8 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager, HarmoniClientInterfac
         self.client_results[result["service"]].append(
             {"time": time(), "data": result["message"]}
         )
-        result_data = ast.literal_eval(result["message"])
+        if isinstance(result["message"], str):
+            result_data = ast.literal_eval(result["message"])
         web_result = []
         for data in result_data:
             if "w" in data:
@@ -174,7 +189,13 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager, HarmoniClientInterfac
                     self.do_request(self.index,service)
             elif result['service'] == "code":
                 for res in web_result:
-                    self.patient_id = res
+                    if res!="":
+                        rospy.loginfo("The result is: "+str(res))
+                        if isinstance(res, str):
+                            res = ast.literal_eval(res)
+                            res = res["patient_id"]
+                        patient_id = res
+                        self.connect_socket(patient_id)
         else:
             service = "display_image"
             rospy.loginfo("End of activity")
@@ -224,12 +245,16 @@ if __name__ == "__main__":
         url = rospy.get_param("/url_" + name + "/")
         try:
             rospy.init_node(name+"_decision")
-            bc = MultipleChoiceDecisionManager(name, test_id, url, test_input)
+            bc = LinguisticDecisionManager(name, test_id, url, test_input)
             service_server = HarmoniServiceServer(name=name+"_decision", service_manager=bc)
-            client_interface = HarmoniClientInterface(ip="192.168.1.83",port=3210, client_manager=bc)
+            interface_client = HarmoniClientInterface(ip="192.168.1.83",client_manager=bc,port=3210)
             rospy.loginfo(f"START from the first step of {name} decision.")
             if test:
                 bc.start()
+                while bc.patient_id=="":
+                    rospy.loginfo("Wait")
+                    rospy.sleep(1)
+                interface_client.open_socket(bc.message)
             else:
                 service_server.update_feedback()
             rospy.spin()

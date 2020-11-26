@@ -110,11 +110,13 @@ class WebService(HarmoniServiceManager):
 
     def _get_web_data(self, data):
         web_array = []
-        data = ast.literal_eval(data)
+        if isinstance(data, str):
+            data = ast.literal_eval(data)
         rospy.loginfo("Data received are"+str(data))
         if not isinstance(data, list):
             if "behavior_data" in data.keys():
-                behavior_data = ast.literal_eval(data["behavior_data"])
+                if isinstance(data["behavior_data"], str):
+                    behavior_data = ast.literal_eval(data["behavior_data"])
                 for b in behavior_data:
                     if "type" in b.keys():
                         if b["type"] == "web":
@@ -149,12 +151,16 @@ class WebService(HarmoniServiceManager):
         """Callback for subscription to the web page"""
         rospy.loginfo("Received an event from the webpage")
         print(event.data)
-        data = ast.literal_eval(event.data)
+        if isinstance(event.data, str):
+            data = ast.literal_eval(event.data)
         # self.result_msg = str(event)[2:-2]
         if hasattr(data, 'set_view'):
             self.result_msg = data["set_view"]
         elif hasattr(data, 'patient_id'):
             self.result_msg = data["patient_id"]
+        else:
+            self.result_msg = str(data)
+        rospy.loginfo("The result msg is " + self.result_msg)
         return
 
 
