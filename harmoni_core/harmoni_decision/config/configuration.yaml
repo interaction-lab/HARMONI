@@ -14,3 +14,5 @@ hardware:
 pattern:
   idle: ["default"]
   code: ["default"]
+  multiple_choice: ["default"]
+  display_image: ["default"]

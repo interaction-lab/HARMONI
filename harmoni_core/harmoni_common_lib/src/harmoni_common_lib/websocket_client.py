@@ -9,6 +9,7 @@ import yaml
 import _thread as thread
 import time
 import json
+import ast
 
 class HarmoniWebsocketClient(object):
     """
@@ -48,7 +49,25 @@ class HarmoniWebsocketClient(object):
         
 
     def on_message(self, message):
-        rospy.loginfo("Receving the message {message}")
+        rospy.loginfo(f"Receiving the message {message}")
+        message=ast.literal_eval(message)
+        rospy.loginfo("The request received is " + message["action"])
+        request = message["action"]
+        rospy.loginfo("Request is "+request)
+        if request=="OPEN":
+            self.open(message)
+        elif request=="PLAY":
+            self.play_game(message)
+        elif request=="NEXT":
+            self.next(message)
+        elif request=="PAUSE":
+            self.pause(message)
+        elif request=="RESUME":
+            self.resume(message)
+        elif request=="PREVIOUS":
+            self.client_manager.previous(message)
+        elif request=="TERMINATE":
+            self.terminate(message)
         return
 
     def on_error(self, error):
@@ -67,10 +86,73 @@ class HarmoniWebsocketClient(object):
         return
 
     def send(self, message):
-        rospy.loginfo("Send the message {message}")
+        rospy.loginfo(f"Send the message {message}")
         self.ws.send(json.dumps(message))
         return
+        
+
+    def open(self, message):
+        """ Make a request of another service, such as a web service
+
+        Raises:
+            NotImplementedError: To be used, this function should be overwritten by the child class.
+        """
+        rospy.loginfo("open")
+        return
+
     
+    def next(self, message):
+        """ Make a request of another service, such as a web service
+
+        Raises:
+            NotImplementedError: To be used, this function should be overwritten by the child class.
+        """
+        rospy.loginfo("open")
+        return
+
+    def play_game(self, message):
+        """ Make a request of another service, such as a web service
+
+        Raises:
+            NotImplementedError: To be used, this function should be overwritten by the child class.
+        """
+        rospy.loginfo("open")
+        return
+
+    def pause(self, message):
+        """ Make a request of another service, such as a web service
+
+        Raises:
+            NotImplementedError: To be used, this function should be overwritten by the child class.
+        """
+        rospy.loginfo("open")
+        return
+    def resume(self, message):
+        """ Make a request of another service, such as a web service
+
+        Raises:
+            NotImplementedError: To be used, this function should be overwritten by the child class.
+        """
+        rospy.loginfo("open")
+        return
+
+    def previous(self, message):
+        """ Make a request of another service, such as a web service
+
+        Raises:
+            NotImplementedError: To be used, this function should be overwritten by the child class.
+        """
+        rospy.loginfo("open")
+        return
+
+    def terminate(self, message):
+        """ Make a request of another service, such as a web service
+
+        Raises:
+            NotImplementedError: To be used, this function should be overwritten by the child class.
+        """
+        rospy.loginfo("open")
+        return
 
     
 

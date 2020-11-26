@@ -99,6 +99,7 @@ class Launcher:
                 "include",
                 file=f"$(find harmoni_{name})/launch/sequence_pattern.launch",
             )
+            args = ET.SubElement(include, "arg", name=package_array[i], value='true')
             args = ET.SubElement(include, "arg", name="pattern_name", value=package_array[i])
         tree = ET.ElementTree(root)
         abs_path = os.path.abspath(__file__)
