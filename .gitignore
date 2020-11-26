@@ -105,7 +105,7 @@ ENV/
 **/build/**
 #**/__*__.py
 #**/*.yaml
-#**/*.wav
+
 **/*.ogg
 **/private-keys.json
 **/private-keys_en.json
@@ -119,3 +119,7 @@ harmoni_core/harmoni_decision/launch/harmoni_service.launch
 **/harmoni_core/harmoni_decision/launch/hardware_service.launch
 **/harmoni_core/harmoni_decision/launch/harmoni_service.launch
 harmoni_dialogues/harmoni_bot/config/configuration.yaml
+harmoni_detectors/harmoni_stt/config/private-keys.json
+harmoni_actuators/harmoni_tts/temp_data/**
+**/*.bag
+**/*.wav

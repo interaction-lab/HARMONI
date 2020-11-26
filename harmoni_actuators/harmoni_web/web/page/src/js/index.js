@@ -1,5 +1,4 @@
 var page = "pageContent";
-//var view = "container_2";
 
 $(document).ready(function () {
 
@@ -12,14 +11,25 @@ $(document).ready(function () {
                     var component = v.component;
                     var children = v.children;
                     var id_parent = "body_page";
-                    handleComponents(children, id, component, id_parent);
+                    var comp_class = "";
+                    if(v.hasOwnProperty('comp_class')){
+                        comp_class = v.comp_class
+                    }
+                    handleComponents(children, id, component, id_parent, comp_class);
                     $("#" + id).hide();
                 });
             };
         });
     })
         .done(function () {
-            //$("#"+view).show();
+            if(view.includes("code")){
+                console.log("Added code script")
+                addCode()
+            }
+            if(show){
+                $("#"+view).show();
+            }
+            // ADD HERE the event click event
             $("button").on("click", function () {
                 var value_item = $(this).closest('container').find('div.button');
                 var value = value_item.prevObject.prevObject[0].previousSibling
@@ -80,19 +90,23 @@ function clickListener(clicked_component) {
     // Send the event clicked to the ROS package
 }
 
-function handleComponents(children, id, component, id_parent) {
+function handleComponents(children, id, component, id_parent, comp_class) {
     if (Array.isArray(children)) {
-        var component_html = createComponent(component, children, id);
+        var component_html = createComponent(component, children, id, comp_class);
         $("#" + id_parent).append(component_html);
         $.each(children, function (k_c, v_c) {
             console.log(v_c);
             var id_c = v_c.id;
             var component_c = v_c.component;
             var children_c = v_c.children;
-            handleComponents(children_c, id_c, component_c, id);
+            var class_c = "";
+            if(v_c.hasOwnProperty('comp_class')){
+                class_c = v_c.comp_class
+            }
+            handleComponents(children_c, id_c, component_c, id, class_c);
         });
     } else {
-        var component_html = createComponent(component, children, id);
+        var component_html = createComponent(component, children, id, comp_class);
         $("#" + id_parent).append(component_html);
 
 
@@ -100,22 +114,28 @@ function handleComponents(children, id, component, id_parent) {
 }
 
 
-function createComponent(component, content, id) {
+function createComponent(component, content, id, comp_class) {
+    if(comp_class==""){
+        comp_class="default"
+    }
     switch (component) {
         case "container":
-            var html = "<div class ='container' id=" + id + "></div>";
+            var html = "<div class ='container "+comp_class+"' id=" + id + "></div>";
             break;
         case "click_img":
-            var html = "<a id=" + id +"><img  src=" + content + "></a>";
+            var html = "<a id=" + id +"><img class="+comp_class+"  src=" + content + "></a>";
             break;
         case "img":
-            var html = "<img src='" + content + "' id=" + id + ">";
+            var html = "<img class="+comp_class+"  src='" + content + "' id=" + id + ">";
+            break;
+        case "video":
+            var html = "<video class="+comp_class+"  src='" + content + "' id=" + id + " muted autoplay loop>";
             break;
         case "text":
             if (!Array.isArray(content)) {
-                var html = "<p id=" + id + ">" + content + "</p>";
+                var html = "<p class="+comp_class+"  id=" + id + ">" + content + "</p>";
             } else {
-                var html = "<p id=" + id + "></p>";
+                var html = "<p class="+comp_class+"  id=" + id + "></p>";
             }
             break;
         case "title":
@@ -126,16 +146,19 @@ function createComponent(component, content, id) {
             }
             break;
         case "input_text":
-                var html = "<input id="+ id +" type='text' name='inputext'>";
+                var html = "<input class="+comp_class+"  id="+ id +" type='text' name='inputext' >";
                 break;
+        case "input_number":
+            var html = "<input class="+comp_class+"  id="+ id +" type='number' name='inpnumb' maxlength="+content+">";
+            break;
         case "button":
-            var html = "<button id=" + id + " value= ''>" + content + "</button>";
+            var html = "<button class="+comp_class+"  id=" + id + " value= ''>" + content + "</button>";
             break;
         case "row":
-            var html = "<div class='row' id=" + id + "></div>";
+            var html = "<div class='row "+comp_class+"' id=" + id + "></div>";
             break;
         case "col":
-            var html = "<div class='col' id=" + id + "></div>";
+            var html = "<div class='col "+comp_class+"' id=" + id + "></div>";
             break;
     }
     return html;
