@@ -7,10 +7,9 @@ import roslib
 from harmoni_common_lib.constants import State
 from harmoni_common_lib.service_server import HarmoniServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
-from harmoni_common_lib.interface_client import HarmoniClientInterface
-from harmoni_common_lib.interface_manager import HarmoniInterfaceManager
 from harmoni_common_lib.websocket_client import HarmoniWebsocketClient
 import harmoni_common_lib.helper_functions as hf
+from harmoni_pattern.sequential_pattern import SequentialPattern
 
 # Specific Imports
 import rospkg
@@ -24,6 +23,8 @@ from harmoni_common_lib.constants import DetectorNameSpace, ActionType, Actuator
 from collections import deque
 from time import time
 import threading
+import logging
+
 
 class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
     """Instantiates behaviors and receives commands/data for them.
@@ -45,14 +46,39 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         self.session_id = ""
         self.scripted_services = pattern_list
         self.setup_scene()
-        self._setup_clients()
+        self.class_clients={}
+        self._setup_classes()
+        self.command = None
         self.state = State.INIT
+
+    
+
+    def _setup_classes(self):
+        """
+        Set up the pattern classes
+        """
+        rospack = rospkg.RosPack()
+        pck_path = rospack.get_path("harmoni_pattern")
+        for pattern in self.scripted_services:
+            pattern_script_path = pck_path + f"/pattern_scripting/{pattern}.json"
+            with open(pattern_script_path, "r") as read_file:
+                script = json.load(read_file)
+            rospy.loginfo(pattern)
+            self.class_clients[pattern] = SequentialPattern(pattern,script)
+            self.client_results[pattern] = deque()
+        rospy.loginfo("Classes instantiate")
+        rospy.loginfo(
+            f"{self.name} Decision manager needs these pattern classess: {self.scripted_services}"
+        )
+        rospy.loginfo("Decision interface classess clients have been set up!")
+        return
 
     def connect_socket(self, patient_id):
         self.message={"action":"OPEN", "patientId": patient_id}
         self.patient_id = int(patient_id)
         rospy.loginfo("Connection to the socket")
-        ip = "192.168.1.83"
+        #ip = "192.168.1.83"
+        ip = "192.168.1.104"
         port = 3210
         secure =False
         HarmoniWebsocketClient.__init__(self,ip, port, secure, self.message)
@@ -74,30 +100,35 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
     def next(self,message):
         rospy.loginfo(message)
         #send finished
+        self.stop("multiple_choice")
+        self.command = "NEXT"
         response = {"action":"FINISHED", "patientId":self.patient_id, "sessionId":self.session_id,"minitask":self.index, "correct":False,"itemSelected": "null"}
-        self.index += 1
-        self.do_request(self.index,"multiple_choice")
         return
 
     def previous(self,message):
         rospy.loginfo(message)
         #send finished
+        self.index-=2
+        rospy.loginfo(self.index)
+        self.command = "PREVIOUS"
         response = {"action":"FINISHED", "patientId":self.patient_id, "sessionId":self.session_id,"minitask":self.index, "correct":False,"itemSelected": "null"}
-        self.index -= 1
-        self.do_request(self.index,"multiple_choice")
+        self.stop("multiple_choice")
         return
 
     def terminate(self,message):
+        self.command = "TERMINATE"
         rospy.loginfo("terminate")
         self.stop("multiple_choice")
         return
 
     def pause(self,message):
+        self.command = "PAUSE"
         rospy.loginfo("pause")
         self.stop("multiple_choice")
         return
 
     def resume(self, message):
+        self.command = "RESUME"
         rospy.loginfo("resume game")
         rospy.loginfo(message)
         if isinstance(message, str):
@@ -108,7 +139,15 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         self.setup_scene()
         #self.send({"action":"STARTED","patientId":self.patient_id, "sessionId":self.session_id})
         rospy.sleep(2) ##handle when it finishes
-        self.do_request(self.activity_selected["minitask"],"multiple_choice")
+        self.do_request(self.activity_selected["miniTaskId"],"multiple_choice")
+        return
+
+    def repeat(self, message):
+        self.command = "REPEAT"
+        rospy.loginfo("repeat game")
+        rospy.loginfo(message)
+        self.index = 0
+        self.do_request(0,"intro")
         return
 
     def play_game(self, message):
@@ -122,37 +161,21 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         self.setup_scene()
         self.send({"action":"STARTED","patientId":self.patient_id, "sessionId":self.session_id})
         rospy.sleep(2) ##handle when it finishes
-        self.do_request(0,"multiple_choice")
+        self.do_request(0,"intro")
         return
-
-    def _setup_clients(self):
-        """
-        Set up the pattern client
-        """
-        for client in self.scripted_services:
-            rospy.loginfo(client)
-            self.service_clients[client] = HarmoniActionClient(client)
-            self.client_results[client] = deque()
-        rospy.loginfo("Clients created")
-        rospy.loginfo(
-            f"{self.name} Decision manager needs these services: {self.scripted_services}"
-        )
-        for cl, client in self.service_clients.items():
-            client.setup_client(cl, self._result_callback, self._feedback_callback)
-        rospy.loginfo("Decision interface action clients have been set up!")
-        return
-
 
     def start(self, service="code"):
+        self.index = 0
         self.state = State.START
-        self.do_request(0,service)
+        self.do_request(self.index,service)
         return
 
 
     def stop(self, service):
         """Stop the Behavior Pattern """
         try:
-            self.service_clients[service].cancel_goal()
+            rospy.loginfo("Stop the goal")
+            self.class_clients[service].stop("web_page_default")
             self.state = State.SUCCESS
         except Exception as E:
             self.state = State.FAILED
@@ -162,7 +185,7 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         rospy.loginfo("_____START STEP "+str(index)+" DECISION MANAGER FOR SERVICE "+service+"_______")
         self.state = State.REQUEST
         optional_data=None
-
+        self.command=None
         if self.type_web=="alt":
             service = "display_image"
         if service=="multiple_choice":
@@ -183,14 +206,24 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         elif service=="display_image":
             if self.type_web=="alt":
                 optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'main_img_alt', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'display_image_container', 'set_content':''}]"}
+            else:
+                optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'main_img_alt', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'display_image_container', 'set_content':''}]"}
+        elif service=="intro":
+            optional_data = {"tts_default": self.sequence_scenes["intro"]["text"], "web_page_default":"[{'component_id':'main_img_alt', 'set_content':'"+self.url +self.sequence_scenes["intro"]["img"]+".png'},{'component_id':'display_image_container', 'set_content':''}]"}
+            service = "display_image"
         if optional_data!="":
             optional_data = str(optional_data)
-        self.service_clients[service].send_goal(
-                    action_goal=ActionType.REQUEST,
-                    optional_data=optional_data,
-                    wait=False,
-                )
-        rospy.loginfo(f"Goal sent to {service}")
+        def daemon():
+            rospy.loginfo("Starting")
+            self.class_clients[service].reset_init()
+            result_msg = self.class_clients[service].request(optional_data)
+            result = {"service":service, "message":result_msg}
+            rospy.loginfo("Received result from class")
+            self._result_callback(result)
+            rospy.loginfo('Exiting')
+        d = threading.Thread(target=daemon)
+        d.setDaemon(True)
+        d.start()
         return
 
 
@@ -203,7 +236,7 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         self.client_results[result["service"]].append(
             {"time": time(), "data": result["message"]}
         )
-        if isinstance(result["message"], str):
+        if isinstance(result["message"], str) and result["message"]!="":
             result_data = ast.literal_eval(result["message"])
         web_result = []
         for data in result_data:
@@ -213,53 +246,78 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         rospy.loginfo(web_result)
         result_empty = True
         if self.index < len(self.sequence_scenes["tasks"]):
-            if result['service']=="multiple_choice":
-                for res in web_result:
-                        service = "multiple_choice"
-                        if res == "":
-                            rospy.loginfo("Not doing anything")
-                            result_empty = True
-                        elif "Target" or "target" in res:
-                            self.index+=1
-                            if self.type_web=="alt":
-                                service="display_image"
-                            self.do_request(self.index,service)
-                            self.state = State.SUCCESS
-                            rospy.loginfo("Correct")
-                            result_empty = False
-                        elif "Comp" or "Distr" or "comp" or "distr" in res:
-                            self.do_request(self.index,service)
-                            rospy.loginfo("Wrong")
-                            self.state = State.FAILED
-                            result_empty = False
-                   
-            elif result['service'] == "display_image":
-                if self.type_web=="alt":
-                    rospy.loginfo("Here")
+            if self.command =="NEXT" or self.command=="PREVIOUS":
+                if result['service']=="multiple_choice":
                     service = "multiple_choice"
                     self.index+=1
+                    if self.type_web=="alt":
+                        service="display_image"
                     self.do_request(self.index,service)
-            elif result['service'] == "code":
-                for res in web_result:
-                    if res!="":
-                        rospy.loginfo("The result is: "+str(res))
-                        if isinstance(res, str):
-                            res = ast.literal_eval(res)
-                            res = res["patient_id"]
-                        patient_id = res
-                        self.connect_socket(patient_id)
+                    self.state = State.SUCCESS
+                    result_empty = False
+                elif result['service'] == "display_image":
+                    if self.type_web=="alt":
+                        rospy.loginfo("Here")
+                        service = "multiple_choice"
+                        self.index+=1
+                        self.do_request(self.index,service)
+            elif self.command=="TERMINATE" or self.command=="PAUSE":
+                service="idle"
+                self.do_request(self.index,service)
+            elif self.command=="RESUME":
+                rospy.loginfo("RESUME")
+            else:
+                if result['service']=="multiple_choice":
+                        res = web_result[1]
+                        service = "multiple_choice"
+                        for res in web_result:
+                            if res=="":
+                                result_empty = True
+                            else:
+                                if "Target" or "target" in res:
+                                    self.index+=1
+                                    if self.type_web=="alt":
+                                        service="display_image"
+                                    elif self.sequence_scenes["tasks"][self.index]["distr_img"]=="": #if choices empty only show main img.
+                                        rospy.loginfo("empty choices")
+                                        service="display_image"
+                                    self.do_request(self.index,service)
+                                    self.state = State.SUCCESS
+                                    rospy.loginfo("Correct")
+                                    result_empty = False
+                                elif "Comp" or "Distr" or "comp" or "distr" in res:
+                                    self.do_request(self.index,service)
+                                    rospy.loginfo("Wrong")
+                                    self.state = State.FAILED
+                                    result_empty = False
+                elif result['service'] == "display_image":
+                    if self.type_web=="alt":
+                        rospy.loginfo("Here")
+                        service = "multiple_choice"
+                        self.index+=1
+                        self.do_request(self.index,service)
+                    elif self.sequence_scenes["tasks"][self.index]["distr_img"]=="":
+                        service="display_image"
+                        self.do_request(self.index,service)
+                    else:
+                        rospy.loginfo("Here")
+                        service = "multiple_choice"
+                        self.do_request(self.index,service)
+                elif result['service'] == "code":
+                    for res in web_result:
+                        if res!="":
+                            rospy.loginfo("The result is: "+str(res))
+                            if isinstance(res, str):
+                                res = ast.literal_eval(res)
+                                res = res["patient_id"]
+                            patient_id = res
+                            self.connect_socket(patient_id)
         else:
-            service = "display_image"
+            service = "idle"
+            self.do_request(self.index,service)
             rospy.loginfo("End of activity")
         return
 
-    def _feedback_callback(self, feedback):
-        """ Send the feedback state to the Behavior Pattern tree to decide what to do next """
-        rospy.logdebug("The feedback recieved is %s and nothing more" % feedback)
-        # Check if the state is end, stop the behavior pattern
-        # if feedback["state"] == State.END:
-        #    self.end_pattern = True
-        return
 
     def setup_scene(self):
         """Setup the scene """
@@ -287,7 +345,6 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
                                             self.sequence_scenes = ep[activity_episode]
                                 else:
                                     self.sequence_scenes=nam[activity_name]
-        rospy.loginfo(self.sequence_scenes)
         return True
 
 if __name__ == "__main__":
@@ -304,12 +361,9 @@ if __name__ == "__main__":
         try:
             rospy.init_node(name+"_decision")
             bc = LinguisticDecisionManager(name, pattern_list, test_id, url, test_input)
-            service_server = HarmoniServiceServer(name=name+"_decision", service_manager=bc)
             rospy.loginfo(f"START from the first step of {name} decision.")
             if test:
                 bc.start()
-            else:
-                service_server.update_feedback()
             rospy.spin()
         except rospy.ROSInterruptException:
             pass

@@ -21,7 +21,8 @@
                                         },
                                         "intro": {
                                             "audio": "1_1_1_Intro",
-                                            "img": "1_1_1_Titolo"
+                                            "img": "1_1_1_Titolo",
+                                            "text": "Queste sono le avventure del cavallo Filippo"
                                         },
                                         "tasks": [
                                             {

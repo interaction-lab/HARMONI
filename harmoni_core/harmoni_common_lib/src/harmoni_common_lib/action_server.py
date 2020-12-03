@@ -224,6 +224,7 @@ class HarmoniActionServer(object):
     def set_preempted(self, result=None, text=""):
         if not result:
             result = self.get_default_result()
+            #self.current_goal.set_canceled(result, text)
         with self.action_server.lock, self.lock:
             rospy.logdebug("Setting the current goal as canceled")
             self.current_goal.set_canceled(result, text)

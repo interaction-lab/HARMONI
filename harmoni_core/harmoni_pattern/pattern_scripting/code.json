@@ -15,7 +15,7 @@
                     "action_goal": "REQUEST",
                     "resource_type": "service",
                     "wait_for": "new",
-                    "trigger":"Ciao, io mi chiamo Chiutti. Inserisci sul *QT/show_tablet* tablet il codice per iniziare a giocare insieme!"
+                    "trigger":"Ciao, io mi chiamo Chiuti. Inserisci sul *QT/show_tablet* tablet il codice per iniziare a giocare insieme!"
                 }
             },
             [

@@ -37,7 +37,6 @@ class SequentialPattern(HarmoniServiceManager):
         self.name = name
         self.scripted_services = self._get_services(script)
         self._setup_clients()
-
         if script[self.script_set_index]["set"] == "setup":
             self.setup(script[self.script_set_index]["steps"])
             self.script_set_index += 1
@@ -47,6 +46,7 @@ class SequentialPattern(HarmoniServiceManager):
 
     def reset_init(self):
         self.script_set_index = 0
+        self.end_pattern = False
         for client in self.scripted_services:
             self.client_results[client] = deque()
         self.state = State.INIT
@@ -167,9 +167,9 @@ class SequentialPattern(HarmoniServiceManager):
                 self.do_sequence(
                     self.script[self.script_set_index]["steps"], looping=True, data=data
                 )
-            elif self.end_pattern:
+            #elif self.end_pattern:
                 ##TODO
-                break
+            #    break
             self.script_set_index += 1
             r.sleep()
         rospy.loginfo("_________SEQUENCE PATTERN END__________")
@@ -179,12 +179,18 @@ class SequentialPattern(HarmoniServiceManager):
         self.response_received = True
         self.actuation_completed = True
         self.state = State.SUCCESS
-        return
+        return self.result_msg
 
     def stop(self, service):
         """Stop the Behavior Pattern """
+        rospy.loginfo("___________________STOP____________________")
         try:
-            self.service_clients[client].cancel_goal()
+            rospy.loginfo("The service is " + service)
+            self.service_clients[service].send_goal(
+                    action_goal=ActionType.OFF,
+                    optional_data="",
+                    wait=False,
+                )
             self.state = State.SUCCESS
         except Exception as E:
             self.state = State.FAILED
@@ -352,7 +358,7 @@ class SequentialPattern(HarmoniServiceManager):
         if len(result["data"]) < 500:
             rospy.loginfo(f"result is {result['data']}")
         rospy.loginfo(
-            f"Recieved result message length ({len(result['data'])}) from service {service}"
+            f"Received result message length ({len(result['data'])}) from service {service}"
         )
         self.client_results[service].appendleft({"time": result["time"], "data": result["data"]})
         # self._result_callback({"do_action": True, "message": result["data"]})

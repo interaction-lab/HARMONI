@@ -336,10 +336,11 @@ class HarmoniActionClient(object):
         """Save the action result """
         rospy.loginfo(f"Client ({self.name}) Heard back result")
         rospy.loginfo(f"Client ({self.name}) Do action?... {result.do_action}")
-        if len(result.message) < 500:
-            rospy.loginfo(f"Client ({self.name}) Message was : {result.message}")
-        else:
-            rospy.loginfo(f"Client ({self.name}) Message was : (too long to display)")
+        if result.message:
+            if len(result.message) < 500:
+                rospy.loginfo(f"Client ({self.name}) Message was : {result.message}")
+            else:
+                rospy.loginfo(f"Client ({self.name}) Message was : (too long to display)")
 
         self.action_result["service"] = self.name
         self.action_result["do_action"] = result.do_action

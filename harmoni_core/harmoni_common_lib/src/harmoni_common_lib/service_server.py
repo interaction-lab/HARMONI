@@ -103,6 +103,7 @@ class HarmoniServiceServer(HarmoniActionServer, object):
                 if self.get_preemption_status():
                     preempted = True
                     rospy.Rate(self.check_premption_rate)
+                    break
             if not hasattr(self.service_manager, "result_msg"):
                 self.service_manager.result_msg = ""
             if preempted or self.service_manager.state == State.FAILED:

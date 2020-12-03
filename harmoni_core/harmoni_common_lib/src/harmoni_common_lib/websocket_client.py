@@ -60,12 +60,14 @@ class HarmoniWebsocketClient(object):
             self.play_game(message)
         elif request=="NEXT":
             self.next(message)
+        elif request=="REPEAT":
+            self.repeat(message)
         elif request=="PAUSE":
             self.pause(message)
         elif request=="RESUME":
             self.resume(message)
         elif request=="PREVIOUS":
-            self.client_manager.previous(message)
+            self.previous(message)
         elif request=="TERMINATE":
             self.terminate(message)
         return
@@ -100,6 +102,15 @@ class HarmoniWebsocketClient(object):
         rospy.loginfo("open")
         return
 
+    def repeat(self, message):
+        """ Make a request of another service, such as a web service
+
+        Raises:
+            NotImplementedError: To be used, this function should be overwritten by the child class.
+        """
+        rospy.loginfo("repeat")
+        return
+
     
     def next(self, message):
         """ Make a request of another service, such as a web service
@@ -107,7 +118,7 @@ class HarmoniWebsocketClient(object):
         Raises:
             NotImplementedError: To be used, this function should be overwritten by the child class.
         """
-        rospy.loginfo("open")
+        rospy.loginfo("next")
         return
 
     def play_game(self, message):
@@ -142,7 +153,7 @@ class HarmoniWebsocketClient(object):
         Raises:
             NotImplementedError: To be used, this function should be overwritten by the child class.
         """
-        rospy.loginfo("open")
+        rospy.loginfo("previous")
         return
 
     def terminate(self, message):

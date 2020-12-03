@@ -15,6 +15,8 @@ from std_msgs.msg import String
 import boto3
 import json
 import ast
+from time import time
+import threading
 
 
 class WebService(HarmoniServiceManager):
@@ -37,7 +39,7 @@ class WebService(HarmoniServiceManager):
             self._event_click_callback,
             queue_size=1,
         )
-        print(ActuatorNameSpace.web.value + self.service_id + "/set_view")
+        self.end_listening = False
         self.web_pub = rospy.Publisher(
             ActuatorNameSpace.web.value + self.service_id + "/set_view",
             String,
@@ -48,10 +50,19 @@ class WebService(HarmoniServiceManager):
         )
         """ Setup the web request """
         self.setup_web()
-        self.result = None
         """Setup the web service as server """
         self.state = State.INIT
         return
+
+    def stop(self):
+        """ End the web"""
+        def daemon():
+            self.end_listening = True
+            rospy.loginfo("STOP!")
+        d = threading.Thread(target=daemon)
+        d.setDaemon(True)
+        d.start()
+        rospy.loginfo("__________END___________")
 
     def setup_web(self):
         rospy.loginfo("Setting up the %s" % self.name)
@@ -67,24 +78,35 @@ class WebService(HarmoniServiceManager):
         rospy.loginfo("Start the %s request" % self.name)
         self.state = State.REQUEST
         self.actuation_completed = False
-        self.result_msg = None
+        self.result_msg = ""
         data_array = []
         if data!="":
             data_array = self._get_web_data(data)
         try:
-            rospy.sleep(1)
+            rospy.sleep(0.2)
             for data in data_array:
                 self.send_request(data)
                 rospy.sleep(0.2)
-            while not rospy.is_shutdown() and not self.result_msg:
-                rospy.logdebug("Waiting for user")
-                rospy.sleep(0.2)
-            rospy.loginfo(
-                f"Message Received {self.result_msg}"
-            )  # "\"My name is chris\""
-            self.state = State.SUCCESS
-            self.actuation_completed = True
-            self.response_received = True
+            def daemon():
+                rospy.loginfo("STARTING")
+                rospy.loginfo(self.result_msg)
+                rospy.loginfo(self.end_listening)
+                while not rospy.is_shutdown() and not self.end_listening:
+                    rospy.loginfo("Waiting for user")
+                    if self.result_msg!="":
+                        break
+                    rospy.sleep(0.2)
+                rospy.loginfo(
+                    f"Message Received {self.result_msg}"
+                )  # "\"My name is chris\""
+                self.state = State.SUCCESS
+                self.actuation_completed = True
+                self.response_received = True
+                self.end_listening = False
+                rospy.loginfo("ENDING")
+            d = threading.Thread(target=daemon)
+            d.setDaemon(True)
+            d.start()
         except Exception:
             self.state = State.FAILED
             self.actuation_completed = True

@@ -28,7 +28,7 @@
                     "web_face_mouth_default": {
                         "action_goal": "DO",
                         "resource_type": "actuator",
-                        "wait_for": ""
+                        "wait_for": "new"
                     }
                 }
             ],
