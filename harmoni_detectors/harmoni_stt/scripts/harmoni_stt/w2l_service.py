@@ -100,7 +100,7 @@ class SpeechToTextService(HarmoniServiceManager):
 
     def transcribe_stream(self):
         # Setup W2L Process and read results as available
-        rospy.loginfo("Openning up W2L process")
+        rospy.loginfo("Opening up W2L process")
         self.w2l_process = Popen(
             ["{} --input_files_base_path={}".format(self.w2l_bin, self.model_path)],
             stdin=PIPE,
