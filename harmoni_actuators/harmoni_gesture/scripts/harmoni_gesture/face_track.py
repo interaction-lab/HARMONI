@@ -54,17 +54,17 @@ class FaceTracker(HarmoniServiceManager):
         face = data.objects[0]
         if face == None:
             print("Face Tracker: No face to track.")
-        else if isinstance(face, Object2D):
+        elif isinstance(face, Object2D):
             img_w, img_h, x, y = face.width, face.height, face.center_x, face.center_y
             img_center_x = img_w / 2
             img_center_y = img_h / 2
             if x > img_center_x + self._track_threshold[0]:
                 print("Face Tracker: Face on right, move head right.")
-            else if x < img_center_x - self._track_threshold[0]:
+            elif x < img_center_x - self._track_threshold[0]:
                 print("Face Tracker: Face on left, move head left.")
             if y > img_center_y + self._track_threshold[1]:
                 print("Face Tracker: Face above, move head up.")
-            else if y < img_center_y - self._track_threshold[1]:
+            elif y < img_center_y - self._track_threshold[1]:
                 print("Face Tracker: Face below, move head down.")
         else:
             rospy.logerr("Face Tracker received bad face object from detector.")
