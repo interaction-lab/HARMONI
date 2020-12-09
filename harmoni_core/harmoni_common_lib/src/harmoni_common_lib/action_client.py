@@ -62,7 +62,7 @@ class HarmoniActionClient(object):
     # for this goal is received.  Takes one parameter: the feedback.
     # destroys the old goal handle
     def send_goal(
-        self, action_goal, optional_data="", condition="", time_out=60, wait=True,
+        self, action_goal, optional_data="", condition="", time_out=2000, wait=True,
     ):
         """Sends a goal to the action server tied to this client.
 

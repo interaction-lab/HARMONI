@@ -90,7 +90,7 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         if message["patientId"] == self.patient_id:
             rospy.loginfo("Pairing works")
             # set activity to idle
-            self.do_request(0,"idle")
+            self.do_request(0,"idle",data="Benvenuto, oggi giocheremo insieme!")
         else:
             rospy.loginfo("Wrong code")
             # rewrite the code
@@ -161,6 +161,7 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         self.setup_scene()
         self.send({"action":"STARTED","patientId":self.patient_id, "sessionId":self.session_id})
         rospy.sleep(2) ##handle when it finishes
+        self.index = 0
         self.do_request(0,"intro")
         return
 
@@ -181,25 +182,25 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
             self.state = State.FAILED
         return
 
-    def do_request(self, index, service):
+    def do_request(self, index, service, data=None):
         rospy.loginfo("_____START STEP "+str(index)+" DECISION MANAGER FOR SERVICE "+service+"_______")
         self.state = State.REQUEST
         optional_data=None
         self.command=None
-        if self.type_web=="alt":
-            service = "display_image"
+        #if self.type_web=="alt":
+        #    service = "display_image"
         if service=="multiple_choice":
             if self.type_web=="full":
-                optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'main_img_full', 'set_content':'"+self.url + self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'target_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["target_img"]+".png'},{'component_id':'comp_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["comp_img"]+".png'},{'component_id':'distr_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["distr_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
+                optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'main_img_full', 'set_content':'"+self.url + self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'target_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["third_img"]+".png'},{'component_id':'comp_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["first_img"]+".png'},{'component_id':'distr_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["second_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
             elif self.type_web=="choices":
-                optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'target_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["target_img"]+".png'},{'component_id':'comp_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["comp_img"]+".png'},{'component_id':'distr_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["distr_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
+                optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'target_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["third_img"]+".png'},{'component_id':'comp_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["first_img"]+".png'},{'component_id':'distr_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["second_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
             elif self.type_web=="composed":
                 optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'first_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["first_img"]+".png'},{'component_id':'second_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["second_img"]+".png'},{'component_id':'third_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["third_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
             elif self.type_web=="alt":
                 if self.sequence_scenes["tasks"][index]["text"]=="":
                     service = "display_image"
                 else:
-                    optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'target_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["target_img"]+".png'},{'component_id':'comp_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["comp_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
+                    optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'target_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["third_img"]+".png'},{'component_id':'comp_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["first_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
             else:
                 rospy.loginfo("Not existing activity")
                 return
@@ -210,7 +211,12 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
                 optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'main_img_alt', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'display_image_container', 'set_content':''}]"}
         elif service=="intro":
             optional_data = {"tts_default": self.sequence_scenes["intro"]["text"], "web_page_default":"[{'component_id':'main_img_alt', 'set_content':'"+self.url +self.sequence_scenes["intro"]["img"]+".png'},{'component_id':'display_image_container', 'set_content':''}]"}
+            self.index=0
             service = "display_image"
+        elif service=="idle":
+            if data:
+                optional_data = {"tts_default": data}
+            self.index=0
         if optional_data!="":
             optional_data = str(optional_data)
         def daemon():
@@ -245,7 +251,7 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         rospy.loginfo("_____END STEP "+str(self.index)+" DECISION MANAGER_______")
         rospy.loginfo(web_result)
         result_empty = True
-        if self.index < len(self.sequence_scenes["tasks"]):
+        if self.index < (len(self.sequence_scenes["tasks"])-1) and self.index!=-1:
             if self.command =="NEXT" or self.command=="PREVIOUS":
                 if result['service']=="multiple_choice":
                     service = "multiple_choice"
@@ -263,7 +269,7 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
                         self.do_request(self.index,service)
             elif self.command=="TERMINATE" or self.command=="PAUSE":
                 service="idle"
-                self.do_request(self.index,service)
+                self.do_request(self.index,service, data="Abbiamo terminato l'attività.")
             elif self.command=="RESUME":
                 rospy.loginfo("RESUME")
             else:
@@ -274,19 +280,27 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
                             if res=="":
                                 result_empty = True
                             else:
-                                if "Target" or "target" in res:
+                                rospy.loginfo(res)
+                                if isinstance(res, str):
+                                    res = ast.literal_eval(res)
+                                if "arget" in res["set_view"]:
                                     self.index+=1
-                                    if self.type_web=="alt":
+                                    if (self.type_web=="alt" and self.sequence_scenes["tasks"][self.index]["main_img"]!=""):
                                         service="display_image"
-                                    elif self.sequence_scenes["tasks"][self.index]["distr_img"]=="": #if choices empty only show main img.
+                                    elif self.sequence_scenes["tasks"][self.index]["first_img"]=="": #if choices empty only show main img.
                                         rospy.loginfo("empty choices")
                                         service="display_image"
                                     self.do_request(self.index,service)
                                     self.state = State.SUCCESS
                                     rospy.loginfo("Correct")
                                     result_empty = False
-                                elif "Comp" or "Distr" or "comp" or "distr" in res:
-                                    self.do_request(self.index,service)
+                                elif "omp" in res["set_view"]:
+                                    self.do_request(self.index, service)
+                                    rospy.loginfo("Wrong")
+                                    self.state = State.FAILED
+                                    result_empty = False
+                                elif "istr" in res["set_view"]:
+                                    self.do_request(self.index, service)
                                     rospy.loginfo("Wrong")
                                     self.state = State.FAILED
                                     result_empty = False
@@ -294,10 +308,16 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
                     if self.type_web=="alt":
                         rospy.loginfo("Here")
                         service = "multiple_choice"
-                        self.index+=1
-                        self.do_request(self.index,service)
-                    elif self.sequence_scenes["tasks"][self.index]["distr_img"]=="":
+                        if self.index==0 and self.sequence_scenes["tasks"][self.index]["main_img"]!="":
+                            service = "display_image"
+                            self.index+=1
+                            self.do_request(0,service)
+                        else:
+                            self.index+=1
+                            self.do_request(self.index,service)
+                    elif self.sequence_scenes["tasks"][self.index]["first_img"]=="":
                         service="display_image"
+                        self.index+=1
                         self.do_request(self.index,service)
                     else:
                         rospy.loginfo("Here")
@@ -313,9 +333,11 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
                             patient_id = res
                             self.connect_socket(patient_id)
         else:
-            service = "idle"
-            self.do_request(self.index,service)
-            rospy.loginfo("End of activity")
+            if self.index==len(self.sequence_scenes["tasks"])-1:
+                service = "idle"
+                self.do_request(self.index,service,data="Ottimo lavoro. Sei stato bravissimo!")
+                rospy.loginfo("End of activity")
+                self.index = -1
         return
 
 
@@ -363,6 +385,8 @@ if __name__ == "__main__":
             bc = LinguisticDecisionManager(name, pattern_list, test_id, url, test_input)
             rospy.loginfo(f"START from the first step of {name} decision.")
             if test:
+                bc.start(service="intro")
+            else:
                 bc.start()
             rospy.spin()
         except rospy.ROSInterruptException:

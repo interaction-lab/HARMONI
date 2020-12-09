@@ -4,7 +4,7 @@
 	<arg name="use_decision" default="true"/>
 	<arg name="name" default="linguistic"/>
 	<arg name="test" default="false"/>
-	<arg name="test_input" default="{'activityType':'Assessment', 'structure':'Relative', 'test':'Pre-test'}"/>
+	<arg name="test_input" default="{'activityType':'Assessment', 'structure':'Clitici', 'test':'Pre-test'}"/>
 	<arg name="test_id" default="default"/>
 	<arg name="url" default="http://i3lab.elet.polimi.it/letssayresources/img/"/>
   	<group if="$(arg use_decision)">

@@ -14,8 +14,7 @@
                 "tts_default": {
                     "action_goal": "REQUEST",
                     "resource_type": "service",
-                    "wait_for": "new",
-                    "trigger":"Benvenuto!"
+                    "wait_for": "new"
                 }
             },
             [
