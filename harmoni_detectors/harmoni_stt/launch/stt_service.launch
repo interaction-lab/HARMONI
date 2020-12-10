@@ -3,7 +3,7 @@
    
 	<arg name="use_w2l" default="true"/>
 	<arg name="use_google" default="false"/>
-	<arg name="test" default="true"/>
+	<arg name="test" default="false"/>
 	<arg name="test_input" default="$(find harmoni_stt)/temp_data/hello.wav"/>
 	<arg name="test_id" default="default"/>
   	<group if="$(arg use_w2l)">
