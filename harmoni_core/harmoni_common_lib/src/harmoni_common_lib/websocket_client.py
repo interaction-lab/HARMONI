@@ -50,7 +50,9 @@ class HarmoniWebsocketClient(object):
 
     def on_message(self, message):
         rospy.loginfo(f"Receiving the message {message}")
-        message=ast.literal_eval(message)
+        if isinstance(message, str):
+            rospy.loginfo("The message is a string")
+            message=ast.literal_eval(message)
         rospy.loginfo("The request received is " + message["action"])
         request = message["action"]
         rospy.loginfo("Request is "+request)
@@ -70,6 +72,8 @@ class HarmoniWebsocketClient(object):
             self.previous(message)
         elif request=="TERMINATE":
             self.terminate(message)
+        elif request=="REPLAY":
+            self.replay(message)
         return
 
     def on_error(self, error):
@@ -110,6 +114,16 @@ class HarmoniWebsocketClient(object):
         """
         rospy.loginfo("repeat")
         return
+    
+    def replay(self, message):
+        """ Make a request of another service, such as a web service
+
+        Raises:
+            NotImplementedError: To be used, this function should be overwritten by the child class.
+        """
+        rospy.loginfo("replay")
+        return
+
 
     
     def next(self, message):
@@ -127,7 +141,7 @@ class HarmoniWebsocketClient(object):
         Raises:
             NotImplementedError: To be used, this function should be overwritten by the child class.
         """
-        rospy.loginfo("open")
+        rospy.loginfo("play")
         return
 
     def pause(self, message):

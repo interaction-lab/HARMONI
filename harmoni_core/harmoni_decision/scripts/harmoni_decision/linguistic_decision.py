@@ -77,8 +77,8 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         self.message={"action":"OPEN", "patientId": patient_id}
         self.patient_id = int(patient_id)
         rospy.loginfo("Connection to the socket")
-        #ip = "192.168.1.83"
-        ip = "192.168.1.104"
+        ip = "192.168.1.83"
+        #ip = "192.168.1.104"
         port = 3210
         secure =False
         HarmoniWebsocketClient.__init__(self,ip, port, secure, self.message)
@@ -102,6 +102,14 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         #send finished
         self.stop("multiple_choice")
         self.command = "NEXT"
+        response = {"action":"FINISHED", "patientId":self.patient_id, "sessionId":self.session_id,"minitask":self.index, "correct":False,"itemSelected": "null"}
+        return
+
+    def replay(self,message):
+        rospy.loginfo(message)
+        #send finished
+        self.stop("multiple_choice")
+        self.command = "REPLAY"
         response = {"action":"FINISHED", "patientId":self.patient_id, "sessionId":self.session_id,"minitask":self.index, "correct":False,"itemSelected": "null"}
         return
 
@@ -255,9 +263,9 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
             if self.command =="NEXT" or self.command=="PREVIOUS":
                 if result['service']=="multiple_choice":
                     service = "multiple_choice"
-                    self.index+=1
                     if self.type_web=="alt":
                         service="display_image"
+                    self.index+=1
                     self.do_request(self.index,service)
                     self.state = State.SUCCESS
                     result_empty = False
@@ -268,10 +276,14 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
                         self.index+=1
                         self.do_request(self.index,service)
             elif self.command=="TERMINATE" or self.command=="PAUSE":
+                rospy.loginfo("------------Terminate")
                 service="idle"
-                self.do_request(self.index,service, data="Abbiamo terminato l'attività.")
+                self.do_request(self.index,service, data="Abbiamo terminato l'attività. *QT/bye* Ciao ciao, alla prossima!")
             elif self.command=="RESUME":
                 rospy.loginfo("RESUME")
+            elif self.command=="REPLAY":
+                rospy.loginfo("REPLAY")
+                self.do_request(self.index,result['service'])
             else:
                 if result['service']=="multiple_choice":
                         res = web_result[1]
