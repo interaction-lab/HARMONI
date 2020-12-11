@@ -92,6 +92,7 @@ class SpeechToTextService(HarmoniServiceManager):
             if not self.w2l_process:
                 rospy.loginfo("Callback occured before setup")
             else:
+                rospy.logdebug(f"W2L receiving data of size {len(data.data)}")
                 self.w2l_process.stdin.write(data.data)
                 self.w2l_process.stdin.flush()
         else:
@@ -118,6 +119,7 @@ class SpeechToTextService(HarmoniServiceManager):
         rospy.loginfo("Setup complete")
         while not rospy.is_shutdown():
             output = self.w2l_process.stdout.readline()
+            rospy.logdebug(output)
             text = self.fix_text(output)
             if text:
                 total_text = total_text + " " + text
@@ -150,7 +152,7 @@ def main():
     test_input = rospy.get_param("/test_input_" + service_name + "/")
     test_id = rospy.get_param("/test_id_" + service_name + "/")
     try:
-        rospy.init_node(service_name)
+        rospy.init_node(service_name, log_level=rospy.INFO)
         param = rospy.get_param(name + "/" + test_id + "_param/")
         if not hf.check_if_id_exist(service_name, test_id):
             rospy.logerr(

@@ -7,6 +7,7 @@ import unittest, rospy, roslib, sys
 
 # Specific Imports
 from actionlib_msgs.msg import GoalStatus
+from harmoni_common_lib.constants import DetectorNameSpace, SensorNameSpace
 from harmoni_common_msgs.msg import harmoniAction, harmoniFeedback, harmoniResult
 from audio_common_msgs.msg import AudioData 
 from std_msgs.msg import String
@@ -22,7 +23,7 @@ class TestW2L(unittest.TestCase):
         super(TestW2L, self).__init__(*args)
 
     def setUp(self):
-        rospy.init_node("test_w2l", log_level=rospy.INFO)
+        rospy.init_node("test_w2l", log_level=rospy.DEBUG)
         self.test_file = rospy.get_param("test_w2l_input")
         self.audio = self.wav_to_data(self.test_file)
         self.result = False
@@ -31,9 +32,9 @@ class TestW2L(unittest.TestCase):
         # rospy.Subscriber("/stt_default/feedback", harmoniFeedback, self.feedback_cb)
         # rospy.Subscriber("/stt_default/status", GoalStatus, self.status_cb)
         # rospy.Subscriber("/stt_default/result", harmoniResult, self.result_cb)
-
         self.output_sub = rospy.Subscriber("/harmoni/detecting/stt/default", String, self.detecting_cb)
-        self.audio_pub = rospy.Publisher("/audio/audio", AudioData, queue_size=1)
+        self.audio_pub = rospy.Publisher(SensorNameSpace.microphone.value + 
+            rospy.get_param("w2l/default_param/subscriber_id"), AudioData, queue_size=1)
         rospy.loginfo("TestW2L: Started up. waiting for w2l startup")
         rospy.sleep(5) # NOTE If sleep does not occur here, the published message gets ignored
         self.audio_pub.publish(self.audio)
