@@ -49,6 +49,7 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         self.class_clients={}
         self._setup_classes()
         self.command = None
+        self.start_time = None
         self.state = State.INIT
 
     
@@ -94,15 +95,22 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         else:
             rospy.loginfo("Wrong code")
             # rewrite the code
-            self.do_request(0,"code")
+            self.do_request(0,"code", data="Hai sbagliato codice. Riproviamo")
         return
+
+    def store_data(self, correct, item):
+        now_time = time()
+        int_time = now_time-self.start_time
+        rospy.loginfo(f"The time is {int_time}")
+        payload = {"action":"FINISHED", "patientId":self.patient_id, "sessionId":self.session_id,"data":{"miniTask":self.index, "correct":correct,"itemSelected": item,"time":int_time}}
+        return payload
 
     def next(self,message):
         rospy.loginfo(message)
         #send finished
         self.stop("multiple_choice")
         self.command = "NEXT"
-        response = {"action":"FINISHED", "patientId":self.patient_id, "sessionId":self.session_id,"minitask":self.index, "correct":False,"itemSelected": "null"}
+        self.send(self.store_data(False, ""))
         return
 
     def replay(self,message):
@@ -110,7 +118,7 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         #send finished
         self.stop("multiple_choice")
         self.command = "REPLAY"
-        response = {"action":"FINISHED", "patientId":self.patient_id, "sessionId":self.session_id,"minitask":self.index, "correct":False,"itemSelected": "null"}
+        self.send(self.store_data(False, ""))
         return
 
     def previous(self,message):
@@ -119,7 +127,7 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         self.index-=2
         rospy.loginfo(self.index)
         self.command = "PREVIOUS"
-        response = {"action":"FINISHED", "patientId":self.patient_id, "sessionId":self.session_id,"minitask":self.index, "correct":False,"itemSelected": "null"}
+        self.send(self.store_data(False, ""))
         self.stop("multiple_choice")
         return
 
@@ -168,6 +176,7 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         rospy.loginfo("The activity selected is " + str(self.activity_selected))
         self.setup_scene()
         self.send({"action":"STARTED","patientId":self.patient_id, "sessionId":self.session_id})
+        self.start_time = time()
         rospy.sleep(2) ##handle when it finishes
         self.index = 0
         self.do_request(0,"intro")
@@ -225,6 +234,9 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
             if data:
                 optional_data = {"tts_default": data}
             self.index=0
+        elif service=="code":
+            if data:
+                optional_data = {"tts_default": data}
         if optional_data!="":
             optional_data = str(optional_data)
         def daemon():
@@ -295,6 +307,7 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
                                 rospy.loginfo(res)
                                 if isinstance(res, str):
                                     res = ast.literal_eval(res)
+                                itemselected = res["set_view"].replace(self.url, "")
                                 if "arget" in res["set_view"]:
                                     self.index+=1
                                     if (self.type_web=="alt" and self.sequence_scenes["tasks"][self.index]["main_img"]!=""):
@@ -305,16 +318,19 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
                                     self.do_request(self.index,service)
                                     self.state = State.SUCCESS
                                     rospy.loginfo("Correct")
+                                    self.send(self.store_data(True, itemselected))
                                     result_empty = False
                                 elif "omp" in res["set_view"]:
                                     self.do_request(self.index, service)
                                     rospy.loginfo("Wrong")
                                     self.state = State.FAILED
+                                    self.send(self.store_data(False, itemselected))
                                     result_empty = False
                                 elif "istr" in res["set_view"]:
                                     self.do_request(self.index, service)
                                     rospy.loginfo("Wrong")
                                     self.state = State.FAILED
+                                    self.send(self.store_data(False, itemselected))
                                     result_empty = False
                 elif result['service'] == "display_image":
                     if self.type_web=="alt":
