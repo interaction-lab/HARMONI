@@ -1,0 +1,12 @@
+<!-- This is an example launch file for how a ROS application could use a node -->
+<launch>
+	<rosparam file="$(find harmoni_bot)/config/configuration.yaml"/>
+    <param name="test_bot" value="true"/>
+    <param name="test_input_bot" value="Hello"/>
+    <param name="test_id_bot" value="default"/>
+    <param name="name_bot" value="lex"/>
+    <node pkg="harmoni_bot" type="aws_lex_service.py" name="harmoni_bot_lex_default" output="screen"/>
+
+	<param name="test_lex_input" value="Hello"/>
+    <test test-name="test_lex" pkg="harmoni_bot" type="rostest_lex.py"/>
+</launch>

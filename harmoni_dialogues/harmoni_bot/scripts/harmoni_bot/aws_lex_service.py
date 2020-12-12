@@ -40,6 +40,7 @@ class AWSLexService(HarmoniServiceManager):
         rospy.loginfo("Start the %s request" % self.name)
         self.state = State.REQUEST
         textdata = input_text
+        result = {"response": False, "message":None}
         try:
             lex_response = self.lex_client.post_content(
                 botName=self.bot_name,
@@ -49,19 +50,27 @@ class AWSLexService(HarmoniServiceManager):
                 accept="text/plain; charset=utf-8",
                 inputStream=textdata,
             )
-            self.state = State.SUCCESS
-            if "intentName" in lex_response:
-                if lex_response["dialogState"] == "Fulfilled":
-                    rospy.loginfo("The dialogue is fulfilled, end the conversation.")
-            rospy.loginfo("The response is %s" % (lex_response["message"]))
-            self.response_received = True
-            self.result_msg = lex_response["message"]
+            rospy.loginfo(f"The lex response is {lex_response}")
+            if lex_response["ResponseMetadata"]["HTTPStatusCode"]==200:
+                self.state = State.SUCCESS
+                result = {"response": True, "message":lex_response["message"]}
+                if "intentName" in lex_response:
+                    if lex_response["dialogState"] == "Fulfilled":
+                        rospy.loginfo("The dialogue is fulfilled, end the conversation.")
+                rospy.loginfo("The response is %s" % (lex_response["message"]))
+                self.response_received = True
+                self.result_msg = lex_response["message"]
+            else: 
+                self.start = State.FAILED
+                rospy.loginfo("Service call failed")
+                self.response_received = True
+                self.result_msg = ""
         except rospy.ServiceException:
             self.start = State.FAILED
             rospy.loginfo("Service call failed")
             self.response_received = True
             self.result_msg = ""
-        return
+        return result
 
 
 def main():
