@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Common Imports
 import rospy
@@ -65,7 +65,6 @@ class SpeechToTextService(HarmoniServiceManager):
         # Startup stream if not started
         rospy.loginfo("Start the %s service" % self.name)
         if self.state == State.INIT:
-            self.state = State.START
             self.transcribe_stream()  # Start the microphone service at the INIT
         else:
             self.state = State.START
@@ -101,6 +100,8 @@ class SpeechToTextService(HarmoniServiceManager):
 
     def transcribe_stream(self):
         # Setup W2L Process and read results as available
+        # TODO: better state handling, and configurable rate.
+        rate = rospy.Rate(20)
         rospy.loginfo("Opening up W2L process")
         self.w2l_process = Popen(
             ["{} --input_files_base_path={}".format(self.w2l_bin, self.model_path)],
@@ -117,17 +118,21 @@ class SpeechToTextService(HarmoniServiceManager):
         # p.start()
         total_text = ""
         rospy.loginfo("Setup complete")
+        self.state = State.START
         while not rospy.is_shutdown():
             output = self.w2l_process.stdout.readline()
             rospy.logdebug(output)
             text = self.fix_text(output)
             if text:
+                self.state = State.START
                 total_text = total_text + " " + text
             else:
                 if total_text:
                     rospy.loginfo("Heard:" + total_text)
                     self.text_pub.publish(total_text[1:])
                     total_text = ""
+                    self.state = State.SUCCESS
+            rate.sleep()
 
     def fix_text(self, output):
         text = output.decode("utf-8")
@@ -152,7 +157,7 @@ def main():
     test_input = rospy.get_param("/test_input_" + service_name + "/")
     test_id = rospy.get_param("/test_id_" + service_name + "/")
     try:
-        rospy.init_node(service_name, log_level=rospy.INFO)
+        rospy.init_node(service_name, log_level=rospy.DEBUG)
         param = rospy.get_param(name + "/" + test_id + "_param/")
         if not hf.check_if_id_exist(service_name, test_id):
             rospy.logerr(
