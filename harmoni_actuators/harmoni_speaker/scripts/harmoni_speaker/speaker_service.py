@@ -47,11 +47,10 @@ class SpeakerService(HarmoniServiceManager):
         """ Do the speak """
         self.state = State.REQUEST
         self.actuation_completed = False
-        if type(data) == str:
-            data = ast.literal_eval(data)
-        data = data["audio_data"]
-
         try:
+            if type(data) == str:
+                data = ast.literal_eval(data)
+            data = data["audio_data"]
             rospy.loginfo("Writing data for speaker")
             rospy.loginfo(f"length of data is {len(data)}")
             self.audio_publisher.publish(data)

@@ -298,10 +298,10 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
                 self.do_request(self.index,result['service'])
             else:
                 if result['service']=="multiple_choice":
-                        res = web_result[1]
+                        #res = web_result[1]
                         service = "multiple_choice"
                         for res in web_result:
-                            if res=="":
+                            if res=="" or res=="_the_queue_is_empty":
                                 result_empty = True
                             else:
                                 rospy.loginfo(res)
