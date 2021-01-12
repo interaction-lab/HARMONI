@@ -2843,6 +2843,714 @@
                         }
                     }
                 ]
+            },
+            {
+                "Retelling WR": [
+                    {
+                        "Il dolcetto": {
+                            "intro": {
+                                "audio": "",
+                                "img": "",
+                                "video": "Ret_0"
+                            },
+                            "tasks": [
+                                {
+                                    "audio": "Ret_3_1",
+                                    "text": "Che cosa succede in questa storia?",
+                                    "main_img": "Ret_3_1",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Ret_3_2",
+                                    "text": "In questa storia ci sono una bambina e la sua mamma. ",
+                                    "main_img": "Ret_3_1",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Ret_3_3",
+                                    "text": "Stanno camminando per strada, e che cosa vedono? Un negozio di dolcetti.",
+                                    "main_img": "Ret_3_1",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Ret_3_4",
+                                    "text": "La bambina vuole comprare dei dolcetti al cioccolato che sono il suo dolce preferito",
+                                    "main_img": "Ret_3_1",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Ret_3_5",
+                                    "text": "Entrano nel negozio, e si fanno dare dalla commessa un pacchetto di dolcetti al cioccolato.",
+                                    "main_img": "Ret_3_2",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Ret_3_6",
+                                    "text": "Guarda come sono contente quando escono dal negozio!",
+                                    "main_img": "Ret_3_3",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Ret_3_7",
+                                    "text": "Poi tornano a casa e aprono il pacchetto che hanno comprato.",
+                                    "main_img": "Ret_3_4",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Ret_3_8",
+                                    "text": "Finalmente la bambina può mangiare un dolcetto. Chissà come sarà buono!",
+                                    "main_img": "Ret_3_4",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Q0",
+                                    "text": "Clicca il bottone, e ripeti la storia.",
+                                    "images": [
+                                        "Ret_3_1",
+                                        "Ret_3_2",
+                                        "Ret_3_3",
+                                        "Ret_3_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q1",
+                                    "text": "Quanti sono i protagonisti della storia?",
+                                    "images": [
+                                        "Ret_3_1",
+                                        "Ret_3_2",
+                                        "Ret_3_3",
+                                        "Ret_3_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q2",
+                                    "text": "Chi sono i protagonisti della storia?",
+                                    "images": [
+                                        "Ret_3_1",
+                                        "Ret_3_2",
+                                        "Ret_3_3",
+                                        "Ret_3_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q3",
+                                    "text": "Dove si svolge la storia?",
+                                    "images": [
+                                        "Ret_3_1",
+                                        "Ret_3_2",
+                                        "Ret_3_3",
+                                        "Ret_3_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q4",
+                                    "text": "Qual è lo stato mentale iniziale?",
+                                    "images": [
+                                        "Ret_3_1",
+                                        "Ret_3_2",
+                                        "Ret_3_3",
+                                        "Ret_3_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q5",
+                                    "text": "Qual è il primo evento?",
+                                    "images": [
+                                        "Ret_3_1",
+                                        "Ret_3_2",
+                                        "Ret_3_3",
+                                        "Ret_3_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q6",
+                                    "text": "Qual è lo stato mentale finale?",
+                                    "images": [
+                                        "Ret_3_1",
+                                        "Ret_3_2",
+                                        "Ret_3_3",
+                                        "Ret_3_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q7",
+                                    "text": "Qual è il secondo evento?",
+                                    "images": [
+                                        "Ret_3_1",
+                                        "Ret_3_2",
+                                        "Ret_3_3",
+                                        "Ret_3_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q8",
+                                    "text": "Quali sono le conseguenza degli eventi?",
+                                    "images": [
+                                        "Ret_3_1",
+                                        "Ret_3_2",
+                                        "Ret_3_3",
+                                        "Ret_3_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q9",
+                                    "text": "Qual è lo stato mentale finale?",
+                                    "images": [
+                                        "Ret_3_1",
+                                        "Ret_3_2",
+                                        "Ret_3_3",
+                                        "Ret_3_4"
+                                    ],
+                                    "flag":"challenge"
+                                }
+                            ],
+                            "reward": {
+                                "audio": "",
+                                "img": "",
+                                "video":"BVL_Final"
+                            },
+                            "activity_type": "retelling"
+                        }
+                    },
+                    {
+                        "Il Natale": {
+                            "intro": {
+                                "audio": "",
+                                "img": "",
+                                "video": "Ret_0"
+                            },
+                            "tasks": [
+                                {
+                                    "audio": "Ret_4_1",
+                                    "text": "Che cosa succede in questa storia?",
+                                    "main_img": "Ret_4_1",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Ret_4_2",
+                                    "text": "In questa storia ci sono un bambino, il suo papà e la sua mamma. ",
+                                    "main_img": "Ret_4_1",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Ret_4_3",
+                                    "text": "Sono in casa, e vogliono festeggiare il natale.",
+                                    "main_img": "Ret_4_1",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Ret_4_4",
+                                    "text": "Il bambino apre il suo regalo e che cosa trova dentro? dei mattoncini di Lego.",
+                                    "main_img": "Ret_4_2",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Ret_4_5",
+                                    "text": "Guarda come è contento del regalo che ha ricevuto!",
+                                    "main_img": "Ret_4_2",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Ret_4_6",
+                                    "text": "Il bambino decide di costruire un castello alto alto, che sia di tutti i colori del mondo.",
+                                    "main_img": "Ret_4_3",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Ret_4_7",
+                                    "text": "Poi il papà fa una foto al castello che il bambino ha costruito.",
+                                    "main_img": "Ret_4_4",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Ret_4_8",
+                                    "text": "Chissà quali altre cose costruirà il bambino con i lego!",
+                                    "main_img": "Ret_4_4",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Q0",
+                                    "text": "Clicca il bottone, e ripeti la storia.",
+                                    "images": [
+                                        "Ret_4_1",
+                                        "Ret_4_2",
+                                        "Ret_4_3",
+                                        "Ret_4_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q1",
+                                    "text": "Quanti sono i protagonisti della storia?",
+                                    "images": [
+                                        "Ret_4_1",
+                                        "Ret_4_2",
+                                        "Ret_4_3",
+                                        "Ret_4_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q2",
+                                    "text": "Chi sono i protagonisti della storia?",
+                                    "images": [
+                                        "Ret_4_1",
+                                        "Ret_4_2",
+                                        "Ret_4_3",
+                                        "Ret_4_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q3",
+                                    "text": "Dove si svolge la storia?",
+                                    "images": [
+                                        "Ret_4_1",
+                                        "Ret_4_2",
+                                        "Ret_4_3",
+                                        "Ret_4_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q4",
+                                    "text": "Qual è lo stato mentale iniziale?",
+                                    "images": [
+                                        "Ret_4_1",
+                                        "Ret_4_2",
+                                        "Ret_4_3",
+                                        "Ret_4_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q5",
+                                    "text": "Qual è il primo evento?",
+                                    "images": [
+                                        "Ret_4_1",
+                                        "Ret_4_2",
+                                        "Ret_4_3",
+                                        "Ret_4_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q6",
+                                    "text": "Qual è lo stato mentale finale?",
+                                    "images": [
+                                        "Ret_4_1",
+                                        "Ret_4_2",
+                                        "Ret_4_3",
+                                        "Ret_4_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q7",
+                                    "text": "Qual è il secondo evento?",
+                                    "images": [
+                                        "Ret_4_1",
+                                        "Ret_4_2",
+                                        "Ret_4_3",
+                                        "Ret_4_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q8",
+                                    "text": "Quali sono le conseguenza degli eventi?",
+                                    "images": [
+                                        "Ret_4_1",
+                                        "Ret_4_2",
+                                        "Ret_4_3",
+                                        "Ret_4_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q9",
+                                    "text": "Qual è lo stato mentale finale?",
+                                    "images": [
+                                        "Ret_4_1",
+                                        "Ret_4_2",
+                                        "Ret_4_3",
+                                        "Ret_4_4"
+                                    ],
+                                    "flag":"challenge"
+                                }
+                            ],
+                            "reward": {
+                                "audio": "",
+                                "img": "",
+                                "video":"BVL_Final"
+                            },
+                            "activity_type": "retelling"
+                        }
+                    }
+                ]
+            },
+            {
+                "Retelling CP": [
+                    {
+                        "Il compleanno": {
+                            "intro": {
+                                "audio": "",
+                                "img": "",
+                                "video": "Ret_0"
+                            },
+                            "tasks": [
+                                {
+                                    "audio": "Ret_1_1",
+                                    "text": "Che cosa succede in questa storia?",
+                                    "main_img": "Ret_1_1",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Ret_1_2",
+                                    "text": "In questa storia ci sono una bambina, il suo papà e la sua mamma. ",
+                                    "main_img": "Ret_1_1",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Ret_1_3",
+                                    "text": "Sono in casa, e vogliono festeggiare il compleanno della bambina.",
+                                    "main_img": "Ret_1_1",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Ret_1_4",
+                                    "text": "La mamma le ha preparato una torta di compleanno, con tutte le candeline.",
+                                    "main_img": "Ret_1_1",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Ret_1_5",
+                                    "text": "Guarda come sono felici la mamma e il papà quando tutte le candeline sono spente dalla bambina.",
+                                    "main_img": "Ret_1_2",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Ret_1_6",
+                                    "text": "Poi la mamma taglia la torta in tante fette uguali per tutti e le dà ad ognuno.",
+                                    "main_img": "Ret_1_3",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Ret_1_7",
+                                    "text": "Finalmente la torta può essere mangiata dalla mamma, dal papà e dalla bambina. ",
+                                    "main_img": "Ret_1_4",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Ret_1_8",
+                                    "text": "Chissà come sarà buona!",
+                                    "main_img": "Ret_1_4",
+                                    "flag":"story"
+                                }, 
+                                {
+                                    "audio": "Q0",
+                                    "text": "Clicca il bottone, e ripeti la storia.",
+                                    "images": [
+                                        "Ret_1_1",
+                                        "Ret_1_2",
+                                        "Ret_1_3",
+                                        "Ret_1_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q1",
+                                    "text": "Quanti sono i protagonisti della storia?",
+                                    "images": [
+                                        "Ret_1_1",
+                                        "Ret_1_2",
+                                        "Ret_1_3",
+                                        "Ret_1_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q2",
+                                    "text": "Chi sono i protagonisti della storia?",
+                                    "images": [
+                                        "Ret_1_1",
+                                        "Ret_1_2",
+                                        "Ret_1_3",
+                                        "Ret_1_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q3",
+                                    "text": "Dove si svolge la storia?",
+                                    "images": [
+                                        "Ret_1_1",
+                                        "Ret_1_2",
+                                        "Ret_1_3",
+                                        "Ret_1_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q4",
+                                    "text": "Qual è lo stato mentale iniziale?",
+                                    "images": [
+                                        "Ret_1_1",
+                                        "Ret_1_2",
+                                        "Ret_1_3",
+                                        "Ret_1_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q5",
+                                    "text": "Qual è il primo evento?",
+                                    "images": [
+                                        "Ret_1_1",
+                                        "Ret_1_2",
+                                        "Ret_1_3",
+                                        "Ret_1_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q6",
+                                    "text": "Qual è lo stato mentale finale?",
+                                    "images": [
+                                        "Ret_1_1",
+                                        "Ret_1_2",
+                                        "Ret_1_3",
+                                        "Ret_1_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q7",
+                                    "text": "Qual è il secondo evento?",
+                                    "images": [
+                                        "Ret_1_1",
+                                        "Ret_1_2",
+                                        "Ret_1_3",
+                                        "Ret_1_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q8",
+                                    "text": "Quali sono le conseguenza degli eventi?",
+                                    "images": [
+                                        "Ret_1_1",
+                                        "Ret_1_2",
+                                        "Ret_1_3",
+                                        "Ret_1_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q9",
+                                    "text": "Qual è lo stato mentale finale?",
+                                    "images": [
+                                        "Ret_1_1",
+                                        "Ret_1_2",
+                                        "Ret_1_3",
+                                        "Ret_1_4"
+                                    ],
+                                    "flag":"challenge"
+                                }
+                            ],
+                            "reward": {
+                                "audio": "",
+                                "img": "",
+                                "video":"BVL_Final"
+                            },
+                            "activity_type": "retelling"
+                        }
+                    },
+                    {
+                        "La palla": {
+                            "intro": {
+                                "audio": "",
+                                "img": "",
+                                "video": "Ret_0"
+                            },
+                            "tasks": [
+                                {
+                                    "audio": "Ret_2_1",
+                                    "text": "Che cosa succede in questa storia?",
+                                    "main_img": "Ret_2_1",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Ret_2_2",
+                                    "text": "In questa storia c'è un bambino. ",
+                                    "main_img": "Ret_2_1",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Ret_2_3",
+                                    "text": "è in casa e sta giocando a palla. ",
+                                    "main_img": "Ret_2_1",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Ret_2_4",
+                                    "text": "Il bambino calcia la palla in alto e la tira per tutta la casa.",
+                                    "main_img": "Ret_2_2",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Ret_2_5",
+                                    "text": "Ma sul mobile del salotto c'è il vaso di fiori della mamma. Il vaso è stato regalato dal papà per il compleanno della mamma.",
+                                    "main_img": "Ret_2_2",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Ret_2_6",
+                                    "text": "Il bambino non lo vede e calcia la palla forte forte, proprio contro il vaso.",
+                                    "main_img": "Ret_2_3",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Ret_2_7",
+                                    "text": "Oh no! Ora il vaso è stato colpito dalla palla e si è rotto in mille pezzi.",
+                                    "main_img": "Ret_2_4",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Ret_2_8",
+                                    "text": "Chissà cosa dirà la mamma quando lo vedrà!",
+                                    "main_img": "Ret_2_4",
+                                    "flag":"story"
+                                },
+                                {
+                                    "audio": "Q0",
+                                    "text": "Clicca il bottone, e ripeti la storia.",
+                                    "images": [
+                                        "Ret_2_1",
+                                        "Ret_2_2",
+                                        "Ret_2_3",
+                                        "Ret_2_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q1",
+                                    "text": "Quanti sono i protagonisti della storia?",
+                                    "images": [
+                                        "Ret_2_1",
+                                        "Ret_2_2",
+                                        "Ret_2_3",
+                                        "Ret_2_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q2",
+                                    "text": "Chi sono i protagonisti della storia?",
+                                    "images": [
+                                        "Ret_2_1",
+                                        "Ret_2_2",
+                                        "Ret_2_3",
+                                        "Ret_2_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q3",
+                                    "text": "Dove si svolge la storia?",
+                                    "images": [
+                                        "Ret_2_1",
+                                        "Ret_2_2",
+                                        "Ret_2_3",
+                                        "Ret_2_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q4",
+                                    "text": "Qual è lo stato mentale iniziale?",
+                                    "images": [
+                                        "Ret_2_1",
+                                        "Ret_2_2",
+                                        "Ret_2_3",
+                                        "Ret_2_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q5",
+                                    "text": "Qual è il primo evento?",
+                                    "images": [
+                                        "Ret_2_1",
+                                        "Ret_2_2",
+                                        "Ret_2_3",
+                                        "Ret_2_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q6",
+                                    "text": "Qual è lo stato mentale finale?",
+                                    "images": [
+                                        "Ret_2_1",
+                                        "Ret_2_2",
+                                        "Ret_2_3",
+                                        "Ret_2_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q7",
+                                    "text": "Qual è il secondo evento?",
+                                    "images": [
+                                        "Ret_2_1",
+                                        "Ret_2_2",
+                                        "Ret_2_3",
+                                        "Ret_2_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q8",
+                                    "text": "Quali sono le conseguenza degli eventi?",
+                                    "images": [
+                                        "Ret_2_1",
+                                        "Ret_2_2",
+                                        "Ret_2_3",
+                                        "Ret_2_4"
+                                    ],
+                                    "flag":"challenge"
+                                },
+                                {
+                                    "audio": "Q9",
+                                    "text": "Qual è lo stato mentale finale?",
+                                    "images": [
+                                        "Ret_2_1",
+                                        "Ret_2_2",
+                                        "Ret_2_3",
+                                        "Ret_2_4"
+                                    ],
+                                    "flag":"challenge"
+                                }
+                            ],
+                            "reward": {
+                                "audio": "",
+                                "img": "",
+                                "video":"BVL_Final"
+                            },
+                            "activity_type": "retelling"
+                        }
+                    }
+                ]
             }
         ]
     },
@@ -4037,6 +4745,322 @@
                                 }
                             ],
                             "activity_type": "alt"
+                        }
+                    }
+                ]
+            },
+            {
+                "Sentence Repetition CP": [
+                    {
+                        "Pre-test": {
+                            "intro": {
+                                "audio": "",
+                                "img": "",
+                                "video": "Sr_0"
+                            },
+                            "tasks": [
+                                {
+                                    "text": "La zia scrive una lettera",
+                                    "main": "Sr_cp1"
+                                },
+                                {
+                                    "text": "Le finestre, il nonno le chiude la sera",
+                                    "main": "Sr_cp2"
+                                },
+                                {
+                                    "text": "La gallina è stata rincorsa dalla volpe ",
+                                    "main": "Sr_cp3"
+                                },
+                                {
+                                    "text": "I gatti hanno dormito sulla poltrona",
+                                    "main": "Sr_cp4"
+                                },
+                                {
+                                    "text": "I conigli salgono sulla sedia",
+                                    "main": "Sr_cp5"
+                                },
+                                {
+                                    "text": "Il fuoco è stato spento",
+                                    "main": "Sr_cp6"
+                                },
+                                {
+                                    "text": "Lei vede i fratelli e li bacia",
+                                    "main": "Sr_cp7"
+                                },
+                                {
+                                    "text": "Il nipote, la nonna lo accompagna a scuola ",
+                                    "main": "Sr_cp8"
+                                },
+                                {
+                                    "text": "Lei sporca le coperte e le pulisce",
+                                    "main": "Sr_cp9"
+                                },
+                                {
+                                    "text": "La bambina ride",
+                                    "main": "Sr_cp10"
+                                },
+                                {
+                                    "text": "I cani hanno nascosto l'osso",
+                                    "main": "Sr_cp11"
+                                },
+                                {
+                                    "text": "La cantante è stata scelta dalla giuria",
+                                    "main": "Sr_cp12"
+                                },
+                                {
+                                    "text": "I regali, la bambina li apre a Natale",
+                                    "main": "Sr_cp13"
+                                },
+                                {
+                                    "text": "Loro comprano un panino e lo mangiano",
+                                    "main": "Sr_cp14"
+                                },
+                                {
+                                    "text": "Il nonno è arrivato con il treno ",
+                                    "main": "Sr_cp15"
+                                }
+                            ],
+                            "reward": {
+                                "audio": "",
+                                "img": "",
+                                "video":"BVL_Final"
+                            },
+                            "activity_type": "repetition"
+                        }
+                    },
+                    {
+                        "Post-test": {
+                            "intro": {
+                                "audio": "",
+                                "img": "",
+                                "video": "Sr_0"
+                            },
+                            "tasks": [
+                                {
+                                    "text": "Loro prendono l'osso e lo nascondono",
+                                    "main": "Sr_a_cp1"
+                                },
+                                {
+                                    "text": "La macchina, il papà la guida in paese",
+                                    "main": "Sr_a_cp2"
+                                },
+                                {
+                                    "text": "Il negozio è stato chiuso",
+                                    "main": "Sr_a_cp3"
+                                },
+                                {
+                                    "text": "I pompieri lavorano sul tetto",
+                                    "main": "Sr_a_cp4"
+                                },
+                                {
+                                    "text": "I pantaloni, la ragazza li lava a casa",
+                                    "main": "Sr_a_cp5"
+                                },
+                                {
+                                    "text": "Le bambine colorano il disegno",
+                                    "main": "Sr_a_cp6"
+                                },
+                                {
+                                    "text": "Lui prepara la torta e la decora",
+                                    "main": "Sr_a_cp7"
+                                },
+                                {
+                                    "text": "Il poliziotto è stato salutato dall'amico",
+                                    "main": "Sr_a_cp8"
+                                },
+                                {
+                                    "text": "Le navi sono affondate nell'oceano",
+                                    "main": "Sr_a_cp9"
+                                },
+                                {
+                                    "text": "La carta, il bambino la butta nel cestino",
+                                    "main": "Sr_a_cp10"
+                                },
+                                {
+                                    "text": "Il vaso cade per terra",
+                                    "main": "Sr_a_cp11"
+                                },
+                                {
+                                    "text": "Loro trovano le caramelle e le mangiano",
+                                    "main": "Sr_a_cp12"
+                                },
+                                {
+                                    "text": "La nonna ha mangiato il gelato ",
+                                    "main": "Sr_a_cp13"
+                                },
+                                {
+                                    "text": "La moto è stata riparata",
+                                    "main": "Sr_a_cp14"
+                                },
+                                {
+                                    "text": "Il maestro ha telefonato alla mamma",
+                                    "main": "Sr_a_cp15"
+                                }
+                            ],
+                            "reward": {
+                                "audio": "",
+                                "img": "",
+                                "video":"BVL_Final"
+                            },
+                            "activity_type": "repetition"
+                        }
+                    }
+                ]
+            },
+            {
+                "Sentence Repetition WR": [
+                    {
+                        "Pre-test": {
+                            "intro": {
+                                "audio": "",
+                                "img": "",
+                                "video": "Sr_0"
+                            },
+                            "tasks": [
+                                {
+                                    "text": "Il coniglio vuole sempre mangiare le carote",
+                                    "main": "Sr_wr1"
+                                },
+                                {
+                                    "text": "Quale coniglio rincorrono i leoni?",
+                                    "main": "Sr_wr2"
+                                },
+                                {
+                                    "text": "Chi invitano le sorelle alla festa ?",
+                                    "main": "Sr_wr3"
+                                },
+                                {
+                                    "text": "La mamma lava il gatto che il cane guarda",
+                                    "main": "Sr_wr4"
+                                },
+                                {
+                                    "text": "Quali camerieri servono il cliente?",
+                                    "main": "Sr_wr5"
+                                },
+                                {
+                                    "text": "Quali dottori curano il paziente?",
+                                    "main": "Sr_wr6"
+                                },
+                                {
+                                    "text": "Chi mangia la zuppa?",
+                                    "main": "Sr_wr7"
+                                },
+                                {
+                                    "text": "La donna dice che il ragazzo prende la palla",
+                                    "main": "Sr_wr8"
+                                },
+                                {
+                                    "text": "Quale volpe rincorre le galline?",
+                                    "main": "Sr_wr9"
+                                },
+                                {
+                                    "text": "Quale mago prepara le pozioni?",
+                                    "main": "Sr_wr10"
+                                },
+                                {
+                                    "text": "La mucca spinge il contadino che lega l'asino",
+                                    "main": "Sr_wr11"
+                                },
+                                {
+                                    "text": "Quali bambini bacia il nonno?",
+                                    "main": "Sr_wr12"
+                                },
+                                {
+                                    "text": "Chi salvano i pompieri dall'incendio?",
+                                    "main": "Sr_wr13"
+                                },
+                                {
+                                    "text": "Il ragazzo dice che la mamma legge il libro",
+                                    "main": "Sr_wr14"
+                                },
+                                {
+                                    "text": "Il pastore trova la capra che la bambina cerca ",
+                                    "main": "Sr_wr15"
+                                }
+                            ],
+                            "reward": {
+                                "audio": "",
+                                "img": "",
+                                "video":"BVL_Final"
+                            },
+                            "activity_type": "repetition"
+                        }
+                    },
+                    {
+                        "Post-test": {
+                            "intro": {
+                                "audio": "",
+                                "img": "",
+                                "video": "Sr_0"
+                            },
+                            "tasks": [
+                                {
+                                    "text": "Chi guida la macchina?",
+                                    "main": "Sr_a_wr1"
+                                },
+                                {
+                                    "text": "Il cane insegue la volpe che morde la gallina",
+                                    "main": "Sr_a_wr2"
+                                },
+                                {
+                                    "text": "Quale pecora cercano i pastori?",
+                                    "main": "Sr_a_wr3"
+                                },
+                                {
+                                    "text": "Il pittore sa disegnare molto bene gli animali",
+                                    "main": "Sr_a_wr4"
+                                },
+                                {
+                                    "text": "Chi incontrano le amiche a scuola?",
+                                    "main": "Sr_a_wr5"
+                                },
+                                {
+                                    "text": "Chi racconta la storia?",
+                                    "main": "Sr_a_wr6"
+                                },
+                                {
+                                    "text": "La mamma lega il cavallo che il topo spaventa",
+                                    "main": "Sr_a_wr7"
+                                },
+                                {
+                                    "text": "Quale topo spaventa gli elefanti?",
+                                    "main": "Sr_a_wr8"
+                                },
+                                {
+                                    "text": "Quale elefante lavano i bambini?",
+                                    "main": "Sr_a_wr9"
+                                },
+                                {
+                                    "text": "Il papà sa guidare molto bene la macchina ",
+                                    "main": "Sr_a_wr10"
+                                },
+                                {
+                                    "text": "Quali bambine abbraccia la maestra?",
+                                    "main": "Sr_a_wr11"
+                                },
+                                {
+                                    "text": "La pecora vede il gatto che morde il topo",
+                                    "main": "Sr_a_wr12"
+                                },
+                                {
+                                    "text": "Quali bambine pettina la mamma?",
+                                    "main": "Sr_a_wr13"
+                                },
+                                {
+                                    "text": "La ragazza dice che lo zio rompe il bicchiere ",
+                                    "main": "Sr_a_wr14"
+                                },
+                                {
+                                    "text": "Quali gatti mangiano il topo?",
+                                    "main": "Sr_a_wr15"
+                                }
+                            ],
+                            "reward": {
+                                "audio": "",
+                                "img": "",
+                                "video":"BVL_Final"
+                            },
+                            "activity_type": "repetition"
                         }
                     }
                 ]

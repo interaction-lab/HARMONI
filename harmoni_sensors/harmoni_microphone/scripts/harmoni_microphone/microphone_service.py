@@ -229,7 +229,7 @@ class MicrophoneService(HarmoniServiceManager):
     def save_data(self):
         """Init the subscriber """
         self.mic_sub = rospy.Subscriber(
-            "/harmoni/sensing/microphone/default",
+            SensorNameSpace.microphone.value + self.service_id,
             AudioData,
             self._record_audio_data_callback,
             queue_size=1,
@@ -261,11 +261,6 @@ def main():
     try:
         rospy.init_node(service_name)
         param = rospy.get_param(name + "/" + test_id + "_param/")
-        if not hf.check_if_id_exist(service_name, test_id):
-            rospy.logerr(
-                "ERROR: Remember to add your configuration ID also in the harmoni_core config file"
-            )
-            return
         service = hf.set_service_server(service_name, test_id)
         s = MicrophoneService(service, param)
         service_server = HarmoniServiceServer(name=service, service_manager=s)
