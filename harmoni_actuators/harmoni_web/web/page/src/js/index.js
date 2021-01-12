@@ -25,6 +25,8 @@ $(document).ready(function () {
             if(view.includes("code")){
                 console.log("Added code script")
                 addCode()
+                console.log("Added record script")
+                record()
             }
             if(show){
                 $("#"+view).show();
@@ -69,9 +71,14 @@ function viewListener(view) {
 function setValueButton(clicked_button, value_item){
     console.log(value_item)
     var selected_butt = clicked_button.id;
-    var input_value = document.getElementById(value_item.id).value;
-    //$("#"+value_item).attr("value")
-    $("#"+selected_butt).attr("value",input_value);
+    console.log(selected_butt)
+    if(value_item!=null && value_item!=""){
+        if(selected_butt!="start_button"){
+            var input_value = document.getElementById(value_item.id).value;
+            //$("#"+value_item).attr("value")
+            $("#"+selected_butt).attr("value",input_value);
+        }
+    }
 }
 
 function clickListener(clicked_component) {
@@ -84,9 +91,12 @@ function clickListener(clicked_component) {
     }
     console.log("Clicked")
     //$("#"+selected_item).css("opacity", "1");
-    var body =  {component_id:selected_item_id , set_view:clicked_component.getAttribute("value")}
-    console.log("The response is", body)
-    user_response_publisher.publish({data: JSON.stringify(body)})
+    if(clicked_component.getAttribute("value")!="" && clicked_component.getAttribute("value")!=null){
+        var body =  {component_id:selected_item_id , set_view:clicked_component.getAttribute("value")}
+        console.log("The response is", body)
+        user_response_publisher.publish({data: JSON.stringify(body)})
+    }
+   
     // Send the event clicked to the ROS package
 }
 
@@ -152,7 +162,12 @@ function createComponent(component, content, id, comp_class) {
             var html = "<input class="+comp_class+"  id="+ id +" type='number' name='inpnumb' maxlength="+content+">";
             break;
         case "button":
-            var html = "<button class="+comp_class+"  id=" + id + " value= ''>" + content + "</button>";
+            if (!Array.isArray(content)) {
+                var html = "<button class="+comp_class+"  id=" + id + " value= ''>" + content + "</button>";
+            } else {
+                var html = "<button class="+comp_class+"  id=" + id + " value= ''></button>";
+            }    
+        
             break;
         case "row":
             var html = "<div class='row "+comp_class+"' id=" + id + "></div>";
