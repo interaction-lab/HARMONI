@@ -50,6 +50,7 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         self._setup_classes()
         self.command = None
         self.start_time = None
+        self.first_img=True
         self.state = State.INIT
 
     
@@ -237,6 +238,16 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         elif service=="code":
             if data:
                 optional_data = {"tts_default": data}
+        elif service=="sentence_repetition":
+            if self.type_web=="repetition":
+                optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'main_img_ret', 'set_content':'"+self.url +"background.png'},{'component_id':'sentence_repetition_container', 'set_content':''}]"}}
+            elif self.type_web=="retelling":
+                if index<8:
+                    service="display_image"
+                    optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'main_img_alt', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'display_image_container', 'set_content':''}]"}
+                else:
+                    rospy.loginfo(self.sequence_scenes["tasks"][index])
+                    optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'main_img_ret', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'sentence_repetition_container', 'set_content':''}]"}
         if optional_data!="":
             optional_data = str(optional_data)
         def daemon():
@@ -343,6 +354,17 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
                         else:
                             self.index+=1
                             self.do_request(self.index,service)
+                    elif self.type_web=="repetition":
+                            service = "sentence_repetition"
+                            self.do_request(0,service)
+                    elif self.type_web=="retelling":
+                            service = "sentence_repetition"
+                            if self.index==0 and self.first_img:
+                                self.do_request(0,service)
+                                self.first_img=False
+                            else:
+                                self.index+=1
+                                self.do_request(self.index,service)
                     elif self.sequence_scenes["tasks"][self.index]["first_img"]=="":
                         service="display_image"
                         self.index+=1
@@ -360,12 +382,44 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
                                 res = res["patient_id"]
                             patient_id = res
                             self.connect_socket(patient_id)
+                elif result['service'] == "sentence_repetition":
+                    rospy.loginfo("Sentence Repetition")
+                    for res in web_result:
+                        if res!="":
+                            rospy.loginfo("The result is: "+str(res))
+                            if isinstance(res, str):
+                                res = ast.literal_eval(res)
+                                res = res["transcript"]
+                            transcript = res
+                            service = result['service']
+                            if self.type_web=="repetition":
+                                result = self.check_sr(transcript)
+                                self.send(self.store_data(result[0], result[1]))
+                            elif self.type_web=="retelling":
+                                if self.index > 7:
+                                    #Check what was repeated
+                                    result = self.check_ret(transcript)
+                                    self.send(self.store_data(result[0], result[1]))
+                            self.index+=1
+                            self.do_request(self.index,service)
         else:
             if self.index==len(self.sequence_scenes["tasks"])-1:
                 service = "idle"
                 self.do_request(self.index,service,data="Ottimo lavoro. Sei stato bravissimo!")
                 rospy.loginfo("End of activity")
                 self.index = -1
+        return
+
+    def check_sr(self, text):
+        #TODO
+        correct = True
+        result = [correct, text]
+        return result
+
+    def check_ret(self, text):
+        #TODO
+        correct = True
+        result = [correct, text]
         return
 
 

@@ -2850,8 +2850,8 @@
                         "Il dolcetto": {
                             "intro": {
                                 "audio": "",
-                                "img": "",
-                                "video": "Ret_0"
+                                "img": "background",
+                                "text": "Ascolta la storia che ti dirò, e ripetila. Ricordati di cliccare il bottone per registrare e per stoppare."
                             },
                             "tasks": [
                                 {
@@ -2905,111 +2905,61 @@
                                 {
                                     "audio": "Q0",
                                     "text": "Clicca il bottone, e ripeti la storia.",
-                                    "images": [
-                                        "Ret_3_1",
-                                        "Ret_3_2",
-                                        "Ret_3_3",
-                                        "Ret_3_4"
-                                    ],
+                                    "main_img": "Ret_3",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q1",
                                     "text": "Quanti sono i protagonisti della storia?",
-                                    "images": [
-                                        "Ret_3_1",
-                                        "Ret_3_2",
-                                        "Ret_3_3",
-                                        "Ret_3_4"
-                                    ],
+                                    "main_img": "Ret_3",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q2",
                                     "text": "Chi sono i protagonisti della storia?",
-                                    "images": [
-                                        "Ret_3_1",
-                                        "Ret_3_2",
-                                        "Ret_3_3",
-                                        "Ret_3_4"
-                                    ],
+                                    "main_img": "Ret_3",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q3",
                                     "text": "Dove si svolge la storia?",
-                                    "images": [
-                                        "Ret_3_1",
-                                        "Ret_3_2",
-                                        "Ret_3_3",
-                                        "Ret_3_4"
-                                    ],
+                                    "main_img": "Ret_3",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q4",
                                     "text": "Qual è lo stato mentale iniziale?",
-                                    "images": [
-                                        "Ret_3_1",
-                                        "Ret_3_2",
-                                        "Ret_3_3",
-                                        "Ret_3_4"
-                                    ],
+                                    "main_img": "Ret_3",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q5",
                                     "text": "Qual è il primo evento?",
-                                    "images": [
-                                        "Ret_3_1",
-                                        "Ret_3_2",
-                                        "Ret_3_3",
-                                        "Ret_3_4"
-                                    ],
+                                    "main_img": "Ret_3",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q6",
                                     "text": "Qual è lo stato mentale finale?",
-                                    "images": [
-                                        "Ret_3_1",
-                                        "Ret_3_2",
-                                        "Ret_3_3",
-                                        "Ret_3_4"
-                                    ],
+                                    "main_img": "Ret_3",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q7",
                                     "text": "Qual è il secondo evento?",
-                                    "images": [
-                                        "Ret_3_1",
-                                        "Ret_3_2",
-                                        "Ret_3_3",
-                                        "Ret_3_4"
-                                    ],
+                                    "main_img": "Ret_3",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q8",
                                     "text": "Quali sono le conseguenza degli eventi?",
-                                    "images": [
-                                        "Ret_3_1",
-                                        "Ret_3_2",
-                                        "Ret_3_3",
-                                        "Ret_3_4"
-                                    ],
+                                    "main_img": "Ret_3",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q9",
                                     "text": "Qual è lo stato mentale finale?",
-                                    "images": [
-                                        "Ret_3_1",
-                                        "Ret_3_2",
-                                        "Ret_3_3",
-                                        "Ret_3_4"
-                                    ],
+                                    "main_img": "Ret_3",
                                     "flag":"challenge"
                                 }
                             ],
@@ -3025,8 +2975,8 @@
                         "Il Natale": {
                             "intro": {
                                 "audio": "",
-                                "img": "",
-                                "video": "Ret_0"
+                                "img": "background",
+                                "text": "Ascolta la storia che ti dirò, e ripetila. Ricordati di cliccare il bottone per registrare e per stoppare."
                             },
                             "tasks": [
                                 {
@@ -3080,111 +3030,61 @@
                                 {
                                     "audio": "Q0",
                                     "text": "Clicca il bottone, e ripeti la storia.",
-                                    "images": [
-                                        "Ret_4_1",
-                                        "Ret_4_2",
-                                        "Ret_4_3",
-                                        "Ret_4_4"
-                                    ],
+                                    "main_img": "Ret_4",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q1",
                                     "text": "Quanti sono i protagonisti della storia?",
-                                    "images": [
-                                        "Ret_4_1",
-                                        "Ret_4_2",
-                                        "Ret_4_3",
-                                        "Ret_4_4"
-                                    ],
+                                    "main_img": "Ret_4",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q2",
                                     "text": "Chi sono i protagonisti della storia?",
-                                    "images": [
-                                        "Ret_4_1",
-                                        "Ret_4_2",
-                                        "Ret_4_3",
-                                        "Ret_4_4"
-                                    ],
+                                    "main_img": "Ret_4",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q3",
                                     "text": "Dove si svolge la storia?",
-                                    "images": [
-                                        "Ret_4_1",
-                                        "Ret_4_2",
-                                        "Ret_4_3",
-                                        "Ret_4_4"
-                                    ],
+                                    "main_img": "Ret_4",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q4",
                                     "text": "Qual è lo stato mentale iniziale?",
-                                    "images": [
-                                        "Ret_4_1",
-                                        "Ret_4_2",
-                                        "Ret_4_3",
-                                        "Ret_4_4"
-                                    ],
+                                    "main_img": "Ret_4",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q5",
                                     "text": "Qual è il primo evento?",
-                                    "images": [
-                                        "Ret_4_1",
-                                        "Ret_4_2",
-                                        "Ret_4_3",
-                                        "Ret_4_4"
-                                    ],
+                                    "main_img": "Ret_4",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q6",
                                     "text": "Qual è lo stato mentale finale?",
-                                    "images": [
-                                        "Ret_4_1",
-                                        "Ret_4_2",
-                                        "Ret_4_3",
-                                        "Ret_4_4"
-                                    ],
+                                    "main_img": "Ret_4",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q7",
                                     "text": "Qual è il secondo evento?",
-                                    "images": [
-                                        "Ret_4_1",
-                                        "Ret_4_2",
-                                        "Ret_4_3",
-                                        "Ret_4_4"
-                                    ],
+                                    "main_img": "Ret_4",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q8",
                                     "text": "Quali sono le conseguenza degli eventi?",
-                                    "images": [
-                                        "Ret_4_1",
-                                        "Ret_4_2",
-                                        "Ret_4_3",
-                                        "Ret_4_4"
-                                    ],
+                                    "main_img": "Ret_4",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q9",
                                     "text": "Qual è lo stato mentale finale?",
-                                    "images": [
-                                        "Ret_4_1",
-                                        "Ret_4_2",
-                                        "Ret_4_3",
-                                        "Ret_4_4"
-                                    ],
+                                    "main_img": "Ret_4",
                                     "flag":"challenge"
                                 }
                             ],
@@ -3204,8 +3104,8 @@
                         "Il compleanno": {
                             "intro": {
                                 "audio": "",
-                                "img": "",
-                                "video": "Ret_0"
+                                "img": "background",
+                                "text": "Ascolta la storia che ti dirò, e ripetila. Ricordati di cliccare il bottone per registrare e per stoppare."
                             },
                             "tasks": [
                                 {
@@ -3259,111 +3159,61 @@
                                 {
                                     "audio": "Q0",
                                     "text": "Clicca il bottone, e ripeti la storia.",
-                                    "images": [
-                                        "Ret_1_1",
-                                        "Ret_1_2",
-                                        "Ret_1_3",
-                                        "Ret_1_4"
-                                    ],
+                                    "main_img": "Ret_1",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q1",
                                     "text": "Quanti sono i protagonisti della storia?",
-                                    "images": [
-                                        "Ret_1_1",
-                                        "Ret_1_2",
-                                        "Ret_1_3",
-                                        "Ret_1_4"
-                                    ],
+                                    "main_img": "Ret_1",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q2",
                                     "text": "Chi sono i protagonisti della storia?",
-                                    "images": [
-                                        "Ret_1_1",
-                                        "Ret_1_2",
-                                        "Ret_1_3",
-                                        "Ret_1_4"
-                                    ],
+                                    "main_img": "Ret_1",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q3",
                                     "text": "Dove si svolge la storia?",
-                                    "images": [
-                                        "Ret_1_1",
-                                        "Ret_1_2",
-                                        "Ret_1_3",
-                                        "Ret_1_4"
-                                    ],
+                                    "main_img": "Ret_1",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q4",
                                     "text": "Qual è lo stato mentale iniziale?",
-                                    "images": [
-                                        "Ret_1_1",
-                                        "Ret_1_2",
-                                        "Ret_1_3",
-                                        "Ret_1_4"
-                                    ],
+                                    "main_img": "Ret_1",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q5",
                                     "text": "Qual è il primo evento?",
-                                    "images": [
-                                        "Ret_1_1",
-                                        "Ret_1_2",
-                                        "Ret_1_3",
-                                        "Ret_1_4"
-                                    ],
+                                    "main_img": "Ret_1",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q6",
                                     "text": "Qual è lo stato mentale finale?",
-                                    "images": [
-                                        "Ret_1_1",
-                                        "Ret_1_2",
-                                        "Ret_1_3",
-                                        "Ret_1_4"
-                                    ],
+                                    "main_img": "Ret_1",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q7",
                                     "text": "Qual è il secondo evento?",
-                                    "images": [
-                                        "Ret_1_1",
-                                        "Ret_1_2",
-                                        "Ret_1_3",
-                                        "Ret_1_4"
-                                    ],
+                                    "main_img": "Ret_1",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q8",
                                     "text": "Quali sono le conseguenza degli eventi?",
-                                    "images": [
-                                        "Ret_1_1",
-                                        "Ret_1_2",
-                                        "Ret_1_3",
-                                        "Ret_1_4"
-                                    ],
+                                    "main_img": "Ret_1",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q9",
                                     "text": "Qual è lo stato mentale finale?",
-                                    "images": [
-                                        "Ret_1_1",
-                                        "Ret_1_2",
-                                        "Ret_1_3",
-                                        "Ret_1_4"
-                                    ],
+                                    "main_img": "Ret_1",
                                     "flag":"challenge"
                                 }
                             ],
@@ -3379,8 +3229,8 @@
                         "La palla": {
                             "intro": {
                                 "audio": "",
-                                "img": "",
-                                "video": "Ret_0"
+                                "img": "background",
+                                "text": "Ascolta la storia che ti dirò, e ripetila. Ricordati di cliccare il bottone per registrare e per stoppare."
                             },
                             "tasks": [
                                 {
@@ -3434,111 +3284,61 @@
                                 {
                                     "audio": "Q0",
                                     "text": "Clicca il bottone, e ripeti la storia.",
-                                    "images": [
-                                        "Ret_2_1",
-                                        "Ret_2_2",
-                                        "Ret_2_3",
-                                        "Ret_2_4"
-                                    ],
+                                    "main_img": "Ret_2",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q1",
                                     "text": "Quanti sono i protagonisti della storia?",
-                                    "images": [
-                                        "Ret_2_1",
-                                        "Ret_2_2",
-                                        "Ret_2_3",
-                                        "Ret_2_4"
-                                    ],
+                                    "main_img": "Ret_2",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q2",
                                     "text": "Chi sono i protagonisti della storia?",
-                                    "images": [
-                                        "Ret_2_1",
-                                        "Ret_2_2",
-                                        "Ret_2_3",
-                                        "Ret_2_4"
-                                    ],
+                                    "main_img": "Ret_2",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q3",
                                     "text": "Dove si svolge la storia?",
-                                    "images": [
-                                        "Ret_2_1",
-                                        "Ret_2_2",
-                                        "Ret_2_3",
-                                        "Ret_2_4"
-                                    ],
+                                    "main_img": "Ret_2",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q4",
                                     "text": "Qual è lo stato mentale iniziale?",
-                                    "images": [
-                                        "Ret_2_1",
-                                        "Ret_2_2",
-                                        "Ret_2_3",
-                                        "Ret_2_4"
-                                    ],
+                                    "main_img": "Ret_2",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q5",
                                     "text": "Qual è il primo evento?",
-                                    "images": [
-                                        "Ret_2_1",
-                                        "Ret_2_2",
-                                        "Ret_2_3",
-                                        "Ret_2_4"
-                                    ],
+                                    "main_img": "Ret_2",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q6",
                                     "text": "Qual è lo stato mentale finale?",
-                                    "images": [
-                                        "Ret_2_1",
-                                        "Ret_2_2",
-                                        "Ret_2_3",
-                                        "Ret_2_4"
-                                    ],
+                                    "main_img": "Ret_2",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q7",
                                     "text": "Qual è il secondo evento?",
-                                    "images": [
-                                        "Ret_2_1",
-                                        "Ret_2_2",
-                                        "Ret_2_3",
-                                        "Ret_2_4"
-                                    ],
+                                    "main_img": "Ret_2",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q8",
                                     "text": "Quali sono le conseguenza degli eventi?",
-                                    "images": [
-                                        "Ret_2_1",
-                                        "Ret_2_2",
-                                        "Ret_2_3",
-                                        "Ret_2_4"
-                                    ],
+                                    "main_img": "Ret_2",
                                     "flag":"challenge"
                                 },
                                 {
                                     "audio": "Q9",
                                     "text": "Qual è lo stato mentale finale?",
-                                    "images": [
-                                        "Ret_2_1",
-                                        "Ret_2_2",
-                                        "Ret_2_3",
-                                        "Ret_2_4"
-                                    ],
+                                    "main_img": "Ret_2",
                                     "flag":"challenge"
                                 }
                             ],
@@ -4755,8 +4555,8 @@
                         "Pre-test": {
                             "intro": {
                                 "audio": "",
-                                "img": "",
-                                "video": "Sr_0"
+                                "img": "background",
+                                "text": "Ascolta la frase che ti dirò, e ripetila. Ricordati di cliccare il bottone per registrare e per stoppare."
                             },
                             "tasks": [
                                 {
@@ -4832,8 +4632,8 @@
                         "Post-test": {
                             "intro": {
                                 "audio": "",
-                                "img": "",
-                                "video": "Sr_0"
+                                "img": "background",
+                                "text": "Ascolta la frase che ti dirò, e ripetila. Ricordati di cliccare il bottone per registrare e per stoppare."
                             },
                             "tasks": [
                                 {
@@ -4913,8 +4713,8 @@
                         "Pre-test": {
                             "intro": {
                                 "audio": "",
-                                "img": "",
-                                "video": "Sr_0"
+                                "img": "background",
+                                "text": "Ascolta la frase che ti dirò, e ripetila. Ricordati di cliccare il bottone per registrare e per stoppare."
                             },
                             "tasks": [
                                 {
@@ -4990,8 +4790,8 @@
                         "Post-test": {
                             "intro": {
                                 "audio": "",
-                                "img": "",
-                                "video": "Sr_0"
+                                "img": "background",
+                                "text": "Ascolta la frase che ti dirò, e ripetila. Ricordati di cliccare il bottone per registrare e per stoppare."
                             },
                             "tasks": [
                                 {

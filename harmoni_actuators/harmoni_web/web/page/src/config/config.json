@@ -144,7 +144,7 @@
                 {
                     "component": "img",
                     "children": "../assets/imgs/background.png",
-                    "id": "back_video_idle"
+                    "id": "back_video_sr"
                 },
                 {
                     "component": "row",
@@ -178,6 +178,15 @@
                                     ]
                                 }
                             ]
+                        },{
+                            "component": "row",
+                            "id": "sr_3",
+                            "children":[{
+                                "component": "img",
+                                "id": "main_img_ret",
+                                "children": ""}
+                            ]
+                            
                         }
                         
                     ]
@@ -269,17 +278,11 @@
         {
             "component": "container",
             "id": "display_image_container",
-            "children": [
+            "children": [ 
                 {
-                    "component": "row",
-                    "id": "row_main_alt",
-                    "children": [
-                        {
-                            "component": "img",
-                            "children": "",
-                            "id": "main_img_alt"
-                        }
-                    ]
+                    "component": "img",
+                    "children": "../assets/imgs/background.png",
+                    "id": "main_img_alt"
                 }
             ]
         },
