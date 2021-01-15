@@ -6,8 +6,7 @@
                 "web_page_default": { 
                     "action_goal": "DO",
                     "resource_type": "actuator",
-                    "wait_for": "",
-                    "trigger":"[{'component_id':'sentence_repetition_container', 'set_content':''}]"
+                    "wait_for": ""
                 }
             },
             {
@@ -37,8 +36,7 @@
                 "web_page_default": { 
                     "action_goal": "REQUEST",
                     "resource_type": "actuator",
-                    "wait_for": "new",
-                    "trigger":"[{'component_id':'sentence_repetition_container', 'set_content':''}]"
+                    "wait_for": "new"
                 }
             }
         ]

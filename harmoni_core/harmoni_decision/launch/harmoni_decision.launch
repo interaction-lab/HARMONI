@@ -4,15 +4,21 @@
 	<arg name="use_decision" default="true"/>
 	<arg name="name" default="linguistic"/>
 	<arg name="test" default="false"/>
-	<arg name="test_input" default="{'activityType':'Training', 'structure':'Retelling CP', 'test':'Il compleanno'}"/>
+	<arg name="test_input" default="{'activityType':'Assessment', 'structure':'Sentence Repetition CP', 'test':'Pre-test'}"/>
 	<arg name="test_id" default="default"/>
 	<arg name="url" default="http://i3lab.elet.polimi.it/letssayresources/img/"/>
+	<arg name="ip" default="192.168.1.176"/>
+	<arg name="port" default="3210"/>
+	<arg name="secure" default="False"/>
   	<group if="$(arg use_decision)">
 			<rosparam file="$(find harmoni_decision)/config/configuration.yaml"/>
 			<param name="test_$(arg name)" value="$(arg test)"/>
 			<param name="test_input_$(arg name)" value="$(arg test_input)"/>
 			<param name="test_id_$(arg name)" value="$(arg test_id)"/>
 			<param name="url_$(arg name)" value="$(arg url)"/>
+			<param name="ip_$(arg name)" value="$(arg ip)"/>
+			<param name="port_$(arg name)" value="$(arg port)"/>
+			<param name="secure_$(arg name)" value="$(arg secure)"/>
 			<param name="name" value="$(arg name)"/>
 			<node pkg="harmoni_decision" type="$(arg name)_decision.py" name="harmoni_decision" output="screen"  args="$(arg test) $(arg test_input) $(arg test_id)"/>
   	</group>

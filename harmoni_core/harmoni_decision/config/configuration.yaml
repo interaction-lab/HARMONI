@@ -16,3 +16,4 @@ pattern:
   code: ["default"]
   multiple_choice: ["default"]
   display_image: ["default"]
+  sentence_repetition: ["default"]

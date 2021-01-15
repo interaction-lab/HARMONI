@@ -32,11 +32,14 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
     This class is a singleton ROS node and should only be instantiated once.
     """
 
-    def __init__(self, name, pattern_list, test_id, url, test_input):
+    def __init__(self, name, pattern_list, test_id, url, test_input, ip, port, secure):
         HarmoniServiceManager.__init__(self,name)
         self.name = name
         self.url = url
         self.service_id  = test_id
+        self.ip = ip
+        self.port = port
+        self.secure = secure
         if isinstance(test_input, str):
             self.activity_selected = ast.literal_eval(test_input)
         self.index = 0
@@ -52,8 +55,6 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         self.start_time = None
         self.first_img=True
         self.state = State.INIT
-
-    
 
     def _setup_classes(self):
         """
@@ -79,11 +80,7 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         self.message={"action":"OPEN", "patientId": patient_id}
         self.patient_id = int(patient_id)
         rospy.loginfo("Connection to the socket")
-        ip = "192.168.1.83"
-        #ip = "192.168.1.104"
-        port = 3210
-        secure =False
-        HarmoniWebsocketClient.__init__(self,ip, port, secure, self.message)
+        HarmoniWebsocketClient.__init__(self, self.ip, self.port, self.secure, self.message)
 
     def open(self, message):
         rospy.loginfo(message)
@@ -109,17 +106,23 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
     def next(self,message):
         rospy.loginfo(message)
         #send finished
-        self.stop("multiple_choice")
+        service = "multiple_choice"
+        if self.type_web == "repetition":
+            service = "sentence_repetition"
+        self.stop(service)
         self.command = "NEXT"
-        self.send(self.store_data(False, ""))
+        self.send(self.store_data(0, ""))
         return
 
     def replay(self,message):
         rospy.loginfo(message)
         #send finished
-        self.stop("multiple_choice")
+        service = "multiple_choice"
+        if self.type_web == "repetition":
+            service = "sentence_repetition"
+        self.stop(service)
         self.command = "REPLAY"
-        self.send(self.store_data(False, ""))
+        self.send(self.store_data(0, ""))
         return
 
     def previous(self,message):
@@ -128,20 +131,29 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         self.index-=2
         rospy.loginfo(self.index)
         self.command = "PREVIOUS"
-        self.send(self.store_data(False, ""))
-        self.stop("multiple_choice")
+        self.send(self.store_data(0, ""))
+        service = "multiple_choice"
+        if self.type_web == "repetition":
+            service = "sentence_repetition"
+        self.stop(service)
         return
 
     def terminate(self,message):
         self.command = "TERMINATE"
         rospy.loginfo("terminate")
-        self.stop("multiple_choice")
+        service = "multiple_choice"
+        if self.type_web == "repetition":
+            service = "sentence_repetition"
+        self.stop(service)
         return
 
     def pause(self,message):
         self.command = "PAUSE"
         rospy.loginfo("pause")
-        self.stop("multiple_choice")
+        service = "multiple_choice"
+        if self.type_web == "repetition":
+            service = "sentence_repetition"
+        self.stop(service)
         return
 
     def resume(self, message):
@@ -156,7 +168,10 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         self.setup_scene()
         #self.send({"action":"STARTED","patientId":self.patient_id, "sessionId":self.session_id})
         rospy.sleep(2) ##handle when it finishes
-        self.do_request(self.activity_selected["miniTaskId"],"multiple_choice")
+        service = "multiple_choice"
+        if self.type_web == "repetition":
+            service = "sentence_repetition"
+        self.do_request(self.activity_selected["miniTaskId"],service)
         return
 
     def repeat(self, message):
@@ -165,6 +180,14 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         rospy.loginfo(message)
         self.index = 0
         self.do_request(0,"intro")
+        return
+
+    def challenge(self, message):
+        self.command = "CHALLENGE"
+        rospy.loginfo("challenge game")
+        rospy.loginfo(message["config"])
+        config = message["config"]
+        self.do_request(config["challenge"],"sentence_repetition")
         return
 
     def play_game(self, message):
@@ -207,6 +230,9 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         self.command=None
         #if self.type_web=="alt":
         #    service = "display_image"
+        if index==-1:
+            service = "idle"
+            data="Ottimo lavoro. Sei stato bravissimo!"
         if service=="multiple_choice":
             if self.type_web=="full":
                 optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'main_img_full', 'set_content':'"+self.url + self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'target_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["third_img"]+".png'},{'component_id':'comp_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["first_img"]+".png'},{'component_id':'distr_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["second_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
@@ -240,7 +266,7 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
                 optional_data = {"tts_default": data}
         elif service=="sentence_repetition":
             if self.type_web=="repetition":
-                optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'main_img_ret', 'set_content':'"+self.url +"background.png'},{'component_id':'sentence_repetition_container', 'set_content':''}]"}}
+                optional_data = {"tts_default": self.sequence_scenes["tasks"][index]["text"], "web_page_default":"[{'component_id':'main_img_ret', 'set_content':'"+self.url +"dots.png'},{'component_id':'sentence_repetition_container', 'set_content':''}]"}
             elif self.type_web=="retelling":
                 if index<8:
                     service="display_image"
@@ -279,7 +305,7 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         for data in result_data:
             if "w" in data:
                 web_result.append(data["w"]["data"])
-        rospy.loginfo("_____END STEP "+str(self.index)+" DECISION MANAGER_______")
+        
         rospy.loginfo(web_result)
         result_empty = True
         if self.index < (len(self.sequence_scenes["tasks"])-1) and self.index!=-1:
@@ -298,6 +324,12 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
                         service = "multiple_choice"
                         self.index+=1
                         self.do_request(self.index,service)
+                elif result['service']=="sentence_repetition":
+                    rospy.loginfo("_________SIAMO QUI___________")
+                    self.index+=1
+                    self.do_request(self.index,result['service'])
+                    self.state = State.SUCCESS
+                    result_empty = False
             elif self.command=="TERMINATE" or self.command=="PAUSE":
                 rospy.loginfo("------------Terminate")
                 service="idle"
@@ -329,19 +361,19 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
                                     self.do_request(self.index,service)
                                     self.state = State.SUCCESS
                                     rospy.loginfo("Correct")
-                                    self.send(self.store_data(True, itemselected))
+                                    self.send(self.store_data(1, itemselected))
                                     result_empty = False
                                 elif "omp" in res["set_view"]:
                                     self.do_request(self.index, service)
                                     rospy.loginfo("Wrong")
                                     self.state = State.FAILED
-                                    self.send(self.store_data(False, itemselected))
+                                    self.send(self.store_data(0, itemselected))
                                     result_empty = False
                                 elif "istr" in res["set_view"]:
                                     self.do_request(self.index, service)
                                     rospy.loginfo("Wrong")
                                     self.state = State.FAILED
-                                    self.send(self.store_data(False, itemselected))
+                                    self.send(self.store_data(0, itemselected))
                                     result_empty = False
                 elif result['service'] == "display_image":
                     if self.type_web=="alt":
@@ -393,31 +425,51 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
                             transcript = res
                             service = result['service']
                             if self.type_web=="repetition":
-                                result = self.check_sr(transcript)
+                                result = self.check_sr(transcript, self.index)
                                 self.send(self.store_data(result[0], result[1]))
                             elif self.type_web=="retelling":
                                 if self.index > 7:
-                                    #Check what was repeated
-                                    result = self.check_ret(transcript)
-                                    self.send(self.store_data(result[0], result[1]))
-                            self.index+=1
-                            self.do_request(self.index,service)
+                                    rospy.loginfo("Send data to the back-end")
+                                    self.send(self.store_data(True, transcript))
         else:
             if self.index==len(self.sequence_scenes["tasks"])-1:
                 service = "idle"
                 self.do_request(self.index,service,data="Ottimo lavoro. Sei stato bravissimo!")
                 rospy.loginfo("End of activity")
                 self.index = -1
+        rospy.loginfo("_____END STEP "+str(self.index)+" DECISION MANAGER_______")
         return
 
-    def check_sr(self, text):
-        #TODO
-        correct = True
-        result = [correct, text]
+    def check_sr(self, told, index):
+        #Check if the sentence told is correct or not
+        rospy.loginfo(f"The index is {index}")
+        correct = 0
+        target = self.sequence_scenes["tasks"][index]["text"]
+        if target == told:
+            correct = 1
+            return [correct,told]
+        resultRobot = []
+        resultChild = []
+        senteceRobot = target.split()
+        senteceChild = told.split()
+
+        if  len(senteceRobot) != len(senteceChild):
+            resultRobot.append(target)
+            resultChild.append(told)
+        else:
+            for i in range(len(senteceRobot)):
+                if senteceRobot[i] != senteceChild[i]:
+                    resultRobot.append(senteceRobot[i].upper())
+                    resultChild.append(senteceChild[i].upper())
+                else:
+                    resultRobot.append(senteceRobot[i])
+                    resultChild.append(senteceChild[i])
+        rospy.loginfo(f"The target sentence was: {resultRobot}")
+        rospy.loginfo(f"The told sentence was: {resultChild}")
+        result = [correct, told]
         return result
 
     def check_ret(self, text):
-        #TODO
         correct = True
         result = [correct, text]
         return
@@ -457,6 +509,9 @@ if __name__ == "__main__":
         test_input = rospy.get_param("/test_input_" + name + "/")
         test_id = rospy.get_param("/test_id_" + name + "/")
         url = rospy.get_param("/url_" + name + "/")
+        ip = rospy.get_param("/ip_" + name + "/")
+        port = rospy.get_param("/port_" + name + "/")
+        secure = rospy.get_param("/secure_" + name + "/")
         pattern_dict = rospy.get_param("/pattern")
         pattern_list = []
         for p in pattern_dict:
@@ -464,7 +519,7 @@ if __name__ == "__main__":
         rospy.loginfo(pattern_list)
         try:
             rospy.init_node(name+"_decision")
-            bc = LinguisticDecisionManager(name, pattern_list, test_id, url, test_input)
+            bc = LinguisticDecisionManager(name, pattern_list, test_id, url, test_input, ip, port, secure)
             rospy.loginfo(f"START from the first step of {name} decision.")
             if test:
                 bc.start(service="intro")

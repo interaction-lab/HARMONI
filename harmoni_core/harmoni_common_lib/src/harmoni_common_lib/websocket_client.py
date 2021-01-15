@@ -74,6 +74,8 @@ class HarmoniWebsocketClient(object):
             self.terminate(message)
         elif request=="REPLAY":
             self.replay(message)
+        elif request=="CHALLENGE":
+            self.challenge(message)
         return
 
     def on_error(self, error):
@@ -113,6 +115,16 @@ class HarmoniWebsocketClient(object):
             NotImplementedError: To be used, this function should be overwritten by the child class.
         """
         rospy.loginfo("repeat")
+        return
+
+
+    def challenge(self, message):
+        """ Make a request of another service, such as a web service
+
+        Raises:
+            NotImplementedError: To be used, this function should be overwritten by the child class.
+        """
+        rospy.loginfo("challenge")
         return
     
     def replay(self, message):
