@@ -4,12 +4,12 @@ harmoni:
   tts: ["default"]
   web: ["default"]
   stt: ["default"]
+  gesture: ["default"]
   #face_detect: ["default"]
 hardware:
   microphone: ["default"]
   #camera: ["default"]
   speaker: ["default"]
-  # gesture: ["default"]
 
 pattern:
   idle: ["default"]

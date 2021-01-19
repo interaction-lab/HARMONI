@@ -60,12 +60,14 @@ class GestureService(HarmoniServiceManager):
         print("List callback")
         if self.gestures_name == []:
             rospy.loginfo("Gesture list received")
-            if isinstance(data, str):
+            if isinstance(data.data, str):
                 data = ast.literal_eval(data.data)
-            for item in data:
-                self.gestures_name.append(item["name"])
-                self.gestures_duration.append(item["duration"])
-            self.gesture_list_received = True
+            if data!="":
+                rospy.loginfo(data)
+                for item in data:
+                    self.gestures_name.append(item["name"])
+                    self.gestures_duration.append(item["duration"])
+                self.gesture_list_received = True
 
     def setup_gesture(self):
         """ Setup the gesture """
@@ -156,11 +158,6 @@ def main():
     try:
         rospy.init_node(service_name)
         param = rospy.get_param(name + "/" + test_id + "_param/")
-        if not hf.check_if_id_exist(service_name, test_id):
-            rospy.logerr(
-                "ERROR: Remember to add your configuration ID also in the harmoni_core config file"
-            )
-            return
         service = hf.set_service_server(service_name, test_id)
         s = GestureService(service, param)
         service_server = HarmoniServiceServer(name=service, service_manager=s)

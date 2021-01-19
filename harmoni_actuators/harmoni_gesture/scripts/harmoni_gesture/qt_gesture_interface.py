@@ -74,8 +74,9 @@ class GestureInterface(HarmoniServiceManager):
     def _handle_gesture_callback(self, data):
         """Gesture callback """
         done = False
-        if isinstance(data, str):
-            data = ast.literal_eval(data.data) 
+        if isinstance(data.data, str):
+            data = ast.literal_eval(data.data)
+        rospy.loginfo(data)
         print(data["gesture"], data["timing"])
         done = self.gesture_to_act(data["gesture"], data["timing"])
         while not done:
