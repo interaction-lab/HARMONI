@@ -17,6 +17,10 @@ import audioop
 import pyaudio
 import math
 import ast
+import wget
+import os
+
+
 
 
 class SpeakerService(HarmoniServiceManager):
@@ -49,7 +53,10 @@ class SpeakerService(HarmoniServiceManager):
         self.actuation_completed = False
         try:
             if type(data) == str:
-                data = ast.literal_eval(data)
+                if ".wav" in data:
+                    data = self.wav_to_data(data)
+                else:
+                    data = ast.literal_eval(data)
             data = data["audio_data"]
             rospy.loginfo("Writing data for speaker")
             rospy.loginfo(f"length of data is {len(data)}")
@@ -99,7 +106,14 @@ class SpeakerService(HarmoniServiceManager):
         WAV to audiodata
         """
         file_handle = path
+        if "http" in path:
+            url = path
+            print('Beginning file download with wget module')
+            file_handle = '/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_speaker/temp_data/test.wav'
+            wget.download(url, file_handle)
         data = np.fromfile(file_handle, np.uint8)[24:]  # Loading wav file
+        if "http" in path:
+            os.remove(file_handle)
         data = data.astype(np.uint8).tostring()
         return {"audio_data": data}
 
@@ -113,11 +127,6 @@ def main():
     try:
         rospy.init_node(service_name)
         param = rospy.get_param(name + "/" + test_id + "_param/")
-        if not hf.check_if_id_exist(service_name, test_id):
-            rospy.logerr(
-                "ERROR: Remember to add your configuration ID also in the harmoni_core config file"
-            )
-            return
         service = hf.set_service_server(service_name, test_id)
         s = SpeakerService(service, param)
         service_server = HarmoniServiceServer(name=service, service_manager=s)

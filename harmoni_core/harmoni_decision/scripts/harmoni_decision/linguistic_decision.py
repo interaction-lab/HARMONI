@@ -35,7 +35,8 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
     def __init__(self, name, pattern_list, test_id, url, test_input, ip, port, secure):
         HarmoniServiceManager.__init__(self,name)
         self.name = name
-        self.url = url
+        self.url_img = url + "img/"
+        self.url_snd = url + "sound/"
         self.service_id  = test_id
         self.ip = ip
         self.port = port
@@ -229,35 +230,38 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         optional_data=None
         self.command=None
         tts_data = self.sequence_scenes["tasks"][index]["text"]
+        audio_data = self.sequence_scenes["tasks"][index]["audio"]
         if index==-1:
             service = "idle"
             data="Ottimo lavoro. Sei stato bravissimo!"
         if service=="multiple_choice":
             if data == "comp":
                 tts_data = self.sequence_scenes["tasks"][index]["text_comp"]
+                audio_data = self.sequence_scenes["tasks"][index]["audio_comp"]
             elif data =="distr":
                 tts_data = self.sequence_scenes["tasks"][index]["text_distr"]
+                audio_data = self.sequence_scenes["tasks"][index]["audio_distr"]
             if self.type_web=="full":
-                optional_data = {"tts_default": tts_data, "web_page_default":"[{'component_id':'main_img_full', 'set_content':'"+self.url + self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'target_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["third_img"]+".png'},{'component_id':'comp_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["first_img"]+".png'},{'component_id':'distr_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["second_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
+                optional_data = {"tts_default": tts_data, "speaker_default": self.url_snd+audio_data+".wav" , "web_page_default":"[{'component_id':'main_img_full', 'set_content':'"+self.url_img + self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'target_img_"+self.type_web+"', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["third_img"]+".png'},{'component_id':'comp_img_"+self.type_web+"', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["first_img"]+".png'},{'component_id':'distr_img_"+self.type_web+"', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["second_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
             elif self.type_web=="choices":
-                optional_data = {"tts_default": tts_data, "web_page_default":"[{'component_id':'target_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["third_img"]+".png'},{'component_id':'comp_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["first_img"]+".png'},{'component_id':'distr_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["second_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
+                optional_data = {"tts_default": tts_data,"speaker_default": self.url_snd+audio_data+".wav", "web_page_default":"[{'component_id':'target_img_"+self.type_web+"', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["third_img"]+".png'},{'component_id':'comp_img_"+self.type_web+"', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["first_img"]+".png'},{'component_id':'distr_img_"+self.type_web+"', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["second_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
             elif self.type_web=="composed":
-                optional_data = {"tts_default": tts_data, "web_page_default":"[{'component_id':'first_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["first_img"]+".png'},{'component_id':'second_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["second_img"]+".png'},{'component_id':'third_img', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["third_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
+                optional_data = {"tts_default": tts_data,"speaker_default": self.url_snd+audio_data+".wav", "web_page_default":"[{'component_id':'first_img', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["first_img"]+".png'},{'component_id':'second_img', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["second_img"]+".png'},{'component_id':'third_img', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["third_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
             elif self.type_web=="alt":
                 if tts_data=="":
                     service = "display_image"
                 else:
-                    optional_data = {"tts_default": tts_data, "web_page_default":"[{'component_id':'target_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["third_img"]+".png'},{'component_id':'comp_img_"+self.type_web+"', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["first_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
+                    optional_data = {"tts_default": tts_data, "web_page_default":"[{'component_id':'target_img_"+self.type_web+"', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["third_img"]+".png'},{'component_id':'comp_img_"+self.type_web+"', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["first_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
             else:
                 rospy.loginfo("Not existing activity")
                 return
         elif service=="display_image":
             if self.type_web=="alt":
-                optional_data = {"tts_default": tts_data, "web_page_default":"[{'component_id':'main_img_alt', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'display_image_container', 'set_content':''}]"}
+                optional_data = {"tts_default": tts_data, "web_page_default":"[{'component_id':'main_img_alt', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'display_image_container', 'set_content':''}]"}
             else:
-                optional_data = {"tts_default": tts_data, "web_page_default":"[{'component_id':'main_img_alt', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'display_image_container', 'set_content':''}]"}
+                optional_data = {"tts_default": tts_data, "web_page_default":"[{'component_id':'main_img_alt', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'display_image_container', 'set_content':''}]"}
         elif service=="intro":
-            optional_data = {"tts_default": self.sequence_scenes["intro"]["text"], "web_page_default":"[{'component_id':'main_img_alt', 'set_content':'"+self.url +self.sequence_scenes["intro"]["img"]+".png'},{'component_id':'display_image_container', 'set_content':''}]"}
+            optional_data = {"tts_default": self.sequence_scenes["intro"]["text"],"speaker_default": self.url_snd + self.sequence_scenes["intro"]["audio"]+".wav", "web_page_default":"[{'component_id':'main_img_alt', 'set_content':'"+self.url_img +self.sequence_scenes["intro"]["img"]+".png'},{'component_id':'display_image_container', 'set_content':''}]"}
             self.index=0
             service = "display_image"
         elif service=="idle":
@@ -269,14 +273,14 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
                 optional_data = {"tts_default": data}
         elif service=="sentence_repetition":
             if self.type_web=="repetition":
-                optional_data = {"tts_default": tts_data, "web_page_default":"[{'component_id':'main_img_ret', 'set_content':'"+self.url +"dots.png'},{'component_id':'sentence_repetition_container', 'set_content':''}]"}
+                optional_data = {"tts_default": tts_data, "web_page_default":"[{'component_id':'main_img_ret', 'set_content':'"+self.url_img +"dots.png'},{'component_id':'sentence_repetition_container', 'set_content':''}]"}
             elif self.type_web=="retelling":
                 if index<8:
                     service="display_image"
-                    optional_data = {"tts_default": tts_data, "web_page_default":"[{'component_id':'main_img_alt', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'display_image_container', 'set_content':''}]"}
+                    optional_data = {"tts_default": tts_data, "web_page_default":"[{'component_id':'main_img_alt', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'display_image_container', 'set_content':''}]"}
                 else:
                     rospy.loginfo(self.sequence_scenes["tasks"][index])
-                    optional_data = {"tts_default": tts_data, "web_page_default":"[{'component_id':'main_img_ret', 'set_content':'"+self.url +self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'sentence_repetition_container', 'set_content':''}]"}
+                    optional_data = {"tts_default": tts_data, "web_page_default":"[{'component_id':'main_img_ret', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'sentence_repetition_container', 'set_content':''}]"}
         if optional_data!="":
             optional_data = str(optional_data)
         def daemon():
@@ -352,7 +356,7 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
                                 rospy.loginfo(res)
                                 if isinstance(res, str):
                                     res = ast.literal_eval(res)
-                                itemselected = res["set_view"].replace(self.url, "")
+                                itemselected = res["set_view"].replace(self.url_img, "")
                                 if "arget" in res["set_view"]:
                                     self.index+=1
                                     if (self.type_web=="alt" and self.sequence_scenes["tasks"][self.index]["main_img"]!=""):
@@ -404,7 +408,7 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
                         self.index+=1
                         self.do_request(self.index,service)
                     else:
-                        rospy.loginfo("Here")
+                        rospy.loginfo("__________________________________QUIIIIII___________________")
                         service = "multiple_choice"
                         self.do_request(self.index,service)
                 elif result['service'] == "code":

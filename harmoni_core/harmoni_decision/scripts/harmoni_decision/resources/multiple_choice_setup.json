@@ -16,18 +16,20 @@
                                             "#73b634"
                                         ],
                                         "story_intro": {
-                                            "audio": "Intro_Cavallo_Filippo",
+                                            "audio": "Intro_Cavallo_Filippo_robot",
                                             "img": ""
                                         },
                                         "intro": {
-                                            "audio": "1_1_1_Intro",
+                                            "audio": "1_1_1_Intro_robot",
                                             "img": "1_1_1_Titolo",
-                                            "text": "Queste sono le avventure del cavallo Filippo, nel prato"
+                                            "text": "Queste sono le avventure del cavallo Filippo. Giochiamo insieme."
                                         },
                                         "tasks": [
                                             {
-                                                "audio": "1_1_1",
-                                                "text": "Oggi c'è il sole",
+                                                "audio": "1_1_2_robot",
+                                                "audio_comp": "Prova_Ancora_robot",
+                                                "audio_distr": "Prova_Ancora_robot",
+                                                "text": "<prosody rate='slow'>Oggi c'è il sole</prosody>",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora",
                                                 "text_distr":"*QT/emotions/sad* Riprova",
                                                 "main_img": "1_1_1_Sfondo",
@@ -36,8 +38,10 @@
                                                 "second_img": "1_1_1_Distr"
                                             },
                                             {
-                                                "audio": "1_1_2",
-                                                "text": "Il cavallo Filippo cammina nel prato",
+                                                "audio": "1_1_2_robot",
+                                                "audio_comp": "Prova_Ancora_robot",
+                                                "audio_distr": "Prova_Ancora_robot",
+                                                "text": "<prosody rate='slow'>Il cavallo Filippo cammina nel prato</prosody>",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora",
                                                 "text_distr":"*QT/emotions/sad* Riprova",
                                                 "main_img": "1_1_2_Sfondo",
@@ -46,8 +50,10 @@
                                                 "third_img": "1_1_2_Distr"
                                             },
                                             {
-                                                "audio": "1_1_3",
-                                                "text": "Nel prato ci sono dei fiori",
+                                                "audio": "1_1_3_robot",
+                                                "audio_comp": "Prova_Ancora_robot",
+                                                "audio_distr": "Prova_Ancora_robot",
+                                                "text": "<prosody rate='slow'>Nel prato ci sono dei fiori</prosody>",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora",
                                                 "text_distr":"*QT/emotions/sad* Riprova",
                                                 "main_img": "1_1_3_Sfondo",
@@ -56,8 +62,10 @@
                                                 "second_img": "1_1_3_Distr"
                                             },
                                             {
-                                                "audio": "1_1_4",
-                                                "text": "Il cavallo Filippo ha trovato un bellissimo cappello",
+                                                "audio": "1_1_4_robot",
+                                                "audio_comp": "Prova_Ancora_robot",
+                                                "audio_distr": "Prova_Ancora_robot",
+                                                "text": "<prosody rate='slow'>Il cavallo Filippo ha trovato un bellissimo cappello</prosody>",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora",
                                                 "text_distr":"*QT/emotions/sad* Riprova",
                                                 "main_img": "1_1_4_Sfondo",
@@ -66,7 +74,9 @@
                                                 "third_img": "1_1_4_Distr"
                                             },
                                             {
-                                                "audio": "1_1_5",
+                                                "audio": "1_1_5_robot",
+                                                "audio_comp": "Prova_Ancora_robot",
+                                                "audio_distr": "Prova_Ancora_robot",
                                                 "text": "Poi arriva il vento e il cappello vola via lontano",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora",
                                                 "text_distr":"*QT/emotions/sad* Riprova",
@@ -76,7 +86,9 @@
                                                 "first_img": "1_1_5_Distr"
                                             },
                                             {
-                                                "audio": "1_1_6",
+                                                "audio": "1_1_6_robot",
+                                                "audio_comp": "Prova_Ancora_robot",
+                                                "audio_distr": "Prova_Ancora_robot",
                                                 "text": "Il cavallo Filippo è molto triste",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora",
                                                 "text_distr":"*QT/emotions/sad* Riprova",
@@ -86,7 +98,9 @@
                                                 "third_img": "1_1_6_Distr"
                                             },
                                             {
-                                                "audio": "1_1_7",
+                                                "audio": "1_1_7_robot",
+                                                "audio_comp": "Prova_Ancora_robot",
+                                                "audio_distr": "Prova_Ancora_robot",
                                                 "text": "Il cavallo Filippo cerca il suo cappello vicino ad un albero",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora",
                                                 "text_distr":"*QT/emotions/sad* Riprova",
@@ -96,7 +110,9 @@
                                                 "second_img": "1_1_7_Distr"
                                             },
                                             {
-                                                "audio": "1_1_8",
+                                                "audio": "1_1_8_robot",
+                                                "audio_comp": "Prova_Ancora_robot",
+                                                "audio_distr": "Prova_Ancora_robot",
                                                 "text": "Vicino all'albero c'è uno scoiattolo",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora",
                                                 "text_distr":"*QT/emotions/sad* Riprova",
@@ -106,7 +122,9 @@
                                                 "second_img": "1_1_8_Distr"
                                             },
                                             {
-                                                "audio": "1_1_9",
+                                                "audio": "1_1_9_robot",
+                                                "audio_comp": "Prova_Ancora_robot",
+                                                "audio_distr": "Prova_Ancora_robot",
                                                 "text": "Vicino all'albero c'è anche una farfalla",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora",
                                                 "text_distr":"*QT/emotions/sad* Riprova",
@@ -116,7 +134,9 @@
                                                 "third_img": "1_1_9_Distr"
                                             },
                                             {
-                                                "audio": "1_1_10",
+                                                "audio": "1_1_10_robot",
+                                                "audio_comp": "1_1_10_Comp_audio_robot",
+                                                "audio_distr": "1_1_10_Distr_audio_robot",
                                                 "text": "La farfalla è rincorsa dallo scoiattolo",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! Qui lo scoiattolo è rincorso dalla farfalla. Io ti ho chiesto la farfalla è rincorsa dallo scoiattolo.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! Io ti ho chiesto la farfalla è rincorsa dallo scoiattolo.",
@@ -126,8 +146,10 @@
                                                 "second_img": "1_1_10_Distr"
                                             },
                                             {
-                                                "audio": "1_1_11",
-                                                "text": "Il cavallo Filippo la tocca.",
+                                                "audio": "1_1_11_robot",
+                                                "audio_comp": "1_1_11_Comp_audio_robot",
+                                                "audio_distr": "1_1_11_Distr_audio_robot",
+                                                "text": "Giusto! la farfalla è rincorsa dallo scoiattolo . Il cavallo Filippo la tocca.",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! Qui il Cavallo Filippo lo tocca. Io ti ho chiesto il Cavallo Filippo la tocca",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! Io ti ho chiesto il cavallo Filippo la tocca.",
                                                 "main_img": "1_1_11_Sfondo",
@@ -136,8 +158,10 @@
                                                 "second_img": "1_1_11_Distr"
                                             },
                                             {
-                                                "audio": "1_1_12",
-                                                "text": "Allora la farfalla si posa su un fiore.",
+                                                "audio": "1_1_12_robot",
+                                                "audio_comp": "Prova_Ancora_robot",
+                                                "audio_distr": "Prova_Ancora_robot",
+                                                "text": "Giusto! Il cavallo Filippo la tocca. Allora la farfalla si posa su un fiore.",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora",
                                                 "text_distr":"*QT/emotions/sad* Riprova",
                                                 "main_img": "1_1_12_Sfondo",
@@ -146,7 +170,9 @@
                                                 "second_img": "1_1_12_Distr"
                                             },
                                             {
-                                                "audio": "1_1_13",
+                                                "audio": "1_1_13_robot",
+                                                "audio_comp": "Prova_Ancora_robot",
+                                                "audio_distr": "Prova_Ancora_robot",
                                                 "text": "Il cavallo Filippo incontra un topo",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora",
                                                 "text_distr":"*QT/emotions/sad* Riprova",
@@ -156,7 +182,9 @@
                                                 "second_img": "1_1_13_Distr"
                                             },
                                             {
-                                                "audio": "1_1_14",
+                                                "audio": "1_1_14_robot",
+                                                "audio_comp": "Prova_Ancora_robot",
+                                                "audio_distr": "Prova_Ancora_robot",
                                                 "text": "Poi arriva una gallina",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora",
                                                 "text_distr":"*QT/emotions/sad* Riprova",
@@ -166,7 +194,9 @@
                                                 "third_img": "1_1_14_Distr"
                                             },
                                             {
-                                                "audio": "1_1_15",
+                                                "audio": "1_1_15_robot",
+                                                "audio_comp": "1_1_15_Comp_audio_robot",
+                                                "audio_distr": "1_1_15_Distr_audio_robot",
                                                 "text": "la gallina è salutata dal topo",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! Qui il topo è salutato dalla gallina. Io ti ho chiesto la gallina è salutata dal topo.",
                                                 "text_distr":"*QT/emotions/sad Fai attenzione! Io ti ho chiesto la gallina è salutata dal topo.*",
@@ -176,18 +206,22 @@
                                                 "first_img": "1_1_15_Distr"
                                             },
                                             {
-                                                "audio": "1_1_16",
-                                                "text": "Il cavallo Filippo lo spinge",
-                                                "text_comp":"*QT/emotions/sad* Fai attenzione! Qui il Cavallo Filippo Ia spinge. Io ti ho chiesto il Cavallo Filippo lo spinge.",
-                                                "text_distr":"*QT/emotions/sad Fai attenzione! Io ti ho chiesto il Cavallo Filippo lo spinge.*",
+                                                "audio": "1_1_16_robot",
+                                                "audio_comp": "1_1_16_Comp_audio_robot",
+                                                "audio_distr": "1_1_16_Distr_audio_robot",
+                                                "text": "Giusto! la gallina è salutata dal topo. Il cavallo Filippo lo spinge",
+                                                "text_comp":"*QT/emotions/sad* Fai attenzione! Qui il Cavallo Filippo la spinge. Io ti ho chiesto il Cavallo Filippo lo spinge.",
+                                                "text_distr":"*QT/emotions/sad* Fai attenzione! Io ti ho chiesto il Cavallo Filippo lo spinge.",
                                                 "main_img": "1_1_16_Sfondo",
                                                 "first_img": "1_1_16_Target",
                                                 "second_img": "1_1_16_Comp",
                                                 "third_img": "1_1_16_Distr"
                                             },
                                             {
-                                                "audio": "1_1_17",
-                                                "text": "Che gran confusione!",
+                                                "audio": "1_1_17_robot",
+                                                "audio_comp": "Prova_Ancora_robot",
+                                                "audio_distr": "Prova_Ancora_robot",
+                                                "text": "Giusto! il cavallo Filippo lo spinge. Che gran confusione!",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora",
                                                 "text_distr":"*QT/emotions/sad* Riprova",
                                                 "main_img": "1_1_17_Sfondo",
@@ -196,7 +230,9 @@
                                                 "second_img": ""
                                             },
                                             {
-                                                "audio": "1_1_18_Outro",
+                                                "audio": "1_1_18_Outro_robot",
+                                                "audio_comp": "Prova_Ancora_robot",
+                                                "audio_distr": "Prova_Ancora_robot",
                                                 "text": " il cavallo Filippo dice: \" fermi tutti! Avete visto il mio cappello?\" gli animali rispondono: \"no, ci dispiace\" Allora il cavallo Filippo continua a cercare",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora",
                                                 "text_distr":"*QT/emotions/sad* Riprova",
@@ -207,7 +243,7 @@
                                             }
                                         ],
                                         "reward": {
-                                            "audio": "1_1_1_Reward",
+                                            "audio": "1_1_1_Reward_robot",
                                             "img": "1_1_1_Reward"
                                         }
                                     }
@@ -223,7 +259,7 @@
                                         "intro": {
                                             "audio": "1_2_1_Intro",
                                             "img": "1_2_1_Titolo",
-                                            "text": "Queste sono le avventure del cavallo Filippo, nel recinto"
+                                            "text": "*QT/bye* Ciao facciamo un gioco. Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. Iniziamo. Queste sono le avventure del cavallo Filippo, nel recinto"
                                         },
                                         "tasks": [
                                             {
@@ -434,7 +470,7 @@
                                         "intro": {
                                             "audio": "1_3_1_Intro",
                                             "img": "1_3_1_Titolo",
-                                            "text": "Queste sono le avventure del cavallo Filippo, nello stagno"
+                                            "text": "*QT/bye* Ciao facciamo un gioco. Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. Iniziamo. Queste sono le avventure del cavallo Filippo, nello stagno"
                                         },
                                         "tasks": [
                                             {
@@ -726,7 +762,7 @@
                                         "intro": {
                                             "audio": "2_1_1_Intro",
                                             "img": "2_1_1_Titolo",
-                                            "text": "Queste sono le avventure della scimmia Sofia, sulla spiaggia"
+                                            "text": "*QT/bye* Ciao facciamo un gioco. Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. Iniziamo. Queste sono le avventure della scimmia Sofia, sulla spiaggia"
                                         },
                                         "tasks": [
                                             {
@@ -927,7 +963,7 @@
                                         "intro": {
                                             "audio": "2_2_1_Intro",
                                             "img": "2_2_1_Titolo",
-                                            "text": "Queste sono le avventure della scimmia Sofia, nel bosco"
+                                            "text": "*QT/bye* Ciao facciamo un gioco. Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. Iniziamo. Queste sono le avventure della scimmia Sofia, nel bosco"
                                         },
                                         "tasks": [
                                             {
@@ -1138,7 +1174,7 @@
                                         "intro": {
                                             "audio": "2_3_1_Intro",
                                             "img": "2_3_1_Titolo",
-                                            "text": "Queste sono le avventure della scimmia Sofia, al circo"
+                                            "text": "*QT/bye* Ciao facciamo un gioco. Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. Iniziamo. Queste sono le avventure della scimmia Sofia, al circo"
                                         },
                                         "tasks": [
                                             {
@@ -1420,7 +1456,7 @@
                             "intro": {
                                 "audio": "intro_gioco",
                                 "img": "background",
-                                "text": "Ora vedrai 3 immagini."
+                                "text": "*QT/bye* Ciao facciamo un gioco. Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. Iniziamo."
                             },
                             "tasks": [
                                 {
@@ -1592,7 +1628,7 @@
                             "intro": {
                                 "audio": "intro_gioco",
                                 "img": "background",
-                                "text": "Ora vedrai 3 immagini."
+                                "text": "*QT/bye* Ciao facciamo un gioco. Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. Iniziamo."
                             },
                             "tasks": [
                                 {
@@ -1764,7 +1800,7 @@
                             "intro": {
                                 "audio": "intro_gioco",
                                 "img": "background",
-                                "text": "Ora vedrai 3 immagini."
+                                "text": "*QT/bye* Ciao facciamo un gioco. Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. Iniziamo."
                             },
                             "tasks": [
                                 {
@@ -1936,7 +1972,7 @@
                             "intro": {
                                 "audio": "intro_gioco",
                                 "img": "background",
-                                "text": "Ora vedrai 3 immagini."
+                                "text": "*QT/bye* Ciao facciamo un gioco. Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. Iniziamo."
                             },
                             "tasks": [
                                 {
@@ -2126,7 +2162,7 @@
                                         "intro": {
                                             "audio": "R_1_1_1_Gino",
                                             "img": "R_1_1_1_Titolo",
-                                            "text": "Le avventure di Gino il pompiere, a scuola."
+                                            "text": "*QT/bye* Ciao facciamo un gioco. Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. Iniziamo. Le avventure di Gino il pompiere, a scuola."
                                         },
                                         "tasks": [
                                             {
@@ -2467,7 +2503,7 @@
                                         "intro": {
                                             "audio": "R_1_2_1_Gino",
                                             "img": "R_1_2_1_Titolo",
-                                            "text": "Le avventure di Gino il pompiere, al parco."
+                                            "text": "*QT/bye* Ciao facciamo un gioco. Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. Iniziamo. Le avventure di Gino il pompiere, al parco."
                                         },
                                         "tasks": [
                                             {
@@ -2810,7 +2846,7 @@
                                         "intro": {
                                             "audio": "R_2_1_1_Giulia",
                                             "img": "R_2_1_1_Titolo",
-                                            "text": "Questa è la storia di Giulia la dottoressa."
+                                            "text": "*QT/bye* Ciao facciamo un gioco. Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. Iniziamo. Questa è la storia di Giulia la dottoressa."
                                         },
                                         "tasks": [
                                             {
@@ -3151,7 +3187,7 @@
                                         "intro": {
                                             "audio": "R_2_2_1_Giulia",
                                             "img": "R_2_2_1_Titolo",
-                                            "text": "Le avventure di Giulia la dottoressa."
+                                            "text": "*QT/bye* Ciao facciamo un gioco. Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. Iniziamo. Le avventure di Giulia la dottoressa."
                                         },
                                         "tasks": [
                                             {
@@ -3483,7 +3519,7 @@
                             "intro": {
                                 "audio": "",
                                 "img": "background",
-                                "text": "Ascolta la storia che ti dirò, e ripetila. Ricordati di cliccare il bottone per registrare e per stoppare."
+                                "text": "*QT/bye* Ciao facciamo un gioco. Ti racconterà una storia facendoti vedere delle immagini su tablet *QT/show_tablet*. Alla fine tu dovrai raccontarmela meglio che puoi, ricordandoti tutte le cose che ti ho detto. Quando la storia sarà finita vedrai sullo schermo un piccolo pulsante con un microfono schiacciarlo e comincia a raccontare la storia. Iniziamo."
                             },
                             "tasks": [
                                 {
@@ -3608,7 +3644,7 @@
                             "intro": {
                                 "audio": "",
                                 "img": "background",
-                                "text": "Ascolta la storia che ti dirò, e ripetila. Ricordati di cliccare il bottone per registrare e per stoppare."
+                                "text": "*QT/bye* Ciao facciamo un gioco. Ti racconterà una storia facendoti vedere delle immagini su tablet *QT/show_tablet*. Alla fine tu dovrai raccontarmela meglio che puoi, ricordandoti tutte le cose che ti ho detto. Quando la storia sarà finita vedrai sullo schermo un piccolo pulsante con un microfono schiacciarlo e comincia a raccontare la storia. Iniziamo."
                             },
                             "tasks": [
                                 {
@@ -3737,7 +3773,7 @@
                             "intro": {
                                 "audio": "",
                                 "img": "background",
-                                "text": "Ascolta la storia che ti dirò, e ripetila. Ricordati di cliccare il bottone per registrare e per stoppare."
+                                "text": "*QT/bye* Ciao facciamo un gioco. Ti racconterà una storia facendoti vedere delle immagini su tablet *QT/show_tablet*. Alla fine tu dovrai raccontarmela meglio che puoi, ricordandoti tutte le cose che ti ho detto. Quando la storia sarà finita vedrai sullo schermo un piccolo pulsante con un microfono schiacciarlo e comincia a raccontare la storia. Iniziamo."
                             },
                             "tasks": [
                                 {
@@ -3862,7 +3898,7 @@
                             "intro": {
                                 "audio": "",
                                 "img": "background",
-                                "text": "Ascolta la storia che ti dirò, e ripetila. Ricordati di cliccare il bottone per registrare e per stoppare."
+                                "text": "*QT/bye* Ciao facciamo un gioco. Ti racconterà una storia facendoti vedere delle immagini su tablet *QT/show_tablet*. Alla fine tu dovrai raccontarmela meglio che puoi, ricordandoti tutte le cose che ti ho detto. Quando la storia sarà finita vedrai sullo schermo un piccolo pulsante con un microfono schiacciarlo e comincia a raccontare la storia. Iniziamo."
                             },
                             "tasks": [
                                 {
@@ -3995,7 +4031,7 @@
                             "intro": {
                                 "audio": "Wp_0",
                                 "img": "background",
-                                "text": "Scegli l'immagine corrispondente all'audio che senti."
+                                "text": "*QT/bye* Ciao facciamo un gioco. Ti dirò delle frasi e vedrai comparire delle figure sullo *QT/show_tablet* schermo del tablet. Dovrai scegliere la figura che si accoppia con la frase che hai sentito mi raccomando devi fare giusto iniziamo."
                             },
                             "tasks": [
                                 {"audio":"Wp_00a","text":"Quali signori asciuga la bambina?","main_img":"","first_img":"Wp_00a_Target","second_img":"Wp_00a_Distr","third_img":"Wp_00a_Comp"},
@@ -4027,7 +4063,7 @@
                             "intro": {
                                 "audio": "W_0",
                                 "img": "background",
-                                "text": "Scegli l'immagine corrispondente all'audio che senti."
+                                "text": "*QT/bye* Ciao facciamo un gioco. Ti dirò delle frasi e vedrai comparire delle figure sullo *QT/show_tablet* schermo del tablet. Dovrai scegliere la figura che si accoppia con la frase che hai sentito mi raccomando devi fare giusto iniziamo."
                             },
                             "tasks": [
                                 {"audio":"W_00a","text":"Quali signori asciuga la bambina?","main_img":"","first_img":"W_00a_Target","second_img":"W_00a_Distr","third_img":"W_00a_Comp"},
@@ -4063,7 +4099,7 @@
                             "intro": {
                                 "audio": "Rp_0",
                                 "img": "background",
-                                "text": "Scegli l'immagine corrispondente all'audio che senti."
+                                "text": "*QT/bye* Ciao facciamo un gioco. Ti dirò delle frasi e vedrai comparire delle figure sullo *QT/show_tablet* schermo del tablet. Dovrai scegliere la figura che si accoppia con la frase che hai sentito mi raccomando devi fare giusto iniziamo."
                             },
                             "tasks": [
                                 {"audio":"Rp_00a","text":"i signori che asciugano la bambina","main_img":"","first_img":"Rp_00a_Comp","second_img":"Rp_00a_Distr","third_img":"Rp_00a_Target"},
@@ -4105,7 +4141,7 @@
                             "intro": {
                                 "audio": "R_0",
                                 "img": "background",
-                                "text": "Scegli l'immagine corrispondente all'audio che senti."
+                                "text": "*QT/bye* Ciao facciamo un gioco. Ti dirò delle frasi e vedrai comparire delle figure sullo *QT/show_tablet* schermo del tablet. Dovrai scegliere la figura che si accoppia con la frase che hai sentito mi raccomando devi fare giusto iniziamo."
                             },
                             "tasks": [
                                 {"audio":"R_00a","text":"i signori che asciugano la bambina","main_img":"","first_img":"R_00a_Comp","second_img":"R_00a_Distr","third_img":"R_00a_Target"},
@@ -4151,7 +4187,7 @@
                             "intro": {
                                 "audio": "Cp_0",
                                 "img": "background",
-                                "text": "Scegli l'immagine corrispondente all'audio che senti."
+                                "text": "*QT/bye* Ciao facciamo un gioco. Ti dirò delle frasi e vedrai comparire delle figure sullo *QT/show_tablet* schermo del tablet. Dovrai scegliere la figura che si accoppia con la frase che hai sentito mi raccomando devi fare giusto iniziamo."
                             },
                             "tasks": [
                                 {
@@ -4478,7 +4514,7 @@
                             "intro": {
                                 "audio": "C_0",
                                 "img": "background",
-                                "text": "Scegli l'immagine corrispondente all'audio che senti."
+                                "text": "*QT/bye* Ciao facciamo un gioco. Ti dirò delle frasi e vedrai comparire delle figure sullo *QT/show_tablet* schermo del tablet. Dovrai scegliere la figura che si accoppia con la frase che hai sentito mi raccomando devi fare giusto iniziamo."
                             },
                             "tasks": [
                                 {
@@ -4823,7 +4859,7 @@
                             "intro": {
                                 "audio": "Pp_0",
                                 "img": "background",
-                                "text": "Scegli l'immagine corrispondente all'audio che senti."
+                                "text": "*QT/bye* Ciao facciamo un gioco. Ti dirò delle frasi e vedrai comparire delle figure sullo *QT/show_tablet* schermo del tablet. Dovrai scegliere la figura che si accoppia con la frase che hai sentito mi raccomando devi fare giusto iniziamo."
                             },
                             "tasks": [
                                 {
@@ -5003,7 +5039,7 @@
                             "intro": {
                                 "audio": "P_0",
                                 "img": "background",
-                                "text": "Scegli l'immagine corrispondente all'audio che senti."
+                                "text": "*QT/bye* Ciao facciamo un gioco. Ti dirò delle frasi e vedrai comparire delle figure sullo *QT/show_tablet* schermo del tablet. Dovrai scegliere la figura che si accoppia con la frase che hai sentito mi raccomando devi fare giusto iniziamo."
                             },
                             "tasks": [
                                 {
@@ -5188,7 +5224,7 @@
                             "intro": {
                                 "audio": "",
                                 "img": "background",
-                                "text": "Ascolta la frase che ti dirò, e ripetila. Ricordati di cliccare il bottone per registrare e per stoppare."
+                                "text": "*QT/bye*Ciao facciamo un gioco. Ti dirò delle frasi e tu dovrai ripeterle esattamente come le hai sentite. Alla fine di ogni frase comparirà sullo schermo del tablet *QT/show_tablet* un bottone con un microfono. Schiaccialo e ripeti la frase meglio che puoi. Iniziamo."
                             },
                             "tasks": [
                                 {
@@ -5265,7 +5301,7 @@
                             "intro": {
                                 "audio": "",
                                 "img": "background",
-                                "text": "Ascolta la frase che ti dirò, e ripetila. Ricordati di cliccare il bottone per registrare e per stoppare."
+                                "text": "*QT/bye*Ciao facciamo un gioco. Ti dirò delle frasi e tu dovrai ripeterle esattamente come le hai sentite. Alla fine di ogni frase comparirà sullo schermo del tablet *QT/show_tablet* un bottone con un microfono. Schiaccialo e ripeti la frase meglio che puoi. Iniziamo."
                             },
                             "tasks": [
                                 {
@@ -5346,7 +5382,7 @@
                             "intro": {
                                 "audio": "",
                                 "img": "background",
-                                "text": "Ascolta la frase che ti dirò, e ripetila. Ricordati di cliccare il bottone per registrare e per stoppare."
+                                "text": "*QT/bye*Ciao facciamo un gioco. Ti dirò delle frasi e tu dovrai ripeterle esattamente come le hai sentite. Alla fine di ogni frase comparirà sullo schermo del tablet *QT/show_tablet* un bottone con un microfono. Schiaccialo e ripeti la frase meglio che puoi. Iniziamo."
                             },
                             "tasks": [
                                 {
@@ -5423,7 +5459,7 @@
                             "intro": {
                                 "audio": "",
                                 "img": "background",
-                                "text": "Ascolta la frase che ti dirò, e ripetila. Ricordati di cliccare il bottone per registrare e per stoppare."
+                                "text": "*QT/bye*Ciao facciamo un gioco. Ti dirò delle frasi e tu dovrai ripeterle esattamente come le hai sentite. Alla fine di ogni frase comparirà sullo schermo del tablet *QT/show_tablet* un bottone con un microfono. Schiaccialo e ripeti la frase meglio che puoi. Iniziamo."
                             },
                             "tasks": [
                                 {

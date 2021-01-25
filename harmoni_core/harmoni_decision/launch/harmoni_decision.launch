@@ -4,10 +4,10 @@
 	<arg name="use_decision" default="true"/>
 	<arg name="name" default="linguistic"/>
 	<arg name="test" default="false"/>
-	<arg name="test_input" default="{'activityType':'Assessment', 'structure':'Sentence Repetition CP', 'test':'Pre-test'}"/>
+	<arg name="test_input" default="{'activityType':'Training', 'structure':'Clitici e Passivi', 'test':'Le avventure del cavallo Filippo', 'episode':'Nel prato'}"/>
 	<arg name="test_id" default="default"/>
-	<arg name="url" default="http://i3lab.elet.polimi.it/letssayresources/img/"/>
-	<arg name="ip" default="192.168.1.176"/>
+	<arg name="url" default="http://i3lab.elet.polimi.it/letssayresources/"/>
+	<arg name="ip" default="192.168.1.104"/>
 	<arg name="port" default="3210"/>
 	<arg name="secure" default="False"/>
   	<group if="$(arg use_decision)">
