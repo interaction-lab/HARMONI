@@ -107,6 +107,7 @@ ENV/
 #**/*.yaml
 #**/*.wav
 **/*.ogg
+**/doc/html/**
 **/private-keys.json
 **/private-keys_en.json
 
