@@ -12,4 +12,4 @@ microphone:
     device_name: default
     loudest_sound_value: 1
     set_threshold: "constant" #default if you want to detect the silence, constant if you want to set it to a constant value
-    test_outdir: "/root/harmoni_catkin_ws/src/HARMON/harmoni_sensors/harmoni_microphone/temp_data/test2.wav"
+    test_outdir: "/root/harmoni_catkin_ws/src/HARMONI/harmoni_sensors/harmoni_microphone/temp_data/test_example.wav"

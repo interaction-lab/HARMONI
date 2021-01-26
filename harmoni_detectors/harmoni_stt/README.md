@@ -19,3 +19,7 @@ ffmpeg -hide_banner -loglevel error -f alsa -i hw:3 -ar 16000 -ac 1 -ab 256k -f 
 # Testing
 
 `rostest harmoni_stt w2l.test --text`
+
+To record your own test audio, use the following:
+
+`arecord -r 16000 -d 6 -f S16_LE test_example.wav`
