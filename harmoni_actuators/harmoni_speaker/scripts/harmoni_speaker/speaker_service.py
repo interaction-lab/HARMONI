@@ -19,6 +19,8 @@ import math
 import ast
 import wget
 import os
+import wave
+import contextlib
 
 
 
@@ -52,15 +54,18 @@ class SpeakerService(HarmoniServiceManager):
         self.state = State.REQUEST
         self.actuation_completed = False
         try:
+            duration = 0
             if type(data) == str:
                 if ".wav" in data:
                     data = self.wav_to_data(data)
+                    duration = data["duration"]
                 else:
                     data = ast.literal_eval(data)
             data = data["audio_data"]
             rospy.loginfo("Writing data for speaker")
             rospy.loginfo(f"length of data is {len(data)}")
             self.audio_publisher.publish(data)
+            rospy.sleep(duration)
             self.state = State.SUCCESS
             self.actuation_completed = True
         except IOError:
@@ -112,10 +117,15 @@ class SpeakerService(HarmoniServiceManager):
             file_handle = '/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_speaker/temp_data/test.wav'
             wget.download(url, file_handle)
         data = np.fromfile(file_handle, np.uint8)[24:]  # Loading wav file
+        data = data.astype(np.uint8).tostring()
+        with contextlib.closing(wave.open(file_handle,'r')) as f:
+            frames = f.getnframes()
+            rate = f.getframerate()
+            duration = frames / float(rate)
+            rospy.loginfo(f"The audio lasts {duration} seconds")
         if "http" in path:
             os.remove(file_handle)
-        data = data.astype(np.uint8).tostring()
-        return {"audio_data": data}
+        return {"audio_data": data, "duration": duration}
 
 
 def main():

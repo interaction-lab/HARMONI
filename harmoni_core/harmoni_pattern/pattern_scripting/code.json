@@ -14,30 +14,29 @@
                 "tts_default": {
                     "action_goal": "REQUEST",
                     "resource_type": "service",
-                    "wait_for": "new",
-                    "trigger":"Ciao, io mi chiamo Chiuti. Inserisci sul *QT/show_tablet* tablet il codice per iniziare a giocare insieme!"
+                    "wait_for": "new"
                 }
             },
-            [
-                {
-                    "speaker_default": {
-                        "action_goal": "DO",
-                        "resource_type": "actuator",
-                        "wait_for": ""
-                    }
-                },
-                {
-                    "web_face_mouth_default": {
-                        "action_goal": "DO",
-                        "resource_type": "actuator",
-                        "wait_for": "new"
-                    }
+            {
+                "web_face_mouth_default": {
+                    "action_goal": "DO",
+                    "resource_type": "actuator",
+                    "wait_for": ""
                 }
-            ],
+            }
+            ,
+            {
+                "speaker_default": {
+                    "action_goal": "DO",
+                    "resource_type": "actuator",
+                    "wait_for": "new"
+                }
+            },
             {
                 "web_page_default": { 
                     "action_goal": "REQUEST",
                     "resource_type": "actuator",
+                    "trigger":"[{'component_id':'code_container', 'set_content':''}]",
                     "wait_for": "new"}
             }
         ]

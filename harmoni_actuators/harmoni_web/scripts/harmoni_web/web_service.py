@@ -95,7 +95,7 @@ class WebService(HarmoniServiceManager):
                     rospy.loginfo("Waiting for user")
                     if self.result_msg!="":
                         break
-                    rospy.sleep(0.2)
+                    rospy.sleep(1)
                 rospy.loginfo(
                     f"Message Received {self.result_msg}"
                 )  # "\"My name is chris\""

@@ -110,6 +110,7 @@ ENV/
 **/*.wav
 **/private-keys.json
 **/private-keys_en.json
+**/doc/**
 
 *.wav
 dockerfiles/config/.asoundrc

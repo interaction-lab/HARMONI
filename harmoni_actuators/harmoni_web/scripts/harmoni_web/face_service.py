@@ -228,7 +228,7 @@ class MouthService(HarmoniServiceManager):
         [valid_face_expression, visemes] = self.get_face_data(data)
         try:
             self.state = State.REQUEST
-
+            rospy.sleep(2)
             if visemes != []:
                 viseme_ids = list(map(lambda b: b["id"], visemes))
                 viseme_times = list(map(lambda b: b["start"], visemes))

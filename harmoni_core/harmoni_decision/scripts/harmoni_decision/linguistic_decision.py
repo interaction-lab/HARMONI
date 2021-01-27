@@ -90,11 +90,11 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         if message["patientId"] == self.patient_id:
             rospy.loginfo("Pairing works")
             # set activity to idle
-            self.do_request(0,"idle",data="*QT/bye* Benvenuto, oggi giocheremo insieme!")
+            self.do_request(0,"idle",data="*QT/bye* Benvenuto, <break time='800ms'/>  oggi giocheremo insieme!")
         else:
             rospy.loginfo("Wrong code")
             # rewrite the code
-            self.do_request(0,"code", data="*QT/show_tablet*Hai sbagliato codice. Riproviamo")
+            self.do_request(0,"code", data="*QT/show_tablet*Hai sbagliato codice. <break time='800ms'/>  Riproviamo")
         return
 
     def store_data(self, correct, item):
@@ -210,7 +210,7 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
     def start(self, service="code"):
         self.index = 0
         self.state = State.START
-        self.do_request(self.index,service)
+        self.do_request(self.index,service, "Ciao mi chiamo QT, inserisci sul *QT/point_front* tablet il codice per iniziare a giocare insieme.")
         return
 
 
@@ -242,11 +242,11 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
                 tts_data = self.sequence_scenes["tasks"][index]["text_distr"]
                 audio_data = self.sequence_scenes["tasks"][index]["audio_distr"]
             if self.type_web=="full":
-                optional_data = {"tts_default": tts_data, "speaker_default": self.url_snd+audio_data+".wav" , "web_page_default":"[{'component_id':'main_img_full', 'set_content':'"+self.url_img + self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'target_img_"+self.type_web+"', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["third_img"]+".png'},{'component_id':'comp_img_"+self.type_web+"', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["first_img"]+".png'},{'component_id':'distr_img_"+self.type_web+"', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["second_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
+                optional_data = {"tts_default": "<prosody rate='slow'>"+tts_data+"</prosody>", "speaker_default": self.url_snd+audio_data+"_robot.wav" , "web_page_default":"[{'component_id':'main_img_full', 'set_content':'"+self.url_img + self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'target_img_"+self.type_web+"', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["third_img"]+".png'},{'component_id':'comp_img_"+self.type_web+"', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["first_img"]+".png'},{'component_id':'distr_img_"+self.type_web+"', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["second_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
             elif self.type_web=="choices":
-                optional_data = {"tts_default": tts_data,"speaker_default": self.url_snd+audio_data+".wav", "web_page_default":"[{'component_id':'target_img_"+self.type_web+"', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["third_img"]+".png'},{'component_id':'comp_img_"+self.type_web+"', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["first_img"]+".png'},{'component_id':'distr_img_"+self.type_web+"', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["second_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
+                optional_data = {"tts_default": "<prosody rate='slow'>"+tts_data+"</prosody>","speaker_default": self.url_snd+audio_data+"_robot.wav", "web_page_default":"[{'component_id':'target_img_"+self.type_web+"', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["third_img"]+".png'},{'component_id':'comp_img_"+self.type_web+"', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["first_img"]+".png'},{'component_id':'distr_img_"+self.type_web+"', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["second_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
             elif self.type_web=="composed":
-                optional_data = {"tts_default": tts_data,"speaker_default": self.url_snd+audio_data+".wav", "web_page_default":"[{'component_id':'first_img', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["first_img"]+".png'},{'component_id':'second_img', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["second_img"]+".png'},{'component_id':'third_img', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["third_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
+                optional_data = {"tts_default": "<prosody rate='slow'>"+tts_data+"</prosody>","speaker_default": self.url_snd+audio_data+"_robot.wav", "web_page_default":"[{'component_id':'first_img', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["first_img"]+".png'},{'component_id':'second_img', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["second_img"]+".png'},{'component_id':'third_img', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["third_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
             elif self.type_web=="alt":
                 if tts_data=="":
                     service = "display_image"
@@ -257,30 +257,31 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
                 return
         elif service=="display_image":
             if self.type_web=="alt":
-                optional_data = {"tts_default": tts_data, "web_page_default":"[{'component_id':'main_img_alt', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'display_image_container', 'set_content':''}]"}
+                optional_data = {"tts_default": "<prosody rate='slow'>"+tts_data+"</prosody>", "speaker_default": self.url_snd+audio_data+"_robot.wav", "web_page_default":"[{'component_id':'main_img_alt', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'display_image_container', 'set_content':''}]"}
             else:
-                optional_data = {"tts_default": tts_data, "web_page_default":"[{'component_id':'main_img_alt', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'display_image_container', 'set_content':''}]"}
+                optional_data = {"tts_default": "<prosody rate='slow'>"+tts_data+"</prosody>", "speaker_default": self.url_snd+audio_data+"_robot.wav", "web_page_default":"[{'component_id':'main_img_alt', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'display_image_container', 'set_content':''}]"}
         elif service=="intro":
-            optional_data = {"tts_default": self.sequence_scenes["intro"]["text"],"speaker_default": self.url_snd + self.sequence_scenes["intro"]["audio"]+".wav", "web_page_default":"[{'component_id':'main_img_alt', 'set_content':'"+self.url_img +self.sequence_scenes["intro"]["img"]+".png'},{'component_id':'display_image_container', 'set_content':''}]"}
+            optional_data = {"tts_default": "<prosody rate='slow'>"+self.sequence_scenes["intro"]["text"]+"</prosody>","speaker_default": self.url_snd + self.sequence_scenes["intro"]["audio"]+"_robot.wav", "web_page_default":"[{'component_id':'main_img_alt', 'set_content':'"+self.url_img +self.sequence_scenes["intro"]["img"]+".png'},{'component_id':'display_image_container', 'set_content':''}]"}
             self.index=0
             service = "display_image"
         elif service=="idle":
             if data:
-                optional_data = {"tts_default": data}
+                optional_data = {"tts_default": "<prosody rate='slow'>"+data+"</prosody>", "speaker_default": self.url_snd+"benvenuto.wav"}
             self.index=0
         elif service=="code":
             if data:
-                optional_data = {"tts_default": data}
+                optional_data = {"tts_default": "<prosody rate='slow'>"+data+"</prosody>", "speaker_default": self.url_snd+"Chiuti_intro.wav"}
+
         elif service=="sentence_repetition":
             if self.type_web=="repetition":
                 optional_data = {"tts_default": tts_data, "web_page_default":"[{'component_id':'main_img_ret', 'set_content':'"+self.url_img +"dots.png'},{'component_id':'sentence_repetition_container', 'set_content':''}]"}
             elif self.type_web=="retelling":
                 if index<8:
                     service="display_image"
-                    optional_data = {"tts_default": tts_data, "web_page_default":"[{'component_id':'main_img_alt', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'display_image_container', 'set_content':''}]"}
+                    optional_data = {"tts_default":  "<prosody rate='slow'>"+tts_data+"</prosody>", "web_page_default":"[{'component_id':'main_img_alt', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'display_image_container', 'set_content':''}]"}
                 else:
                     rospy.loginfo(self.sequence_scenes["tasks"][index])
-                    optional_data = {"tts_default": tts_data, "web_page_default":"[{'component_id':'main_img_ret', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'sentence_repetition_container', 'set_content':''}]"}
+                    optional_data = {"tts_default": "<prosody rate='slow'>"+tts_data+"</prosody>", "web_page_default":"[{'component_id':'main_img_ret', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'sentence_repetition_container', 'set_content':''}]"}
         if optional_data!="":
             optional_data = str(optional_data)
         def daemon():

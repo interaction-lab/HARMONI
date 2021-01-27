@@ -17,22 +17,21 @@
                     "wait_for": "new"
                 }
             },
-            [
                 {
-                    "speaker_default": {
+                    "web_face_mouth_default": {
                         "action_goal": "DO",
                         "resource_type": "actuator",
                         "wait_for": ""
                     }
                 },
                 {
-                    "web_face_mouth_default": {
+                    "speaker_default": {
                         "action_goal": "DO",
                         "resource_type": "actuator",
                         "wait_for": "new"
                     }
                 }
-            ]
+            
         ]
     }
 ]
