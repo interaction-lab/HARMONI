@@ -278,10 +278,10 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
             elif self.type_web=="retelling":
                 if index<8:
                     service="display_image"
-                    optional_data = {"tts_default":  "<prosody rate='slow'>"+tts_data+"</prosody>", "web_page_default":"[{'component_id':'main_img_alt', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'display_image_container', 'set_content':''}]"}
+                    optional_data = {"tts_default":  "<prosody rate='slow'>"+tts_data+"</prosody>","speaker_default": self.url_snd+audio_data+"_robot.wav", "web_page_default":"[{'component_id':'main_img_alt', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'display_image_container', 'set_content':''}]"}
                 else:
                     rospy.loginfo(self.sequence_scenes["tasks"][index])
-                    optional_data = {"tts_default": "<prosody rate='slow'>"+tts_data+"</prosody>", "web_page_default":"[{'component_id':'main_img_ret', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'sentence_repetition_container', 'set_content':''}]"}
+                    optional_data = {"tts_default": "<prosody rate='slow'>"+tts_data+"</prosody>", "speaker_default": self.url_snd+audio_data+"_robot.wav", "web_page_default":"[{'component_id':'main_img_ret', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'sentence_repetition_container', 'set_content':''}]"}
         if optional_data!="":
             optional_data = str(optional_data)
         def daemon():
