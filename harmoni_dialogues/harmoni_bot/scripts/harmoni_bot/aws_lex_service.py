@@ -103,7 +103,7 @@ def main():
         service = hf.set_service_server(service_name, test_id)
         s = AWSLexService(service, param)
         service_server = HarmoniServiceServer(name=service, service_manager=s)
-        service_server.update_feedback()
+        service_server.start_sending_feedback()
         rospy.spin()
     except rospy.ROSInterruptException:
         pass

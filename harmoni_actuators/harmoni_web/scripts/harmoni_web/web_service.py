@@ -173,7 +173,7 @@ def main():
             rospy.sleep(2)
             s.do(test_input)
         else:
-            service_server.update_feedback()
+            service_server.start_sending_feedback()
             rospy.spin()
     except rospy.ROSInterruptException:
         pass

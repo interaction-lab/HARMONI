@@ -1,6 +1,7 @@
-#This is an example of a swarm based compose file that can launch from a single PC. It works, but cannot do static IPs.
-#It may requre setting up your own network and then treating it as an external network.
-#To deploy: docker stack deploy -c TEST-docker-compose-harmoni-swarm.yml <stack_name>
+# This is an example of a swarm based compose file that can launch from a single PC.
+# It works, but cannot do static IPs.
+# It may requre setting up your own network and then treating it as an external network.
+# To deploy: docker stack deploy -c TEST-docker-compose-harmoni-swarm.yml <stack_name>
 version: "3.8"
 services:
   harmoni_core:
@@ -55,7 +56,7 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     working_dir: /root/harmoni_catkin_ws/src/HARMONI
-    entrypoint: /bin/bash --rcfile /root/setup_script.sh 
+    entrypoint: /bin/bash --rcfile /root/setup_script.sh
     stdin_open: true #get a interactive terminal when attaching.
     tty: true
     # command: roscore
@@ -89,7 +90,7 @@ services:
         ipv4_address: 172.18.3.5
     hostname: ros_hardware
     # depends_on:
-      # - "harmoni_core"
+    # - "harmoni_core"
     devices:
       - /dev/dri:/dev/dri
       - /dev/snd:/dev/snd
@@ -111,12 +112,12 @@ services:
       - /etc/localtime:/etc/localtime:ro
     working_dir: /root/harmoni_catkin_ws/src/HARMONI
     #TODO: remove dumb-init and next line
-    entrypoint: /bin/bash --rcfile /root/setup_script.sh 
+    entrypoint: /bin/bash --rcfile /root/setup_script.sh
     stdin_open: true #get a interactive terminal when attaching.
     tty: true
     #command: bash -c "
-    #  terminator -ue \"cd ../HARMONI && echo 'Entering harmoni_hardware Container... \\n start with rlhardwareservices' && bash\"" 
-   
+    #  terminator -ue \"cd ../HARMONI && echo 'Entering harmoni_hardware Container... \\n start with rlhardwareservices' && bash\""
+
 networks:
   ros_net:
     driver: overlay

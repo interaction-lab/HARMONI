@@ -409,8 +409,8 @@ def main():
             rospy.sleep(1)
             s_mouth.do(str({"behavior_data": str(test_input)}))
         else:
-            service_server_eyes.update_feedback()
-            service_server_mouth.update_feedback()
+            service_server_eyes.start_sending_feedback()
+            service_server_mouth.start_sending_feedback()
             rospy.spin()
     except rospy.ROSInterruptException:
         pass

@@ -274,7 +274,7 @@ def main():
             s.save_data()
             s.start()
         else:
-            service_server.update_feedback()
+            service_server.start_sending_feedback()
             rospy.spin()
     except rospy.ROSInterruptException:
         pass

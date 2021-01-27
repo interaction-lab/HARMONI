@@ -208,7 +208,7 @@ def main():
             data = s.wav_to_data(test_input)
             s.transcribe_file_request(data)
         else:
-            service_server.update_feedback()
+            service_server.start_sending_feedback()
             rospy.spin()
     except rospy.ROSInterruptException:
         pass

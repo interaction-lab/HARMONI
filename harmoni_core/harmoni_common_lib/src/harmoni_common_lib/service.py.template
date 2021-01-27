@@ -59,7 +59,7 @@ def main():
             data = s.run_test(test_input)
             rospy.loginfo(f"Testing the {service} completed")
         if not test:
-            server.update_feedback()
+            server.start_sending_feedback()
         rospy.spin()
 
     except rospy.ROSInterruptException:

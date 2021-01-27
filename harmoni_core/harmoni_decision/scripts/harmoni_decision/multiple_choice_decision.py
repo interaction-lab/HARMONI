@@ -174,7 +174,7 @@ if __name__ == "__main__":
             if test:
                 bc.start(0)
             else:
-                service_server.update_feedback()
+                service_server.start_sending_feedback()
             rospy.spin()
         except rospy.ROSInterruptException:
             pass

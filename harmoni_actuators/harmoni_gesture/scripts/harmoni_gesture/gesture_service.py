@@ -169,7 +169,7 @@ def main():
             s.gesture_pub.publish(test_input)
             rospy.loginfo("Testing the %s has been completed!" % (service))
         else:
-            service_server.update_feedback()
+            service_server.start_sending_feedback()
             rospy.spin()
     except rospy.ROSInterruptException:
         pass

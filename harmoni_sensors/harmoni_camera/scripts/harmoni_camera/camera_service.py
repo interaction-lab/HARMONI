@@ -132,7 +132,7 @@ def main():
             rospy.loginfo("Testing the %s" % (service))
             s.start()
         else:
-            service_server.update_feedback()
+            service_server.start_sending_feedback()
             rospy.spin()
     except rospy.ROSInterruptException:
         pass
