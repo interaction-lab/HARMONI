@@ -7,9 +7,9 @@
 	<arg name="test_input" default="{'activityType':'Training', 'structure':'Clitici e Passivi', 'test':'Le avventure del cavallo Filippo', 'episode':'Nel prato'}"/>
 	<arg name="test_id" default="default"/>
 	<arg name="url" default="http://i3lab.elet.polimi.it/letssayresources/"/>
-	<arg name="ip" default="192.168.1.104"/>
-	<arg name="port" default="3210"/>
-	<arg name="secure" default="False"/>
+	<arg name="ip" default="i3lab.elet.polimi.it/pling-ws/"/>
+	<arg name="port" default=""/>
+	<arg name="secure" default="True"/>
   	<group if="$(arg use_decision)">
 			<rosparam file="$(find harmoni_decision)/config/configuration.yaml"/>
 			<param name="test_$(arg name)" value="$(arg test)"/>

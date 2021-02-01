@@ -97,11 +97,11 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
             self.do_request(0,"code", data="*QT/show_tablet*Hai sbagliato codice. <break time='800ms'/>  Riproviamo")
         return
 
-    def store_data(self, correct, item):
+    def store_data(self, correct, item, action="FINISHED"):
         now_time = time()
         int_time = now_time-self.start_time
         rospy.loginfo(f"The time is {int_time}")
-        payload = {"action":"FINISHED", "patientId":self.patient_id, "sessionId":self.session_id,"data":{"miniTask":self.index, "correct":correct,"itemSelected": item,"time":int_time}}
+        payload = {"action":action, "patientId":self.patient_id, "sessionId":self.session_id,"data":{"miniTask":self.index, "correct":correct,"itemSelected": item,"time":int_time}}
         return payload
 
     def next(self,message):
@@ -233,7 +233,8 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         audio_data = self.sequence_scenes["tasks"][index]["audio"]
         if index==-1:
             service = "idle"
-            data="Ottimo lavoro. Sei stato bravissimo!"
+            data="FINE"
+            self.send(self.store_data(True,"",action="COMPLETED"))
         if service=="multiple_choice":
             if data == "comp":
                 tts_data = self.sequence_scenes["tasks"][index]["text_comp"]
@@ -266,7 +267,10 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
             service = "display_image"
         elif service=="idle":
             if data:
-                optional_data = {"tts_default": "<prosody rate='slow'>"+data+"</prosody>", "speaker_default": self.url_snd+"benvenuto.wav"}
+                if data=="FINE":
+                    optional_data = {"tts_default": "<prosody rate='slow'> *QT/emotions/happy* Abbiamo finito ci vediamo al prossimo gioco</prosody>", "speaker_default": self.url_snd+"Abbiamo_finito_robot.wav"}
+                else:
+                    optional_data = {"tts_default": "<prosody rate='slow'>"+data+"</prosody>", "speaker_default": self.url_snd+"benvenuto.wav"}
             self.index=0
         elif service=="code":
             if data:
@@ -405,11 +409,15 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
                                 self.index+=1
                                 self.do_request(self.index,service)
                     elif self.sequence_scenes["tasks"][self.index]["first_img"]=="":
+                        print(self.index)
                         service="display_image"
-                        self.index+=1
-                        self.do_request(self.index,service)
+                        if self.index==0 and self.sequence_scenes["tasks"][self.index]["main_img"]!="":
+                            self.do_request(0,service)
+                            self.index+=1
+                        else:
+                            self.index+=1
+                            self.do_request(self.index,service)
                     else:
-                        rospy.loginfo("__________________________________QUIIIIII___________________")
                         service = "multiple_choice"
                         self.do_request(self.index,service)
                 elif result['service'] == "code":
@@ -438,10 +446,12 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
                                 if self.index > 7:
                                     rospy.loginfo("Send data to the back-end")
                                     self.send(self.store_data(True, transcript))
+                                    self.index+=1
         else:
             if self.index==len(self.sequence_scenes["tasks"])-1:
                 service = "idle"
-                self.do_request(self.index,service,data="*QT/emotions/happy* Ottimo lavoro. Sei stato bravissimo!")
+                self.send(self.store_data(True,"",action="COMPLETED"))
+                self.do_request(self.index,service,data="FINE")
                 rospy.loginfo("End of activity")
                 self.index = -1
         rospy.loginfo("_____END STEP "+str(self.index)+" DECISION MANAGER_______")

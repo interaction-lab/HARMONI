@@ -20,11 +20,23 @@
                                             "img": ""
                                         },
                                         "intro": {
-                                            "audio": "1_1_1_Intro",
-                                            "img": "1_1_1_Titolo",
-                                            "text": "Queste sono le avventure del cavallo Filippo. Giochiamo insieme."
+                                            "audio": "intro_gioco",
+                                            "img": "background",
+                                            "text": "*QT/bye* Ciao facciamo un gioco. Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. Iniziamo."
                                         },
                                         "tasks": [
+                                            {
+                                                "audio": "1_1_1_Intro",
+                                                "audio_comp": "",
+                                                "audio_distr": "",
+                                                "text": "Queste sono le avventure del cavallo Filippo nel prato. Giochiamo insieme.",
+                                                "text_comp":"",
+                                                "text_distr":"",
+                                                "main_img": "1_1_1_Titolo",
+                                                "first_img": "",
+                                                "third_img": "",
+                                                "second_img": ""
+                                            },
                                             {
                                                 "audio": "1_1_1",
                                                 "audio_comp": "Prova_Ancora",
@@ -257,11 +269,23 @@
                                             "#73b634"
                                         ],
                                         "intro": {
-                                            "audio": "1_2_1_Intro",
-                                            "img": "1_2_1_Titolo",
-                                            "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo. <break time='800ms'/> Queste sono le avventure del cavallo Filippo, nel recinto"
+                                            "audio": "intro_gioco",
+                                            "img": "background",
+                                            "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo."
                                         },
                                         "tasks": [
+                                            {
+                                                "audio": "1_2_1_Intro",
+                                                "audio_comp": "",
+                                                "audio_distr": "",
+                                                "text": "Queste sono le avventure del cavallo Filippo nel recinto. Giochiamo insieme.",
+                                                "text_comp":"",
+                                                "text_distr":"",
+                                                "main_img": "1_2_1_Titolo",
+                                                "first_img": "",
+                                                "third_img": "",
+                                                "second_img": ""
+                                            },
                                             {
                                                 "audio": "1_2_1",
                                                 "audio_comp": "Prova_Ancora",
@@ -302,7 +326,7 @@
                                                 "audio": "1_2_4",
                                                 "audio_comp": "1_2_4_Comp_audio",
                                                 "audio_distr": "1_2_4_Distr_audio",
-                                                "text": "Il cavallo Filippo lo ferma",
+                                                "text": "Giusto! <break time='800ms'/>  La mucca insegue il maialino.   <break time='800ms'/> Il cavallo Filippo lo ferma",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Qui il Cavallo Filippo la ferma. <break time='1000ms'/> Io ti ho chiesto il cavallo Filippo lo ferma.",
                                                 "text_distr":"*QT/emotions/sad Fai attenzione! <break time='800ms'/> Tu hai scelto la mucca lo ferma.<break time='1000ms'/>Io ti ho chiesto il Cavallo Filippo lo ferma.*",
                                                 "main_img": "1_2_4_Sfondo",
@@ -314,7 +338,7 @@
                                                 "audio": "1_2_5",
                                                 "audio_comp": "Prova_Ancora",
                                                 "audio_distr": "Prova_Ancora",
-                                                "text": "Il cavallo Filippo è felice, <break time='800ms'/> Magari lui sa dove è il suo cappello",
+                                                "text": "Giusto!  <break time='800ms'/>  Il cavallo Filippo lo ferma.  <break time='800ms'/> Il cavallo Filippo è felice. <break time='800ms'/>  Magari lui sa dove è il suo cappello.",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora",
                                                 "text_distr":"*QT/emotions/sad* Riprova",
                                                 "main_img": "1_2_5_Sfondo",
@@ -350,7 +374,7 @@
                                                 "audio": "1_2_8",
                                                 "audio_comp": "1_2_8_Comp_audio",
                                                 "audio_distr": "1_2_8_Distr_audio",
-                                                "text": "Il cavallo Filippo lo bagna",
+                                                "text": "Giusto!  <break time='800ms'/> Il cane è leccato dalla capretta.  <break time='800ms'/>  Il cavallo filippo lo bagna",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Qui il Cavallo Filippo la bagna. <break time='1000ms'/> Io ti ho chiesto il Cavallo Filippo lo bagna.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Tu hai scelto il cane lo bagna.  <break time='1000ms'/> Io ti ho chiesto il Cavallo Filippo lo bagna.",
                                                 "main_img": "1_2_8_Sfondo",
@@ -362,7 +386,7 @@
                                                 "audio": "1_2_9",
                                                 "audio_comp": "1_2_9_Comp_audio",
                                                 "audio_distr": "1_2_9_Distr_audio",
-                                                "text": "Allora il cavallo è sgridato dalla capretta",
+                                                "text": "Giusto!  <break time='800ms'/>  Il cavallo filippo lo bagna.  <break time='800ms'/> Allora il cavallo è sgridato dalla capretta. ",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Qui la capretta è sgridata dal cavallo. <break time='1000ms'/> Io ti ho chiesto il Cavallo è sgridato dalla capretta.   ",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Tu hai scelto cane è sgridato dal maialino. <break time='1000ms'/> Io ti ho chiesto il Cavallo è sgridato dalla capretta.",
                                                 "main_img": "1_2_9_Sfondo",
@@ -374,7 +398,7 @@
                                                 "audio": "1_2_10",
                                                 "audio_comp": "1_2_10_Comp_audio",
                                                 "audio_distr": "1_2_10_Distr_audio",
-                                                "text": "La mucca la spinge",
+                                                "text": "Giusto!  <break time='800ms'/>  il cavallo è sgridato dalla capretta.  <break time='800ms'/>  La mucca la spinge",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Qui la mucca lo spinge. <break time='1000ms'/> Io ti ho chiesto la mucca la spinge.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Tu hai scelto il maialino la spinge. <break time='1000ms'/> Io ti ho chiesto la mucca la spinge.",
                                                 "main_img": "1_2_10_Sfondo",
@@ -386,7 +410,7 @@
                                                 "audio": "1_2_11",
                                                 "audio_comp": "Prova_Ancora",
                                                 "audio_distr": "Prova_Ancora",
-                                                "text": "Adesso il cavallo Filippo è arrabbiato, <break time='800ms'/> vuole il suo cappello!",
+                                                "text": "Giusto!  <break time='800ms'/>   La mucca la spinge.  <break time='800ms'/> Adesso il cavallo Filippo è arrabbiato, vuole il suo cappello!",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora",
                                                 "text_distr":"*QT/emotions/sad* Riprova",
                                                 "main_img": "1_2_11_Sfondo",
@@ -410,7 +434,7 @@
                                                 "audio": "1_2_13",
                                                 "audio_comp": "1_2_13_Comp_audio",
                                                 "audio_distr": "1_2_13_Distr_audio",
-                                                "text": "La capretta la tocca",
+                                                "text": "Giusto! <break time='800ms'/>  Il cane rincorre la mucca.  <break time='800ms'/>  La capretta la tocca",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Qui la capretta lo tocca. <break time='1000ms'/> Io ti ho chiesto la capretta la tocca.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Tu hai scelto la mucca la tocca.  <break time='1000ms'/> Io ti ho chiesto la capretta la tocca.",
                                                 "main_img": "1_2_13_Sfondo",
@@ -422,7 +446,7 @@
                                                 "audio": "1_2_14",
                                                 "audio_comp": "1_2_14_Comp_audio",
                                                 "audio_distr": "1_2_14_Distr_audio",
-                                                "text": "Poi <break time='600ms'/> il cane è sollevato dalla capretta",
+                                                "text": "Giusto! <break time='800ms'/>  La capretta la tocca.  <break time='800ms'/> Poi il cane è sollevato dalla capretta",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Qui la capretta è sollevata dal cane. <break time='1000ms'/> Io ti ho chiesto il cane è sollevato dalla capretta.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>  Tu hai scelto il maialino è sollevato dalla capretta. <break time='1000ms'/> Io ti ho chiesto il cane è sollevato dalla capretta.",
                                                 "main_img": "1_2_14_Sfondo",
@@ -434,7 +458,7 @@
                                                 "audio": "1_2_15",
                                                 "audio_comp": "1_2_15_Comp_audio",
                                                 "audio_distr": "1_2_15_Distr_audio",
-                                                "text": "la mucca sporca il maialino",
+                                                "text": "Giusto! <break time='800ms'/>  il cane è sollevato dalla capretta.  <break time='800ms'/>  la mucca sporca il maialino",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Qui il maialino sporca la mucca. <break time='1000ms'/> Io ti ho chiesto la mucca sporca il maialino.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Tu hai scelto la capretta sporca il cane.<break time='1000ms'/> Io ti ho chiesto la mucca sporca il maialino.",
                                                 "main_img": "1_2_15_Sfondo",
@@ -446,7 +470,7 @@
                                                 "audio": "1_2_16",
                                                 "audio_comp": "Prova_Ancora",
                                                 "audio_distr": "Prova_Ancora",
-                                                "text": "Adesso, <break time='600ms'/> sono stanchi e tutti sono sul carro",
+                                                "text": "Giusto!  <break time='800ms'/>  la mucca sporca il maialino.  <break time='800ms'/> Adesso, sono stanchi e tutti sono sul carro.",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora",
                                                 "text_distr":"*QT/emotions/sad* Riprova",
                                                 "main_img": "1_2_16_Sfondo",
@@ -506,11 +530,23 @@
                                             "#73b634"
                                         ],
                                         "intro": {
-                                            "audio": "1_3_1_Intro",
-                                            "img": "1_3_1_Titolo",
-                                            "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo. <break time='800ms'/> Queste sono le avventure del cavallo Filippo, nello stagno"
+                                            "audio": "intro_gioco",
+                                            "img": "background",
+                                            "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo."
                                         },
                                         "tasks": [
+                                            {
+                                                "audio": "1_3_1_Intro",
+                                                "audio_comp": "",
+                                                "audio_distr": "",
+                                                "text": "Queste sono le avventure del cavallo Filippo nello stagno. Giochiamo insieme.",
+                                                "text_comp":"",
+                                                "text_distr":"",
+                                                "main_img": "1_3_1_Titolo",
+                                                "first_img": "",
+                                                "third_img": "",
+                                                "second_img": ""
+                                            },
                                             {
                                                 "audio": "1_3_1",
                                                 "audio_comp": "Prova_Ancora",
@@ -537,8 +573,8 @@
                                             },
                                             {
                                                 "audio": "1_3_3",
-                                                "audio_comp": "Prova_Ancora",
-                                                "audio_distr": "Prova_Ancora",
+                                                "audio_comp": "1_3_3_Comp_audio",
+                                                "audio_distr": "1_3_3_Distr_audio",
                                                 "text": "il castoro è accarezzato dalla papera",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione!  <break time='800ms'/> Qui la papera è accarezzata dal castoro.  <break time='800ms'/> Io ti ho chiesto il castoro è accarezzato dalla papera.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione!  <break time='800ms'/> Tu hai scelto il cigno è accarezzato dalla rana.  <break time='1000ms'/>Io ti ho chiesto il castoro è accarezzato dalla papera.",
@@ -551,7 +587,7 @@
                                                 "audio": "1_3_4",
                                                 "audio_comp": "Prova_Ancora",
                                                 "audio_distr": "Prova_Ancora",
-                                                "text": "Il cavallo FIlippo è arrabbiato",
+                                                "text": "Giusto!  <break time='800ms'/>  il castoro è accarezzato dalla papera. <break time='800ms'/>  Il cavallo filippo è arrabbiato",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora",
                                                 "text_distr":"*QT/emotions/sad* Riprova",
                                                 "main_img": "1_3_4_Sfondo",
@@ -599,7 +635,7 @@
                                                 "audio": "1_3_8",
                                                 "audio_comp": "1_3_8_Comp_audio",
                                                 "audio_distr": "1_3_8_Distr_audio",
-                                                "text": "La papera lo insegue.",
+                                                "text": "Giusto! <break time='800ms'/>  La rana è bagnata dal cigno.  <break time='800ms'/> La papera lo insegue",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Qui la papera la segue. <break time='1000ms'/> Io ti ho chiesto la papera lo segue.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto il castoro la segue. <break time='1000ms'/> Io ti ho chiesto la papera lo segue.",
                                                 "main_img": "1_3_8_Sfondo",
@@ -611,7 +647,7 @@
                                                 "audio": "1_3_9",
                                                 "audio_comp": "1_3_9_Comp_audio",
                                                 "audio_distr": "1_3_9_Distr_audio",
-                                                "text": "Poi il castoro è sporcato dalla rana",
+                                                "text": "Giusto!  <break time='800ms'/>  La papera lo insegue.  <break time='800ms'/> Il castoro è sporcato dalla rana",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Qui la rana è sporcata dal castoro. <break time='1000ms'/> Io ti ho chiesto il castoro è sporcato dalla rana.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Tu hai scelto il castoro è sporcato dal cigno. <break time='1000ms'/> Io ti ho chiesto il castoro è sporcato dalla rana.",
                                                 "main_img": "1_3_9_Sfondo",
@@ -623,7 +659,7 @@
                                                 "audio": "1_3_10",
                                                 "audio_comp": "1_3_10_Comp_audio",
                                                 "audio_distr": "1_3_10_Distr_audio",
-                                                "text": "la papera lo rincorre",
+                                                "text": "Giusto! <break time='800ms'/>  Il castoro è sporcato dalla rana. <break time='800ms'/>  La papera lo rincorre",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Qui la papera la rincorre. <break time='1000ms'/> Io ti ho chiesto òa papera lo rincorre.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Tu hai scelto il cavallo la rincorre.<break time='1000ms'/> Io ti ho chiesto òa papera lo rincorre.",
                                                 "main_img": "1_3_10_Sfondo",
@@ -635,7 +671,7 @@
                                                 "audio": "1_3_11",
                                                 "audio_comp": "Prova_Ancora",
                                                 "audio_distr": "Prova_Ancora",
-                                                "text": "Adesso il cavallo Filippo è stanco.",
+                                                "text": "Giusto!  <break time='800ms'/> La papera lo rincorre. <break time='800ms'/>  Adesso il cavallo filippo è stanco.",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora",
                                                 "text_distr":"*QT/emotions/sad* Riprova",
                                                 "main_img": "1_3_11_Sfondo",
@@ -659,7 +695,7 @@
                                                 "audio": "1_3_13",
                                                 "audio_comp": "1_3_13_Comp_audio",
                                                 "audio_distr": "1_3_13_Distr_audio",
-                                                "text": "Il cigno la tocca",
+                                                "text": "Giusto!  <break time='800ms'/> il cavallo filippo è stanco.  <break time='800ms'/> Poi il cavallo filippo è baciato dalla rana",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Qui il cigno lo tocca. <break time='1000ms'/> Io ti ho chiesto il cigno la tocca.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione!  <break time='800ms'/> Tu hai scelto la rana lo tocca.  <break time='1000ms'/> Io ti ho chiesto il cigno la tocca.",
                                                 "main_img": "1_3_13_Sfondo",
@@ -671,7 +707,7 @@
                                                 "audio": "1_3_14",
                                                 "audio_comp": "Prova_Ancora",
                                                 "audio_distr": "Prova_Ancora",
-                                                "text": "Adesso il cavallo, il cigno e la rana cercano <break time='600ms'/> assieme il cappello",
+                                                "text": "Giusto! <break time='800ms'/>  il cavallo filippo è baciato dalla rana. <break time='800ms'/>  Il cigno la tocca",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
                                                 "main_img": "1_3_14_Sfondo",
@@ -695,7 +731,7 @@
                                                 "audio": "1_3_16",
                                                 "audio_comp": "1_3_16_Comp_audio",
                                                 "audio_distr": "1_3_16_Distr_audio",
-                                                "text": "Il cavallo Filippo la lecca",
+                                                "text": "Giusto!  <break time='800ms'/> Il castoro spinge la papera.  <break time='800ms'/> Il cavallo filippo la lecca",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Qui il cavallo Filippo lo lecca. <break time='1000ms'/> Io ti ho chiesto il cavallo Filippo lo lecca.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Tu hai scelto ila raba lo lecca. <break time='1000ms'/> Io ti ho chiesto il cavallo Filippo lo lecca.",
                                                 "main_img": "1_3_16_Sfondo",
@@ -707,7 +743,7 @@
                                                 "audio": "1_3_17",
                                                 "audio_comp": "Prova_Ancora",
                                                 "audio_distr": "Prova_Ancora",
-                                                "text": "Ora tutti cercano il cappello nello stagno",
+                                                "text": "Giusto!  <break time='800ms'/> Il cavallo filippo la lecca.  <break time='800ms'/> Ora tutti cercano il cappello nello stagno",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
                                                 "main_img": "1_3_17_Sfondo",
@@ -731,7 +767,7 @@
                                                 "audio": "1_3_19",
                                                 "audio_comp": "1_3_19_Comp_audio",
                                                 "audio_distr": "1_3_19_Distr_audio",
-                                                "text": "la papera la segue",
+                                                "text": "Giusto! <break time='800ms'/>  La rana è spinta dal cigno. <break time='800ms'/>  La papera la segue",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Qui la papera lo segue. <break time='1000ms'/> Io ti ho chiesto la papera la segue",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Tu hai scelto il cavallo la segue.<break time='1000ms'/> Io ti ho chiesto la papera la segue.",
                                                 "main_img": "1_3_19_Sfondo",
@@ -743,7 +779,7 @@
                                                 "audio": "1_3_20",
                                                 "audio_comp": "1_3_20_Comp_audio",
                                                 "audio_distr": "1_3_20_Distr_audio",
-                                                "text": "Poi la rana lega il castoro",
+                                                "text": "Giusto!  <break time='800ms'/> La papera la segue.  <break time='800ms'/>  Poi la rana lega il castoro",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Qui il castoro lega la rana. <break time='1000ms'/> Io ti ho chiesto la rana lega il castoro.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto la papera lega il cigno. <break time='1000ms'/> Io ti ho chiesto la rana lega il castoro.",
                                                 "main_img": "1_3_20_Sfondo",
@@ -755,7 +791,7 @@
                                                 "audio": "1_3_21",
                                                 "audio_comp": "1_3_21_Comp_audio",
                                                 "audio_distr": "1_3_21_Distr_audio",
-                                                "text": "La papera lo bagna.",
+                                                "text": "Giusto!  <break time='800ms'/> La rana lega il castoro.  <break time='800ms'/>  La papera lo bagna",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Qui la papera la bagna. <break time='1000ms'/> Io ti ho chiesto la papera lo bagna.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto il cavallo la bagna.  <break time='1000ms'/>Io ti ho chiesto la papera lo bagna.",
                                                 "main_img": "1_3_21_Sfondo",
@@ -767,7 +803,7 @@
                                                 "audio": "1_3_22",
                                                 "audio_comp": "1_3_22_Comp_audio",
                                                 "audio_distr": "1_3_22_Distr_audio",
-                                                "text": "La rana è sollevata dal cigno.",
+                                                "text": "Giusto!  <break time='800ms'/> La papera lo bagna. <break time='800ms'/>  La rana è sollevata dal cigno",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Qui il cigno è sollevato dalla rana. <break time='1000ms'/> Io ti ho chiesto la rana è sollevata dal cigno.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Tu hai scelto la rana è sollevata dal castoro. <break time='1000ms'/> Io ti ho chiesto la rana è sollevata dal cigno.",
                                                 "main_img": "1_3_22_Sfondo",
@@ -779,7 +815,7 @@
                                                 "audio": "1_3_23",
                                                 "audio_comp": "Prova_Ancora",
                                                 "audio_distr": "Prova_Ancora",
-                                                "text": "Ecco! La rana vede il cappello dietro al cespuglio.",
+                                                "text": "Giusto!  <break time='800ms'/>  La rana è sollevata dal cigno.  <break time='800ms'/>  Ecco!  <break time='800ms'/> La rana vede il cappello dietro al cespuglio",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
                                                 "main_img": "1_3_23_Sfondo",
@@ -803,7 +839,7 @@
                                                 "audio": "1_3_25",
                                                 "audio_comp": "Prova_Ancora",
                                                 "audio_distr": "Prova_Ancora",
-                                                "text": "Finalmente il cappello è sulla testa del cavallo Filippo!",
+                                                "text": "Giusto!  <break time='800ms'/> La rana è baciata dal cavallo filippo.  <break time='800ms'/>  Finalmente il cappello è sulla testa del cavallo Filippo!",
                                                 "text_comp":"",
                                                 "text_distr":"",
                                                 "main_img": "1_3_25_Sfondo",
@@ -845,16 +881,24 @@
                                             "#e6e9c9",
                                             "#faffde"
                                         ],
-                                        "story_intro": {
-                                            "audio": "Intro_Scimmia_Sofia",
-                                            "img": ""
-                                        },
                                         "intro": {
-                                            "audio": "2_1_1_Intro",
-                                            "img": "2_1_1_Titolo",
-                                            "text": "*QT/bye* Ciao facciamo un gioco. Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. Iniziamo. Queste sono le avventure della scimmia Sofia, sulla spiaggia"
+                                            "audio": "intro_gioco",
+                                            "img": "background",
+                                            "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo."
                                         },
                                         "tasks": [
+                                            {
+                                                "audio": "2_1_1_Intro",
+                                                "audio_comp": "",
+                                                "audio_distr": "",
+                                                "text": "Queste sono le avventure della Scimmia Sofia sulla spiaggia. Giochiamo insieme.",
+                                                "text_comp":"",
+                                                "text_distr":"",
+                                                "main_img": "2_1_1_Titolo",
+                                                "first_img": "",
+                                                "third_img": "",
+                                                "second_img": ""
+                                            },
                                             {
                                                 "audio": "2_1_1",
                                                 "text": "Oggi c'è il sole.",
@@ -1051,11 +1095,23 @@
                                             "#73b634"
                                         ],
                                         "intro": {
-                                            "audio": "2_2_1_Intro",
-                                            "img": "2_2_1_Titolo",
-                                            "text": "*QT/bye* Ciao facciamo un gioco. Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. Iniziamo. Queste sono le avventure della scimmia Sofia, nel bosco"
+                                            "audio": "intro_gioco",
+                                            "img": "background",
+                                            "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo."
                                         },
                                         "tasks": [
+                                            {
+                                                "audio": "2_2_1_Intro",
+                                                "audio_comp": "",
+                                                "audio_distr": "",
+                                                "text": "Queste sono le avventure della Scimmia Sofia nel bosco. Giochiamo insieme.",
+                                                "text_comp":"",
+                                                "text_distr":"",
+                                                "main_img": "2_2_1_Titolo",
+                                                "first_img": "",
+                                                "third_img": "",
+                                                "second_img": ""
+                                            },
                                             {
                                                 "audio": "2_2_1",
                                                 "text": "Nel bosco c'è una volpe",
@@ -1262,11 +1318,23 @@
                                             "#f7d4aa"
                                         ],
                                         "intro": {
-                                            "audio": "2_3_1_Intro",
-                                            "img": "2_3_1_Titolo",
-                                            "text": "*QT/bye* Ciao facciamo un gioco. Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. Iniziamo. Queste sono le avventure della scimmia Sofia, al circo"
+                                            "audio": "intro_gioco",
+                                            "img": "background",
+                                            "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo."
                                         },
                                         "tasks": [
+                                            {
+                                                "audio": "2_3_1_Intro",
+                                                "audio_comp": "",
+                                                "audio_distr": "",
+                                                "text": "Queste sono le avventure della Scimmia Sofia al circo. Giochiamo insieme.",
+                                                "text_comp":"",
+                                                "text_distr":"",
+                                                "main_img": "2_3_1_Titolo",
+                                                "first_img": "",
+                                                "third_img": "",
+                                                "second_img": ""
+                                            },
                                             {
                                                 "audio": "2_3_1",
                                                 "text": "Al circo, la scimmia vede un leone.",
@@ -2314,11 +2382,23 @@
                                             "img": ""
                                         },
                                         "intro": {
-                                            "audio": "R_1_1_1_Gino",
-                                            "img": "R_1_1_1_Titolo",
-                                            "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo. <break time='800ms'/> Le avventure di Gino il pompiere, a scuola."
+                                            "audio": "intro_gioco",
+                                            "img": "background",
+                                            "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo."
                                         },
                                         "tasks": [
+                                            {
+                                                "audio": "R_1_1_1_Gino",
+                                                "audio_comp": "",
+                                                "audio_distr": "",
+                                                "text": "Queste sono le avventure di Gino il pompiere. Giochiamo insieme.",
+                                                "text_comp":"",
+                                                "text_distr":"",
+                                                "main_img": "R_1_1_1_Titolo",
+                                                "first_img": "",
+                                                "third_img": "",
+                                                "second_img": ""
+                                            },
                                             {
                                                 "audio": "R_1_1_1",
                                                 "audio_comp": "Prova_Ancora",
@@ -2407,7 +2487,7 @@
                                                 "audio": "R_1_1_8",
                                                 "audio_comp": "R_1_1_8_Comp_audio",
                                                 "audio_distr": "R_1_1_8_Distr_audio",
-                                                "text": "Poi, <break time='600ms'/> Gino chiama il nonno che le mamme salutano",
+                                                "text": "Giusto!   <break time='800ms'/> Gino guarda le mamme che inseguono il nonno.  <break time='800ms'/> Poi, Gino chiama il nonno che le mamme salutano ",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Questo è il nonno che saluta le mamme. <break time='1000ms'/> Io ti ho chiesto il nonno che le mamme salutano",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto i nonno che la mamma saluta. <break time='1000ms'/> Io ti ho chiesto il nonno che le mamme salutano",
                                                 "main_img": "R_1_1_8",
@@ -2419,7 +2499,7 @@
                                                 "audio": "R_1_1_9",
                                                 "audio_comp": "Prova_Ancora",
                                                 "audio_distr": "Prova_Ancora",
-                                                "text": "Hai visto la maestra Daniela? <break time='800ms'/> Chiede Gino al nonno",
+                                                "text": "Giusto!  <break time='800ms'/>  Gino chiama il nonno che le mamme salutano.  <break time='800ms'/>  Hai visto la maestra Daniela? Chiede Gino al nonno ",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
                                                 "main_img": "R_1_1_9",
@@ -2467,7 +2547,7 @@
                                                 "audio": "R_1_1_13",
                                                 "audio_comp": "R_1_1_13_Comp_audio",
                                                 "audio_distr": "R_1_1_13_Distr_audio",
-                                                "text": "Poi,<break time='600ms'/> Gino osserva i maestri che una poliziotta bagna",
+                                                "text": "Giusto! <break time='800ms'/>   Gino vede il maestro che è sporcato dalle poliziotte. <break time='800ms'/>  Poi, Gino osserva i maestri che una poliziotta bagna",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Questi sono i maestri che bagnano la poliziotta. <break time='1000ms'/> Io ti ho chiesto i maestri che una poliziotta bagna",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto il maestro che le poliziotte bagnano. <break time='1000ms'/> Io ti ho chiesto i maestri che una poliziotta bagna",
                                                 "main_img": "R_1_1_13",
@@ -2479,7 +2559,7 @@
                                                 "audio": "R_1_1_14",
                                                 "audio_comp": "R_1_1_14_Comp_audio",
                                                 "audio_distr": "R_1_1_14_Distr_audio",
-                                                "text": "Allora, <break time='600ms'/> Gino chiama il maestro che fotografa le poliziotte",
+                                                "text": "Giusto!  <break time='800ms'/>  Gino osserva i maestri che una poliziotta bagna.  <break time='800ms'/> Allora, Gino chiama il maestro che fotografa le poliziotte",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Queste sono le poliziotte che fotografano il maestro. <break time='1000ms'/> Io ti ho chiesto il maestro che fotografa le poliziotte",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Tu hai scelto i maestri che fotografano la poliziotta. <break time='1000ms'/> Io ti ho chiesto il maestro che fotografa le poliziotte",
                                                 "main_img": "R_1_1_14",
@@ -2491,7 +2571,7 @@
                                                 "audio": "R_1_1_15",
                                                 "audio_comp": "Prova_Ancora",
                                                 "audio_distr": "Prova_Ancora",
-                                                "text": "HAi visto la maestra Daniela?  <break time='800ms'/> Chiede Gino a un maestro",
+                                                "text": "Giusto!  <break time='800ms'/> Allora, Gino chiama il maestro che fotografa le poliziotte.  <break time='800ms'/> Hai visto la maestra Daniela? Chiede Gino a un maestro",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
                                                 "main_img": "R_1_1_15",
@@ -2539,7 +2619,7 @@
                                                 "audio": "R_1_1_19",
                                                 "audio_comp": "R_1_1_19_Comp_audio",
                                                 "audio_distr": "R_1_1_19_Distr_audio",
-                                                "text": "Poi, <break time='600ms'/> Gino guarda la bambina che i cowboy sgridano",
+                                                "text": "Giusto!  <break time='800ms'/>  Gino vede i cowboy(2) che sono tirati da una bambina.  <break time='800ms'/>  Poi, Gino guarda la bambina che i cowboy sgridano",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Questa è la bambina che sgrida i cowboy. <break time='1000ms'/> Io ti ho chiesto la bambina che i cowboy sgridano",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto le bambine che il cowboy sgrida.  <break time='1000ms'/> Io ti ho chiesto la bambina che i cowboy sgridano",
                                                 "main_img": "R_1_1_19",
@@ -2551,7 +2631,7 @@
                                                 "audio": "R_1_1_20",
                                                 "audio_comp": "Prova_Ancora",
                                                 "audio_distr": "Prova_Ancora",
-                                                "text": "Avete visto la maestra Daniela? <break time='800ms'/> Chiede Gino alle bambine",
+                                                "text": "Giusto!  <break time='800ms'/>  Gino guarda la bambina che i cowboy sgridano.  <break time='800ms'/>  Avete visto la maestra Daniela? Chiede Gino alle bambine",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
                                                 "main_img": "R_1_1_20",
@@ -2599,7 +2679,7 @@
                                                 "audio": "R_1_1_24",
                                                 "audio_comp": "R_1_1_24_Comp_audio",
                                                 "audio_distr": "R_1_1_24_Distr_audio",
-                                                "text": "Poi, <break time='600ms'/> Gino osserva le dottoresse che  fotografano il cuoco",
+                                                "text": "Giusto!  <break time='800ms'/>  Gino vede una dottoressa che è spinta dai cuochi.  <break time='800ms'/>  Poi, Gino osserva le dottoresse che  fotografano il cuoco ",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Questo è il cuoco che fotografa le dottoresse. <break time='1000ms'/> Io ti ho chiesto le dottoresse che fotografano il cuoco",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Tu hai scelto la dottoressa che fotografa i cuochi.<break time='1000ms'/> Io ti ho chiesto le dottoresse che fotografano il cuoco",
                                                 "main_img": "R_1_1_24",
@@ -2611,7 +2691,7 @@
                                                 "audio": "R_1_1_25",
                                                 "audio_comp": "R_1_1_25_Comp_audio",
                                                 "audio_distr": "R_1_1_25_Distr_audio",
-                                                "text": "Allora, <break time='600ms'/> Gino chiama i cuochi che la dottoressa tocca",
+                                                "text": "Giusto!  <break time='800ms'/> Gino osserva le dottoresse che fotografano il cuoco.  <break time='800ms'/> Allora, Gino chiama i cuochi che la dottoressa tocca",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Questi sono i cuochi che toccano la dottoressa. <break time='1000ms'/> Io ti ho chiesto i cuochi che la dottoressa tocca",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Tu hai scelto il cuoco che le dottoresse toccano.<break time='1000ms'/> Io ti ho chiesto i cuochi che la dottoressa tocca",
                                                 "main_img": "R_1_1_25",
@@ -2623,7 +2703,7 @@
                                                 "audio": "R_1_1_26",
                                                 "audio_comp": "Prova_Ancora",
                                                 "audio_distr": "Prova_Ancora",
-                                                "text": "Avete visto la maestra Daniela? <break time='800ms'/> Chiede Gino ai cuochi",
+                                                "text": "Giusto!  <break time='800ms'/> Gino chiama i cuochi che la dottoressa tocca. <break time='800ms'/>   Avete visto la maestra Daniela? Chiede Gino ai cuochi.",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
                                                 "main_img": "R_1_1_26",
@@ -2671,7 +2751,7 @@
                                                 "audio": "R_1_1_30",
                                                 "audio_comp": "R_1_1_30_Comp_audio",
                                                 "audio_distr": "R_1_1_30_Distr_audio",
-                                                "text": "Poi,<break time='600ms'/> Gino guarda le ballerine che sono indicate da un calciatore",
+                                                "text": "Giusto! <break time='800ms'/> Gino guarda il calciatore che lega le ballerine.  <break time='800ms'/> Poi, Gino guarda le ballerine che sono indicate da un calciatore",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Queste sono le ballerine che indicano il calciatore. <break time='1000ms'/> Io ti ho chiesto le ballerine che sono indicate dal calciatore",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Tu hai scelto la ballerina che è indicata dai calciatori. <break time='1000ms'/> Io ti ho chiesto le ballerine che sono indicate dal calciatore",
                                                 "main_img": "R_1_1_30",
@@ -2683,7 +2763,7 @@
                                                 "audio": "R_1_1_31",
                                                 "audio_comp": "Prova_Ancora",
                                                 "audio_distr": "Prova_Ancora",
-                                                "text": "Avete visto la maestra Daniela? <break time='800ms'/> Chiede Gino alle ballerine",
+                                                "text": "Giusto! <break time='800ms'/>  Gino guarda le ballerine che sono indicate da un calciatore.  <break time='800ms'/> Ma loro non hanno visto la maestra Daniela, allora Gino triste torna a casa.",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
                                                 "main_img": "R_1_1_31",
@@ -2719,11 +2799,23 @@
                                             "#dba683"
                                         ],
                                         "intro": {
-                                            "audio": "R_1_2_1_Gino",
-                                            "img": "R_1_2_1_Titolo",
-                                            "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo. <break time='800ms'/> Le avventure di Gino il pompiere, al parco."
+                                            "audio": "intro_gioco",
+                                            "img": "background",
+                                            "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo."
                                         },
                                         "tasks": [
+                                            {
+                                                "audio": "R_1_2_1_Gino",
+                                                "audio_comp": "",
+                                                "audio_distr": "",
+                                                "text": "Queste sono le avventure di Gino il pompiere. Giochiamo insieme.",
+                                                "text_comp":"",
+                                                "text_distr":"",
+                                                "main_img": "R_1_2_1_Titolo",
+                                                "first_img": "",
+                                                "third_img": "",
+                                                "second_img": ""
+                                            },
                                             {
                                                 "audio": "R_1_1_1",
                                                 "audio_comp": "Prova_Ancora",
@@ -2788,7 +2880,7 @@
                                                 "audio": "R_1_2_6",
                                                 "audio_comp": "R_1_2_6_Comp_audio",
                                                 "audio_distr": "R_1_2_6_Distr_audio",
-                                                "text": "Poi Gino osserva le studentesse che sono salutate dalla nonna",
+                                                "text": "Giusto! <break time='800ms'/>  Gino guarda la nonna che insegue delle studentesse.  <break time='800ms'/> Poi, Gino osserva le studentesse che sono salutate dalla nonna",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Queste sono le studentesse che salutano la nonna. <break time='1000ms'/> Io ti ho chiesto le studentesse che sono salutate dalla nonna",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Tu hai scelto la studentessa che è salutata dalle nonne. <break time='1000ms'/>  Io ti ho chiesto le studentesse che sono salutate dalla nonna",
                                                 "main_img": "R_1_2_6",
@@ -2800,7 +2892,7 @@
                                                 "audio": "R_1_2_7",
                                                 "audio_comp": "Prova_Ancora",
                                                 "audio_distr": "Prova_Ancora",
-                                                "text": "Avete visto la maestra Daniela? <break time='800ms'/> Chiede Gino alle studentesse",
+                                                "text": "Giusto!  <break time='800ms'/> Gino osserva le studentesse che sono salutate dalla nonna.  <break time='800ms'/> Avete visto la maestra Daniela? Chiede Gino alle studentesse",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
                                                 "main_img": "R_1_2_7",
@@ -2848,7 +2940,7 @@
                                                 "audio": "R_1_2_11",
                                                 "audio_comp": "R_1_2_11_Comp_audio",
                                                 "audio_distr": "R_1_2_11_Distr_audio",
-                                                "text": "Poi Gino osserva il mago che i dottori bagnano",
+                                                "text": "Giusto!   <break time='800ms'/> Gino vede i dottori che sono sporcati dal mago.  <break time='800ms'/> Poi, Gino osserva il mago che i dottori bagnano",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Questo è il mago che bagna i dottori. <break time='1000ms'/> Io ti ho chiesto il mago che i dottori bagnano",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto i maghi che il dottore bagna. <break time='1000ms'/>Io ti ho chiesto il mago che i dottori bagnano",
                                                 "main_img": "R_1_2_11",
@@ -2860,7 +2952,7 @@
                                                 "audio": "R_1_2_12",
                                                 "audio_comp": "R_1_2_12_Comp_audio",
                                                 "audio_distr": "R_1_2_12_Distr_audio",
-                                                "text": "Allora Gino chiama i maghi che fotografano il dottore",
+                                                "text": "Giusto!  <break time='800ms'/> Gino osserva il mago che i dottori bagnano. <break time='800ms'/>  Allora, Gino chiama i maghi che fotografano il dottore",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Questo è il dottore che fotografa i maghi. <break time='1000ms'/> Io ti ho chiesto i maghi che fotografano i dottori",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto il mago che fotografa i dottori <break time='1000ms'/> Io ti ho chiesto i maghi che fotografano i dottori",
                                                 "main_img": "R_1_2_12",
@@ -2872,7 +2964,7 @@
                                                 "audio": "R_1_2_13",
                                                 "audio_comp": "Prova_Ancora",
                                                 "audio_distr": "Prova_Ancora",
-                                                "text": "\"Avete visto la maestra Daniela?\" <break time='800ms'/> Chiede Gino a un mago",
+                                                "text": "Giusto!  <break time='800ms'/> Gino chiama i maghi che fotografano il dottore.  <break time='800ms'/> \"Avete visto la maestra Daniela?\" <break time='800ms'/> Chiede Gino a un mago",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
                                                 "main_img": "R_1_2_13",
@@ -2920,7 +3012,7 @@
                                                 "audio": "R_1_2_17",
                                                 "audio_comp": "R_1_2_17_Comp_audio",
                                                 "audio_distr": "R_1_2_17_Distr_audio",
-                                                "text": "Poi Gino guarda i gelatai che il pittore indica",
+                                                "text": "Giusto!  <break time='800ms'/> Gino vede  il gelataio che è tirato dai pittori.  <break time='800ms'/> Poi, Gino guarda i gelatai che il pittore indica",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Questi sono i gelatai che indicano il pittore. <break time='1000ms'/> Io ti ho chiesto i gelatai che il pittore indica",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Tu hai scelto il gelataio che i pittori indicano.<break time='1000ms'/>Io ti ho chiesto i gelatai che il pittore indica",
                                                 "main_img": "R_1_2_17",
@@ -2932,7 +3024,7 @@
                                                 "audio": "R_1_2_18",
                                                 "audio_comp": "Prova_Ancora",
                                                 "audio_distr": "Prova_Ancora",
-                                                "text": "\"Avete visto la maestra Daniela?\" <break time='800ms'/> Chiede Gino a tutti quanti",
+                                                "text": "Giusto! <break time='800ms'/>  Gino guarda i gelatai che il pittore indica. <break time='800ms'/> \"Avete visto la maestra Daniela?\" <break time='800ms'/> Chiede Gino a tutti quanti",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
                                                 "main_img": "R_1_2_18",
@@ -2980,7 +3072,7 @@
                                                 "audio": "R_1_2_22",
                                                 "audio_comp": "R_1_2_22_Comp_audio",
                                                 "audio_distr": "R_1_2_22_Distr_audio",
-                                                "text": "Poi Gino osserva la cameriera che tocca le signore",
+                                                "text": "Giusto!  <break time='800ms'/>  Gino vede le signore che sono spinte dalla cameriera.  <break time='800ms'/> Poi, Gino osserva la cameriera che tocca le signore",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Queste sono le signore che toccano la cameriera. <break time='1000ms'/> Io ti ho chiesto la cameriera che tocca le signore",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Tu hai scelto le cameriere che toccano la signora.<break time='1000ms'/> Io ti ho chiesto la cameriera che tocca le signore",
                                                 "main_img": "R_1_2_22",
@@ -2992,7 +3084,7 @@
                                                 "audio": "R_1_2_23",
                                                 "audio_comp": "R_1_2_23_Comp_audio",
                                                 "audio_distr": "R_1_2_23_Distr_audio",
-                                                "text": "Allora, <break time='600ms'/> Gino chiama la signora che le cameriere sgridano",
+                                                "text": "Giusto! <break time='800ms'/>  Gino osserva la cameriera che tocca le signore. <break time='800ms'/> Allora, Gino chiama la signora che le cameriere sgridano",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Questa è la signora che sgrida le cameriere. <break time='1000ms'/> Io ti ho chiesto la signora che le cameriere sgridano",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto le signore che la cameriera sgrida. <break time='1000ms'/> Io ti ho chiesto la signora che le cameriere sgridano",
                                                 "main_img": "R_1_2_23",
@@ -3004,7 +3096,7 @@
                                                 "audio": "R_1_2_24",
                                                 "audio_comp": "Prova_Ancora",
                                                 "audio_distr": "Prova_Ancora",
-                                                "text": "\"Avete visto la maestra Daniela?\" <break time='600ms'/> Chiede Gino alle cameriere",
+                                                "text": "Giusto! <break time='800ms'/>  Gino chiama la signora che le cameriere sgridano.  <break time='800ms'/> \"Avete visto la maestra Daniela?\" <break time='600ms'/> Chiede Gino alle cameriere",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
                                                 "main_img": "R_1_2_24",
@@ -3052,7 +3144,7 @@
                                                 "audio": "R_1_2_28",
                                                 "audio_comp": "R_1_2_28_Comp_audio",
                                                 "audio_distr": "R_1_2_28_Distr_audio",
-                                                "text": "Poi Gino guarda l'astronauta che i pagliacci legano",
+                                                "text": "Giusto!  <break time='800ms'/> Gino vede i pagliacci che salutano l'astronauta.  <break time='800ms'/> Poi, Gino guarda l'astronauta che i pagliacci legano",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Questo è l'astronauta che lega i pagliacci. <break time='1000ms'/> Io ti ho chiesto  l'astronauta che i pagliacci legano",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Tu hai scelto gli astronauti che il pagliaccio lega.<break time='1000ms'/> Io ti ho chiesto  l'astronauta che i pagliacci legano",
                                                 "main_img": "R_1_2_28",
@@ -3064,7 +3156,7 @@
                                                 "audio": "R_1_2_29",
                                                 "audio_comp": "Prova_Ancora",
                                                 "audio_distr": "Prova_Ancora",
-                                                "text": "\"Avete visto la maestra Daniela?\"<break time='800ms'/> Chiede Gino ai pagliacci",
+                                                "text": "Giusto! <break time='800ms'/>  Gino guarda l'astronauta che i pagliacci legano.  <break time='800ms'/> \"Avete visto la maestra Daniela?\"<break time='800ms'/> Chiede Gino ai pagliacci",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
                                                 "main_img": "R_1_2_29",
@@ -3124,11 +3216,23 @@
                                             "text": "Le avventure di Giulia la dottoressa."
                                         },
                                         "intro": {
-                                            "audio": "R_2_1_1_Giulia",
-                                            "img": "R_2_1_1_Titolo",
-                                            "text": "*QT/bye* Ciao facciamo un gioco. Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. Iniziamo. Questa è la storia di Giulia la dottoressa."
+                                            "audio": "intro_gioco",
+                                            "img": "background",
+                                            "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo."
                                         },
                                         "tasks": [
+                                            {
+                                                "audio": "R_2_1_1_Giulia",
+                                                "audio_comp": "",
+                                                "audio_distr": "",
+                                                "text": "Queste sono le avventure di Giulia la dottoressa. Giochiamo insieme.",
+                                                "text_comp":"",
+                                                "text_distr":"",
+                                                "main_img": "R_2_1_1_Titolo",
+                                                "first_img": "",
+                                                "third_img": "",
+                                                "second_img": ""
+                                            },
                                             {
                                                 "audio": "R_2_1_1",
                                                 "text": "Questa è la storia di Giulia, la dottoressa",
@@ -3465,11 +3569,23 @@
                                             "#dba683"
                                         ],
                                         "intro": {
-                                            "audio": "R_2_2_1_Giulia",
-                                            "img": "R_2_2_1_Titolo",
-                                            "text": "*QT/bye* Ciao facciamo un gioco. Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. Iniziamo. Le avventure di Giulia la dottoressa."
+                                            "audio": "intro_gioco",
+                                            "img": "background",
+                                            "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo."
                                         },
                                         "tasks": [
+                                            {
+                                                "audio": "R_2_2_1_Giulia",
+                                                "audio_comp": "",
+                                                "audio_distr": "",
+                                                "text": "Queste sono le avventure di Giulia la dottoressa. Giochiamo insieme.",
+                                                "text_comp":"",
+                                                "text_distr":"",
+                                                "main_img": "R_2_2_1_Titolo",
+                                                "first_img": "",
+                                                "third_img": "",
+                                                "second_img": ""
+                                            },
                                             {
                                                 "audio": "R_2_2_1",
                                                 "text": "Ti ricordi, questa è la storia di Giulia la dottoressa",
@@ -3797,7 +3913,7 @@
                     {
                         "Il dolcetto": {
                             "intro": {
-                                "audio": "",
+                                "audio": "Ret_0",
                                 "img": "background",
                                 "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti racconterà una storia facendoti vedere delle immagini su tablet *QT/show_tablet*. <break time='800ms'/> Alla fine tu dovrai raccontarmela meglio che puoi, ricordandoti tutte le cose che ti ho detto. <break time='800ms'/> Quando la storia sarà finita vedrai sullo schermo un piccolo pulsante con un microfono schiacciarlo e comincia a raccontare la storia.<break time='800ms'/> Iniziamo."
                             },
@@ -3922,7 +4038,7 @@
                     {
                         "Il Natale": {
                             "intro": {
-                                "audio": "",
+                                "audio": "Ret_0",
                                 "img": "background",
                                 "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti racconterà una storia facendoti vedere delle immagini su tablet *QT/show_tablet*. <break time='800ms'/> Alla fine tu dovrai raccontarmela meglio che puoi, ricordandoti tutte le cose che ti ho detto.<break time='800ms'/>  Quando la storia sarà finita vedrai sullo schermo un piccolo pulsante con un microfono schiacciarlo e comincia a raccontare la storia. <break time='800ms'/> Iniziamo."
                             },
@@ -4051,7 +4167,7 @@
                     {
                         "Il compleanno": {
                             "intro": {
-                                "audio": "",
+                                "audio": "Ret_0",
                                 "img": "background",
                                 "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti racconterà una storia facendoti vedere delle immagini su tablet *QT/show_tablet*. <break time='800ms'/> Alla fine tu dovrai raccontarmela meglio che puoi, ricordandoti tutte le cose che ti ho detto.<break time='800ms'/>  Quando la storia sarà finita vedrai sullo schermo un piccolo pulsante con un microfono schiacciarlo e comincia a raccontare la storia. <break time='800ms'/> Iniziamo."
                             },
@@ -4176,7 +4292,7 @@
                     {
                         "La palla": {
                             "intro": {
-                                "audio": "",
+                                "audio": "Ret_0",
                                 "img": "background",
                                 "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti racconterà una storia facendoti vedere delle immagini su tablet *QT/show_tablet*. <break time='800ms'/> Alla fine tu dovrai raccontarmela meglio che puoi, ricordandoti tutte le cose che ti ho detto.<break time='800ms'/>  Quando la storia sarà finita vedrai sullo schermo un piccolo pulsante con un microfono schiacciarlo e comincia a raccontare la storia. <break time='800ms'/> Iniziamo."
                             },

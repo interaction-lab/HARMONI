@@ -29,7 +29,7 @@
                 "speaker_default": {
                     "action_goal": "DO",
                     "resource_type": "actuator",
-                    "wait_for": "new"
+                    "wait_for": ""
                 }
             },
             {

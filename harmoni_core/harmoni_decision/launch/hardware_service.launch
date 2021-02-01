@@ -1,1 +1,1 @@
-<launch><include file="$(find harmoni_microphone)/launch/microphone_service.launch"><arg name="test_id" value="default" /></include><include file="$(find harmoni_speaker)/launch/speaker_service.launch"><arg name="test_id" value="default" /></include></launch>
+<launch><include file="$(find harmoni_speaker)/launch/speaker_service.launch"><arg name="test_id" value="default" /></include></launch>

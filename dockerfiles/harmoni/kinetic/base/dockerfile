@@ -80,6 +80,8 @@ RUN \
     catkin_pkg \
     catkin_tools \
     # AWS
+    wget \
+    websocket-client \
     boto3 \
     awscli \
     google-cloud-speech==1.3.2 \

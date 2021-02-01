@@ -68,47 +68,60 @@
                     "comp_class":"overlay",
                     "children": [
                         {
-                            "component": "text",
-                            "children": "Inserisci il codice qui!",
-                            "id": "p_1",
-                            "comp_class":""
+                            "component": "row",
+                            "id": "r_code_1",
+                            "comp_class":"",
+                            "children": [{
+                                "component": "text",
+                                "children": "Inserisci il codice qui!",
+                                "id": "p_1",
+                                "comp_class":""
+                            }]
+                            
                         },
-                         {
-                            "component": "input_number",
-                            "children": "1",
-                            "id": "code_1",
-                            "comp_class":"code"
-                        },
+                        
                         {
-                            "component": "input_number",
-                            "children": "1",
-                            "id": "code_2",
-                            "comp_class":"code"
-                        },
-                        {
-                            "component": "input_number",
-                            "children": "1",
-                            "id": "code_3",
-                            "comp_class":"code"
-                        },
-                        {
-                            "component": "input_number",
-                            "children": "1",
-                            "id": "code_4",
-                            "comp_class":"code"
-                        },
-                        {
-                            "component": "input_number",
-                            "children": "1",
-                            "id": "code_5",
-                            "comp_class":"code"
-                        },
-                        {
-                            "component": "input_number",
-                            "children": "1",
-                            "id": "code_6",
-                            "comp_class":"code"
+                            "component": "row",
+                            "id": "r_code_2",
+                            "comp_class":"",
+                            "children": [{
+                                "component": "input_number",
+                                "children": "1",
+                                "id": "code_1",
+                                "comp_class":"code"
+                            },
+                            {
+                                "component": "input_number",
+                                "children": "1",
+                                "id": "code_2",
+                                "comp_class":"code"
+                            },
+                            {
+                                "component": "input_number",
+                                "children": "1",
+                                "id": "code_3",
+                                "comp_class":"code"
+                            },
+                            {
+                                "component": "input_number",
+                                "children": "1",
+                                "id": "code_4",
+                                "comp_class":"code"
+                            },
+                            {
+                                "component": "input_number",
+                                "children": "1",
+                                "id": "code_5",
+                                "comp_class":"code"
+                            },
+                            {
+                                "component": "input_number",
+                                "children": "1",
+                                "id": "code_6",
+                                "comp_class":"code"
+                            }]
                         }
+                         
                     ]
                 }
             ]
@@ -129,7 +142,7 @@
                     "children": [
                         {
                             "component": "text",
-                            "children": "Benvenuto! Tra poco giocheremo insieme.",
+                            "children": "Ciao!",
                             "id": "p_idle",
                             "comp_class":""
                         }
