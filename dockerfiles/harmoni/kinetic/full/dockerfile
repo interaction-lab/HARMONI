@@ -24,6 +24,18 @@ ENV ROS_WS /root/harmoni_catkin_ws
 RUN mkdir -p $ROS_WS/src
 WORKDIR $ROS_WS
 
+
+
+RUN \
+    # ==================================================================
+    # Install ros/catkin packages
+    # ------------------------------------------------------------------
+    PIP_INSTALL="python3 -m pip --no-cache-dir install --upgrade"  && \
+    $PIP_INSTALL \
+    websocket-client \
+    wget \
+    future
+
 RUN git -C src clone \
     -b kinetic \
     https://github.com/ros-perception/vision_opencv.git \
@@ -37,7 +49,7 @@ RUN git -C src clone \
 #caching protection for Harmoni
 ADD https://api.github.com/repos/interaction-lab/HARMONI/git/refs/heads/develop /root/version.json
 RUN git -C src clone \
-    -b develop \
+    -b feature/web-service \
     https://github.com/interaction-lab/HARMONI.git 
 
 # ==================================================================
