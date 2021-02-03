@@ -16,7 +16,7 @@ __Commands:__
 #All paths must be absolute; double check the -v options to ensure they are correct. An assumed path was chosen for the harmoni git directory
 #To run in background, replace "docker run -it" in first line with "docker run -dit" 
 ##copy until end
-docker run -it --name harmoni_core --network host --init \
+docker run -it --name harmoni_core --network host --restart=always --init \
 --device=/dev/video0:/dev/video0 \
 -e "ROS_MASTER_URI=$ROS_MASTER_URI" \
 -e "ROS_HOSTNAME=$ROS_HOSTNAME" \
@@ -42,7 +42,7 @@ cmbirmingham/harmoni-lightweight:latest bash
 #note that all paths must be absolute; double check the -v options to ensure they are correct.
 #To run in background, replace "docker run -it" in first line with "docker run -dit" 
 ##copy until end
-docker run -it --name harmoni_hardware --network host --init \
+docker run -it --name harmoni_hardware --restart=always --network host --init \
 --device=/dev/snd:/dev/snd \
 -e "ROS_MASTER_URI=$ROS_MASTER_URI" \
 -e "ROS_HOSTNAME=$ROS_HOSTNAME" \

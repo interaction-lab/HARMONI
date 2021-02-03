@@ -1,0 +1,66 @@
+version: "3.7"
+
+services:
+  harmoni_core:
+    container_name: harmoni_core_qt
+    restart: always
+    build:
+      context: .
+      dockerfile: dockerfiles/harmoni/kinetic/full/dockerfile
+      network: host
+    image: harmoniteam/harmoni:kinetic-full
+    init: true
+    environment:
+      DISPLAY: $DISPLAY
+      QT_GRAPHICSSYSTEM: native
+      ROS_DISTRO: kinetic
+      ROS_MASTER_URI: http://192.168.100.1:11311 
+      IS_DOCKER_ENV: "true"
+      ROS_HOSTNAME: harmoni_core_qt
+      CATKIN_WS: harmoni_catkin_ws
+    privileged: true
+    network: host
+    hostname: harmoni_core_qt
+    ports:
+      - "11312:11312"
+      - "33691:33691"
+      - "8081:8081"
+      - "8082:8082"
+    devices:
+      - /dev/dri:/dev/dri
+      #- /dev/snd:/dev/snd
+      - /dev/video0:/dev/video0
+    volumes:
+      - harmoni_catkin_ws:/root/harmoni_catkin_ws
+      - ../HARMONI/:/root/local_mount/HARMONI/
+      # IDEs
+      - ~/.aws:/root/.aws/
+      # Configuration
+      - ./dockerfiles/config/setup_script.sh:/root/.setup_script.sh
+      - ./dockerfiles/config/dev_setup_script.sh:/root/.dev_setup_script.sh
+      # Other
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ~/.config/terminator/config:/root/.config/terminator/config
+      - ~/.gitconfig:/root/.gitconfig:ro
+      - ~/.ssh/:/root/.ssh:ro
+      - ~/.vimrc:/root/.vimrc:ro
+      - ~/.vim/:/root/.vim/:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    working_dir: /root/harmoni_catkin_ws/src/HARMONI
+    #TODO: remove dumb-init and next line (init flag does the job of dumb-init)
+    # entrypoint: "/bin/bash"
+    # stdin_open: true #get a interactive terminal when attaching.
+    # tty: true
+    command: bash -c "
+      terminator -ue \"echo 'Entering harmoni_core Container... \\n start with roscore and rlharmoniservices' && bash\""
+
+networks:
+  shared_net:
+    name: ros_net
+    driver: overlay
+    ipam:
+      driver: default
+
+volumes:
+  harmoni_catkin_ws:
