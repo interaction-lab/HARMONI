@@ -176,6 +176,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     packaging==19.1 \
     soundfile \
     empy \
+    wget \
     PyAudio \
     imutils \
     --force-reinstall defusedxml \
