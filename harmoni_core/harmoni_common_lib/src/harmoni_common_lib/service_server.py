@@ -144,7 +144,8 @@ class HarmoniServiceServer(HarmoniActionServer, object):
 
             rospy.loginfo(f"(Server {self.name}) Received goal. Requesting")
 
-            self.service_manager.response_received, preempted = False
+            self.service_manager.response_received = False
+            preempted = False
 
             self.service_manager.request(goal.optional_data)
 
