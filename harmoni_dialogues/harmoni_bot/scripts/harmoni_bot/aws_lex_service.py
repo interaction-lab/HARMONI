@@ -87,7 +87,7 @@ class AWSLexService(HarmoniServiceManager):
             rospy.loginfo("Service call failed")
             self.response_received = True
             self.result_msg = ""
-        return {"response": self.response_received, "message":self.result_msg}
+        return {"response": self.state, "message":self.result_msg}
 
 
 def main():

@@ -107,7 +107,8 @@ class HarmoniServiceServer(HarmoniActionServer, object):
 
             rospy.loginfo(f"(Server {self.name}) Received goal. Doing")
 
-            self.service_manager.actuation_completed, preempted = False
+            self.service_manager.actuation_completed = False
+            preempted = False
 
             self.service_manager.do(goal.optional_data)
 

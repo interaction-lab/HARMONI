@@ -7,6 +7,7 @@ import unittest, rospy, roslib, sys
 #from unittest.mock import Mock, patch
 # Specific Imports
 from actionlib_msgs.msg import GoalStatus
+from harmoni_common_lib.constants import State
 from harmoni_common_msgs.msg import harmoniAction, harmoniFeedback, harmoniResult
 from std_msgs.msg import String
 import os, io
@@ -34,7 +35,7 @@ class TestLex(unittest.TestCase):
         response = self.aws_service.request(self.text)
         # Confirm that the request-response cycle completed successfully.
         rospy.loginfo(response)
-        if response["response"]:
+        if response["response"]==State.SUCCESS:
             rospy.loginfo("The response succeed")
             self.result = True #set the response to true if the request succeeded
         assert(self.result == True)
