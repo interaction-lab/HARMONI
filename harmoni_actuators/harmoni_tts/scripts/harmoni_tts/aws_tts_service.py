@@ -42,27 +42,30 @@ class AWSTtsService(HarmoniServiceManager):
         return
 
     def setup_aws_tts(self):
-        self.tts = boto3.client("polly", region_name=self.region_name)
-        self.vis_transl = {
-            "p": "BILABIAL",
-            "f": "LABIODENTAL",
-            "T": "INTERDENTAL",
-            "s": "DENTAL_ALVEOLAR",
-            "t": "DENTAL_ALVEOLAR",
-            "S": "POSTALVEOLAR",
-            "r": "POSTALVEOLAR",
-            "J": "POSTALVEOLAR",
-            "k": "VELAR_GLOTTAL",
-            "i": "CLOSE_FRONT_VOWEL",
-            "u": "CLOSE_BACK_VOWEL",
-            "@": "MID_CENTRAL_VOWEL",
-            "a": "OPEN_FRONT_VOWEL",
-            "e": "OPEN_FRONT_VOWEL",
-            "E": "OPEN_FRONT_VOWEL",
-            "o": "OPEN_BACK_VOWEL",
-            "O": "OPEN_BACK_VOWEL",
-            "sil": "IDLE",
-        }
+        try:
+            self.tts = boto3.client("polly", region_name=self.region_name)
+            self.vis_transl = {
+                "p": "BILABIAL",
+                "f": "LABIODENTAL",
+                "T": "INTERDENTAL",
+                "s": "DENTAL_ALVEOLAR",
+                "t": "DENTAL_ALVEOLAR",
+                "S": "POSTALVEOLAR",
+                "r": "POSTALVEOLAR",
+                "J": "POSTALVEOLAR",
+                "k": "VELAR_GLOTTAL",
+                "i": "CLOSE_FRONT_VOWEL",
+                "u": "CLOSE_BACK_VOWEL",
+                "@": "MID_CENTRAL_VOWEL",
+                "a": "OPEN_FRONT_VOWEL",
+                "e": "OPEN_FRONT_VOWEL",
+                "E": "OPEN_FRONT_VOWEL",
+                "o": "OPEN_BACK_VOWEL",
+                "O": "OPEN_BACK_VOWEL",
+                "sil": "IDLE",
+            }
+        except:
+            sys.exit()
         return
 
     def split_text(self, text):
