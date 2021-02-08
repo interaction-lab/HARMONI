@@ -54,13 +54,3 @@ services:
     # tty: true
     command: bash -c "
       terminator -ue \"echo 'Entering harmoni_core Container... \\n start with roscore and rlharmoniservices' && bash\""
-
-networks:
-  shared_net:
-    name: ros_net
-    driver: overlay
-    ipam:
-      driver: default
-
-volumes:
-  harmoni_catkin_ws:
