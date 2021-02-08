@@ -1,7 +1,7 @@
 # Configuration file for the microphone
 polly:
   default_param:
-    region_name: "us-west-2"
+    region_name: "eu-west-2"
     language: "it-IT"
     outdir: "/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/temp_data"
     wav_header_length: 24
