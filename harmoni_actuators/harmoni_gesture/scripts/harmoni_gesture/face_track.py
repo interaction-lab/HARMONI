@@ -77,7 +77,7 @@ def launch(service_name: str, service: HarmoniServiceManager):
         rospy.init_node(service_name)
         rospy.loginfo("Launching", service_name)
         
-        InternalServiceServer(name=service, service_manager=service()))
+        InternalServiceServer(name=service, service_manager=service())
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
