@@ -4,7 +4,7 @@ harmoni:
   tts: ["default"]
   web: ["default"]
   #stt: ["default"]
-  #gesture: ["default"]
+  gesture: ["default"]
   #face_detect: ["default"]
 hardware:
   #microphone: ["default"]

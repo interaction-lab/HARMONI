@@ -1,6 +1,6 @@
 <!-- This is an example launch file for how a ROS application could use a node --> <launch>
 	<arg name="use_gesture" default="true"/>
-	<arg name="use_simulator" default="true"/>
+	<arg name="use_simulator" default="false"/>
 	<arg name="use_simulator_with_robot" default="false"/>
 	<arg name="test" default="false"/>
 	<arg name="test_input" default="{'gesture':'QT/bye', 'timing': 0.5}"/>
