@@ -212,6 +212,7 @@ class AWSTtsService(HarmoniServiceManager):
             return
         else:
             rospy.sleep(3)
+            os.system("pkill init")
             self.wait_for_internet_connection()
 
     def request(self, input_text):
