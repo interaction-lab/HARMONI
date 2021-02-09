@@ -889,8 +889,8 @@
                                         "tasks": [
                                             {
                                                 "audio": "2_1_1_Intro",
-                                                "audio_comp": "",
-                                                "audio_distr": "",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Queste sono le avventure della Scimmia Sofia sulla spiaggia.  <break time='800ms'/> Giochiamo insieme.",
                                                 "text_comp":"",
                                                 "text_distr":"",
@@ -901,6 +901,8 @@
                                             },
                                             {
                                                 "audio": "2_1_1",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Oggi c'è il sole.",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -911,6 +913,8 @@
                                             },
                                             {
                                                 "audio": "2_1_2",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "La scimmia Sofia cammina sulla spiaggia.",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -921,6 +925,8 @@
                                             },
                                             {
                                                 "audio": "2_1_3",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Sulla spiaggia ci sono delle conchiglie",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -931,6 +937,8 @@
                                             },
                                             {
                                                 "audio": "2_1_4",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "La scimmia Sofia è scappata dal circo con la sua bellissima palla",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -941,6 +949,8 @@
                                             },
                                             {
                                                 "audio": "2_1_5",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Poi arriva il vento e la palla vola via lontano",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -951,6 +961,8 @@
                                             },
                                             {
                                                 "audio": "2_1_6",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "La scimmia Sofia è molto arrabbiata",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -961,6 +973,8 @@
                                             },
                                             {
                                                 "audio": "2_1_7",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "La scimmia Sofia cerca la palla, guarda vicino ad un ombrellone",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -971,6 +985,8 @@
                                             },
                                             {
                                                 "audio": "2_1_8",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Vicino all'ombrellone c'è un granchio",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -981,6 +997,8 @@
                                             },
                                             {
                                                 "audio": "2_1_9",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Vicino all'ombrellone c'è anche una stella marina",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -991,6 +1009,8 @@
                                             },
                                             {
                                                 "audio": "2_1_10",
+                                                "audio_comp": "2_1_10_Comp_audio",
+                                                "audio_distr": "2_1_10_Distr_audio",
                                                 "text": "Il granchio è spinto dalla stella marina",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Qui la stella marina è spinta dal granchio. <break time='1000ms'/> Io ti ho chiesto il granchio è spinto dalla stella marina.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto il granchio è spinto dalla scimmia.  <break time='1000ms'/> Io ti ho chiesto il granchio è spinto dalla stella marina.",
@@ -1001,6 +1021,8 @@
                                             },
                                             {
                                                 "audio": "2_1_11",
+                                                "audio_comp": "2_1_11_Comp_audio",
+                                                "audio_distr": "2_1_11_Distr_audio",
                                                 "text": "Giusto!  <break time='800ms'/> Il granchio è spinto dalla stella marina. La scimmia lo tocca.  <break time='800ms'/> \"Hai visto la mia palla?\" - chiede",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Io ti ho chiesto il granchio è spinto dalla stella marina.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto la scimmia tocca il pesce. <break time='1000ms'/> Io ti ho chiesto la scimmia tocca il pesce",
@@ -1011,6 +1033,8 @@
                                             },
                                             {
                                                 "audio": "2_1_12",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Giusto! <break time='800ms'/>  La scimmia lo tocca. <break time='800ms'/>  Ma il granchio non risponde e si nasconde dietro una conchiglia",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -1021,6 +1045,8 @@
                                             },
                                             {
                                                 "audio": "2_1_13",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "La scimmia Sofia incontra una tartaruga",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -1031,6 +1057,8 @@
                                             },
                                             {
                                                 "audio": "2_1_14",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Poi arriva un polpo",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -1041,6 +1069,8 @@
                                             },
                                             {
                                                 "audio": "2_1_15",
+                                                "audio_comp": "2_1_15_Comp_audio",
+                                                "audio_distr": "2_1_15_Distr_audio",
                                                 "text": "Giusto!  <break time='800ms'/> Il polipo bagna la tartaruga.  <break time='800ms'/> La scimmia Sofia la asciuga",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Qui tartaruga bagna il polipo. <break time='1000ms'/> Io ti ho chiesto il polipo bagna la tartaruga.",
                                                 "text_distr":"*QT/emotions/sad*Fai attenzione! <break time='800ms'/>Tu hai scelto la tartaruga bagna il gabbiano. <break time='1000ms'/> Io ti ho chiesto il polipo bagna la tartaruga",
@@ -1051,6 +1081,8 @@
                                             },
                                             {
                                                 "audio": "2_1_16",
+                                                "audio_comp": "2_1_16_Comp_audio",
+                                                "audio_distr": "2_1_16_Distr_audio",
                                                 "text": "La scimmia Sofia la asciuga",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Qui la scimmia Sofia lo asciuga. <break time='1000ms'/> Io ti ho chiesto la scimmia Sofia la asciuga.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto la scimmia asciuga la stella marina.<break time='1000ms'/>  Io ti ho chiesto la scimmia Sofia  asciuga la tartaruga",
@@ -1061,6 +1093,8 @@
                                             },
                                             {
                                                 "audio": "2_1_17",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Giusto!  <break time='800ms'/> La scimmia Sofia la asciuga.  <break time='800ms'/> Poi la scimmia Sofia le chiede",
                                                 "text_comp":"",
                                                 "text_distr":"",
@@ -1071,6 +1105,8 @@
                                             },
                                             {
                                                 "audio": "2_1_18_Outro",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "\"Hai visto la mia palla?\" la tartaruga risponde: \"no, mi dispiace\".  <break time='800ms'/> Allora la scimmia continua a cercare",
                                                 "text_comp":"",
                                                 "text_distr":"",
@@ -1114,6 +1150,8 @@
                                             },
                                             {
                                                 "audio": "2_2_1",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Nel bosco c'è una volpe",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -1124,6 +1162,8 @@
                                             },
                                             {
                                                 "audio": "2_2_2",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Nel bosco C'è anche un orso",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -1134,6 +1174,8 @@
                                             },
                                             {
                                                 "audio": "2_2_3",
+                                                "audio_comp": "2_2_3_Comp_audio",
+                                                "audio_distr": "2_2_3_Distr_audio",
                                                 "text": "La volpe rincorre l'orso",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Qui l'orso rincorre la volpe. <break time='1000ms'/> Io ti ho chiesto la volpe rincorre l'orso.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto la gallina rincorre la volpe.<break time='1000ms'/>  Io ti ho chiesto la volpe rincorre l'orso.",
@@ -1144,6 +1186,8 @@
                                             },
                                             {
                                                 "audio": "2_2_4",
+                                                "audio_comp": "2_2_4_Comp_audio",
+                                                "audio_distr": "2_2_4_Distr_audio",
                                                 "text": "Giusto!  <break time='800ms'/> La volpe rincorre l'orso.  <break time='800ms'/> poi la scimmia Sofia lo cattura",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Qui la scimmia Sofia la cattura. <break time='1000ms'/> Io ti ho chiesto la scimmia Sofia lo cattura.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto la scimmia cattura il cane. <break time='1000ms'/>  Io ti ho chiesto la scimmia Sofia cattura l'orso",
@@ -1154,6 +1198,8 @@
                                             },
                                             {
                                                 "audio": "2_2_5",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Giusto!  <break time='800ms'/> la scimmia Sofia lo cattura.  <break time='800ms'/> Ma poi l'orso si libera e si sposta vicino a un albero",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -1164,6 +1210,8 @@
                                             },
                                             {
                                                 "audio": "2_2_6",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "la scimmia Sofia pensa sempre alla sua palla",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -1174,6 +1222,8 @@
                                             },
                                             {
                                                 "audio": "2_2_7",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Vicino ad un albero ci sono un gufo e una tigre",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -1184,6 +1234,8 @@
                                             },
                                             {
                                                 "audio": "2_2_8",
+                                                "audio_comp": "2_2_8_Comp_audio",
+                                                "audio_distr": "2_2_8_Distr_audio",
                                                 "text": "la tigre è toccata dal gufo",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Qui il gufo è toccato dalla tigre.<break time='1000ms'/>  Io ti ho chiesto la tigre è toccata dal gufo.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto il cane è toccato dalla scimmia. <break time='1000ms'/> Io ti ho chiesto la tigre è toccata dal gufo",
@@ -1194,6 +1246,8 @@
                                             },
                                             {
                                                 "audio": "2_2_9",
+                                                "audio_comp": "2_2_9_Comp_audio",
+                                                "audio_distr": "2_2_9_Distr_audio",
                                                 "text": "Giusto! <break time='800ms'/>  la tigre è toccata dal gufo.  <break time='800ms'/> Che confusione!  <break time='800ms'/> La scimmia Sofia la abbraccia",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Qui la scimmia Sofia lo abbraccia.<break time='1000ms'/>  Io ti ho chiesto la scimmia Sofia la abbraccia.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto la scimmia Sofia abbraccia la volpe.<break time='1000ms'/>  Io ti ho chiesto la scimmia Sofia abbraccia la tigre",
@@ -1204,6 +1258,8 @@
                                             },
                                             {
                                                 "audio": "2_2_10",
+                                                "audio_comp": "2_2_10_Comp_audio",
+                                                "audio_distr": "2_2_10_Distr_audio",
                                                 "text": "Giusto! <break time='800ms'/>  La scimmia Sofia la abbraccia.  <break time='800ms'/> il gufo è sporcato dalla volpe",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Qui la volpe è sporcata dal gufo. <break time='1000ms'/> Io ti ho chiesto il gufo è sporcato dalla volpe.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/>Tu hai scelto il cane è sporcato dalla gallina.<break time='1000ms'/>  Io ti ho chiesto il gufo è sporcato dalla volpe",
@@ -1214,6 +1270,8 @@
                                             },
                                             {
                                                 "audio": "2_2_11",
+                                                "audio_comp": "2_2_11_Comp_audio",
+                                                "audio_distr": "2_2_11_Distr_audio",
                                                 "text": "Giusto!  <break time='800ms'/>  il gufo è sporcato dalla volpe.  <break time='800ms'/> La scimmia sofia la insegue \"Sicuramente lei sa dove è la mia palla!\"",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Qui la scimmia lo insegue.<break time='1000ms'/>  Io ti ho chiesto la scimmia la insegue.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto la scimmia insegue la tigre.  <break time='1000ms'/> Io ti ho chiesto la scimmia insegue la volpe",
@@ -1224,6 +1282,8 @@
                                             },
                                             {
                                                 "audio": "2_2_12",
+                                                "audio_comp": "2_2_12_Comp_audio",
+                                                "audio_distr": "2_2_12_Distr_audio",
                                                 "text": "Giusto! <break time='800ms'/> La scimmia la insegue. <break time='800ms'/>  Poi l'orso morde la tigre",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione!  <break time='800ms'/> Qui la tigre morde l'orso.  <break time='1000ms'/>  Io ti ho chiesto l'orso morde la tigre.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto la scimmia morde la tigre.<break time='1000ms'/>  Io ti ho chiesto l'orso morde la tigre",
@@ -1234,6 +1294,8 @@
                                             },
                                             {
                                                 "audio": "2_2_13",
+                                                "audio_comp": "2_2_13_Comp_audio",
+                                                "audio_distr": "2_2_13_Distr_audio",
                                                 "text": "Giusto! <break time='800ms'/>  l'orso morde la tigre.  <break time='800ms'/> Il gufo la bacia",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione!  <break time='800ms'/> Qui il gufo lo bacia.  <break time='1000ms'/> Io ti ho chiesto il gufo la bacia.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! Tu hai scelto il gufo bacia la volpe. <break time='1000ms'/> Io ti ho chiesto il gufo bacia la tigre",
@@ -1244,6 +1306,8 @@
                                             },
                                             {
                                                 "audio": "2_2_14",
+                                                "audio_comp": "2_2_14_Comp_audio",
+                                                "audio_distr": "2_2_14_Distr_audio",
                                                 "text": "Giusto!  <break time='800ms'/> Il gufo la bacia.  <break time='800ms'/> Poi l'orso è morso dalla tigre",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione!  <break time='800ms'/> Qui la tigre è morsa dall'orso. <break time='1000ms'/>  Io ti ho chiesto l'orso è morso dalla tigre.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto la volpe è morsa dal cane. <break time='1000ms'/> Io ti ho chiesto l'orso è morso dalla tigre",
@@ -1254,6 +1318,8 @@
                                             },
                                             {
                                                 "audio": "2_2_15",
+                                                "audio_comp": "2_2_15_Comp_audio",
+                                                "audio_distr": "2_2_15_Distr_audio",
                                                 "text": "Giusto!  <break time='800ms'/> Poi l'orso è morso dalla tigre.  <break time='800ms'/> la volpe è abbracciata dal gufo",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione!  <break time='800ms'/> Qui il gufo è abbracciato dalla volpe.  <break time='1000ms'/> Io ti ho chiesto la volpe è abbracciata dal gufo.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! Tu hai scelto la volpe è abbracciata dalla scimmia. <break time='1000ms'/> Io ti ho chiesto la volpe è abbracciata dal gufo",
@@ -1264,6 +1330,8 @@
                                             },
                                             {
                                                 "audio": "2_2_16",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Giusto! <break time='800ms'/>  la volpe è abbracciata dal gufo.  <break time='800ms'/> Adesso, tutti si siedono per terra",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -1274,6 +1342,8 @@
                                             },
                                             {
                                                 "audio": "2_2_17",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Poi la scimmia cerca la sua palla vicino ad un albero",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -1284,6 +1354,8 @@
                                             },
                                             {
                                                 "audio": "2_2_18",
+                                                "audio_comp": "",
+                                                "audio_distr": "",
                                                 "text": "Allora la scimmia Sofia chiede loro",
                                                 "text_comp":"",
                                                 "text_distr":"",
@@ -1294,6 +1366,8 @@
                                             },
                                             {
                                                 "audio": "2_2_19_Outro",
+                                                "audio_comp": "",
+                                                "audio_distr": "",
                                                 "text": "\"Avete visto la mia palla? \" <break time='800ms'/> gli animali rispondono: \"no, ci dispiace\". Allora la scimmia continua a cercare",
                                                 "text_comp":"",
                                                 "text_distr":"",
@@ -1337,6 +1411,8 @@
                                             },
                                             {
                                                 "audio": "2_3_1",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Al circo, la scimmia vede un leone.",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -1347,6 +1423,8 @@
                                             },
                                             {
                                                 "audio": "2_3_2",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Poi arriva anche una zebra",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -1357,6 +1435,8 @@
                                             },
                                             {
                                                 "audio": "2_3_3",
+                                                "audio_comp": "2_3_3_Comp_audio",
+                                                "audio_distr": "2_3_3_Distr_audio",
                                                 "text": "La zebra è baciata dal leone",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Qui il leone è baciato dalla zebra.<break time='1000ms'/>  Io ti ho chiesto la zebra è baciata dal leone.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto il serpente è baciato dalla scimmia. <break time='1000ms'/>  Io ti ho chiesto la zebra è baciata dal leone",
@@ -1367,6 +1447,8 @@
                                             },
                                             {
                                                 "audio": "2_3_4",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Giusto!  <break time='800ms'/> La zebra è baciata dal leone. <break time='800ms'/>  Ci sono anche un elefante e una giraffa!",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -1377,6 +1459,8 @@
                                             },
                                             {
                                                 "audio": "2_3_5",
+                                                "audio_comp": "2_3_5_Comp_audio",
+                                                "audio_distr": "2_3_5_Distr_audio",
                                                 "text": "La giraffa sporca l'elefante",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione!  <break time='800ms'/> Qui l'elefante sporca la zebra. <break time='1000ms'/>  Io ti ho chiesto la zebra sporca l'elefante.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto la zebra sporca il leone.<break time='1000ms'/>  Io ti ho chiesto la giraffa sporca l'elefante",
@@ -1387,6 +1471,8 @@
                                             },
                                             {
                                                 "audio": "2_3_6",
+                                                "audio_comp": "2_3_6_Comp_audio",
+                                                "audio_distr": "2_3_6_Distr_audio",
                                                 "text": "Giusto!  <break time='800ms'/> La giraffa sporca l'elefante.  <break time='800ms'/> Poi il leone lo bagna",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione!  <break time='800ms'/> Qui il leone la bagna.  <break time='1000ms'/> Io ti ho chiesto il leone lo bagna.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto il leone bagna il cavallo.<break time='1000ms'/>  Io ti ho chiesto il leone bagna l'elefante",
@@ -1397,6 +1483,8 @@
                                             },
                                             {
                                                 "audio": "2_3_7",
+                                                "audio_comp": "2_3_7_Comp_audio",
+                                                "audio_distr": "2_3_7_Distr_audio",
                                                 "text": "Giusto! <break time='800ms'/>  il leone lo bagna.  <break time='800ms'/> A quel punto la giraffa è tirata dall'elefante",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Qui l'elefante è tirato dalla giraffa.<break time='1000ms'/>  Io ti ho chiesto la giraffa è tirata dall'elefante.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/> Tu hai scelto la zebra è tirata dal leone. <break time='1000ms'/>  Io ti ho chiesto la giraffa è tirata dall'elefante",
@@ -1407,6 +1495,8 @@
                                             },
                                             {
                                                 "audio": "2_3_8",
+                                                "audio_comp": "2_3_8_Comp_audio",
+                                                "audio_distr": "2_3_8_Distr_audio",
                                                 "text": "Giusto! <break time='800ms'/>  la giraffa è tirata dall'elefante.  <break time='800ms'/> La scimmia lo tocca",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Qui la scimmia la tocca. <break time='1000ms'/> Io ti ho chiesto  la scimmia lo tocca.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto la scimmia tocca il leone.  <break time='1000ms'/> Io ti ho chiesto  la scimmia tocca l'elefante",
@@ -1417,6 +1507,8 @@
                                             },
                                             {
                                                 "audio": "2_3_9",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Giusto! <break time='800ms'/>  La scimmia lo tocca. <break time='800ms'/> elefante, hai visto la mia palla?",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -1427,6 +1519,8 @@
                                             },
                                             {
                                                 "audio": "2_3_10",
+                                                "audio_comp": "2_3_10_Comp_audio",
+                                                "audio_distr": "2_3_10_Distr_audio",
                                                 "text": "Ma L'elefante è rincorso dalla zebra.",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Qui la zebra è rincorsa dall'elefante. <break time='1000ms'/> Io ti ho chiesto l'elefante è rincorso dalla zebra.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto il leone è rincorso dalla giraffa. <break time='1000ms'/> Io ti ho chiesto l'elefante è rincorso dalla zebra",
@@ -1437,6 +1531,8 @@
                                             },
                                             {
                                                 "audio": "2_3_11",
+                                                "audio_comp": "2_3_11_Comp_audio",
+                                                "audio_distr": "2_3_11_Distr_audio",
                                                 "text": "Giusto!  <break time='800ms'/>  L'elefante è rincorso dalla zebra.  <break time='800ms'/> il leone lo abbraccia",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Qui il leone la abbraccia. <break time='1000ms'/> Io ti ho chiesto  il leone lo abbraccia.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto il leone abbraccia il cavallo. <break time='1000ms'/> Io ti ho chiesto  il leone abbraccia l'elefante",
@@ -1447,6 +1543,8 @@
                                             },
                                             {
                                                 "audio": "2_3_12",
+                                                "audio_comp": "2_3_12_Comp_audio",
+                                                "audio_distr": "2_3_12_Distr_audio",
                                                 "text": "Giusto!  <break time='800ms'/> il leone lo abbraccia. <break time='800ms'/>  Poi, l'elefante è SPINTO dalla zebra",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Qui la zebra è spinta dall'elefante. <break time='1000ms'/> Io ti ho chiesto l'elefante è spinto dalla zebra.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto la giraffa è spinta dal leone. <break time='1000ms'/> Io ti ho chiesto l'elefante è spinto dalla zebra",
@@ -1457,6 +1555,8 @@
                                             },
                                             {
                                                 "audio": "2_3_13",
+                                                "audio_comp": "2_3_13_Comp_audio",
+                                                "audio_distr": "2_3_13_Distr_audio",
                                                 "text": "Giusto!  <break time='800ms'/> l'elefante è SPINTO dalla zebra.  <break time='800ms'/> Ma il leone la LECCA",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Qui il leone lo lecca.<break time='1000ms'/>  Io ti ho chiesto il leone la lecca.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto il leone lecca la giraffa. <break time='1000ms'/> Io ti ho chiesto il leone lecca la zebra",
@@ -1467,6 +1567,8 @@
                                             },
                                             {
                                                 "audio": "2_3_14",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Giusto!  <break time='800ms'/>  il leone la LECCA.  <break time='800ms'/> Nessun animale è seduto",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -1477,6 +1579,8 @@
                                             },
                                             {
                                                 "audio": "2_3_15",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Poi tutti corrono",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -1487,6 +1591,8 @@
                                             },
                                             {
                                                 "audio": "2_3_16",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "la scimmia è arrabbiata: nessuno la aiuta!",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -1497,6 +1603,8 @@
                                             },
                                             {
                                                 "audio": "2_3_17",
+                                                "audio_comp": "2_3_17_Comp_audio",
+                                                "audio_distr": "2_3_17_Distr_audio",
                                                 "text": "Intanto, <break time='800ms'/>  la giraffa è bagnata dall'elefante",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Qui l'elefante è bagnato dalla giraffa. <break time='1000ms'/> Io ti ho chiesto la giraffa è bagnata dall'elefante.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai chiesto il leone è bagnato dalla zebra. <break time='1000ms'/> Io ti ho chiesto la giraffa è bagnata dall'elefante",
@@ -1507,6 +1615,8 @@
                                             },
                                             {
                                                 "audio": "2_3_18",
+                                                "audio_comp": "2_3_18_Comp_audio",
+                                                "audio_distr": "2_3_18_Distr_audio",
                                                 "text": "Giusto!  <break time='800ms'/> la giraffa è bagnata dall'elefante.  <break time='800ms'/> Poi il leone la copre ",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Qui il leone lo copre. <break time='1000ms'/> Io ti ho chiesto il leone la copre.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto il leone copre la zebra. <break time='1000ms'/> Io ti ho chiesto il leone copre la giraffa",
@@ -1517,6 +1627,8 @@
                                             },
                                             {
                                                 "audio": "2_3_19",
+                                                "audio_comp": "2_3_19_Comp_audio",
+                                                "audio_distr": "2_3_19_Distr_audio",
                                                 "text": "Giusto!  <break time='800ms'/> il leone la copre. <break time='800ms'/>  L'elefante è legato dalla zebra",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Qui la zebra è legata dall'elefante. <break time='1000ms'/> Io ti ho chiesto l'elefante è legato dalla zebra.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto il leone è legato dalla scimmia. <break time='1000ms'/> Io ti ho chiesto l'elefante è legato dalla zebra",
@@ -1527,6 +1639,8 @@
                                             },
                                             {
                                                 "audio": "2_3_20",
+                                                "audio_comp": "2_3_20_Comp_audio",
+                                                "audio_distr": "2_3_20_Distr_audio",
                                                 "text": "Giusto!  <break time='800ms'/> L'elefante è legato dalla zebra. <break time='800ms'/>  Alla fine, la giraffa è toccata dall'elefante",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Qui l'elefante è toccato dalla giraffa. <break time='1000ms'/> Io ti ho chiesto la giraffa è toccata dall'elefante.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto la zebra è toccata dalla scimmia. <break time='1000ms'/> Io ti ho chiesto la giraffa è toccata dall'elefante",
@@ -1537,6 +1651,8 @@
                                             },
                                             {
                                                 "audio": "2_3_21",
+                                                "audio_comp": "2_3_21_Comp_audio",
+                                                "audio_distr": "2_3_21_Distr_audio",
                                                 "text": "Giusto! <break time='800ms'/> la giraffa è toccata dall'elefante.  <break time='800ms'/> Il leone lo insegue",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Qui il leone la insegue. <break time='1000ms'/> Io ti ho chiesto il leone lo insegue.",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto il leone insegue il cavallo. <break time='1000ms'/> Io ti ho chiesto il leone insegue l'elefante",
@@ -1547,6 +1663,8 @@
                                             },
                                             {
                                                 "audio": "2_3_22",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Giusto! <break time='800ms'/>  Il leone lo insegue.  <break time='800ms'/> La scimmia è di fronte agli animali",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -1557,6 +1675,8 @@
                                             },
                                             {
                                                 "audio": "2_3_23",
+                                                "audio_comp": "",
+                                                "audio_distr": "",
                                                 "text": "La scimmia dice",
                                                 "text_comp":"",
                                                 "text_distr":"",
@@ -1567,6 +1687,8 @@
                                             },
                                             {
                                                 "audio": "2_3_24",
+                                                "audio_comp": "",
+                                                "audio_distr": "",
                                                 "text": "\"Animali, per favore, aiutatemi!\"  <break time='800ms'/> Ho perso la mia palla, l'avete vista?",
                                                 "text_comp":"",
                                                 "text_distr":"",
@@ -1577,6 +1699,8 @@
                                             },
                                             {
                                                 "audio": "2_3_25",
+                                                "audio_comp": "",
+                                                "audio_distr": "",
                                                 "text": "Finalmente gli animali ascoltano la scimmia e dicono  <break time='800ms'/> \"ecco di chi era la bellissima palla rossa! è dentro il tendone, andiamo a prenderla!\"",
                                                 "text_comp":"",
                                                 "text_distr":"",
@@ -1587,6 +1711,8 @@
                                             },
                                             {
                                                 "audio": "2_3_26_Outro",
+                                                "audio_comp": "",
+                                                "audio_distr": "",
                                                 "text": "Adesso la scimmia trova la sua palla!",
                                                 "text_comp":"",
                                                 "text_distr":"",
@@ -1619,6 +1745,8 @@
                             "tasks": [
                                 {
                                     "audio": "1_1",
+                                    "audio_comp": "D1_1_Comp_audio",
+                                    "audio_distr": "D1_1_Distr_audio",
                                     "text": "Quale persona sta spegnendo l'incendio?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto la persona che sta cucinando.<break time='1000ms'/> Io ti ho chiesto quale persona sta spegnendo l'incendio?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto la persona che sta accarezzando il gatto. <break time='1000ms'/> Io ti ho chiesto quale persona sta spegnendo l'incendio?",
@@ -1629,6 +1757,8 @@
                                 },
                                 {
                                     "audio": "1_2",
+                                    "audio_comp": "D1_2_Comp_audio",
+                                    "audio_distr": "D1_2_Distr_audio",
                                     "text": "Quale persona sta guidando l'aereo?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto la persona che sta cavalcando.<break time='1000ms'/>  Io ti ho chiesto quale persona sta guidando l'aereo?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto la persona che sta ballando.<break time='1000ms'/>  Io ti ho chiesto quale persona sta guidando l'aereo?",
@@ -1639,6 +1769,8 @@
                                 },
                                 {
                                     "audio": "1_3",
+                                    "audio_comp": "D1_3_Comp_audio",
+                                    "audio_distr": "D1_3_Distr_audio",
                                     "text": "Quale persona sta aggiustando la macchina?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto la persona che sta portando il secchio. <break time='1000ms'/> Io ti ho chiesto quale persona sta aggiustando la macchina?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto la persona che sta dipingendo il quadro. <break time='1000ms'/> Io ti ho chiesto quale persona sta aggiustando la macchina?",
@@ -1649,6 +1781,8 @@
                                 },
                                 {
                                     "audio": "1_4",
+                                    "audio_comp": "D1_4_Comp_audio",
+                                    "audio_distr": "D1_4_Distr_audio",
                                     "text": "Quale persona sta tagliando i capelli?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto la persona che sta pescando.<break time='1000ms'/>  Io ti ho chiesto quale persona sta tagliando i capelli?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto la persona che sta scavando una buca. <break time='1000ms'/> Io ti ho chiesto quale persona sta tagliando i capelli?",
@@ -1659,6 +1793,8 @@
                                 },
                                 {
                                     "audio": "1_5",
+                                    "audio_comp": "D1_5_Comp_audio",
+                                    "audio_distr": "D1_5_Distr_audio",
                                     "text": "Quali persone stanno arrestando il ladro?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto le persone che stanno servendo il cliente.<break time='1000ms'/>  Io ti ho chiesto quale persone stanno arrestando il ladro?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto le persone che stanno costruendo il muro.<break time='1000ms'/>  Io ti ho chiesto quale persone stanno arrestando il ladro?",
@@ -1669,6 +1805,8 @@
                                 },
                                 {
                                     "audio": "1_6",
+                                    "audio_comp": "D1_6_Comp_audio",
+                                    "audio_distr": "D1_6_Distr_audio",
                                     "text": "Quali animali stanno mangiando l'erba?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto gli animali che stanno costruendo il nido.<break time='1000ms'/>  Io ti ho chiesto quali animali stanno mangiando l'erba?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto gli animali che stanno giocando con la palla.<break time='1000ms'/> Io ti ho chiesto quali animali stanno mangiando l'erba?",
@@ -1679,6 +1817,8 @@
                                 },
                                 {
                                     "audio": "1_7",
+                                    "audio_comp": "D1_7_Comp_audio",
+                                    "audio_distr": "D1_7_Distr_audio",
                                     "text": "Quali persone stanno curando il paziente?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto le persone che stanno andando nello spazio. <break time='1000ms'/> Io ti ho chiesto quali persone stanno curando il paziente?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto le persone che stanno insegnando. <break time='1000ms'/> Io ti ho chiesto quali persone stanno curando il paziente?",
@@ -1689,6 +1829,8 @@
                                 },
                                 {
                                     "audio": "1_8",
+                                    "audio_comp": "D1_8_Comp_audio",
+                                    "audio_distr": "D1_8_Distr_audio",
                                     "text": "Quali animali stanno mangiando il formaggio?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto gli animali che stanno saltando gli ostacoli.<break time='1000ms'/>  Io ti ho chiesto quali animali stanno mangiando il formaggio?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto gli animali che stanno giocando con il gomitolo. <break time='1000ms'/> Io ti ho chiesto quali animali stanno mangiando il formaggio?",
@@ -1699,6 +1841,8 @@
                                 },
                                 {
                                     "audio": "1_9",
+                                    "audio_comp": "D1_9_Comp_audio",
+                                    "audio_distr": "D1_9_Distr_audio",
                                     "text": "Quale animale sta accarezzando le bambine?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto l'animale che stanno lavando i bambini.<break time='1000ms'/>  Io ti ho chiesto quale animale stanno accarezzando le bambine?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto l'animale che stanno tirando i contadini.<break time='1000ms'/>  Io ti ho chiesto quale animale stanno accarezzando le bambine?",
@@ -1709,6 +1853,8 @@
                                 },
                                 {
                                     "audio": "1_10",
+                                    "audio_comp": "D1_10_Comp_audio",
+                                    "audio_distr": "D1_10_Distr_audio",
                                     "text": "Quale oggetto stanno usando gli studenti?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto l'oggetto che stanno spingendo i poliziotti.<break time='1000ms'/>  Io ti ho chiesto quale oggetto stanno usando gli studenti?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto il cibo che stanno mangiando le signore.<break time='1000ms'/>  Io ti ho chiesto quale oggetto stanno usando gli studenti?",
@@ -1719,6 +1865,8 @@
                                 },
                                 {
                                     "audio": "1_11",
+                                    "audio_comp": "D1_11_Comp_audio",
+                                    "audio_distr": "D1_11_Distr_audio",
                                     "text": "Quale cibo stanno mangiando i bambini?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto il cibo che stanno cogliendo le signore. <break time='1000ms'/> Io ti ho chiesto quale cibo stanno mangiando i bambini?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto il cibo che stanno cucinando i cuochi.<break time='1000ms'/>  Io ti ho chiesto quale cibo stanno mangiando i bambini?",
@@ -1729,6 +1877,8 @@
                                 },
                                 {
                                     "audio": "1_12",
+                                    "audio_comp": "D1_12_Comp_audio",
+                                    "audio_distr": "D1_12_Distr_audio",
                                     "text": "Quale cibo stanno cucinando i pasticceri?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto il cibo che stanno cogliendo i comtadini.<break time='1000ms'/>  Io ti ho chiesto quale cibo stanno cucinando i pasticceri?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto il cibo che stanno mangiando le signore.<break time='1000ms'/>  Io ti ho chiesto quale cibo stanno cucinando i pasticceri?",
@@ -1739,6 +1889,8 @@
                                 },
                                 {
                                     "audio": "1_13",
+                                    "audio_comp": "D1_13_Comp_audio",
+                                    "audio_distr": "D1_13_Distr_audio",
                                     "text": "Quali animali sta prendendo il contadino?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto gli animali che sta fotografando il singore. <break time='1000ms'/> Io ti ho chiesto quali animali sta prendendo il contadino?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto gli animali che sta accarezzando la signora.<break time='1000ms'/>  Io ti ho chiesto quali animali sta prendendo il contadino?",
@@ -1749,6 +1901,8 @@
                                 },
                                 {
                                     "audio": "1_14",
+                                    "audio_comp": "D1_14_Comp_audio",
+                                    "audio_distr": "D1_14_Distr_audio",
                                     "text": "Quali strumenti sta usando il pittore?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto gli strumenti che sta usando il cuoco. <break time='1000ms'/> Io ti ho chiesto quali strumenti sta usando il pittore?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto gli strumenti che sta usando la parrucchiera. <break time='1000ms'/> Io ti ho chiesto quali strumenti sta usando il pittore?",
@@ -1759,6 +1913,8 @@
                                 },
                                 {
                                     "audio": "1_15",
+                                    "audio_comp": "D1_15_Comp_audio",
+                                    "audio_distr": "D1_15_Distr_audio",
                                     "text": "Quali verdure sta mangiando il coniglio?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto le verdure che sta guardando la signora.<break time='1000ms'/>  Io ti ho chiesto quali verdure sta mangiando il coniglio?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto le verdure che sta guardando il contadino.<break time='1000ms'/>  Io ti ho chiesto quali verdure sta mangiando il coniglio?",
@@ -1769,6 +1925,8 @@
                                 },
                                 {
                                     "audio": "1_16",
+                                    "audio_comp": "D1_16_Comp_audio",
+                                    "audio_distr": "D1_16_Distr_audio",
                                     "text": "Quali persone sta inseguendo il poliziotto?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto le persone che sta fotgrafando il poliziotto.<break time='1000ms'/>  Io ti ho chiesto quali persone sta inseguendo il poliziotto?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto le persone che sta dipingendo il pittore.<break time='1000ms'/>  Io ti ho chiesto quali persone sta inseguendo il poliziotto?",
@@ -2199,6 +2357,8 @@
                             "tasks": [
                                 {
                                     "audio": "4_1",
+                                    "audio_comp": "D4_1_Comp_audio",
+                                    "audio_distr": "D4_1_Distr_audio",
                                     "text": "Quale persona spegne gli incendi?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto la persona che cura le persone.<break time='1000ms'/> Io ti ho chiesto quale persona spegne gli incendi?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto la persona cucina le torte.<break time='1000ms'/> Io ti ho chiesto quale persona spegne gli incendi?",
@@ -2209,6 +2369,8 @@
                                 },
                                 {
                                     "audio": "4_2",
+                                    "audio_comp": "D4_2_Comp_audio",
+                                    "audio_distr": "D4_2_Distr_audio",
                                     "text": "Quale persona guida gli aerei?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto la persona che ha le piume lunghe. <break time='1000ms'/>Io ti ho chiesto quale persona guida gli aerei?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto la persona che balla.<break time='1000ms'/> Io ti ho chiesto quale persona guida gli aerei?",
@@ -2219,6 +2381,8 @@
                                 },
                                 {
                                     "audio": "4_3",
+                                    "audio_comp": "D4_3_Comp_audio",
+                                    "audio_distr": "D4_3_Distr_audio",
                                     "text": "Quale persona aggiusta le macchine?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto la persona che porta gli stivali.<break time='1000ms'/> Io ti ho chiesto quale persona aggiusta le macchine?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto la persona che dipinge i quadri.<break time='1000ms'/> Io ti ho chiesto quale persona aggiusta le macchine?",
@@ -2229,6 +2393,8 @@
                                 },
                                 {
                                     "audio": "4_4",
+                                    "audio_comp": "D4_4_Comp_audio",
+                                    "audio_distr": "D4_4_Distr_audio",
                                     "text": "Quale persona taglia i capellli?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto la persona che pesca.<break time='1000ms'/> Io ti ho chiesto quale persona taglia i capelli?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto la persona che coltiva le verdure. <break time='1000ms'/>Io ti ho chiesto quale persona taglia i capelli?",
@@ -2239,6 +2405,8 @@
                                 },
                                 {
                                     "audio": "4_5",
+                                    "audio_comp": "D4_5_Comp_audio",
+                                    "audio_distr": "D4_5_Distr_audio",
                                     "text": "Quali persone servono il cliente?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto le persone che arrestano i ladri. <break time='1000ms'/>Io ti ho chiesto quali persone servono il cliente?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto le persone che costruiscono le case. <break time='1000ms'/>Io ti ho chiesto quali persone servono il cliente?",
@@ -2249,6 +2417,8 @@
                                 },
                                 {
                                     "audio": "4_6",
+                                    "audio_comp": "D4_6_Comp_audio",
+                                    "audio_distr": "D4_6_Distr_audio",
                                     "text": "Quali animali mangiano l'erba?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto gli animali che mangiano la carne. <break time='1000ms'/>Io ti ho chiesto quali animali mangiano l'erba?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto gli animali che mangiano i pesci. <break time='1000ms'/>Io ti ho chiesto quali animali mangiano l'erba?",
@@ -2259,6 +2429,8 @@
                                 },
                                 {
                                     "audio": "4_7",
+                                    "audio_comp": "D4_7_Comp_audio",
+                                    "audio_distr": "D4_7_Distr_audio",
                                     "text": "Quali persone curano il paziente?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto le persone che vanno nello spazio. <break time='1000ms'/>Io ti ho chiesto quali persone curano il paziente?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto le persone insegnano a scuola.<break time='1000ms'/> Io ti ho chiesto quali persone curano il paziente?",
@@ -2269,6 +2441,8 @@
                                 },
                                 {
                                     "audio": "4_8",
+                                    "audio_comp": "D4_8_Comp_audio",
+                                    "audio_distr": "D4_8_Distr_audio",
                                     "text": "Quali animali fanno il latte?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto gli animali che vivono nell'oceano.<break time='1000ms'/> Io ti ho chiesto quali animali fanno il latte?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto gli animali che vivono nel mare.<break time='1000ms'/> Io ti ho chiesto quali animali fanno il latte?",
@@ -2279,6 +2453,8 @@
                                 },
                                 {
                                     "audio": "4_9",
+                                    "audio_comp": "D4_9_Comp_audio",
+                                    "audio_distr": "D4_9_Distr_audio",
                                     "text": "Quale animale mangiano i gatti?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto l'animale che mangia le gazzelle. Io ti ho chiesto quale animale mangiano i gatti?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto l'animale che mangia gli insetti. Io ti ho chiesto quale animale mangiano i gatti?",
@@ -2289,6 +2465,8 @@
                                 },
                                 {
                                     "audio": "4_10",
+                                    "audio_comp": "D4_10_Comp_audio",
+                                    "audio_distr": "D4_10_Distr_audio",
                                     "text": "Quale oggetto usano gli studenti?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto l'ggetto che usano i motociclisti.<break time='1000ms'/> Io ti ho chiesto quale oggetto usano gli studenti?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto l'oggetto che usano i cuochi.<break time='1000ms'/> Io ti ho chiesto quale oggetto usano gli studenti?",
@@ -2299,6 +2477,8 @@
                                 },
                                 {
                                     "audio": "4_11",
+                                    "audio_comp": "D4_11_Comp_audio",
+                                    "audio_distr": "D4_11_Distr_audio",
                                     "text": "Quale cibo producono le api?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto il cibo che viene dal cacao. Io ti ho chiesto quale cibo producono le api?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto il cibo che fanno i pizzaioli. Io ti ho chiesto quale cibo producono le api?",
@@ -2309,6 +2489,8 @@
                                 },
                                 {
                                     "audio": "4_12",
+                                    "audio_comp": "D4_12_Comp_audio",
+                                    "audio_distr": "D4_12_Distr_audio",
                                     "text": "Quale cibo cucinano i pasticceri?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto il cibo che cucinano i cuochi. <break time='1000ms'/>Io ti ho chiesto quale cibo cucinano i pasticceri?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto il cibo che coltivano i contadini. <break time='1000ms'/>Io ti ho chiesto quale cibo cucinano i pasticceri?",
@@ -2319,6 +2501,8 @@
                                 },
                                 {
                                     "audio": "4_13",
+                                    "audio_comp": "D4_13_Comp_audio",
+                                    "audio_distr": "D4_13_Distr_audio",
                                     "text": "Quali animali alleva il contadino?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto gli aniamli che trovi allo zoo. <break time='1000ms'/>Io ti ho chiesto quali animali alleva il contadino?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto gli animali che trovi nello stagno. <break time='1000ms'/>Io ti ho chiesto quali animali alleva il contadino?",
@@ -2329,6 +2513,8 @@
                                 },
                                 {
                                     "audio": "4_14",
+                                    "audio_comp": "D4_14_Comp_audio",
+                                    "audio_distr": "D4_14_Distr_audio",
                                     "text": "Quali strumenti usa il pittore?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto gli strumenti che usa il cuoco.<break time='1000ms'/> Io ti ho chiesto quali strumenti usa il pittore?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto gli strumenti che usa la parrucchiera.<break time='1000ms'/> Io ti ho chiesto quali strumenti usa il pittore?",
@@ -2339,6 +2525,8 @@
                                 },
                                 {
                                     "audio": "4_15",
+                                    "audio_comp": "D4_15_Comp_audio",
+                                    "audio_distr": "D4_15_Distr_audio",
                                     "text": "Quali verdure mangia il coniglio?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto i cibi che mangia il signore.<break time='1000ms'/> Io ti ho chiesto quali cibi mangia il coniglio?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto i cibi che mangia il bambino. <break time='1000ms'/>Io ti ho chiesto quali cibi mangia il coniglio?",
@@ -2349,6 +2537,8 @@
                                 },
                                 {
                                     "audio": "4_16",
+                                    "audio_comp": "D4_16_Comp_audio",
+                                    "audio_distr": "D4_16_Distr_audio",
                                     "text": "Quali persone insegue il poliziotto?",
                                     "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto le persone che cantano. <break time='1000ms'/> Io ti ho chiesto quali persone cattura il poliziotto?",
                                     "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto le persone che coltivano i fiori. <break time='1000ms'/>Io ti ho chiesto quali persone cattura il poliziotto?",
@@ -3235,6 +3425,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_1",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Questa è la storia di Giulia, la dottoressa",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3245,6 +3437,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_2",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Giulia la dottoressa guarda la TV",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3255,6 +3449,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_3",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Al telegiornale dicono che Alessandro il calciatore ha vinto il premio come miglior giocatore d'Italia",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3265,6 +3461,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_4",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Giulia la dottoressa vuole incontrare Alessandro il calciatore!",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3275,6 +3473,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_5",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Allora, Giulia va allo stadio",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3285,6 +3485,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_6",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Davanti allo stadio, <break time='800ms'/>  ci sono dei tifosi e delle ragazze pon pon",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3295,6 +3497,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_7",
+                                                "audio_comp": "R_2_1_7_Comp_audio",
+                                                "audio_distr": "R_2_1_7_Distr_audio",
                                                 "text": "Prima Giulia vede i tifosi che salutano la ragazza pon pon",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Questa è la ragazza pon pon che saluta i tifosi. <break time='1000ms'/> Io ti ho chiesto i tifosi che salutano la ragazza pon pon",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto il tifoso che saluta le ragazze pon pon. <break time='1000ms'/> Io ti ho chiesto i tifosi che salutano la ragazza pon pon",
@@ -3305,6 +3509,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_8",
+                                                "audio_comp": "R_2_1_8_Comp_audio",
+                                                "audio_distr": "R_2_1_8_Distr_audio",
                                                 "text": "Giusto! <break time='800ms'/>  Giulia vede i tifosi che salutano la ragazza pon pon.  <break time='800ms'/> Poi, Giulia tocca la ragazza pon pon che i tifosi indicano",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Questa è la ragazza pon pon che indica i tifosi. <break time='1000ms'/> Io ti ho chiesto la ragazza pon pon che i tifosi indicano",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto le ragazze pon pon che il tifoso saluta. <break time='1000ms'/> Io ti ho chiesto la ragazza pon pon che i tifosi indicano",
@@ -3315,6 +3521,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_9",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Giusto!  <break time='800ms'/> Giulia tocca la ragazza pon pon che i tifosi indicano.  <break time='800ms'/> \"Hai visto il calciatore Alessandro?\" Chiede Giulia alla ragazza pon pon",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3325,6 +3533,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_10",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "\"Guarda vicino all'edicola\", risponde",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3335,6 +3545,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_11",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Vicino all'edicola ci sono delle fotografe e dei giornalisti",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3345,6 +3557,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_12",
+                                                "audio_comp": "R_2_1_12_Comp_audio",
+                                                "audio_distr": "R_2_1_12_Distr_audio",
                                                 "text": "Prima Giulia vede il giornalista che è seguito dalle fotografe",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Questo è il giornalista che segue le fotografe. <break time='1000ms'/> Io ti ho chiesto il giornalista che è seguito dalle fotografe",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto i giornalisti che sono inseguiti dalla fotografa. <break time='1000ms'/> Io ti ho chiesto il giornalista che è seguito dalle fotografe",
@@ -3355,6 +3569,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_13",
+                                                "audio_comp": "R_2_1_13_Comp_audio",
+                                                "audio_distr": "R_2_1_13_Distr_audio",
                                                 "text": "Giusto!  <break time='800ms'/> Giulia vede il giornalista che è seguito dalle fotografe.  <break time='800ms'/> Poi, Giulia chiama le fotografe che il giornalista rincorre",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Queste sono le fotografe che rincorrono il giornalista. <break time='1000ms'/> Io ti ho chiesto le fotografe che il giornalista rincorre",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto la fotografa che i giornalisti rincorrono. <break time='1000ms'/> Io ti ho chiesto le fotografe che il giornalista rincorre",
@@ -3365,6 +3581,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_14",
+                                                "audio_comp": "R_2_1_14_Comp_audio",
+                                                "audio_distr": "R_2_1_14_Distr_audio",
                                                 "text": "Giusto! <break time='800ms'/> Giulia chiama le fotografe che il giornalista rincorre.  <break time='800ms'/> Allora, Giulia sgrida la fotografa che spinge i giornalisti",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione!  <break time='800ms'/> Questi sono i giornalisti che spingono la fotografa.  <break time='1000ms'/> Io ti ho chiesto la fotografa che spinge i giornalisti",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto le fotografe che spingono il giornalista.<break time='1000ms'/>  Io ti ho chiesto la fotografa che spinge i giornalisti",
@@ -3375,6 +3593,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_15",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Giusto!  <break time='800ms'/> Giulia sgrida la fotografa che spinge i giornalisti.  <break time='800ms'/> \"Avete visto il giocatore Alessandro?\" Chiede Giulia ai giornalisti",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3385,6 +3605,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_16",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "\"Guarda dentro gli spogliatoi\", rispondono i giornalisti",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3395,6 +3617,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_17",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Negli spogliatoi ci sono degli arbitri e delle poliziotte",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3405,6 +3629,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_18",
+                                                "audio_comp": "R_2_1_18_Comp_audio",
+                                                "audio_distr": "R_2_1_18_Distr_audio",
                                                 "text": "Prima Giulia osserva l'arbitro che le poliziotte bagnano",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione!  <break time='800ms'/> Questo è l'arbitro che bagna le poliziotte.  <break time='1000ms'/>  Io ti ho chiesto l'arbitro che le poliziotte bagnano",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto gli arbitri che la poliziotta bagna. <break time='1000ms'/> Io ti ho chiesto l'arbitro che le poliziotte bagnano",
@@ -3415,6 +3641,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_19",
+                                                "audio_comp": "R_2_1_19_Comp_audio",
+                                                "audio_distr": "R_2_1_19_Distr_audio",
                                                 "text": "Giusto!  <break time='800ms'/>  Giulia osserva l'arbitro che le poliziotte bagnano.  <break time='800ms'/> Poi, Giulia ferma la poliziotta che è rincorsa dagli arbitri",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione!  <break time='800ms'/> Questa è la poliziotta che rincorre gli arbitri.  <break time='1000ms'/>  Io ti ho chiesto la poliziotta che è rincorsa dagli arbitri",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto le poliziotte che sono rincorse dall'arbitro.<break time='1000ms'/>  Io ti ho chiesto la poliziotta che è rincorsa dagli arbitri",
@@ -3425,6 +3653,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_20",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Giusto!  <break time='800ms'/>  Giulia ferma la poliziotta che è rincorsa dagli arbitri. <break time='800ms'/>  \"Avete visto il calciatore Alessandro?\" Chiede Giulia alle poliziotte",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3435,6 +3665,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_21",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "\"Guarda sul campo da calcio\", rispondono",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3445,6 +3677,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_22",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Sul campo da calcio ci sono delle maestre e dei bambini",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3455,6 +3689,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_23",
+                                                "audio_comp": "R_2_1_23_Comp_audio",
+                                                "audio_distr": "R_2_1_23_Distr_audio",
                                                 "text": "Prima Giulia guarda il bambino che è sollevato dalle maestre",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Questo è il bambino che solleva le maestre.<break time='1000ms'/>  Io ti ho chiesto il bambino che è sollevato dalle maestre",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto i bambini che sono sollevati dalla maestra.<break time='1000ms'/> Io ti ho chiesto il bambino che è sollevato dalle maestre",
@@ -3465,6 +3701,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_24",
+                                                "audio_comp": "R_2_1_24_Comp_audio",
+                                                "audio_distr": "R_2_1_24_Distr_audio",
                                                 "text": "Giusto!  <break time='800ms'/>  Giulia guarda il bambino che è sollevato dalle maestre.  <break time='800ms'/> Poi, Giulia tocca la maestra che rincorre i bambini",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione!  <break time='800ms'/> Questi sono i bambini che rincorrono la mestra . <break time='1000ms'/>  Io ti ho chiesto la maestra che rincorre i bambini",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto le maestre che rincorrono il bambino.  <break time='1000ms'/> Io ti ho chiesto la maestra che rincorre i bambini",
@@ -3475,6 +3713,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_25",
+                                                "audio_comp": "R_2_1_25_Comp_audio",
+                                                "audio_distr": "R_2_1_25_Distr_audio",
                                                 "text": "Giusto!  <break time='800ms'/>  Giulia tocca la maestra che rincorre i bambini.  <break time='800ms'/> Allora, Giulia saluta le maestre che il bambino sporca",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>  Queste sono le maestre che sporcano il bambino.  <break time='1000ms'/>  Io ti ho chiesto le maestre che il bambino sporca",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto la mestra che i bambini sporcano. <break time='1000ms'/> Io ti ho chiesto le maestre che il bambino sporca",
@@ -3485,6 +3725,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_26",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Giusto!  <break time='800ms'/>   Giulia saluta le maestre che il bambino sporca.  <break time='800ms'/>  \"Hai visto il calciatore Alessandro?\" Chiede Giulia ad un bambino",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3495,6 +3737,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_27",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "\"Guarda davanti al pullman\",  <break time='800ms'/> dice il bambino",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3505,6 +3749,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_28",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Davanti il pullman ci sono delle calciatrici e dei postini",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3515,6 +3761,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_29",
+                                                "audio_comp": "R_2_1_29_Comp_audio",
+                                                "audio_distr": "R_2_1_29_Distr_audio",
                                                 "text": "Prima Giulia osserva la calciatrice che è legata dai postini",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Questa è la calciatrice che lega i postini. <break time='1000ms'/> Io ti ho chiesto la calciatrice che è legata dai postini",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto le calciatrici che sono legate dal postino. <break time='1000ms'/> Io ti ho chiesto la calciatrice che è legata dai postini",
@@ -3525,6 +3773,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_30",
+                                                "audio_comp": "R_2_1_30_Comp_audio",
+                                                "audio_distr": "R_2_1_30_Distr_audio",
                                                 "text": "Giusto! <break time='800ms'/>  Giulia osserva la calciatrice che è legata dai postini.  <break time='800ms'/> Poi, Giulia chiama il postino che le calciatrici inseguono",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione!  <break time='800ms'/> Questo è il postino che insegue le calciatrici. <break time='1000ms'/> Io ti ho chiesto il postino che le calciatrici inseguono",
                                                 "text_distr":"*QT/emotions/sad*Fai attenzione! <break time='800ms'/>Tu hai scelto i postini che la calciatrice insegue. <break time='1000ms'/> Io ti ho chiesto il postino che le calciatrici inseguono",
@@ -3535,6 +3785,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_31",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Giusto!  <break time='800ms'/> Giulia chiama il postino che le calciatrici inseguono.  <break time='800ms'/> \"Hai visto il calciatore Alessandro?\" Chiede Giulia a una calciatrice",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3545,6 +3797,8 @@
                                             },
                                             {
                                                 "audio": "R_2_1_32",
+                                                "audio_comp": "",
+                                                "audio_distr": "",
                                                 "text": "Ma la calciatrice non ha visto il calciatore Alessandro,  <break time='800ms'/> allora Giulia triste torna a casa.",
                                                 "text_comp":"",
                                                 "text_distr":"",
@@ -3588,6 +3842,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_1",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Ti ricordi,  <break time='800ms'/> questa è la storia di Giulia la dottoressa",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3598,6 +3854,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_2",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Giulia la dottoressa vuole incontrare Alessandro il calciatore",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3608,6 +3866,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_3",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Giulia la dottoressa non si arrende e cerca Alessandro in piazza",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3618,6 +3878,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_4",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "in piazza ci sono delle maestre e delle fioriste",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3628,6 +3890,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_5",
+                                                "audio_comp": "R_2_2_5_Comp_audio",
+                                                "audio_distr": "R_2_2_5_Distr_audio",
                                                 "text": "Prima Giulia vede la maestra che saluta le fioriste",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Queste sono le fioriste che salutano la maestra. <break time='1000ms'/> Io ti ho chiesto la maestra che saluta le fioriste",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto le maestre che salutano la fiorista. <break time='1000ms'/> Io ti ho chiesto la maestra che saluta le fioriste",
@@ -3638,6 +3902,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_6",
+                                                "audio_comp": "R_2_2_6_Comp_audio",
+                                                "audio_distr": "R_2_2_6_Distr_audio",
                                                 "text": "Giusto!  <break time='800ms'/> Giulia vede la maestra che saluta le fioriste . <break time='800ms'/>  Poi, Giulia osserva le fioriste che sono spinte dalla maestra",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Queste sono le fioriste che spingono la maestra. <break time='1000ms'/> Io ti ho chiesto le fioriste che sono spinte dalla maestra",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto la fiorista che è spinta dalle maestre. <break time='1000ms'/> Io ti ho chiesto le fioriste che sono spinte dalla maestra",
@@ -3648,6 +3914,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_7",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Giusto! <break time='800ms'/>  Giulia osserva le fioriste che sono spinte dalla maestra. <break time='800ms'/> \"Avete visto il calciatore Alessandro?\" Chiede Giulia alle fioriste",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3658,6 +3926,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_8",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "\"Guarda vicino alla statua\",  <break time='800ms'/> rispondono",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3668,6 +3938,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_9",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Vicino alla statua ci sono dei piloti e dei contadini",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3678,6 +3950,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_10",
+                                                "audio_comp": "R_2_2_10_Comp_audio",
+                                                "audio_distr": "R_2_2_10_Distr_audio",
                                                 "text": "Prima Giulia chiama i contadini che sono seguiti dal pilota",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Questi sono i contadini che seguono il pilota. <break time='1000ms'/> Io ti ho chiesto i contadini che sono seguiti dal pilota",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto il contadino che è inseguito dai piloti. <break time='1000ms'/>  Io ti ho chiesto i contadini che sono seguiti dal pilota",
@@ -3688,6 +3962,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_11",
+                                                "audio_comp": "R_2_2_11_Comp_audio",
+                                                "audio_distr": "R_2_2_11_Distr_audio",
                                                 "text": "Giusto! <break time='800ms'/>  Giulia chiama i contadini che sono seguiti dal pilota.  <break time='800ms'/> Poi Giulia ferma il pilota che i contadini bagnano",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Questo è il pilota che bagna i contadini. <break time='1000ms'/> Io ti ho chiesto il pilota che i contadini bagnano",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto i piloti che il contadino bagna. <break time='1000ms'/> Io ti ho chiesto il pilota che i contadini bagnano",
@@ -3698,6 +3974,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_12",
+                                                "audio_comp": "R_2_2_12_Comp_audio",
+                                                "audio_distr": "R_2_2_12_Distr_audio",
                                                 "text": "Giusto!  <break time='800ms'/> Giulia ferma il pilota che i contadini bagnano. <break time='800ms'/>  Allora, Giulia guarda i piloti che legano il contadino",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione!  <break time='800ms'/> Questo è il contadino che lega i piloti.  <break time='1000ms'/> Io ti ho chiesto i piloti che legano il contadino",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto il pilota che lega i contadini.<break time='1000ms'/>  Io ti ho chiesto i piloti che legano il contadino",
@@ -3708,6 +3986,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_13",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Giusto!  <break time='800ms'/> Giulia guarda i piloti che legano il contadino.  <break time='800ms'/> \"Hai visto il calciatore Alessandro?\" Chiede Giulia ad un pilota",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3718,6 +3998,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_14",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "\"Guarda davanti alla fontana\"",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3728,6 +4010,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_15",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Davanti alla fontana ci sono delle pittrici e delle ballerine",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3738,6 +4022,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_16",
+                                                "audio_comp": "R_2_2_16_Comp_audio",
+                                                "audio_distr": "R_2_2_16_Distr_audio",
                                                 "text": "Prima Giulia saluta la pittrice che le ballerine sprocano",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Questa è la pittrice che sporca le ballerine. <break time='1000ms'/> Io ti ho chiesto la pittrice che le ballerine sporcano",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto le pittrici che la ballerina sporca.<break time='1000ms'/>  Io ti ho chiesto la pittrice che le ballerine sporcano",
@@ -3748,6 +4034,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_17",
+                                                "audio_comp": "R_2_2_17_Comp_audio",
+                                                "audio_distr": "R_2_2_17_Distr_audio",
                                                 "text": "Giusto!  <break time='800ms'/> Giulia saluta la pittrice che le ballerine sporcano.  <break time='800ms'/> Poi Giulia tocca le ballerine che inseguono la pittrice",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione!  <break time='800ms'/> Questa è la pittrice che insegue le ballerine. <break time='1000ms'/>  Io ti ho chiesto le ballerine che inseguono la pittrice",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto la ballerina che insegue le pittrici.<break time='1000ms'/>  Io ti ho chiesto le ballerine che inseguono la pittrice",
@@ -3758,6 +4046,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_18",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Giusto!  <break time='800ms'/> Giulia tocca le ballerine che inseguono la pittrice. <break time='800ms'/>  \"Avete visto il calciatore Alessandro?\" Chiede Giulia a tutte quante",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3768,6 +4058,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_19",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "\"Guarda sotto il lampione\", rispodono",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3778,6 +4070,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_20",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Sotto il lampione ci sono dei pescatori e dei cowboy",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3788,6 +4082,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_21",
+                                                "audio_comp": "R_2_2_21_Comp_audio",
+                                                "audio_distr": "R_2_2_21_Distr_audio",
                                                 "text": "Prima Giulia vede due cowboy che sono rincorsi da un pescatore",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione!  <break time='800ms'/> Questi sono i cowboy che rincorrono un pescatore.<break time='1000ms'/>  Io ti ho chiesto i cowboy che sono rincorsi da un pescatore",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto il cowboy che è rincorso dai pescatori.<break time='1000ms'/>  Io ti ho chiesto i cowboy che sono rincorsi da un pescatore",
@@ -3798,6 +4094,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_22",
+                                                "audio_comp": "R_2_2_22_Comp_audio",
+                                                "audio_distr": "R_2_2_22_Distr_audio",
                                                 "text": "Giusto!  <break time='800ms'/> Giulia vede i cowboy che sono rincorsi da un pescatore.  <break time='800ms'/> Poi Giulia guarda il pescatore che i cowboy toccano",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione!  <break time='800ms'/> Questo è il pescatore che tocca i cowboy.  <break time='1000ms'/>  Io ti ho chiesto il pescatore che i cowboy toccano",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Tu hai scelto i pescatori che il cowboy tocca.<break time='1000ms'/>  Io ti ho chiesto il pescatore che i cowboy toccano",
@@ -3808,6 +4106,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_23",
+                                                "audio_comp": "R_2_2_23_Comp_audio",
+                                                "audio_distr": "R_2_2_23_Distr_audio",
                                                 "text": "Giusto!  <break time='800ms'/> Giulia guarda il pescatore che i cowboy toccano.  <break time='800ms'/> Allora Giulia tocca il cowboy che solleva i pescatori",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione!  <break time='800ms'/> Questi sono i pescatori che sgridano il cowboy. <break time='1000ms'/>  Io ti ho chiesto il cowboy che sgrida i pescatori",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto i cowboy che sgridano il pescatore.  <break time='1000ms'/> Io ti ho chiesto il cowboy che sgrida i pescatori",
@@ -3818,6 +4118,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_24",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Giusto!  <break time='800ms'/> Giulia tocca  il cowboy che sgrida i pescatori.  <break time='800ms'/> \"Avete visto il calciatore Alessandro?\" Chiede Giulia ai pescatori",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3828,6 +4130,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_25",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "\"Guarda di fianco al bar\"",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3838,6 +4142,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_26",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Di fianco al bar ci sono delle parrucchiere e delle cameriere",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3848,6 +4154,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_27",
+                                                "audio_comp": "R_2_2_27_Comp_audio",
+                                                "audio_distr": "R_2_2_27_Distr_audio",
                                                 "text": "Prima Giulia chiama le cameriere che la parrucchiera fotografa",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione!<break time='800ms'/> Queste sono le cameriere che fotografano la parrucchiera.<break time='1000ms'/>  Io ti ho chiesto le cameriere che la parrucchiera fotografa",
                                                 "text_distr":"*QT/emotions/sad* Fai attenzione! <break time='800ms'/>Tu hai scelto la cameriera che le parrucchiere fotografano. <break time='1000ms'/> Io ti ho chiesto le cameriere che la parrucchiera fotografa",
@@ -3858,6 +4166,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_28",
+                                                "audio_comp": "R_2_2_28_Comp_audio",
+                                                "audio_distr": "R_2_2_28_Distr_audio",
                                                 "text": "Giusto! <break time='800ms'/>  Giulia osserva la parrucchiera che è indicata dalle cameriere. <break time='800ms'/>  Poi Giulia osserva la parrucchiera che è indicata dalle cameriere",
                                                 "text_comp":"*QT/emotions/sad* Fai attenzione!  <break time='800ms'/> Questa è la parrucchiera che indica le cameriere. <break time='1000ms'/> Io ti ho chiesto la parrucchiera che è indicata dalle cameriere",
                                                 "text_distr":"*QT/emotions/sad*Fai attenzione! <break time='800ms'/>Tu hai scelto le parrucchiere che sono indicate dalla cameriera. <break time='1000ms'/> Io ti ho chiesto la parrucchiera che è indicata dalle cameriere",
@@ -3868,6 +4178,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_29",
+                                                "audio_comp": "Prova_Ancora",
+                                                "audio_distr": "Prova_Ancora",
                                                 "text": "Giusto!  <break time='800ms'/> Giulia osserva la parrucchiera che è indicata dalle cameriere. <break time='800ms'/> \"Avete visto il calciatore Alessandro?\" chiede Giulia alle fotografe",
                                                 "text_comp":"*QT/emotions/sad* Prova ancora.",
                                                 "text_distr":"*QT/emotions/sad* Riprova!",
@@ -3878,6 +4190,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_30",
+                                                "audio_comp": "",
+                                                "audio_distr": "",
                                                 "text": "\"Sì, eccolo lì\"",
                                                 "text_comp":"",
                                                 "text_distr":"",
@@ -3888,6 +4202,8 @@
                                             },
                                             {
                                                 "audio": "R_2_2_31",
+                                                "audio_comp": "",
+                                                "audio_distr": "",
                                                 "text": "Giulia si gira e finalmente vede il calciatore Alessandro seduto sulla panchina.",
                                                 "text_comp":"",
                                                 "text_distr":"",
