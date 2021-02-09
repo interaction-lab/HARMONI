@@ -19,6 +19,7 @@ import boto3
 import re
 import json
 import ast
+import os
 import sys
 
 
@@ -42,30 +43,30 @@ class AWSTtsService(HarmoniServiceManager):
         return
 
     def setup_aws_tts(self):
-        try:
-            self.tts = boto3.client("polly", region_name=self.region_name)
-            self.vis_transl = {
-                "p": "BILABIAL",
-                "f": "LABIODENTAL",
-                "T": "INTERDENTAL",
-                "s": "DENTAL_ALVEOLAR",
-                "t": "DENTAL_ALVEOLAR",
-                "S": "POSTALVEOLAR",
-                "r": "POSTALVEOLAR",
-                "J": "POSTALVEOLAR",
-                "k": "VELAR_GLOTTAL",
-                "i": "CLOSE_FRONT_VOWEL",
-                "u": "CLOSE_BACK_VOWEL",
-                "@": "MID_CENTRAL_VOWEL",
-                "a": "OPEN_FRONT_VOWEL",
-                "e": "OPEN_FRONT_VOWEL",
-                "E": "OPEN_FRONT_VOWEL",
-                "o": "OPEN_BACK_VOWEL",
-                "O": "OPEN_BACK_VOWEL",
-                "sil": "IDLE",
-            }
-        except:
-            sys.exit()
+        rospy.loginfo("Wait for connection")
+        self.wait_for_internet_connection()
+        rospy.loginfo("Connected")
+        self.tts = boto3.client("polly", region_name=self.region_name)
+        self.vis_transl = {
+            "p": "BILABIAL",
+            "f": "LABIODENTAL",
+            "T": "INTERDENTAL",
+            "s": "DENTAL_ALVEOLAR",
+            "t": "DENTAL_ALVEOLAR",
+            "S": "POSTALVEOLAR",
+            "r": "POSTALVEOLAR",
+            "J": "POSTALVEOLAR",
+            "k": "VELAR_GLOTTAL",
+            "i": "CLOSE_FRONT_VOWEL",
+            "u": "CLOSE_BACK_VOWEL",
+            "@": "MID_CENTRAL_VOWEL",
+            "a": "OPEN_FRONT_VOWEL",
+            "e": "OPEN_FRONT_VOWEL",
+            "E": "OPEN_FRONT_VOWEL",
+            "o": "OPEN_BACK_VOWEL",
+            "O": "OPEN_BACK_VOWEL",
+            "sil": "IDLE",
+        }
         return
 
     def split_text(self, text):
@@ -203,6 +204,14 @@ class AWSTtsService(HarmoniServiceManager):
             "behavior_data": str(behaviours),
         }
         return str(response)
+
+    def wait_for_internet_connection(self):
+        hostname = "google.com"  
+        response = os.system("ping -c 1 " + hostname)
+        if response==0:
+            return
+        else:
+            self.wait_for_internet_connection()
 
     def request(self, input_text):
         rospy.loginfo("Start the %s request" % self.name)
