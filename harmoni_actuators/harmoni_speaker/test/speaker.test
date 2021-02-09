@@ -1,4 +1,3 @@
-<!-- This is an example launch file for how a ROS application could use a node -->
 <launch>
     <include file="$(find audio_play)/launch/play.launch">
         <arg name="do_timestamp" value = "false"/> 
@@ -9,6 +8,6 @@
     <param name="name_speaker" value="speaker"/>
     <node pkg="harmoni_speaker" type="speaker_service.py" name="harmoni_speaker_default" output="screen"/>
 
-	<param name="test_speaker_input" value="/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/temp_data/tts.wav"/>
+	<param name="test_speaker_input" value="$(find harmoni_tts)/temp_data/tts.wav"/>
     <test test-name="test_speaker" pkg="harmoni_speaker" type="rostest_speaker.py" />
 </launch>

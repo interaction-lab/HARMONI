@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
 # Common Imports
-import rospy
-import roslib
+import rospy, rospkg, roslib
 
 from harmoni_common_lib.constants import State, ActuatorNameSpace
 from harmoni_common_lib.service_server import HarmoniServiceServer
@@ -35,6 +34,7 @@ class SpeakerService(HarmoniServiceManager):
         super().__init__(name)
         self.audio_publisher = rospy.Publisher("/audio/audio", AudioData, queue_size=1,)
         self.state = State.INIT
+        self.rospack = rospkg.RosPack()
         return
 
     def do(self, data):
@@ -86,7 +86,7 @@ class SpeakerService(HarmoniServiceManager):
         if "http" in path:
             url = path
             print('Beginning file download with wget module')
-            file_handle = '/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_speaker/temp_data/test.wav'
+            file_handle = self.rospack.get_path('harmoni_speaker') + '/temp_data/test.wav'
             wget.download(url, file_handle)
         data = np.fromfile(file_handle, np.uint8)[24:]  # Loading wav file
         data = data.astype(np.uint8).tostring()

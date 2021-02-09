@@ -37,6 +37,7 @@ class TestSpeaker(unittest.TestCase):
         rospy.Subscriber("/harmoni_speaker_default/status", GoalStatus, self.status_cb)
         rospy.Subscriber("/harmoni_speaker_default/result", harmoniResult, self.result_cb)
         rospy.loginfo("TestSpeaker: Started up. waiting for speaker startup")
+        rospy.sleep(1) #TODO implement non-magic wait for audio_play node to initialize.
         rospy.loginfo("TestSpeaker: Started")
 
     def feedback_cb(self, data):
@@ -61,7 +62,6 @@ class TestSpeaker(unittest.TestCase):
         assert(self.result == True)
 
 def main():
-    #TODO convert to a test suite so that setup doesn't have to run over and over.
     import rostest
     rospy.loginfo("test_speaker started")
     rospy.loginfo("TestSpeaker: sys.argv: %s" % str(sys.argv))
