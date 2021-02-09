@@ -242,6 +242,7 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
             elif data =="distr":
                 tts_data = self.sequence_scenes["tasks"][index]["text_distr"]
                 audio_data = self.sequence_scenes["tasks"][index]["audio_distr"]
+                
             if self.type_web=="full":
                 optional_data = {"tts_default": "<prosody rate='slow'>"+tts_data+"</prosody>", "speaker_default": self.url_snd+audio_data+"_robot.wav" , "web_page_default":"[{'component_id':'main_img_full', 'set_content':'"+self.url_img + self.sequence_scenes["tasks"][index]["main_img"]+".png'},{'component_id':'target_img_"+self.type_web+"', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["third_img"]+".png'},{'component_id':'comp_img_"+self.type_web+"', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["first_img"]+".png'},{'component_id':'distr_img_"+self.type_web+"', 'set_content':'"+self.url_img +self.sequence_scenes["tasks"][index]["second_img"]+".png'}, {'component_id':'multiple_choice_"+self.type_web+"_container', 'set_content':''}]"}
             elif self.type_web=="choices":

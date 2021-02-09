@@ -17,13 +17,23 @@
                     "wait_for": "new"
                 }
             },
+            [
                 {
                     "web_face_mouth_default": {
                         "action_goal": "DO",
                         "resource_type": "actuator",
                         "wait_for": ""
                     }
-                },
+                }
+                ,
+                {
+                    "gesture_default": {
+                        "action_goal": "DO",
+                        "resource_type": "actuator",
+                        "wait_for": ""
+                    }
+                }
+            ],
                 {
                     "speaker_default": {
                         "action_goal": "DO",
