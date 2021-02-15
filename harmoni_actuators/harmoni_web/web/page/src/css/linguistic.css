@@ -7,6 +7,19 @@
   }
 
 
+#start_button{
+  width: 60%;
+}
+
+#sr_2{
+  width: 20%;
+}
+
+
+#sr{
+  width: 60%;
+}
+
 #insert_code, #idle_div{
     text-align: center;
     margin: 15vmin 0 15vmin 0;

@@ -72,11 +72,6 @@ function record(){
             interim_transcript += event.results[i][0].transcript;
           }
         }
-        showInfo(final_transcript)
-        if (final_transcript!=""){
-            var body={transcript:final_transcript}
-            user_response_publisher.publish({data: JSON.stringify(body)})
-        }
       };
     }
 }
@@ -91,7 +86,11 @@ function startButton(event) {
     console.log("Start Button clicked")
   if (recognizing) {
     recognition.stop();
-    
+    showInfo(final_transcript)
+    if (final_transcript!=""){
+      var body={transcript:final_transcript}
+      user_response_publisher.publish({data: JSON.stringify(body)})
+    }
     return;
   }
   final_transcript = '';

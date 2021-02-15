@@ -4231,7 +4231,7 @@
                             "intro": {
                                 "audio": "Ret_0",
                                 "img": "background",
-                                "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti racconterà una storia facendoti vedere delle immagini su tablet *QT/show_tablet*. <break time='800ms'/> Alla fine tu dovrai raccontarmela meglio che puoi, ricordandoti tutte le cose che ti ho detto. <break time='800ms'/> Quando la storia sarà finita vedrai sullo schermo un piccolo pulsante con un microfono schiacciarlo e comincia a raccontare la storia.<break time='800ms'/> Iniziamo."
+                                "text": "<break time='2000ms'/>*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti racconterà una storia facendoti vedere delle immagini su tablet *QT/show_tablet*. <break time='800ms'/> Alla fine tu dovrai raccontarmela meglio che puoi, ricordandoti tutte le cose che ti ho detto. <break time='800ms'/> Quando la storia sarà finita vedrai sullo schermo un piccolo pulsante con un microfono schiacciarlo e comincia a raccontare la storia.<break time='800ms'/> Iniziamo."
                             },
                             "tasks": [
                                 {
@@ -4356,7 +4356,7 @@
                             "intro": {
                                 "audio": "Ret_0",
                                 "img": "background",
-                                "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti racconterà una storia facendoti vedere delle immagini su tablet *QT/show_tablet*. <break time='800ms'/> Alla fine tu dovrai raccontarmela meglio che puoi, ricordandoti tutte le cose che ti ho detto.<break time='800ms'/>  Quando la storia sarà finita vedrai sullo schermo un piccolo pulsante con un microfono schiacciarlo e comincia a raccontare la storia. <break time='800ms'/> Iniziamo."
+                                "text": "<break time='2000ms'/>*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti racconterà una storia facendoti vedere delle immagini su tablet *QT/show_tablet*. <break time='800ms'/> Alla fine tu dovrai raccontarmela meglio che puoi, ricordandoti tutte le cose che ti ho detto.<break time='800ms'/>  Quando la storia sarà finita vedrai sullo schermo un piccolo pulsante con un microfono schiacciarlo e comincia a raccontare la storia. <break time='800ms'/> Iniziamo."
                             },
                             "tasks": [
                                 {
@@ -4485,7 +4485,7 @@
                             "intro": {
                                 "audio": "Ret_0",
                                 "img": "background",
-                                "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti racconterà una storia facendoti vedere delle immagini su tablet *QT/show_tablet*. <break time='800ms'/> Alla fine tu dovrai raccontarmela meglio che puoi, ricordandoti tutte le cose che ti ho detto.<break time='800ms'/>  Quando la storia sarà finita vedrai sullo schermo un piccolo pulsante con un microfono schiacciarlo e comincia a raccontare la storia. <break time='800ms'/> Iniziamo."
+                                "text": "<break time='2000ms'/>*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti racconterà una storia facendoti vedere delle immagini su tablet *QT/show_tablet*. <break time='800ms'/> Alla fine tu dovrai raccontarmela meglio che puoi, ricordandoti tutte le cose che ti ho detto.<break time='800ms'/>  Quando la storia sarà finita vedrai sullo schermo un piccolo pulsante con un microfono schiacciarlo e comincia a raccontare la storia. <break time='800ms'/> Iniziamo."
                             },
                             "tasks": [
                                 {
@@ -4610,7 +4610,7 @@
                             "intro": {
                                 "audio": "Ret_0",
                                 "img": "background",
-                                "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti racconterà una storia facendoti vedere delle immagini su tablet *QT/show_tablet*. <break time='800ms'/> Alla fine tu dovrai raccontarmela meglio che puoi, ricordandoti tutte le cose che ti ho detto.<break time='800ms'/>  Quando la storia sarà finita vedrai sullo schermo un piccolo pulsante con un microfono schiacciarlo e comincia a raccontare la storia. <break time='800ms'/> Iniziamo."
+                                "text": "<break time='2000ms'/>*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti racconterà una storia facendoti vedere delle immagini su tablet *QT/show_tablet*. <break time='800ms'/> Alla fine tu dovrai raccontarmela meglio che puoi, ricordandoti tutte le cose che ti ho detto.<break time='800ms'/>  Quando la storia sarà finita vedrai sullo schermo un piccolo pulsante con un microfono schiacciarlo e comincia a raccontare la storia. <break time='800ms'/> Iniziamo."
                             },
                             "tasks": [
                                 {
