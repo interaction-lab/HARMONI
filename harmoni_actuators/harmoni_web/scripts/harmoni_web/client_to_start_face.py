@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import rospy
+import os
 from std_srvs.srv import Trigger
 
 if __name__ == "__main__":
@@ -12,3 +13,4 @@ if __name__ == "__main__":
         print(response)
     except Exception:
         print("Service call failed")
+        os.system("pkill init")
