@@ -22,7 +22,7 @@
                                         "intro": {
                                             "audio": "intro_gioco",
                                             "img": "background",
-                                            "text": "*QT/bye* Ciao facciamo un gioco. Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. Iniziamo."
+                                            "text": "<break time='2000ms'/>*QT/bye* Ciao facciamo un gioco. Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. Iniziamo."
                                         },
                                         "tasks": [
                                             {
@@ -271,7 +271,7 @@
                                         "intro": {
                                             "audio": "intro_gioco",
                                             "img": "background",
-                                            "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo."
+                                            "text": "<break time='2000ms'/>*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo."
                                         },
                                         "tasks": [
                                             {
@@ -532,7 +532,7 @@
                                         "intro": {
                                             "audio": "intro_gioco",
                                             "img": "background",
-                                            "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo."
+                                            "text": "<break time='2000ms'/>*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo."
                                         },
                                         "tasks": [
                                             {
@@ -884,7 +884,7 @@
                                         "intro": {
                                             "audio": "intro_gioco",
                                             "img": "background",
-                                            "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo."
+                                            "text": "<break time='2000ms'/>*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo."
                                         },
                                         "tasks": [
                                             {
@@ -1133,7 +1133,7 @@
                                         "intro": {
                                             "audio": "intro_gioco",
                                             "img": "background",
-                                            "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo."
+                                            "text": "<break time='2000ms'/>*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo."
                                         },
                                         "tasks": [
                                             {
@@ -1394,7 +1394,7 @@
                                         "intro": {
                                             "audio": "intro_gioco",
                                             "img": "background",
-                                            "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo."
+                                            "text": "<break time='2000ms'/> *QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo."
                                         },
                                         "tasks": [
                                             {
@@ -1740,7 +1740,7 @@
                             "intro": {
                                 "audio": "intro_gioco",
                                 "img": "background",
-                                "text": "*QT/bye* Ciao facciamo un gioco. Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. Iniziamo."
+                                "text": "<break time='2000ms'/>*QT/bye* Ciao facciamo un gioco. Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. Iniziamo."
                             },
                             "tasks": [
                                 {
@@ -1944,7 +1944,7 @@
                             "intro": {
                                 "audio": "intro_gioco",
                                 "img": "background",
-                                "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo."
+                                "text": "<break time='2000ms'/>*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo."
                             },
                             "tasks": [
                                 {
@@ -2148,7 +2148,7 @@
                             "intro": {
                                 "audio": "intro_gioco",
                                 "img": "background",
-                                "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini.<break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito.<break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo.<break time='800ms'/> Iniziamo."
+                                "text": "<break time='2000ms'/>*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini.<break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito.<break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo.<break time='800ms'/> Iniziamo."
                             },
                             "tasks": [
                                 {
@@ -2352,7 +2352,7 @@
                             "intro": {
                                 "audio": "intro_gioco",
                                 "img": "background",
-                                "text": "*QT/bye* Ciao facciamo un gioco. Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. Iniziamo."
+                                "text": "<break time='2000ms'/>*QT/bye* Ciao facciamo un gioco. Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. Iniziamo."
                             },
                             "tasks": [
                                 {
@@ -2574,7 +2574,7 @@
                                         "intro": {
                                             "audio": "intro_gioco",
                                             "img": "background",
-                                            "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo."
+                                            "text": "<break time='2000ms'/>*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo."
                                         },
                                         "tasks": [
                                             {
@@ -2991,7 +2991,7 @@
                                         "intro": {
                                             "audio": "intro_gioco",
                                             "img": "background",
-                                            "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo."
+                                            "text": "<break time='2000ms'/>*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo."
                                         },
                                         "tasks": [
                                             {
@@ -3408,7 +3408,7 @@
                                         "intro": {
                                             "audio": "intro_gioco",
                                             "img": "background",
-                                            "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo."
+                                            "text": "<break time='2000ms'/>*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo."
                                         },
                                         "tasks": [
                                             {
@@ -3825,7 +3825,7 @@
                                         "intro": {
                                             "audio": "intro_gioco",
                                             "img": "background",
-                                            "text": "*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo."
+                                            "text": "<break time='2000ms'/>*QT/bye* Ciao facciamo un gioco. <break time='800ms'/> Ti farò ascoltare delle frasi, e davanti a te sul tablet *QT/show_tablet* appariranno alcune immagini. <break time='800ms'/> Ascoltami con attenzione e trova la figura corrispondente alla frase che hai sentito. <break time='800ms'/> Quando avrai scelto la figura cliccaci sopra, e aspetta qualche secondo. <break time='800ms'/> Iniziamo."
                                         },
                                         "tasks": [
                                             {

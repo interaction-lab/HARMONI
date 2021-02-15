@@ -12,7 +12,9 @@
     margin: 15vmin 0 15vmin 0;
 }
 
-
+#sentence_repetition_container{
+  overflow-y: scroll;
+}
 
 .overlay{
     position: fixed;
