@@ -92,8 +92,8 @@ class WebService(HarmoniServiceManager):
                 rospy.loginfo(self.result_msg)
                 rospy.loginfo(self.end_listening)
                 while not rospy.is_shutdown() and not self.end_listening:
-                    rospy.loginfo("Waiting for user")
-                    if self.result_msg!="":
+                    rospy.loginfo(f"Waiting for user, the results is: {self.result_msg}")
+                    if self.end_listening:
                         break
                     rospy.sleep(1)
                 rospy.loginfo(
@@ -173,6 +173,7 @@ class WebService(HarmoniServiceManager):
         """Callback for subscription to the web page"""
         rospy.loginfo("Received an event from the webpage")
         print(event.data)
+        self.end_listening=True
         if isinstance(event.data, str):
             data = ast.literal_eval(event.data)
         # self.result_msg = str(event)[2:-2]
