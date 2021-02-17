@@ -12,15 +12,17 @@ import harmoni_common_lib.helper_functions as hf
 # Specific Imports
 from audio_common_msgs.msg import AudioData
 import numpy as np
-import wget
+# import wget
 import contextlib
 import ast
 import wave
+import os
 
 class SpeakerService(HarmoniServiceManager):
-    """This is a class representation of a harmoni_dialogue service
+    """This is a class representation of a harmoni_speaker service
     (HarmoniServiceManager). It is essentially an extended combination of the
-    :class:`harmoni_common_lib.service_server.HarmoniServiceServer` and :class:`harmoni_common_lib.service_manager.HarmoniServiceManager` classes
+    :class:`harmoni_common_lib.service_server.HarmoniServiceServer` 
+    and :class:`harmoni_common_lib.service_manager.HarmoniServiceManager` classes
 
     :param name: Name of the current service
     :type name: str
@@ -38,7 +40,9 @@ class SpeakerService(HarmoniServiceManager):
         return
 
     def do(self, data):
-        """[summary]
+        """Publishes audio to the "/audio/audio" topic for the sound_play module
+
+        Converts input audio from bytes or a local/network path to an audio msg.
 
         Args:
             data (str): This could be a string of:
@@ -52,7 +56,7 @@ class SpeakerService(HarmoniServiceManager):
         try:
             if type(data) == str:
                 if ".wav" in data:
-                    data = self.wav_to_data(data)
+                    data = self.file_path_to_audio_data(data)
                     duration = data["duration"]
                 else:
                     data = ast.literal_eval(data)
@@ -69,8 +73,9 @@ class SpeakerService(HarmoniServiceManager):
             self.actuation_completed = True
         return({"response": self.state})
 
-    def wav_to_data(self, path):
-        """[summary]
+    def file_path_to_audio_data(self, path):
+        """Returns audio data from a local path or internet link
+        TODO: Add wget to docker image 
 
         Args:
             path (string): string of:
@@ -87,7 +92,7 @@ class SpeakerService(HarmoniServiceManager):
             url = path
             print('Beginning file download with wget module')
             file_handle = self.rospack.get_path('harmoni_speaker') + '/temp_data/test.wav'
-            wget.download(url, file_handle)
+            # wget.download(url, file_handle)
         data = np.fromfile(file_handle, np.uint8)[24:]  # Loading wav file
         data = data.astype(np.uint8).tostring()
         with contextlib.closing(wave.open(file_handle,'r')) as f:
