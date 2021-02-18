@@ -123,19 +123,19 @@ class MicrophoneService(HarmoniServiceManager):
         """
         rospy.loginfo("The %s is listening" % self.name)
         while not rospy.is_shutdown():
-            try:
-                if self.state == State.START:
-                    latest_audio_data = self.stream.read(
-                        self.chunk_size, exception_on_overflow=False
-                    )
-                    raw_audio_bitstream = np.fromstring(latest_audio_data, np.uint8)
-                    raw_audio = raw_audio_bitstream.tolist()
-                    self.raw_mic_pub.publish(raw_audio)  # Publishing raw AudioData
-                else:
-                    break
-            except Exception as e:
-                self.state = State.FAILED
-                rospy.loginfo("Caught the following exception" + e)
+            if self.state == State.START:
+                latest_audio_data = self.stream.read(
+                    self.chunk_size, exception_on_overflow=False
+                )
+                raw_audio_bitstream = np.fromstring(latest_audio_data, np.uint8)
+                raw_audio = raw_audio_bitstream.tolist()
+                self.raw_mic_pub.publish(raw_audio)  # Publishing raw AudioData
+            else:
+                break
+        # try:
+        # except Exception as e:
+        #     self.state = State.FAILED
+        #     rospy.loginfo("Caught the following exception")
 
         rospy.loginfo("Shutting down")
         return
@@ -187,20 +187,21 @@ class MicrophoneService(HarmoniServiceManager):
 
 
 def main():
-    # Set names, collect params, and give service to server
+    """Set names, collect params, and give service to server"""
 
     service_name = SensorNameSpace.microphone.name  # microphone
     instance_id = rospy.get_param("instance_id")  # default
+    service_id = f"{service_name}_{instance_id}"
+
     try:
         rospy.init_node(service_name)
 
-        # microphone/default_param
-        param = rospy.get_param(service_name + "/" + instance_id + "_param/")
+        # microphone/default_param/[all your params]
+        params = rospy.get_param(service_name + "/" + instance_id + "_param/")
 
-        service = hf.get_service_server_instance_id(service_name, instance_id)
-        s = MicrophoneService(service, param)
+        s = MicrophoneService(service_id, params)
 
-        service_server = HarmoniServiceServer(name=service, service_manager=s)
+        service_server = HarmoniServiceServer(service_id, s)
 
         service_server.start_sending_feedback()
         rospy.spin()

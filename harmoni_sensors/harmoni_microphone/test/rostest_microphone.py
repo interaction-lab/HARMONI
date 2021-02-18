@@ -94,6 +94,12 @@ class TestMicrophone(unittest.TestCase):
         # rospy.sleep(5)
         # assert self.result == False, "Mic should be off by now"
 
+    def test_recording(self):
+        # TODO use microphone service recording functionality
+        # either through an import ant test or may add optional data
+        # which specifies recording
+        pass
+
 
 def main():
     import rostest
