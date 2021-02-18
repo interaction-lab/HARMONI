@@ -12,16 +12,18 @@ import harmoni_common_lib.helper_functions as hf
 # Specific Imports
 from audio_common_msgs.msg import AudioData
 import numpy as np
+
 # import wget
 import contextlib
 import ast
 import wave
 import os
 
+
 class SpeakerService(HarmoniServiceManager):
     """This is a class representation of a harmoni_speaker service
     (HarmoniServiceManager). It is essentially an extended combination of the
-    :class:`harmoni_common_lib.service_server.HarmoniServiceServer` 
+    :class:`harmoni_common_lib.service_server.HarmoniServiceServer`
     and :class:`harmoni_common_lib.service_manager.HarmoniServiceManager` classes
 
     :param name: Name of the current service
@@ -31,10 +33,13 @@ class SpeakerService(HarmoniServiceManager):
     """
 
     def __init__(self, name):
-        """Constructor method: Initialization of variables and lex parameters + setting up
-        """
+        """Constructor method: Initialization of variables and lex parameters + setting up"""
         super().__init__(name)
-        self.audio_publisher = rospy.Publisher("/audio/audio", AudioData, queue_size=1,)
+        self.audio_publisher = rospy.Publisher(
+            "/audio/audio",
+            AudioData,
+            queue_size=1,
+        )
         self.state = State.INIT
         self.rospack = rospkg.RosPack()
         return
@@ -48,7 +53,7 @@ class SpeakerService(HarmoniServiceManager):
             data (str): This could be a string of:
                             - audio data
                             - path of local wav file
-                            - link of wav audio file you want to download and heard from 
+                            - link of wav audio file you want to download and heard from
         """
         duration = 0
         self.state = State.REQUEST
@@ -71,11 +76,11 @@ class SpeakerService(HarmoniServiceManager):
             rospy.logwarn("Speaker failed: Audio appears too busy")
             self.state = State.FAILED
             self.actuation_completed = True
-        return({"response": self.state})
+        return {"response": self.state}
 
     def file_path_to_audio_data(self, path):
         """Returns audio data from a local path or internet link
-        TODO: Add wget to docker image 
+        TODO: Add wget to docker image
 
         Args:
             path (string): string of:
@@ -90,12 +95,14 @@ class SpeakerService(HarmoniServiceManager):
         file_handle = path
         if "http" in path:
             url = path
-            print('Beginning file download with wget module')
-            file_handle = self.rospack.get_path('harmoni_speaker') + '/temp_data/test.wav'
+            print("Beginning file download with wget module")
+            file_handle = (
+                self.rospack.get_path("harmoni_speaker") + "/temp_data/test.wav"
+            )
             # wget.download(url, file_handle)
         data = np.fromfile(file_handle, np.uint8)[24:]  # Loading wav file
         data = data.astype(np.uint8).tostring()
-        with contextlib.closing(wave.open(file_handle,'r')) as f:
+        with contextlib.closing(wave.open(file_handle, "r")) as f:
             frames = f.getnframes()
             rate = f.getframerate()
             duration = frames / float(rate)
@@ -111,7 +118,7 @@ def main():
     test_id = rospy.get_param("/test_id_" + service_name + "/")
     try:
         rospy.init_node(service_name)
-        service = hf.set_service_server(service_name, test_id)
+        service = hf.get_service_server_instance_id(service_name, test_id)
         s = SpeakerService(service)
         service_server = HarmoniServiceServer(name=service, service_manager=s)
         service_server.start_sending_feedback()

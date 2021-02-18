@@ -109,7 +109,7 @@ def get_all_repos():
     return repo_list
 
 
-def set_service_server(service_name, input_id):
+def get_service_server_instance_id(service_name, input_id):
     # FIXME this doesn't actually set anything, it gets a service server instance id. Change the name and all that call it.
     """Set the service server name """
     name = ""

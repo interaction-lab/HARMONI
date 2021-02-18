@@ -393,7 +393,7 @@ def main():
         if not hf.check_if_id_exist(service_name, test_id):
 
             return
-        service = hf.set_service_server(service_name, test_id)
+        service = hf.get_service_server_instance_id(service_name, test_id)
         s_eyes = EyesService(service + "_eyes_" + test_id, param_eyes)
         s_mouth = MouthService(service + "_mouth_" + test_id, param_mouth)
         service_server_eyes = HarmoniServiceServer(

@@ -26,8 +26,7 @@ class AWSLexService(HarmoniServiceManager):
     """
 
     def __init__(self, name, param):
-        """Constructor method: Initialization of variables and lex parameters + setting up
-        """
+        """Constructor method: Initialization of variables and lex parameters + setting up"""
         super().__init__(name)
         """ Initialization of variables and lex parameters """
         self.user_id = param["user_id"]
@@ -39,8 +38,7 @@ class AWSLexService(HarmoniServiceManager):
         return
 
     def setup_aws_lex(self):
-        """[summary] Setup the lex request, connecting to AWS services
-        """
+        """[summary] Setup the lex request, connecting to AWS services"""
         self.lex_client = boto3.client("lex-runtime", region_name=self.region_name)
         return
 
@@ -58,7 +56,7 @@ class AWSLexService(HarmoniServiceManager):
         rospy.loginfo("Start the %s request" % self.name)
         self.state = State.REQUEST
         textdata = input_text
-        result = {"response": False, "message":None}
+        result = {"response": False, "message": None}
         try:
             lex_response = self.lex_client.post_content(
                 botName=self.bot_name,
@@ -69,15 +67,17 @@ class AWSLexService(HarmoniServiceManager):
                 inputStream=textdata,
             )
             rospy.loginfo(f"The lex response is {lex_response}")
-            if lex_response["ResponseMetadata"]["HTTPStatusCode"]==200:
+            if lex_response["ResponseMetadata"]["HTTPStatusCode"] == 200:
                 self.state = State.SUCCESS
                 if "intentName" in lex_response:
                     if lex_response["dialogState"] == "Fulfilled":
-                        rospy.loginfo("The dialogue is fulfilled, end the conversation.")
+                        rospy.loginfo(
+                            "The dialogue is fulfilled, end the conversation."
+                        )
                 rospy.loginfo("The response is %s" % (lex_response["message"]))
                 self.response_received = True
                 self.result_msg = lex_response["message"]
-            else: 
+            else:
                 self.start = State.FAILED
                 rospy.loginfo("Service call failed")
                 self.response_received = True
@@ -87,7 +87,7 @@ class AWSLexService(HarmoniServiceManager):
             rospy.loginfo("Service call failed")
             self.response_received = True
             self.result_msg = ""
-        return {"response": self.state, "message":self.result_msg}
+        return {"response": self.state, "message": self.result_msg}
 
 
 def main():
@@ -100,7 +100,7 @@ def main():
     try:
         rospy.init_node(service_name)
         param = rospy.get_param(name + "/" + test_id + "_param/")
-        service = hf.set_service_server(service_name, test_id)
+        service = hf.get_service_server_instance_id(service_name, test_id)
         s = AWSLexService(service, param)
         service_server = HarmoniServiceServer(name=service, service_manager=s)
         service_server.start_sending_feedback()

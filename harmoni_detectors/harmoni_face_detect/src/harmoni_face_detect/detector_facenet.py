@@ -165,7 +165,7 @@ def main():
         if not hf.check_if_id_exist(service_name, test_id):
 
             return
-        service = hf.set_service_server(service_name, test_id)
+        service = hf.get_service_server_instance_id(service_name, test_id)
         s = FacenetFaceDetector(service, param)
         service_server = HarmoniServiceServer(name=service, service_manager=s)
         if test:

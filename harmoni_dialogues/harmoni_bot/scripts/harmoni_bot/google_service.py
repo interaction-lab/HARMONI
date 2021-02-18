@@ -22,8 +22,7 @@ class GoogleService(HarmoniServiceManager):
     """
 
     def __init__(self, name, param):
-        """Constructor method: Initialization of variables and lex parameters + setting up
-        """
+        """Constructor method: Initialization of variables and lex parameters + setting up"""
         super().__init__(name)
         rospy.loginfo("Google initializing")
         self.name = name
@@ -69,13 +68,15 @@ class GoogleService(HarmoniServiceManager):
             )
 
             self.state = State.SUCCESS
-            rospy.loginfo("The response is %s" % (google_response.query_result.fulfillment_text))
+            rospy.loginfo(
+                "The response is %s" % (google_response.query_result.fulfillment_text)
+            )
             self.response_received = True
             self.result_msg = google_response.query_result.fulfillment_text
         except rospy.ServiceException:
             self.start = State.FAILED
             rospy.loginfo("Service call failed")
-        return {"response": self.response_received, "message":self.result_msg}
+        return {"response": self.response_received, "message": self.result_msg}
 
 
 def main():
@@ -90,7 +91,7 @@ def main():
     try:
         rospy.init_node(service_name)
         param = rospy.get_param(name + "/" + test_id + "_param/")
-        service = hf.set_service_server(service_name, test_id)
+        service = hf.get_service_server_instance_id(service_name, test_id)
         s = GoogleService(service, param)
         service_server = HarmoniServiceServer(name=service, service_manager=s)
         if test:

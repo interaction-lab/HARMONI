@@ -11,7 +11,7 @@ import harmoni_common_lib.helper_functions as hf
 
 
 # Specific Imports
-#from qt_gesture_controller.srv import *
+# from qt_gesture_controller.srv import *
 from std_msgs.msg import String, Bool
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Header
@@ -24,6 +24,7 @@ from threading import Timer
 import datetime
 import dateutil.relativedelta
 
+
 class QTSimulatorJoint(HarmoniServiceManager):
     """
     Simulator Joints publisher service
@@ -34,7 +35,7 @@ class QTSimulatorJoint(HarmoniServiceManager):
         super().__init__(name)
         self.joint_message = JointState()
         self.joint_message.header = Header()
-        self.gesture= []
+        self.gesture = []
         """ Setup Params """
         self.name = name
         self.rate = rospy.Rate(param["rate"])
@@ -54,7 +55,9 @@ class QTSimulatorJoint(HarmoniServiceManager):
             self._get_joint_state_cb,
             queue_size=1,
         )
-        self.command_sub = rospy.Subscriber(self.gesture_topic, String, self.command_cb, queue_size = 1)
+        self.command_sub = rospy.Subscriber(
+            self.gesture_topic, String, self.command_cb, queue_size=1
+        )
         self.joint_pub = rospy.Publisher(
             "simulated_joints",
             JointState,
@@ -64,28 +67,26 @@ class QTSimulatorJoint(HarmoniServiceManager):
         self.state = State.INIT
         return
 
-
     def command_cb(self, data):
         """Get command"""
         command = data.data
         self._parse_gesture(command)
-            
+
     def get_files(self, dirName):
-    	# create a list of file and sub directories 
-    	# names in the given directory 
+        # create a list of file and sub directories
+        # names in the given directory
         listOfFile = os.listdir(dirName)
         allFiles = list()
         # Iterate over all the entries
         for entry in listOfFile:
-                # Create full path
-                fullPath = os.path.join(dirName, entry)
-                # If entry is a directory then get the list of files in this directory 
-                if os.path.isdir(fullPath):
-                        allFiles = allFiles + self.get_files(fullPath)
-                else:
-                        allFiles.append(fullPath)            
-        return allFiles  
-
+            # Create full path
+            fullPath = os.path.join(dirName, entry)
+            # If entry is a directory then get the list of files in this directory
+            if os.path.isdir(fullPath):
+                allFiles = allFiles + self.get_files(fullPath)
+            else:
+                allFiles.append(fullPath)
+        return allFiles
 
     def _get_joint_state_cb(self, data):
         "Get initial state"
@@ -95,7 +96,6 @@ class QTSimulatorJoint(HarmoniServiceManager):
             self.joint_message.velocity = data.velocity
             self.joint_message.effort = data.effort
             self.talker()
-            
 
     def talker(self):
         if self.joint_message.name != []:
@@ -113,11 +113,12 @@ class QTSimulatorJoint(HarmoniServiceManager):
                 self.joint_message.position[index] = joint["position"]
                 self.joint_pub.publish(self.joint_message)
 
-    def _parse_gesture(self,command):
+    def _parse_gesture(self, command):
         start_command = False
         all_files = self.get_files(self.path)
         for filename in all_files:
-            if not filename.endswith('.xml'): continue
+            if not filename.endswith(".xml"):
+                continue
             fullname = filename
             tree = ET.parse(fullname)
             root = tree.getroot()
@@ -128,20 +129,34 @@ class QTSimulatorJoint(HarmoniServiceManager):
                         start_command = True
             if start_command:
                 array = list(root.iter("point"))
-                for idx in range(0,len(array)):
+                for idx in range(0, len(array)):
                     start_command = False
-                    time_start = int(array[idx].get('time'))
-                    dt1 = datetime.datetime.fromtimestamp(time_start/1000000000, tz=datetime.timezone.utc)
-                    if idx != len(array)-1:
-                        time_plus = int(array[idx+1].get('time'))
-                        dt2 = datetime.datetime.fromtimestamp(time_plus/1000000000, tz=datetime.timezone.utc)
-                        delta_time = dateutil.relativedelta.relativedelta (dt2, dt1)
-                        delta_sec = delta_time.microseconds/1000000
+                    time_start = int(array[idx].get("time"))
+                    dt1 = datetime.datetime.fromtimestamp(
+                        time_start / 1000000000, tz=datetime.timezone.utc
+                    )
+                    if idx != len(array) - 1:
+                        time_plus = int(array[idx + 1].get("time"))
+                        dt2 = datetime.datetime.fromtimestamp(
+                            time_plus / 1000000000, tz=datetime.timezone.utc
+                        )
+                        delta_time = dateutil.relativedelta.relativedelta(dt2, dt1)
+                        delta_sec = delta_time.microseconds / 1000000
                         for el in array[idx]:
                             if "Head" in el.tag:
-                                self.gesture.append({"name":el.tag, "position": math.radians(int(float(el.text)))})
+                                self.gesture.append(
+                                    {
+                                        "name": el.tag,
+                                        "position": math.radians(int(float(el.text))),
+                                    }
+                                )
                             else:
-                                self.gesture.append({"name":el.tag, "position": int(float(el.text))/100})
+                                self.gesture.append(
+                                    {
+                                        "name": el.tag,
+                                        "position": int(float(el.text)) / 100,
+                                    }
+                                )
                         t = Timer(delta_sec, self._update_joint)
                         t.start()
                         start_time = rospy.Time.now()
@@ -149,14 +164,23 @@ class QTSimulatorJoint(HarmoniServiceManager):
                     else:
                         for el in array[idx]:
                             if "Head" in el.tag:
-                                self.gesture.append({"name":el.tag, "position": math.radians(int(float(el.text)))})
+                                self.gesture.append(
+                                    {
+                                        "name": el.tag,
+                                        "position": math.radians(int(float(el.text))),
+                                    }
+                                )
                             else:
-                                self.gesture.append({"name":el.tag, "position": int(float(el.text))/100})
+                                self.gesture.append(
+                                    {
+                                        "name": el.tag,
+                                        "position": int(float(el.text)) / 100,
+                                    }
+                                )
                         t = Timer(self.time_interval, self._update_joint)
                         t.start()
                         start_time = rospy.Time.now()
-                    self.gesture= []
-                    
+                    self.gesture = []
 
 
 def main():
@@ -166,11 +190,11 @@ def main():
     test_input = rospy.get_param("/test_input_" + service_name + "/")
     test_id = rospy.get_param("/test_id_" + service_name + "/")
     try:
-        rospy.init_node(service_name+"_"+name+"_simulator")
+        rospy.init_node(service_name + "_" + name + "_simulator")
         param = rospy.get_param(name + "/" + test_id + "_param/")
-        service = hf.set_service_server(service_name, test_id)
-        s = QTSimulatorJoint(service+"_"+name+"_simulator", param)
-        #service_server = HarmoniServiceServer(name=service, service_manager=s)
+        service = hf.get_service_server_instance_id(service_name, test_id)
+        s = QTSimulatorJoint(service + "_" + name + "_simulator", param)
+        # service_server = HarmoniServiceServer(name=service, service_manager=s)
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
