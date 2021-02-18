@@ -28,6 +28,8 @@ class AWSTtsService(HarmoniServiceManager):
     """
 
     def __init__(self, name, param):
+        """Constructor method: Initialization of variables and polly parameters + setting up
+        """
         super().__init__(name)
         """ Initialization of variables and tts parameters """
         self.region_name = param["region_name"]
@@ -42,6 +44,8 @@ class AWSTtsService(HarmoniServiceManager):
         return
 
     def _setup_aws_tts(self):
+        """[summary] Setup the tts polly request, connecting to AWS services
+        """
         self.tts = boto3.client("polly", region_name=self.region_name)
         self.vis_transl = {
             "p": "BILABIAL",
@@ -65,7 +69,14 @@ class AWSTtsService(HarmoniServiceManager):
         return
 
     def _split_text(self, text):
-        """Split too long sentence: handle by the Behavior Controller """
+        """[summary]
+        Split long sentences
+        Args:
+            text (str): Sentence to be synthetised
+
+        Returns:
+            text_array (list): array which containes the part of the text splitted
+        """
         if "." in text:
             text_array = text.split(".")
         else:
@@ -74,14 +85,28 @@ class AWSTtsService(HarmoniServiceManager):
         return text_array
 
     def _split_behaviors(self, s):
-        """Split the text from the behaviors """
+        """[summary]
+        Split the text from the behaviors
+        Args:
+            s (str): input text
+
+        Returns:
+            list: list of splitted text and actions
+        """
         if len(s) >= 2 and s[-1] == "*" and s[0] == "*":
             return [s]
         else:
             return re.split("\s+", s)
 
     def _get_text_and_actions(self, sentence):
-        """Get text and actions from the sentence """
+        """[summary]
+        Get text and actions from the sentence
+        Args:
+            sentence (str): Input text before requesting
+
+        Returns:
+            (phrase, actions): Get the text and the action 
+        """
         tokens = re.split("(\*[^\*\*]*\*)", sentence)
         phrase = "".join(list(filter(lambda s: "*" not in s, tokens)))
         rospy.loginfo("Processing the phrase: %s" % phrase)
@@ -101,7 +126,16 @@ class AWSTtsService(HarmoniServiceManager):
         return (phrase, actions)
 
     def _get_behaviors(self, response, actions):
-        """Processing the response from AWS Polly and get the behaviors"""
+        """[summary]
+        Processing the response from AWS Polly and get the behaviors
+        Args:
+            response (json): Response from Polly service which contains information about word timing, duration, and visemes
+            actions (json): Collects the actions in the text (words into stars **: gesture and facial expressions)
+
+        Returns:
+            data (json): It contains all the data including words and actions information 
+        """
+
         xSheet = []
         if "AudioStream" in response:
             with closing(response["AudioStream"]) as stream:
@@ -166,7 +200,14 @@ class AWSTtsService(HarmoniServiceManager):
         return data
 
     def _get_audio(self, response):
-        """Get audio data from AWS Polly """
+        """[summary]
+        This function writes the audio file getting data from Polly
+        Args:
+            response (obj): response from amazon Polly for getting audio data
+
+        Returns:
+            data: audio data
+        """
         data = {}
         data["file"] = self.outdir + "/tts.ogg"
         if "AudioStream" in response:
@@ -181,8 +222,18 @@ class AWSTtsService(HarmoniServiceManager):
             print("Could not stream audio")
         return data
 
-    def _get_response(self, behavior_data, audio_data):
-        """ Get final response """
+    def _get_response(self, behavior_data):
+        """[summary]
+
+        Args:
+            behavior_data (json): json containing behavior data (visemes, facial expressions, and gestures) and audio data (audio_frame, and audio_data)
+
+        Returns:
+            response (str): it is a object stringified which contained information about
+                audio_frame (int)
+                audio_data (str): string of audio data array
+                behavior_data (str): string of behaviors
+        """
         behaviours = list(sorted(behavior_data, key=lambda i: i["start"]))
         data, samplerate = sf.read(self.outdir + "/tts.ogg")
         sf.write(self.outdir + "/tts.wav", data, samplerate)
@@ -201,6 +252,15 @@ class AWSTtsService(HarmoniServiceManager):
         return str(response)
 
     def request(self, input_text):
+        """[summary]
+
+        Args:
+            input_text (str): Input string to synthetize
+        Returns:
+            object: It containes information about the response received (bool) and response message (str)
+                response: bool
+                message: str
+        """
         rospy.loginfo("Start the %s request" % self.name)
         self.state = State.REQUEST
         text = input_text
@@ -228,7 +288,7 @@ class AWSTtsService(HarmoniServiceManager):
                 VoiceId=self.voice,
             )
             audio_data = self._get_audio(ogg_response)
-            tts_response = self._get_response(behavior_data, audio_data)
+            tts_response = self._get_response(behavior_data)
             self.state = State.SUCCESS
             self.response_received = True
             self.result_msg = tts_response
@@ -242,6 +302,9 @@ class AWSTtsService(HarmoniServiceManager):
 
 
 def main():
+    """[summary]
+    Main function for starting HarmoniPolly service
+    """
     service_name = ActuatorNameSpace.tts.name
     name = rospy.get_param("/name_" + service_name + "/")
     test_id = rospy.get_param("/test_id_" + service_name + "/")
