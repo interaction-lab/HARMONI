@@ -37,13 +37,7 @@ class MicrophoneService(HarmoniServiceManager):
         self.chunk_size = param["chunk_size"]
         self.total_channels = param["total_channels"]
         self.audio_rate = param["audio_rate"]
-        self.silence_limit_seconds = param["silence_limit_seconds"]
-        self.previous_audio_seconds = param["previous_audio_seconds"]
-        self.total_silence_samples = param["total_silence_samples"]
-        self.silence_threshold = param["silence_threshold"]
-        self.loudest_sound_value = param["loudest_sound_value"]
         self.device_name = param["device_name"]
-        self.set_threshold = param["set_threshold"]
         self.file_path = param["test_outdir"]
 
         self.first_audio_frame = True  # When recording, the first frame is special
@@ -126,11 +120,14 @@ class MicrophoneService(HarmoniServiceManager):
         return
 
     def read_stream_and_publish(self):
-        """Listening from the microphone """
+        """Continously publish audio data from the microphone
+
+        While state is START publish audio
+        """
         rospy.loginfo("The %s is listening" % self.name)
         while not rospy.is_shutdown():
             try:
-                if self.state != State.FAILED:
+                if self.state == State.START:
                     latest_audio_data = self.stream.read(
                         self.chunk_size, exception_on_overflow=False
                     )
@@ -193,14 +190,13 @@ class MicrophoneService(HarmoniServiceManager):
 
 
 def main():
-    service_name = SensorNameSpace.microphone.name
-    name = rospy.get_param("/name_" + service_name + "/")
-    instance_id = rospy.get_param("/instance_id_" + service_name + "/")
+    service_name = SensorNameSpace.microphone.name  # microphone
+    instance_id = rospy.get_param("instance_id")
     try:
         rospy.init_node(service_name)
 
-        param = rospy.get_param(name + "/" + instance_id + "_param/")
-
+        # microphone/default_param
+        param = rospy.get_param(service_name + "/" + instance_id + "_param/")
         if not hf.check_if_id_exist(service_name, instance_id):
             return
 
