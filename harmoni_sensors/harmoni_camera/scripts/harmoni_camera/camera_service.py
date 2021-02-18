@@ -120,9 +120,7 @@ def main():
     try:
         rospy.init_node(service_name)
         param = rospy.get_param(name + "/" + instance_id + "_param/")
-        if not hf.check_if_id_exist(service_name, instance_id):
 
-            return
         service = hf.get_service_server_instance_id(service_name, instance_id)
         s = CameraService(service, param)
         service_server = HarmoniServiceServer(name=service, service_manager=s)

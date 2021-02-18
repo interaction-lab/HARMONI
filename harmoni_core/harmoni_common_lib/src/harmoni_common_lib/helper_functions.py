@@ -110,7 +110,8 @@ def get_all_repos():
 
 
 def get_service_server_instance_id(service_name, input_id):
-    # FIXME this doesn't actually set anything, it gets a service server instance id. Change the name and all that call it.
+    # FIXME this doesn't actually set anything, it gets a service server instance id.
+    # Change the name and all that call it.
     """Set the service server name """
     name = ""
     if _check_if_resources(service_name):
@@ -148,20 +149,3 @@ def _check_if_resources(service):
     if service == "face":
         has_resources = True
     return has_resources
-
-
-def check_if_id_exist(service, selected_id):
-    """Check if the ID of the launching file has been already added to the harmoni_core config file."""
-    exist = False
-    list_service_names = get_child_list(service)
-    service_server_list = []
-    for service in list_service_names:
-        service_id = get_child_id(service)
-        if service_id == selected_id:
-            exist = True
-    if not exist:
-        rospy.logerr(
-            "ERROR: Remember to add your configuration ID also in the harmoni_core config file"
-        )
-        # TODO: Why is it an error to run without this ID being set?
-    return exist

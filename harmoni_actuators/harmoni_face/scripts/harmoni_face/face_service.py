@@ -390,9 +390,7 @@ def main():
         rospy.init_node(service_name)
         param_eyes = rospy.get_param(name + "/" + instance_id + "_param/eyes/")
         param_mouth = rospy.get_param(name + "/" + instance_id + "_param/mouth/")
-        if not hf.check_if_id_exist(service_name, instance_id):
 
-            return
         service = hf.get_service_server_instance_id(service_name, instance_id)
         s_eyes = EyesService(service + "_eyes_" + instance_id, param_eyes)
         s_mouth = MouthService(service + "_mouth_" + instance_id, param_mouth)
