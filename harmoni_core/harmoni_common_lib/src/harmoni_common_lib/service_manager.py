@@ -16,12 +16,12 @@ class HarmoniServiceManager(object):
 
     Children of the service should overwrite the functionality of the parent functions
     with their own logic and functionality. Not all children should overwrite all functions
-    as it wouldn't make sense for a microphone node to 'do' anything. 
+    as it wouldn't make sense for a microphone node to 'do' anything.
 
     """
 
     def __init__(self, name):
-        """ The service setup will instantiate the publishers, subscribers,
+        """The service setup will instantiate the publishers, subscribers,
         class variables and clients.
 
         Args:
@@ -35,14 +35,16 @@ class HarmoniServiceManager(object):
         self.client_results = defaultdict(deque)  # store state of the service
 
     def test(self):
-        """ Tests the setup has successfully completed and the unit is ready to
+        """Tests the setup has successfully completed and the unit is ready to
         be used
         """
         rospy.loginfo(f"Sucessfully reached {self.name}")
         return True
 
     def request(self, rate):
-        """ Make a request of another service, such as a web service
+        """Make a request of another service, such as a web service
+
+        When request returns it should return the result of the request and set status
 
         Raises:
             NotImplementedError: To be used, this function should be overwritten by the child class.
@@ -51,8 +53,10 @@ class HarmoniServiceManager(object):
         return
 
     def do(self, data):
-        """ Will start a atomic action. This could be executing a movement or speech
+        """Will start a atomic action. This could be executing a movement or speech
         For long actions use do()
+
+        When do returns the status should be set to succeeded or failed
 
         Raises:
             NotImplementedError: To be used, this function should be overwritten by the child class.
@@ -61,8 +65,10 @@ class HarmoniServiceManager(object):
         return
 
     def start(self):
-        """ Will start a long running action. This could be reading hardware and publishing
+        """Will start a long running action. This could be reading hardware and publishing
         it to a topic or running a behavior pattern. For atomic actions use do()
+
+        Start actions can be long running or indefinate.
 
         Raises:
             NotImplementedError: To be used, this function should be overwritten by the child class.
@@ -71,7 +77,7 @@ class HarmoniServiceManager(object):
         return
 
     def pause(self):
-        """ Will interupt the long running action, preventing it from continuing until start
+        """Will interupt the long running action, preventing it from continuing until start
         is called again.
 
         Raises:
@@ -81,7 +87,7 @@ class HarmoniServiceManager(object):
         return
 
     def stop(self):
-        """ Will interupt the long running action
+        """Will interupt the long running action
 
         Raises:
             NotImplementedError: To be used, this function should be overwritten by the child class.
@@ -90,11 +96,10 @@ class HarmoniServiceManager(object):
         return
 
     def reset_init(self):
-        """ Resets variables such that if start is called will start from beginning
+        """Resets variables such that if start is called will start from beginning
 
         Raises:
             NotImplementedError: To be used, this function should be overwritten by the child class.
         """
         rospy.logwarn("Class reset not implemented, add a reset to your node")
         return
-

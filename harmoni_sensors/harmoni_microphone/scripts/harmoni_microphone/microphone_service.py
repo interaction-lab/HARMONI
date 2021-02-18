@@ -198,10 +198,14 @@ def main():
     test_id = rospy.get_param("/test_id_" + service_name + "/")
     try:
         rospy.init_node(service_name)
+
         param = rospy.get_param(name + "/" + test_id + "_param/")
+
         if not hf.check_if_id_exist(service_name, test_id):
             return
-        service = hf.set_service_server(service_name, test_id)
+
+        service = hf.get_service_server_instance_id(service_name, test_id)
+
         s = MicrophoneService(service, param)
         service_server = HarmoniServiceServer(name=service, service_manager=s)
         service_server.start_sending_feedback()
