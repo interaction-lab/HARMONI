@@ -66,11 +66,8 @@ class MicrophoneService(HarmoniServiceManager):
         rospy.loginfo("Start the %s service" % self.name)
         if self.state == State.INIT:
             self.state = State.START
-            try:
-                self.open_stream()
-                self.read_stream_and_publish()
-            except Exception:
-                self.state = State.FAILED
+            self._open_stream()
+            self._read_stream_and_publish()
         else:
             rospy.loginfo("Trying to start stream when already started")
             self.state = State.START
@@ -80,7 +77,7 @@ class MicrophoneService(HarmoniServiceManager):
         """Stop the service and close the stream"""
         rospy.loginfo("Stop the %s service" % self.name)
         try:
-            self.close_stream()
+            self._close_stream()
             self.state = State.SUCCESS
         except Exception:
             self.state = State.FAILED
@@ -96,10 +93,10 @@ class MicrophoneService(HarmoniServiceManager):
     def setup_microphone(self):
         """ Setup the microphone """
         rospy.loginfo("Setting up the %s" % self.name)
-        self.get_device_index()  # get index of the input audio device
+        self._get_device_index()  # get index of the input audio device
         return
 
-    def open_stream(self):
+    def _open_stream(self):
         """Open the microphone audio stream with configured params """
         rospy.loginfo("Opening the audio input stream")
 
@@ -113,13 +110,13 @@ class MicrophoneService(HarmoniServiceManager):
         )
         return
 
-    def close_stream(self):
+    def _close_stream(self):
         """ When possibly, the pyaudio stream object should be closed """
         self.stream.stop_stream()
         self.stream.close()
         return
 
-    def read_stream_and_publish(self):
+    def _read_stream_and_publish(self):
         """Continously publish audio data from the microphone
 
         While state is START publish audio
@@ -143,21 +140,21 @@ class MicrophoneService(HarmoniServiceManager):
         rospy.loginfo("Shutting down")
         return
 
-    def get_device_index(self):
+    def _get_device_index(self):
         """
         Find the input audio devices configured in ~/.asoundrc.
         If the device is not found, pyaudio will use your machine default device
         """
         for i in range(self.p.get_device_count()):
             device = self.p.get_device_info_by_index(i)
-            rospy.loginfo(device)
+            # rospy.loginfo(device)
             # rospy.loginfo(f"Found device with name {self.device_name} at index {i}")
             if device["name"] == self.device_name:
                 rospy.loginfo(device)
                 self.input_device_index = i
         return
 
-    def save_data(self):
+    def start_recording_data(self):
         """Init the subscriber to microphone/default for recording audio.
 
         The callback in the subscriber will save the audio to a file
@@ -190,20 +187,21 @@ class MicrophoneService(HarmoniServiceManager):
 
 
 def main():
+    # Set names, collect params, and give service to server
+
     service_name = SensorNameSpace.microphone.name  # microphone
-    instance_id = rospy.get_param("instance_id")
+    instance_id = rospy.get_param("instance_id")  # default
     try:
         rospy.init_node(service_name)
 
         # microphone/default_param
         param = rospy.get_param(service_name + "/" + instance_id + "_param/")
-        if not hf.check_if_id_exist(service_name, instance_id):
-            return
 
         service = hf.get_service_server_instance_id(service_name, instance_id)
-
         s = MicrophoneService(service, param)
+
         service_server = HarmoniServiceServer(name=service, service_manager=s)
+
         service_server.start_sending_feedback()
         rospy.spin()
     except rospy.ROSInterruptException:
