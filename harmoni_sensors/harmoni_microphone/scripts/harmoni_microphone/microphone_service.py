@@ -12,22 +12,25 @@ import harmoni_common_lib.helper_functions as hf
 # Other Imports
 from harmoni_common_lib.constants import SensorNameSpace
 from audio_common_msgs.msg import AudioData
-from collections import deque
-import sys
 import pyaudio
-import math
-import audioop
 import wave
 import numpy as np
-import ast
 
 
 class MicrophoneService(HarmoniServiceManager):
-    """
-    Microphone service
+    """Reads from a microphone and publishes audio data.
+
+    As a sensor service, the microphone is responsible for reading the audio data
+    from a physical microphone and publishing it so that it can be recorded or
+    transcribed by a detector.
+
+    The microphone has many parameters which are set in the configuration.yaml
+
+    The public functions exposed by the microphone include start(), stop(), and pause()
     """
 
     def __init__(self, name, param):
+
         """ Initialization of variables and microphone parameters """
         super().__init__(name)
         self.audio_format_width = param["audio_format_width"]
@@ -42,41 +45,45 @@ class MicrophoneService(HarmoniServiceManager):
         self.device_name = param["device_name"]
         self.set_threshold = param["set_threshold"]
         self.file_path = param["test_outdir"]
-        self.first_audio_frame = True
+
+        self.first_audio_frame = True  # When recording, the first frame is special
+
         self.service_id = hf.get_child_id(self.name)
+
         """ Setup the microphone """
         self.p = pyaudio.PyAudio()
-        self.audio_format = (
-            pyaudio.paInt16
-        )  # How can we trasform it in a input parameter?
+
+        # TODO: How can we trasform audio_format as an a input parameter?
+        self.audio_format = pyaudio.paInt16
         self.stream = None
         self.setup_microphone()
-        """Init the publisher """
-        self.mic_pub = rospy.Publisher(
-            SensorNameSpace.microphone.value + self.service_id + "/talking",
-            AudioData,
-            queue_size=1,
-        )  # Publishing the voice data
-        self.mic_raw_pub = rospy.Publisher(
-            SensorNameSpace.microphone.value + self.service_id, AudioData, queue_size=1
-        )  # Publishing raw_data
+
+        """ Init the publishers """
+        self.microphone_topic = SensorNameSpace.microphone.value + self.service_id
+        self.raw_mic_pub = rospy.Publisher(
+            self.microphone_topic, AudioData, queue_size=1
+        )
+
         self.state = State.INIT
         return
 
-    def start(self, rate=""):
+    def start(self):
+        """Start the microphone stream and publish audio"""
         rospy.loginfo("Start the %s service" % self.name)
         if self.state == State.INIT:
             self.state = State.START
             try:
                 self.open_stream()
-                self.listen()  # Start the microphone service at the INIT
+                self.read_stream_and_publish()
             except Exception:
                 self.state = State.FAILED
         else:
+            rospy.loginfo("Trying to start stream when already started")
             self.state = State.START
         return
 
     def stop(self):
+        """Stop the service and close the stream"""
         rospy.loginfo("Stop the %s service" % self.name)
         try:
             self.close_stream()
@@ -86,6 +93,7 @@ class MicrophoneService(HarmoniServiceManager):
         return
 
     def pause(self):
+        """Set the service to success to stop publishing"""
         rospy.loginfo("Pause the %s service" % self.name)
         self.state = State.SUCCESS
         rospy.sleep(15)
@@ -94,13 +102,13 @@ class MicrophoneService(HarmoniServiceManager):
     def setup_microphone(self):
         """ Setup the microphone """
         rospy.loginfo("Setting up the %s" % self.name)
-        self.get_index_device()  # get index of the input audio device
-        self.determine_silence_threshold(self.set_threshold)
+        self.get_device_index()  # get index of the input audio device
         return
 
     def open_stream(self):
-        """Opening the stream """
+        """Open the microphone audio stream with configured params """
         rospy.loginfo("Opening the audio input stream")
+
         self.stream = self.p.open(
             format=self.audio_format,
             channels=self.total_channels,
@@ -112,19 +120,14 @@ class MicrophoneService(HarmoniServiceManager):
         return
 
     def close_stream(self):
-        """Closing the stream """
+        """ When possibly, the pyaudio stream object should be closed """
         self.stream.stop_stream()
         self.stream.close()
         return
 
-    def listen(self):
+    def read_stream_and_publish(self):
         """Listening from the microphone """
         rospy.loginfo("The %s is listening" % self.name)
-        current_audio = b""
-        chunks_per_second = int(self.audio_rate / self.chunk_size)
-        sliding_window = deque(maxlen=self.silence_limit_seconds * chunks_per_second)
-        prev_audio = deque(maxlen=self.previous_audio_seconds * chunks_per_second)
-        started = False
         while not rospy.is_shutdown():
             try:
                 if self.state != State.FAILED:
@@ -133,55 +136,17 @@ class MicrophoneService(HarmoniServiceManager):
                     )
                     raw_audio_bitstream = np.fromstring(latest_audio_data, np.uint8)
                     raw_audio = raw_audio_bitstream.tolist()
-                    self.mic_raw_pub.publish(raw_audio)  # Publishing raw AudioData
-                    if self.state == State.START:
-                        # Check magnitude of audio
-                        sliding_window.append(
-                            math.sqrt(
-                                abs(
-                                    audioop.avg(
-                                        latest_audio_data, self.audio_format_width
-                                    )
-                                )
-                            )
-                        )
-                        Calibrating = False
-                        if Calibrating:
-                            print_window = str([round(x, 1) for x in sliding_window])
-                            maximum = round(max(sliding_window), 2)
-                            rospy.loginfo("Noises" + print_window + str(maximum))
-                        if any([x > self.silence_threshold for x in sliding_window]):
-                            if not started:
-                                rospy.loginfo("Sound detected...")
-                                started = True
-                            current_audio += latest_audio_data
-                        elif started:
-                            rospy.loginfo("Finished detecting")
-                            all_audio_data = b"".join(prev_audio) + current_audio
-                            self.state = State.SUCCESS
-                            audio_bitstream = np.fromstring(all_audio_data, np.uint8)
-                            audio = audio_bitstream.tolist()
-                            rospy.loginfo("Publish listening data")
-                            self.mic_pub.publish(audio)  # Publishing AudioData of voice
-                            started = False
-                            sliding_window.clear()
-                            prev_audio.clear()
-                            current_audio = b""
-                            rospy.loginfo("Detection sent. Waiting for new audio...")
-                            self.state = State.START
-                        else:
-                            prev_audio.append(latest_audio_data)
-                    else:
-                        rospy.loginfo("not listening")
+                    self.raw_mic_pub.publish(raw_audio)  # Publishing raw AudioData
                 else:
                     break
             except Exception as e:
+                self.state = State.FAILED
                 rospy.loginfo("Caught the following exception" + e)
 
         rospy.loginfo("Shutting down")
         return
 
-    def get_index_device(self):
+    def get_device_index(self):
         """
         Find the input audio devices configured in ~/.asoundrc.
         If the device is not found, pyaudio will use your machine default device
@@ -195,49 +160,24 @@ class MicrophoneService(HarmoniServiceManager):
                 self.input_device_index = i
         return
 
-    def determine_silence_threshold(self, mode):
-        """Determine silence threshold from the mic or setting a constant value """
-        loudest_sound_cohort_size = 0.2
-        silence_threshold_multiplier = 5
-        if mode == "default":
-            self.open_stream()
-            tss = self.total_silence_samples
-            values = [
-                math.sqrt(
-                    abs(
-                        audioop.avg(
-                            self.stream.read(self.chunk_size), self.audio_format_width
-                        )
-                    )
-                )
-                for _ in range(tss)
-            ]
-            values = sorted(values, reverse=True)
-            sum_of_loudest_sounds = sum(values[: int(tss * loudest_sound_cohort_size)])
-            total_samples_in_cohort = int(tss * loudest_sound_cohort_size)
-            average_of_loudest_sounds = sum_of_loudest_sounds / total_samples_in_cohort
-            self.close_stream()
-        elif mode == "constant":
-            average_of_loudest_sounds = self.loudest_sound_value
-        rospy.loginfo("Average audio intensity is " + str(average_of_loudest_sounds))
-        self.silence_threshold = (
-            average_of_loudest_sounds * silence_threshold_multiplier
-        )
-        rospy.loginfo("Silence threshold set to " + str(self.silence_threshold))
-        return
-
     def save_data(self):
-        """Init the subscriber """
+        """Init the subscriber to microphone/default for recording audio.
+
+        The callback in the subscriber will save the audio to a file
+        specified in the configuration yaml.
+        """
+        rospy.loginfo(f"Start recording to {self.file_path}")
+
         self.mic_sub = rospy.Subscriber(
-            "/harmoni/sensing/microphone/default",
+            self.microphone_topic,
             AudioData,
             self._record_audio_data_callback,
             queue_size=1,
-        )  # Publishing the voice data
+        )
         return
 
     def _record_audio_data_callback(self, data):
-        """Callback function to record data"""
+        """Callback function to write data"""
         data = np.fromstring(data.data, np.uint8)
         if self.first_audio_frame:
             self.wf = wave.open(self.file_path, "wb")
@@ -255,27 +195,17 @@ class MicrophoneService(HarmoniServiceManager):
 def main():
     service_name = SensorNameSpace.microphone.name
     name = rospy.get_param("/name_" + service_name + "/")
-    test = rospy.get_param("/test_" + service_name + "/")
-    test_input = rospy.get_param("/test_input_" + service_name + "/")
     test_id = rospy.get_param("/test_id_" + service_name + "/")
     try:
         rospy.init_node(service_name)
         param = rospy.get_param(name + "/" + test_id + "_param/")
         if not hf.check_if_id_exist(service_name, test_id):
-            rospy.logerr(
-                "ERROR: Remember to add your configuration ID also in the harmoni_core config file"
-            )
             return
         service = hf.set_service_server(service_name, test_id)
         s = MicrophoneService(service, param)
         service_server = HarmoniServiceServer(name=service, service_manager=s)
-        if test:
-            rospy.loginfo("Testing the %s" % (service))
-            s.save_data()
-            s.start()
-        else:
-            service_server.start_sending_feedback()
-            rospy.spin()
+        service_server.start_sending_feedback()
+        rospy.spin()
     except rospy.ROSInterruptException:
         pass
 
