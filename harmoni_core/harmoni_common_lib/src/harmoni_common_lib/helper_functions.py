@@ -2,9 +2,9 @@
 
 # Importing the libraries
 import yaml
+import rospy
 import os
 from harmoni_common_lib.constants import (
-    Router,
     DetectorNameSpace,
     SensorNameSpace,
     Resources,
@@ -13,10 +13,6 @@ from harmoni_common_lib.constants import (
 
 PATH_CONFIG = "HARMONI/harmoni_core/harmoni_decision/config/configuration.yaml"
 
-
-def get_routers():
-    router_names = [enum.value for enum in list(Router)]
-    return router_names
 
 def get_child(child_name):
     """Get children name without ids from config file"""
@@ -28,6 +24,7 @@ def get_child(child_name):
         if child_name in repos[repo]:
             child_name = child_name
     return child_name
+
 
 def get_child_list(child_name, resources=True):
     """Get children from config file"""
@@ -53,12 +50,11 @@ def get_child_list(child_name, resources=True):
         for id_child in repos[child_repo][child_name]:
             if resource_array != "" and resources:
                 for r in resource_array:
-                    ids_list.append(
-                        child_name + "_" + r + "_" + id_child
-                    )
+                    ids_list.append(child_name + "_" + r + "_" + id_child)
             else:
                 ids_list.append(child_name + "_" + id_child)
     return ids_list
+
 
 def get_service_list_of_repo(repository):
     """Get children from config file of a specific repo"""
@@ -95,8 +91,8 @@ def get_service_name(repo_service_id):
     """Get name of the child from service"""
     service = repo_service_id.split("_")
     name = ""
-    for i in range(0,len(service)):
-        if not i==0 and not i==len(service)-1:
+    for i in range(0, len(service)):
+        if not i == 0 and not i == len(service) - 1:
             name += service[i]
     print(name)
     return name
@@ -112,19 +108,20 @@ def get_all_repos():
         repo_list.append(repo)
     return repo_list
 
+
 def set_service_server(service_name, input_id):
-    #FIXME this doesn't actually set anything, it gets a service server instance id. Change the name and all that call it.
+    # FIXME this doesn't actually set anything, it gets a service server instance id. Change the name and all that call it.
     """Set the service server name """
     name = ""
     if _check_if_resources(service_name):
-        service_server = get_child(service_name) #child
+        service_server = get_child(service_name)  # child
     else:
         list_service_names = get_child_list(service_name)
         for service in list_service_names:
             service_id = get_child_id(service)
             if service_id == input_id:
-                service_server = service #child_id
-    return (service_server)
+                service_server = service  # child_id
+    return service_server
 
 
 def check_if_detector(service_name):
@@ -162,4 +159,9 @@ def check_if_id_exist(service, selected_id):
         service_id = get_child_id(service)
         if service_id == selected_id:
             exist = True
+    if not exist:
+        rospy.logerr(
+            "ERROR: Remember to add your configuration ID also in the harmoni_core config file"
+        )
+        # TODO: Why is it an error to run without this ID being set?
     return exist
