@@ -385,22 +385,22 @@ def main():
     name = rospy.get_param("/name_" + service_name + "/")
     test = rospy.get_param("/test_" + service_name + "/")
     test_input = rospy.get_param("/test_input_" + service_name + "/")
-    test_id = rospy.get_param("/test_id_" + service_name + "/")
+    instance_id = rospy.get_param("/instance_id_" + service_name + "/")
     try:
         rospy.init_node(service_name)
-        param_eyes = rospy.get_param(name + "/" + test_id + "_param/eyes/")
-        param_mouth = rospy.get_param(name + "/" + test_id + "_param/mouth/")
-        if not hf.check_if_id_exist(service_name, test_id):
+        param_eyes = rospy.get_param(name + "/" + instance_id + "_param/eyes/")
+        param_mouth = rospy.get_param(name + "/" + instance_id + "_param/mouth/")
+        if not hf.check_if_id_exist(service_name, instance_id):
 
             return
-        service = hf.get_service_server_instance_id(service_name, test_id)
-        s_eyes = EyesService(service + "_eyes_" + test_id, param_eyes)
-        s_mouth = MouthService(service + "_mouth_" + test_id, param_mouth)
+        service = hf.get_service_server_instance_id(service_name, instance_id)
+        s_eyes = EyesService(service + "_eyes_" + instance_id, param_eyes)
+        s_mouth = MouthService(service + "_mouth_" + instance_id, param_mouth)
         service_server_eyes = HarmoniServiceServer(
-            name=service + "_eyes_" + test_id, service_manager=s_eyes
+            name=service + "_eyes_" + instance_id, service_manager=s_eyes
         )
         service_server_mouth = HarmoniServiceServer(
-            name=service + "_mouth_" + test_id, service_manager=s_mouth
+            name=service + "_mouth_" + instance_id, service_manager=s_mouth
         )
         if test:
             rospy.loginfo("Testing the %s" % (service + "_mouth"))

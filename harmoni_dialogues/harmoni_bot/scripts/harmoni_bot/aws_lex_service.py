@@ -96,11 +96,11 @@ def main():
     """
     service_name = DialogueNameSpace.bot.name
     name = rospy.get_param("/name_" + service_name + "/")
-    test_id = rospy.get_param("/test_id_" + service_name + "/")
+    instance_id = rospy.get_param("/instance_id_" + service_name + "/")
     try:
         rospy.init_node(service_name)
-        param = rospy.get_param(name + "/" + test_id + "_param/")
-        service = hf.get_service_server_instance_id(service_name, test_id)
+        param = rospy.get_param(name + "/" + instance_id + "_param/")
+        service = hf.get_service_server_instance_id(service_name, instance_id)
         s = AWSLexService(service, param)
         service_server = HarmoniServiceServer(name=service, service_manager=s)
         service_server.start_sending_feedback()

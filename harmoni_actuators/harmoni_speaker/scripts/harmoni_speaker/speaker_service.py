@@ -115,10 +115,10 @@ class SpeakerService(HarmoniServiceManager):
 def main():
     service_name = ActuatorNameSpace.speaker.name
     name = rospy.get_param("/name_" + service_name + "/")
-    test_id = rospy.get_param("/test_id_" + service_name + "/")
+    instance_id = rospy.get_param("/instance_id_" + service_name + "/")
     try:
         rospy.init_node(service_name)
-        service = hf.get_service_server_instance_id(service_name, test_id)
+        service = hf.get_service_server_instance_id(service_name, instance_id)
         s = SpeakerService(service)
         service_server = HarmoniServiceServer(name=service, service_manager=s)
         service_server.start_sending_feedback()

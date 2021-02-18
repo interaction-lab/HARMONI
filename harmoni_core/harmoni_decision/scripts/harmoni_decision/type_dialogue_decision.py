@@ -32,12 +32,12 @@ class TypeDialogueDecisionManager(HarmoniServiceManager):
     This class is a singleton ROS node and should only be instantiated once.
     """
 
-    def __init__(self, name, script, test_id, path, url):
+    def __init__(self, name, script, instance_id, path, url):
         super().__init__(name)
         self.name = name
         self.script = script
         self.url = url
-        self.service_id = test_id
+        self.service_id = instance_id
         self.pattern_script_path = path
         self.index = 0
         self.max_index = 18
@@ -80,7 +80,7 @@ if __name__ == "__main__":
     pattern_name = rospy.get_param("/pattern_name/")
     test = rospy.get_param("/test_" + pattern_name + "/")
     test_input = rospy.get_param("/test_input_" + pattern_name + "/")
-    test_id = rospy.get_param("/test_id_" + pattern_name + "/")
+    instance_id = rospy.get_param("/instance_id_" + pattern_name + "/")
     url = rospy.get_param("/url_" + pattern_name + "/")
     rospack = rospkg.RosPack()
     pck_path = rospack.get_path("harmoni_pattern")
@@ -90,7 +90,7 @@ if __name__ == "__main__":
     try:
         rospy.init_node(pattern_name)
         bc = TypeDialogueDecisionManager(
-            pattern_name, script, test_id, pattern_script_path, url
+            pattern_name, script, instance_id, pattern_script_path, url
         )
         service_server = HarmoniServiceServer(name=pattern_name, service_manager=bc)
         rospy.loginfo(f"START from the first step of {pattern_name} pattern.")

@@ -315,7 +315,7 @@ def main():
     pattern_name = rospy.get_param("/pattern_name/")
     test = rospy.get_param("/test_" + pattern_name + "/")
     test_input = rospy.get_param("/test_input_" + pattern_name + "/")
-    test_id = rospy.get_param("/test_id_" + pattern_name + "/")
+    instance_id = rospy.get_param("/instance_id_" + pattern_name + "/")
     # trigger_intent = rospy.get_param("/test_input_" + pattern_name + "/")
     rospack = rospkg.RosPack()
     pck_path = rospack.get_path("harmoni_pattern")

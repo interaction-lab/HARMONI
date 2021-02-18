@@ -3,7 +3,7 @@
 	<rosparam file="$(find harmoni_stt)/config/configuration.yaml"/>
 	<param name="test_stt" value="false"/>
 	<param name="test_input_stt" value="$(find harmoni_stt)/test_data/test_example.wav"/>
-	<param name="test_id_stt" value="default"/>
+	<param name="instance_id_stt" value="default"/>
 	<param name="name_stt" value="w2l"/>
 	<node pkg="harmoni_stt" type="w2l_service.py" name="harmoni_stt_w2l_default" output="screen"/>
 

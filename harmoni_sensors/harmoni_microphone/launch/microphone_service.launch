@@ -4,14 +4,14 @@
 	<arg name="use_microphone" default="true"/>
 	<arg name="test" default="false"/>
 	<arg name="test_input" default=""/>
-	<arg name="test_id" default="default"/>
+	<arg name="instance_id" default="default"/>
   	<group if="$(arg use_microphone)">
 			<rosparam file="$(find harmoni_microphone)/config/configuration.yaml"/>
 			<param name="test_microphone" value="$(arg test)"/>
 			<param name="test_input_microphone" value="$(arg test_input)"/>
-			<param name="test_id_microphone" value="$(arg test_id)"/>
+			<param name="instance_id_microphone" value="$(arg instance_id)"/>
 			<param name="name_microphone" value="microphone"/>
-			<node pkg="harmoni_microphone" type="microphone_service.py" name="harmoni_microphone_$(arg test_id)" output="screen"/>
+			<node pkg="harmoni_microphone" type="microphone_service.py" name="harmoni_microphone_$(arg instance_id)" output="screen"/>
   			
    </group>
 

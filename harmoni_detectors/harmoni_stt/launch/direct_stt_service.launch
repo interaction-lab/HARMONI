@@ -4,17 +4,17 @@
 	<arg name="use_w2l" default="true"/>
 	<arg name="test" default="true"/>
 	<arg name="test_input" default="$(find harmoni_stt)/temp_data/hello.wav"/>
-	<arg name="test_id" default="default"/>
+	<arg name="instance_id" default="default"/>
   	<group if="$(arg use_w2l)">
 			<rosparam file="$(find harmoni_stt)/config/direct_configuration.yaml"/>
             <param name="test" value="$(arg test)"/>
 			<param name="test_input" value="$(arg test_input)"/>
-			<param name="test_id" value="$(arg test_id)"/>
+			<param name="instance_id" value="$(arg instance_id)"/>
 			<param name="test_stt" value="$(arg test)"/>
 			<param name="test_input_stt" value="$(arg test_input)"/>
-			<param name="test_id_stt" value="$(arg test_id)"/>
+			<param name="instance_id_stt" value="$(arg instance_id)"/>
 			<param name="name_stt" value="w2l"/>
-			<node pkg="harmoni_stt" type="direct_w2l_service.py" name="direct_harmoni_stt_w2l_$(arg test_id)" output="screen"/>
+			<node pkg="harmoni_stt" type="direct_w2l_service.py" name="direct_harmoni_stt_w2l_$(arg instance_id)" output="screen"/>
   	</group>
     
 </launch>

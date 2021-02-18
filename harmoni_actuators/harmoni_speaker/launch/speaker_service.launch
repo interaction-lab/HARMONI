@@ -1,11 +1,11 @@
 <!-- This is an example launch file for how a ROS application could use a node -->
 <launch>   
 	<arg name="use_speaker" default="true"/>
-	<arg name="test_id" default="default"/>
+	<arg name="instance_id" default="default"/>
 	<group if="$(arg use_speaker)">
-			<param name="test_id_speaker" value="$(arg test_id)"/>
+			<param name="instance_id_speaker" value="$(arg instance_id)"/>
 			<param name="name_speaker" value="speaker"/>
-			<node pkg="harmoni_speaker" type="speaker_service.py" name="harmoni_speaker_$(arg test_id)" output="screen"/>
+			<node pkg="harmoni_speaker" type="speaker_service.py" name="harmoni_speaker_$(arg instance_id)" output="screen"/>
     </group>
     <include file="$(find audio_play)/launch/play.launch">
         <arg name="do_timestamp" value = "false"/> 

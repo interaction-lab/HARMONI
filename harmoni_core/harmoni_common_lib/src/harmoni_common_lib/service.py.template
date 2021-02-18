@@ -43,11 +43,11 @@ def main():
     # Read ROS Params
     test = rospy.get_param("/test/")
     test_input = rospy.get_param("/test_input/")
-    test_id = rospy.get_param("/test_id/")
+    instance_id = rospy.get_param("/instance_id/")
     try:
         service_id = rospy.get_param("/service_id/")
     except Exception:
-        service_id = test_id
+        service_id = instance_id
 
     try:
         params = rospy.get_param("~" + service_id + "_param/")

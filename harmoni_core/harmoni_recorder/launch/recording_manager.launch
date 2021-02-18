@@ -4,7 +4,7 @@
 	<arg name="use_recorder" default="true"/>
 	<arg name="test" default="false"/>
 	<arg name="test_input" default=""/>
-	<arg name="test_id" default="default"/>
+	<arg name="instance_id" default="default"/>
 	<arg name="unit_name" default="recorder"/>
   	<group if="$(arg use_recorder)">
 			<rosparam file="$(find harmoni_recorder)/config/configuration.yaml"/>
@@ -12,10 +12,10 @@
 			<rosparam file="$(find harmoni_camera)/config/configuration.yaml"/>-->
 			<param name="test_recorder" value="$(arg test)"/>
 			<param name="test_input_recorder" value="$(arg test_input)"/>
-			<param name="test_id_recorder" value="$(arg test_id)"/>
+			<param name="instance_id_recorder" value="$(arg instance_id)"/>
 			<param name="name_recorder" value="recorder"/>
 			<param name="unit_name" value="recorder"/>
-			<node pkg="harmoni_recorder" type="recording_manager.py" name="harmoni_recorder_$(arg test_id)" output="screen"/>
+			<node pkg="harmoni_recorder" type="recording_manager.py" name="harmoni_recorder_$(arg instance_id)" output="screen"/>
   	</group>
 
 

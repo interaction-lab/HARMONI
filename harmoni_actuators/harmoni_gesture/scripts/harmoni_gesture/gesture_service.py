@@ -198,14 +198,14 @@ def main():
     name = rospy.get_param("/name_" + service_name + "/")
     test = rospy.get_param("/test_" + service_name + "/")
     test_input = rospy.get_param("/test_input_" + service_name + "/")
-    test_id = rospy.get_param("/test_id_" + service_name + "/")
+    instance_id = rospy.get_param("/instance_id_" + service_name + "/")
     try:
         rospy.init_node(service_name)
-        param = rospy.get_param(name + "/" + test_id + "_param/")
-        if not hf.check_if_id_exist(service_name, test_id):
+        param = rospy.get_param(name + "/" + instance_id + "_param/")
+        if not hf.check_if_id_exist(service_name, instance_id):
 
             return
-        service = hf.get_service_server_instance_id(service_name, test_id)
+        service = hf.get_service_server_instance_id(service_name, instance_id)
         s = GestureService(service, param)
         service_server = HarmoniServiceServer(name=service, service_manager=s)
         if test:

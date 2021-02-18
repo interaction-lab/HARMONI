@@ -209,7 +209,7 @@ def main():
     name = rospy.get_param("/unit_name/")
     test = rospy.get_param("/test_" + name + "/")
     test_input = rospy.get_param("/test_input_" + name + "/")
-    test_id = rospy.get_param("/test_id_" + name + "/")
+    instance_id = rospy.get_param("/instance_id_" + name + "/")
     child_names = rospy.get_param("/" + name + "/")
     try:
         rospy.init_node(name)
