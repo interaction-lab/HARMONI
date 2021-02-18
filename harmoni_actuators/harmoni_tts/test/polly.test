@@ -1,0 +1,10 @@
+<!-- This is an example launch file for how a ROS application could use a node -->
+<launch>
+	<rosparam file="$(find harmoni_tts)/config/configuration.yaml"/>
+    <param name="test_id_tts" value="default"/>
+    <param name="name_tts" value="polly"/>
+    <node pkg="harmoni_tts" type="aws_tts_service.py" name="harmoni_tts_polly_default" output="screen"/>
+
+	<param name="test_polly_input" value="Hello"/>
+    <test test-name="test_polly" pkg="harmoni_tts" type="rostest_polly.py" />
+</launch>
