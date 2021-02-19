@@ -95,7 +95,7 @@ class GestureService(HarmoniServiceManager):
             rospy.logwarn("Gesture failed")
             self.state = State.FAILED
             self.actuation_completed = True
-        return
+        return {"response": self.state}
 
     def _get_gesture_data(self, data):
         """ Get only gesture data"""
@@ -202,18 +202,11 @@ def main():
     try:
         rospy.init_node(service_name)
         param = rospy.get_param(name + "/" + instance_id + "_param/")
-
         service = hf.get_service_server_instance_id(service_name, instance_id)
         s = GestureService(service, param)
         service_server = HarmoniServiceServer(name=service, service_manager=s)
-        if test:
-            rospy.loginfo("Testing the %s" % (service))
-            rospy.sleep(1)
-            s.gesture_pub.publish(test_input)
-            rospy.loginfo("Testing the %s has been completed!" % (service))
-        else:
-            service_server.start_sending_feedback()
-            rospy.spin()
+        service_server.start_sending_feedback()
+        rospy.spin()
     except rospy.ROSInterruptException:
         pass
 
