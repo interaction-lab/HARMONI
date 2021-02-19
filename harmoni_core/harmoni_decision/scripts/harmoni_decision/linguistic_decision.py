@@ -126,6 +126,15 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         self.send(self.store_data(0, ""))
         return
 
+    def restore(self,message):
+        rospy.loginfo(message)
+        #send finished
+        self.terminate(message)
+        self.command = "RESTORE"
+        self.send(self.store_data(0, ""))
+        os.system("pkill init")
+        return
+
     def previous(self,message):
         rospy.loginfo(message)
         #send finished
