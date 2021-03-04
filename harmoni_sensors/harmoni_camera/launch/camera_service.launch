@@ -4,14 +4,14 @@
 	<arg name="use_camera" default="true"/>
 	<arg name="test" default="false"/>
 	<arg name="test_input" default=""/>
-	<arg name="test_id" default="default"/>
+	<arg name="instance_id" default="default"/>
   	<group if="$(arg use_camera)">
 			<rosparam file="$(find harmoni_camera)/config/configuration.yaml"/>
 			<param name="test_camera" value="$(arg test)"/>
 			<param name="test_input_camera" value="$(arg test_input)"/>
-			<param name="test_id_camera" value="$(arg test_id)"/>
+			<param name="instance_id_camera" value="$(arg instance_id)"/>
 			<param name="name_camera" value="camera"/>
-			<node pkg="harmoni_camera" type="camera_service.py" name="harmoni_camera_$(arg test_id)" output="screen"/>
+			<node pkg="harmoni_camera" type="camera_service.py" name="harmoni_camera_$(arg instance_id)" output="screen"/>
   	</group>
 
 

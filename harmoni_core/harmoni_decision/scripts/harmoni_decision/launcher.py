@@ -105,7 +105,9 @@ class Launcher:
                     "include",
                     file=f"$(find harmoni_{package_array[i]})/launch/{launch_file_array[i]}.launch",
                 )
-                args = ET.SubElement(include, "arg", name="test_id", value=service_id)
+                args = ET.SubElement(
+                    include, "arg", name="instance_id", value=service_id
+                )
         tree = ET.ElementTree(root)
         abs_path = os.path.abspath(__file__)
         path = abs_path.split("scripts/")

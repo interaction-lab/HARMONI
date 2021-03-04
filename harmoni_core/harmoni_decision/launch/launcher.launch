@@ -1,5 +1,4 @@
-<!-- This launch file invokes a python based launcher to dynamically launch the configured routers 
-        and/or services you can set the -->
+<!-- This launch file invokes a python based launcher to dynamically launch the configured services  -->
 <launch>
 	<arg name="launch" default="true"/> <!--Set to false if you want to just create a launch file-->
 	<!-- If you want to launch multiple services from different repos set service variable to 

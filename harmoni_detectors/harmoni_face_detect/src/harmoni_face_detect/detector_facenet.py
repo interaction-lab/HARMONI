@@ -22,13 +22,14 @@ sys.path.append("/opt/ros/kinetic/lib/python2.7/dist-packages")
 from facenet_pytorch import MTCNN
 import cv2
 
+
 class FacenetFaceDetector(HarmoniServiceManager):
     """Face detector based off of Facenet
-        Args:
-            detector_threshold(float): Confidence threshold for faces. Positive values
-                will return fewer detections, and negative values more detections.
-                This value can be changed at any time with no major side-effects.
-        """
+    Args:
+        detector_threshold(float): Confidence threshold for faces. Positive values
+            will return fewer detections, and negative values more detections.
+            This value can be changed at any time with no major side-effects.
+    """
 
     # The input image can be upsampled for the detector to see more faces.
     # This is usually not necessary.
@@ -44,7 +45,7 @@ class FacenetFaceDetector(HarmoniServiceManager):
         self.detector_threshold = detector_threshold
         self.service_id = hf.get_child_id(self.name)
         self._image_source = (
-                SensorNameSpace.camera.value + self.subscriber_id + "watching"
+            SensorNameSpace.camera.value + self.subscriber_id + "watching"
         )  # /harmoni/sensing/watching/harmoni_camera"
         self._image_sub = (
             None  # assign this when start() called. #TODO test subscription during init
@@ -157,23 +158,19 @@ def main():
     name = rospy.get_param("/name_" + service_name + "/")
     test = rospy.get_param("/test_" + service_name + "/")
     test_input = rospy.get_param("/test_input_" + service_name + "/")
-    test_id = rospy.get_param("/test_id_" + service_name + "/")
+    instance_id = rospy.get_param("/instance_id_" + service_name + "/")
     try:
         rospy.init_node(service_name)
-        param = rospy.get_param(name + "/" + test_id + "_param/")
-        if not hf.check_if_id_exist(service_name, test_id):
-            rospy.logerr(
-                "ERROR: Remember to add your configuration ID also in the harmoni_core config file"
-            )
-            return
-        service = hf.set_service_server(service_name, test_id)
+        param = rospy.get_param(name + "/" + instance_id + "_param/")
+
+        service = hf.get_service_server_instance_id(service_name, instance_id)
         s = FacenetFaceDetector(service, param)
         service_server = HarmoniServiceServer(name=service, service_manager=s)
         if test:
             rospy.loginfo("Testing the %s" % (service))
             s.start(test_input)
         else:
-            service_server.update_feedback()
+            service_server.start_sending_feedback()
             rospy.spin()
     except rospy.ROSInterruptException:
         pass

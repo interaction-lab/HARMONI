@@ -195,4 +195,5 @@ include_directories(
 # endif()
 
 ## Add folders to be run by python nosetests
-# catkin_add_nosetests(test)
+catkin_add_nosetests(test/unittest_polly.py)
+catkin_add_nosetests(test/unittest_mock_polly.py)

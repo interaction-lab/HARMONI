@@ -1,136 +1,128 @@
 #!/usr/bin/env python3
 
 # Common Imports
-import rospy
-import roslib
+import rospy, rospkg, roslib
 
 from harmoni_common_lib.constants import State, ActuatorNameSpace
 from harmoni_common_lib.service_server import HarmoniServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 import harmoni_common_lib.helper_functions as hf
 
+
 # Specific Imports
 from audio_common_msgs.msg import AudioData
-from collections import deque
 import numpy as np
-import audioop
-import pyaudio
-import math
+
+# import wget
+import contextlib
 import ast
+import wave
+import os
 
 
 class SpeakerService(HarmoniServiceManager):
-    """
-    Speaker service
+    """This is a class representation of a harmoni_speaker service
+    (HarmoniServiceManager). It is essentially an extended combination of the
+    :class:`harmoni_common_lib.service_server.HarmoniServiceServer`
+    and :class:`harmoni_common_lib.service_manager.HarmoniServiceManager` classes
+
+    :param name: Name of the current service
+    :type name: str
+    :param param: input parameters of the configuration.yaml file
+    :type param: from yaml
     """
 
-    def __init__(self, name, param):
-        """ """
+    def __init__(self, name):
+        """Constructor method: Initialization of variables and lex parameters + setting up"""
         super().__init__(name)
-
-        """ Setup Params """
-        self.total_channels = param["total_channels"]
-        self.audio_rate = param["audio_rate"]
-        self.chunk_size = param["chunk_size"]
-        self.device_name = param["device_name"]
-        self.output_device_index = None
-        """ Setup the speaker """
-        # self.p = pyaudio.PyAudio()
-        self.audio_format = pyaudio.paInt16
-        self.audio_publisher = rospy.Publisher("/audio/audio", AudioData, queue_size=1,)
-        """Setup the speaker service as server """
+        self.audio_publisher = rospy.Publisher(
+            "/audio/audio",
+            AudioData,
+            queue_size=1,
+        )
         self.state = State.INIT
-        # self.open_stream()
+        self.rospack = rospkg.RosPack()
         return
 
     def do(self, data):
-        """ Do the speak """
+        """Publishes audio to the "/audio/audio" topic for the sound_play module
+
+        Converts input audio from bytes or a local/network path to an audio msg.
+
+        Args:
+            data (str): This could be a string of:
+                            - audio data
+                            - path of local wav file
+                            - link of wav audio file you want to download and heard from
+        """
+        duration = 0
         self.state = State.REQUEST
         self.actuation_completed = False
-        if type(data) == str:
-            data = ast.literal_eval(data)
-        data = data["audio_data"]
-
         try:
+            if type(data) == str:
+                if ".wav" in data:
+                    data = self.file_path_to_audio_data(data)
+                    duration = data["duration"]
+                else:
+                    data = ast.literal_eval(data)
+            data = data["audio_data"]
             rospy.loginfo("Writing data for speaker")
             rospy.loginfo(f"length of data is {len(data)}")
             self.audio_publisher.publish(data)
+            rospy.sleep(duration)
             self.state = State.SUCCESS
             self.actuation_completed = True
         except IOError:
             rospy.logwarn("Speaker failed: Audio appears too busy")
             self.state = State.FAILED
             self.actuation_completed = True
-        return
+        return {"response": self.state}
 
-    def setup_speaker(self):
-        """ Setup the speaker """
-        rospy.loginfo("Setting up the %s" % self.name)
-        self.get_index_device()
-        return
+    def file_path_to_audio_data(self, path):
+        """Returns audio data from a local path or internet link
+        TODO: Add wget to docker image
 
-    def open_stream(self):
-        """Opening the stream """
-        rospy.loginfo("Opening the audio output stream")
-        self.stream.start_stream()
-        return
+        Args:
+            path (string): string of:
+                            - local folder path
+                            - link of audio file you want to listen to
 
-    def close_stream(self):
-        """Closing the stream """
-        rospy.loginfo("Closing the audio output stream")
-        self.stream.stop_stream()
-        # self.stream.close()
-        # self.p.terminate()
-        return
-
-    def get_index_device(self):
-        """ 
-        Find the output audio devices configured in ~/.asoundrc. 
-        If the device is not found, pyaudio will use your machine default device
-        """
-        for i in range(self.p.get_device_count()):
-            device = self.p.get_device_info_by_index(i)
-            if device["name"] == self.device_name:
-                # rospy.loginfo("Found device with name " + self.device_name)
-                self.output_device_index = i
-                return
-
-    def wav_to_data(self, path):
-        """ 
-        WAV to audiodata
+        Returns:
+            json: return an object with two fields:
+                        - audio_data: string
+                        - duration: int (duration of the file)
         """
         file_handle = path
+        if "http" in path:
+            url = path
+            print("Beginning file download with wget module")
+            file_handle = (
+                self.rospack.get_path("harmoni_speaker") + "/temp_data/test.wav"
+            )
+            # wget.download(url, file_handle)
         data = np.fromfile(file_handle, np.uint8)[24:]  # Loading wav file
         data = data.astype(np.uint8).tostring()
-        return {"audio_data": data}
+        with contextlib.closing(wave.open(file_handle, "r")) as f:
+            frames = f.getnframes()
+            rate = f.getframerate()
+            duration = frames / float(rate)
+            rospy.loginfo(f"The audio lasts {duration} seconds")
+        if "http" in path:
+            os.remove(file_handle)
+        return {"audio_data": data, "duration": duration}
 
 
 def main():
     service_name = ActuatorNameSpace.speaker.name
     name = rospy.get_param("/name_" + service_name + "/")
-    test = rospy.get_param("/test_" + service_name + "/")
-    test_input = rospy.get_param("/test_input_" + service_name + "/")
-    test_id = rospy.get_param("/test_id_" + service_name + "/")
+    instance_id = rospy.get_param("/instance_id_" + service_name + "/")
     try:
         rospy.init_node(service_name)
-        param = rospy.get_param(name + "/" + test_id + "_param/")
-        if not hf.check_if_id_exist(service_name, test_id):
-            rospy.logerr(
-                "ERROR: Remember to add your configuration ID also in the harmoni_core config file"
-            )
-            return
-        service = hf.set_service_server(service_name, test_id)
-        s = SpeakerService(service, param)
+        service = hf.get_service_server_instance_id(service_name, instance_id)
+        s = SpeakerService(service)
         service_server = HarmoniServiceServer(name=service, service_manager=s)
-        if test:
-            rospy.loginfo("Testing the %s" % (service))
-            rospy.sleep(1)
-            data = s.wav_to_data(test_input)
-            s.audio_publisher.publish(data["audio_data"])
-            rospy.loginfo("Testing the %s has been completed!" % (service))
-        else:
-            service_server.update_feedback()
-            rospy.spin()
+        service_server.start_sending_feedback()
+        rospy.spin()
     except rospy.ROSInterruptException:
         pass
 

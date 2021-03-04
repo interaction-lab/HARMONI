@@ -15,11 +15,16 @@ import json
 import inspect
 from std_msgs.msg import String
 from harmoni_common_lib.action_client import HarmoniActionClient
-from harmoni_common_lib.constants import DetectorNameSpace, ActionType, ActuatorNameSpace
+from harmoni_common_lib.constants import (
+    DetectorNameSpace,
+    ActionType,
+    ActuatorNameSpace,
+)
 from harmoni_pattern.sequential_pattern import SequentialPattern
 from collections import deque
 from time import time
 import threading
+
 
 class MultipleChoiceDecisionManager(HarmoniServiceManager):
     """Instantiates behaviors and receives commands/data for them.
@@ -27,12 +32,12 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
     This class is a singleton ROS node and should only be instantiated once.
     """
 
-    def __init__(self, name, script, test_id, path, url):
+    def __init__(self, name, script, instance_id, path, url):
         super().__init__(name)
         self.name = name
         self.script = script
         self.url = url
-        self.service_id  = test_id
+        self.service_id = instance_id
         self.pattern_script_path = path
         self.index = 0
         self.max_index = 18
@@ -61,28 +66,20 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
                     "background_cont": ["container_2", ""],
                     "background": [
                         "img_bkg",
-                        self.url
-                        + str(i)
-                        + "_Sfondo.png",
+                        self.url + str(i) + "_Sfondo.png",
                     ],
                     "text": "Background image",
                     "choice_1": [
                         "img_1",
-                        self.url
-                        + str(i)
-                        + "_Comp.png",
+                        self.url + str(i) + "_Comp.png",
                     ],
                     "choice_2": [
                         "img_2",
-                        self.url
-                        + str(i)
-                        + "_Distr.png",
+                        self.url + str(i) + "_Distr.png",
                     ],
                     "choice_3": [
                         "img_3",
-                        self.url
-                        + str(i)
-                        + "_Target.png",
+                        self.url + str(i) + "_Target.png",
                     ],
                 }
             )
@@ -91,7 +88,7 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
                 "background_cont": ["container_2", ""],
                 "background": [
                     "img_bkg",
-                    self.url+ "17_Sfondo.png",
+                    self.url + "17_Sfondo.png",
                 ],
                 "text": "Background image",
             }
@@ -101,7 +98,7 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
                 "background_cont": ["container_2", ""],
                 "background": [
                     "img_bkg",
-                    self.url+ "18_Sfondo.png",
+                    self.url + "18_Sfondo.png",
                 ],
                 "text": "Background image",
             }
@@ -120,9 +117,9 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
             + self.sequence_scenes[index_scene]["background_cont"][1]
             + "'}]"
         )
-        self.script[0]["steps"][1]["tts_default"][
-            "trigger"
-        ] = self.sequence_scenes[index_scene]["text"]
+        self.script[0]["steps"][1]["tts_default"]["trigger"] = self.sequence_scenes[
+            index_scene
+        ]["text"]
         if index_scene < self.choice_index:
             self.script[0]["steps"][3]["web_default"]["trigger"] = (
                 "[{'component_id':'"
@@ -156,25 +153,27 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
 
 
 if __name__ == "__main__":
-        pattern_name = rospy.get_param("/pattern_name/")
-        test = rospy.get_param("/test_" + pattern_name + "/")
-        test_input = rospy.get_param("/test_input_" + pattern_name + "/")
-        test_id = rospy.get_param("/test_id_" + pattern_name + "/")
-        url = rospy.get_param("/url_" + pattern_name + "/")
-        rospack = rospkg.RosPack()
-        pck_path = rospack.get_path("harmoni_pattern")
-        pattern_script_path = pck_path + f"/pattern_scripting/{pattern_name}.json"
-        with open(pattern_script_path, "r") as read_file:
-            script = json.load(read_file)
-        try:
-            rospy.init_node(pattern_name)
-            bc = MultipleChoiceDecisionManager(pattern_name, script, test_id, pattern_script_path, url)
-            service_server = HarmoniServiceServer(name=pattern_name, service_manager=bc)
-            rospy.loginfo(f"START from the first step of {pattern_name} pattern.")
-            if test:
-                bc.start(0)
-            else:
-                service_server.update_feedback()
-            rospy.spin()
-        except rospy.ROSInterruptException:
-            pass
+    pattern_name = rospy.get_param("/pattern_name/")
+    test = rospy.get_param("/test_" + pattern_name + "/")
+    test_input = rospy.get_param("/test_input_" + pattern_name + "/")
+    instance_id = rospy.get_param("/instance_id_" + pattern_name + "/")
+    url = rospy.get_param("/url_" + pattern_name + "/")
+    rospack = rospkg.RosPack()
+    pck_path = rospack.get_path("harmoni_pattern")
+    pattern_script_path = pck_path + f"/pattern_scripting/{pattern_name}.json"
+    with open(pattern_script_path, "r") as read_file:
+        script = json.load(read_file)
+    try:
+        rospy.init_node(pattern_name)
+        bc = MultipleChoiceDecisionManager(
+            pattern_name, script, instance_id, pattern_script_path, url
+        )
+        service_server = HarmoniServiceServer(name=pattern_name, service_manager=bc)
+        rospy.loginfo(f"START from the first step of {pattern_name} pattern.")
+        if test:
+            bc.start(0)
+        else:
+            service_server.start_sending_feedback()
+        rospy.spin()
+    except rospy.ROSInterruptException:
+        pass
