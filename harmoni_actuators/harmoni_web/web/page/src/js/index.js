@@ -45,6 +45,7 @@ $(document).ready(function () {
 });
 
 function viewListener(view) {
+    console.log("VIEW LISTENER")
     //Waiting for the view request from the ROS package
     console.log(view.data)
     var data = view.data.replace(/'/g, '"')
@@ -64,8 +65,37 @@ function viewListener(view) {
     } else if (component.includes("container")) {
         $(".container").hide()
     }
+    disableOptions()
     $("#" + component).show();
-    setTimeout(function(){ $("#"+ component).children().bind('click'); }, 3000);
+    //setTimeout(function(){ $("#"+ component).children().bind('click'); }, 3000);
+};
+
+
+function requestListener(view) {
+    console.log("REQUEST LISTENER")
+    //Waiting for the view request from the ROS package
+    console.log(view.data)
+    var data = view.data.replace(/'/g, '"')
+    var json_data = JSON.parse(data)
+    var component = json_data.component_id
+    var content = json_data.set_content
+    if (content != "") {
+        if (component.includes("img")) {
+            $("#" + component).attr("src", content);
+            $("#" + component).attr("value", content);
+            $('img', "#"+component).attr('src', content);
+            //$("#"+ component).children().bind('click');
+        }
+        else {
+            $("#" + component).html(content)
+        }
+    } else if (component.includes("container")) {
+        $(".container").hide()
+    }
+    $("#"+ component).children().bind('click'); 
+    enableOptions()
+    $("#" + component).show();
+    //setTimeout(function(){ $("#"+ component).children().bind('click'); enableOptions()}, 3000);
 };
 
 function setValueButton(clicked_button, value_item){
@@ -95,10 +125,22 @@ function clickListener(clicked_component) {
         var body =  {component_id:selected_item_id , set_view:clicked_component.getAttribute("value")}
         console.log("The response is", body)
         user_response_publisher.publish({data: JSON.stringify(body)})
+        disableOptions()       
     }
-   
     // Send the event clicked to the ROS package
 }
+
+
+function disableOptions(){
+    $(".option_choice").addClass("disabled")
+}
+
+function enableOptions(){
+    if ($(".option_choice").hasClass("disabled")){
+        $(".option_choice").removeClass("disabled")
+    }
+}
+
 
 function handleComponents(children, id, component, id_parent, comp_class) {
     if (Array.isArray(children)) {

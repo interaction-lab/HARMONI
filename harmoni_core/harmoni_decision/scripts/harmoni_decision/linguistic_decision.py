@@ -36,7 +36,8 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         HarmoniServiceManager.__init__(self,name)
         self.name = name
         self.url_img = url + "img/"
-        self.url_snd = url + "sound/"
+        #self.url_snd = url + "sound/"
+        self.url_snd = "/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_speaker/temp_data/"
         self.service_id  = test_id
         self.ip = ip
         self.port = port

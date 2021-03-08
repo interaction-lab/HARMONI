@@ -45,6 +45,11 @@ class WebService(HarmoniServiceManager):
             String,
             queue_size=1,
         )
+        self.web_pub_request = rospy.Publisher(
+            ActuatorNameSpace.web.value + self.service_id + "/set_view/request",
+            String,
+            queue_size=1,
+        )
         self.text_pub = rospy.Publisher(
             DetectorNameSpace.stt.value + self.service_id, String, queue_size=10
         )
@@ -121,7 +126,7 @@ class WebService(HarmoniServiceManager):
         try:
             rospy.sleep(1)
             for data in data_array:
-                self.send_request(data)
+                self.send_do(data)
                 rospy.sleep(0.2)
             self.state = State.SUCCESS
             self.actuation_completed = True
@@ -166,8 +171,16 @@ class WebService(HarmoniServiceManager):
         """ Send the request to the web page"""
         rospy.loginfo("Sending request to webpage")
         print(display_view)
+        self.web_pub_request.publish(display_view)
+        return
+
+    def send_do(self, display_view):
+        """ Send the request to the web page"""
+        rospy.loginfo("Sending request to webpage")
+        print(display_view)
         self.web_pub.publish(display_view)
         return
+
 
     def _event_click_callback(self, event):
         """Callback for subscription to the web page"""

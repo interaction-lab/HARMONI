@@ -23,7 +23,7 @@
                         "resource_type": "actuator",
                         "wait_for": ""
                     }
-                }
+                } 
                 ,
                 {
                     "gesture_default": {
@@ -37,7 +37,7 @@
                 "speaker_default": {
                     "action_goal": "DO",
                     "resource_type": "actuator",
-                    "wait_for": ""
+                    "wait_for": "new"
                 }
             }
             ,

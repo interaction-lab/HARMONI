@@ -46,6 +46,13 @@ function setupRosNetwork() {
     });
     display_view_listener.subscribe(viewListener);
 
+    display_request_listener = new ROSLIB.Topic({
+        ros: ros,
+        name: '/harmoni/actuating/web/default/set_view/request',
+        messageType: 'std_msgs/String'
+    });
+    display_request_listener.subscribe(requestListener);
+
     user_response_publisher = new ROSLIB.Topic({
         ros: ros,
         name: '/harmoni/actuating/web/default/listen_click_event',

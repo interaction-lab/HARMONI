@@ -251,17 +251,20 @@
                         {
                             "component": "click_img",
                             "children": "",
-                            "id": "target_img_full"
+                            "id": "target_img_full",
+                            "comp_class":"option_choice"
                         },
                         {
                             "component": "click_img",
                             "children": "",
-                            "id": "comp_img_full"
+                            "id": "comp_img_full",
+                            "comp_class":"option_choice"
                         },
                         {
                             "component": "click_img",
                             "children": "",
-                            "id": "distr_img_full"
+                            "id": "distr_img_full",
+                            "comp_class":"option_choice"
                         }
                     ]
                 }
@@ -277,12 +280,14 @@
                         {
                             "component": "click_img",
                             "children": "",
-                            "id": "target_img_alt"
+                            "id": "target_img_alt",
+                            "comp_class":"option_choice"
                         },
                         {
                             "component": "click_img",
                             "children": "",
-                            "id": "comp_img_alt"
+                            "id": "comp_img_alt",
+                            "comp_class":"option_choice"
                         }
                     ]
                 }
@@ -310,17 +315,20 @@
                         {
                             "component": "click_img",
                             "children": "",
-                            "id": "target_img_choices"
+                            "id": "target_img_choices",
+                            "comp_class":"option_choice"
                         },
                         {
                             "component": "click_img",
                             "children": "",
-                            "id": "comp_img_choices"
+                            "id": "comp_img_choices",
+                            "comp_class":"option_choice"
                         },
                         {
                             "component": "click_img",
                             "children": "",
-                            "id": "distr_img_choices"
+                            "id": "distr_img_choices",
+                            "comp_class":"option_choice"
                         }
                     ]
                 }
@@ -338,17 +346,20 @@
                         {
                             "component": "click_img",
                             "children": "../assets/imgs/test.jpg",
-                            "id": "first_img"
+                            "id": "first_img",
+                            "comp_class":"option_choice"
                         },
                         {
                             "component": "click_img",
                             "children": "../assets/imgs/test.jpg",
-                            "id": "second_img"
+                            "id": "second_img",
+                            "comp_class":"option_choice"
                         },
                         {
                             "component": "click_img",
                             "children": "../assets/imgs/test.jpg",
-                            "id": "third_img"
+                            "id": "third_img",
+                            "comp_class":"option_choice"
                         }
                     ]
                 }

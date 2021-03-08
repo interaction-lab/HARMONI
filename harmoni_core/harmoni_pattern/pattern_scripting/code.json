@@ -3,14 +3,6 @@
         "set": "sequence",
         "steps": [
             {
-                "web_page_default": { 
-                    "action_goal": "DO",
-                    "resource_type": "actuator",
-                    "wait_for": "",
-                    "trigger":"[{'component_id':'code_container', 'set_content':''}]"
-                }
-            },
-            {
                 "tts_default": {
                     "action_goal": "REQUEST",
                     "resource_type": "service",
@@ -39,7 +31,7 @@
                 "speaker_default": {
                     "action_goal": "DO",
                     "resource_type": "actuator",
-                    "wait_for": ""
+                    "wait_for": "new"
                 }
             },
             {
