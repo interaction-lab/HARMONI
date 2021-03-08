@@ -93,7 +93,7 @@ class GestureInterface(HarmoniServiceManager):
                     if float(timing) < gesture_time_duration_x:
                         speed = j
                     else:
-                        speed = 2 # the default speed value
+                        speed = 1 # the default speed value
                 rospy.loginfo("The speed of the gesture " + str(self.gestures_name[i]) + " is: " + str(speed))
                 # I calibrated the speed according to the gesture duration and the timing of the word
                 self.gesture_service.publish(self.gestures_name[i])
