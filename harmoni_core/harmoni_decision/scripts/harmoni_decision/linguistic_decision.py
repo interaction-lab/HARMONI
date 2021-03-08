@@ -37,7 +37,7 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
         self.name = name
         self.url_img = url + "img/"
         #self.url_snd = url + "sound/"
-        self.url_snd = "/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_speaker/temp_data/"
+        self.url_snd = "/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_speaker/temp_data/sounds/"
         self.service_id  = test_id
         self.ip = ip
         self.port = port
@@ -100,7 +100,10 @@ class LinguisticDecisionManager(HarmoniServiceManager, HarmoniWebsocketClient):
 
     def store_data(self, correct, item, action="FINISHED"):
         now_time = time()
-        int_time = now_time-self.start_time
+        if not self.start_time:
+            int_time = 0
+        else:
+            int_time = now_time-self.start_time
         rospy.loginfo(f"The time is {int_time}")
         payload = {"action":action, "patientId":self.patient_id, "sessionId":self.session_id,"data":{"miniTask":self.index, "correct":correct,"itemSelected": item,"time":int_time}}
         return payload
