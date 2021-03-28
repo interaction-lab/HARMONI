@@ -189,8 +189,8 @@ class MicrophoneService(HarmoniServiceManager):
 def main():
     """Set names, collect params, and give service to server"""
 
-    service_name = SensorNameSpace.microphone.name  # microphone
-    instance_id = rospy.get_param("instance_id")  # default
+    service_name = SensorNameSpace.microphone.name  # "microphone"
+    instance_id = rospy.get_param("instance_id")  # "default"
     service_id = f"{service_name}_{instance_id}"
 
     try:
