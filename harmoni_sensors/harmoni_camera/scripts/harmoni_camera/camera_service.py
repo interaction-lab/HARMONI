@@ -25,52 +25,67 @@ import cv2
 
 
 class CameraService(HarmoniServiceManager):
-    """
-    Camera service
+    """Reads from a camera and publishes image data.
+
+    As a sensor service, the camera is responsible for reading the image data
+    from a physical camera and publishing it so that it can be recorded or
+    used by a detector.
+
+    The camera has many parameters which are set in the configuration.yaml
+
+    The public functions exposed by the camera include start(), stop(), and pause()
     """
 
     def __init__(self, name, param):
-        super().__init__(name)
+
         """ Initialization of variables and camera parameters """
+        super().__init__(name)
         self.input_device_index = param["input_device_index"]
         self.show = param["show"]
         self.video_format = param["video_format"]
+        self.file_path = param["test_outdir"]
+
         self.service_id = hf.get_child_id(self.name)
+
         """ Setup the camera """
         self.cv_bridge = CvBridge()
+        self.setup_camera()
+
         """ Init the camera publisher"""
+        self.camera_topic = SensorNameSpace.camera.value + self.service_id
         self._video_pub = rospy.Publisher(
-            SensorNameSpace.camera.value + self.service_id + "/watching",
+            self.camera_topic,
             Image,
             queue_size=1,
         )
-        """Setup the camera service as server """
-        self.setup_camera()
+
         self.state = State.INIT
         return
 
-    def start(self, rate=""):
+    def start(self):
+        """Start the camera stream and publish images"""
         rospy.loginfo("Start the %s service" % self.name)
         if self.state == State.INIT:
             self.state = State.START
-            try:
-                self.watch()  # Start the camera service at the INIT
-            except Exception:
-                self.state = State.FAILED
+            self._read_stream_and_publish()  # Start the camera service at the INIT
+            self.state = State.FAILED
         else:
+            rospy.loginfo("Trying to start stream when already started")
             self.state = State.START
         return
 
     def stop(self):
+        """Stop the service and close the stream"""
         rospy.loginfo("Stop the %s service" % self.name)
         try:
-            self.close_stream()
+            self._close_stream()
             self.state = State.SUCCESS
         except Exception:
             self.state = State.FAILED
         return
 
     def pause(self):
+        """Set the service to success to stop publishing"""
         rospy.loginfo("Pause the %s service" % self.name)
         self.state = State.SUCCESS
         return
@@ -79,10 +94,10 @@ class CameraService(HarmoniServiceManager):
         """ Setup the camera """
         rospy.loginfo("Setting up the %s" % self.name)
         self.video_cap = cv2.VideoCapture(self.input_device_index)
-        self.open_stream()
+        self._open_stream()
         return
 
-    def open_stream(self):
+    def _open_stream(self):
         """Opening the stream """
         rospy.loginfo("Opening the video input stream")
         self.width = int(self.video_cap.get(cv2.CAP_PROP_FRAME_WIDTH) + 0.5)
@@ -92,44 +107,50 @@ class CameraService(HarmoniServiceManager):
         rospy.set_param("/" + self.name + "_param/fps/", self.fps)
         return
 
-    def close_stream(self):
+    def _close_stream(self):
         """Closing the stream """
         self.video_cap.release()
         if self.show:
             cv2.destroyAllWindows()
         return
 
-    def watch(self):
+    def _read_stream_and_publish(self):
+        """Continously publish image data from the camera
+
+        While state is START publish images
+        """
         while not rospy.is_shutdown():
             _, frame = self.video_cap.read()
             image = self.cv_bridge.cv2_to_imgmsg(frame, self.video_format)
             self._video_pub.publish(image)
             if self.show:
-                cv2.imshow("PcCameraVideo", frame)
-            if cv2.waitKey(1) and (0xFF == ord("x")) and self.show:
-                break
+                cv2.imwrite(self.file_path, frame)
+                # TODO: Allow showing images in docker
+                # cv2.imshow("PcCameraVideo", frame)
+                # if cv2.waitKey(1) and (0xFF == ord("x")) and self.show:
+                #     break
         return
 
 
 def main():
-    service_name = SensorNameSpace.camera.name
-    name = rospy.get_param("/name_" + service_name + "/")
-    test = rospy.get_param("/test_" + service_name + "/")
-    test_input = rospy.get_param("/test_input_" + service_name + "/")
-    instance_id = rospy.get_param("/instance_id_" + service_name + "/")
+    """Set names, collect params, and give service to server"""
+
+    service_name = SensorNameSpace.camera.name  # "camera"
+    instance_id = rospy.get_param("instance_id")  # "default"
+    service_id = f"{service_name}_{instance_id}"
+
     try:
         rospy.init_node(service_name)
-        param = rospy.get_param(name + "/" + instance_id + "_param/")
 
-        service = hf.get_service_server_instance_id(service_name, instance_id)
-        s = CameraService(service, param)
-        service_server = HarmoniServiceServer(name=service, service_manager=s)
-        if test:
-            rospy.loginfo("Testing the %s" % (service))
-            s.start()
-        else:
-            service_server.start_sending_feedback()
-            rospy.spin()
+        # camera/default_param/[all your params]
+        params = rospy.get_param(service_name + "/" + instance_id + "_param/")
+
+        s = CameraService(service_id, params)
+
+        service_server = HarmoniServiceServer(service_id, s)
+
+        service_server.start_sending_feedback()
+        rospy.spin()
     except rospy.ROSInterruptException:
         pass
 

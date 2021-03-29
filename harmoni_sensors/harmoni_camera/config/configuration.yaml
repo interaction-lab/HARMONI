@@ -1,7 +1,8 @@
-# Configuration file for the microphone
+# Configuration file for the camera
 camera:
   default_param:
     input_device_index: 0
     show: True
     video_format: "rgb8"
     fps: 30
+    test_outdir: "/root/harmoni_catkin_ws/src/HARMONI/harmoni_sensors/harmoni_camera/temp_data/test_example.png"
