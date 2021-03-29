@@ -21,19 +21,14 @@ import os
 
 
 class SpeakerService(HarmoniServiceManager):
-    """This is a class representation of a harmoni_speaker service
-    (HarmoniServiceManager). It is essentially an extended combination of the
-    :class:`harmoni_common_lib.service_server.HarmoniServiceServer`
-    and :class:`harmoni_common_lib.service_manager.HarmoniServiceManager` classes
+    """Takes sound and publishes it to the default audio topic for the audio_play package
 
-    :param name: Name of the current service
-    :type name: str
-    :param param: input parameters of the configuration.yaml file
-    :type param: from yaml
+    Args:
+        HarmoniServiceManager ([type]): [description]
     """
 
     def __init__(self, name):
-        """Constructor method: Initialization of variables and lex parameters + setting up"""
+        """ Initialization of variables and camera parameters """
         super().__init__(name)
         self.audio_publisher = rospy.Publisher(
             "/audio/audio",
@@ -45,7 +40,7 @@ class SpeakerService(HarmoniServiceManager):
         return
 
     def do(self, data):
-        """Publishes audio to the "/audio/audio" topic for the sound_play module
+        """Publishes audio to the "/audio/audio" topic for the audio_play module
 
         Converts input audio from bytes or a local/network path to an audio msg.
 

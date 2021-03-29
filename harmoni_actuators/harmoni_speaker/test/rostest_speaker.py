@@ -29,7 +29,7 @@ class TestSpeaker(unittest.TestCase):
         self.data = rospy.get_param(
             "test_speaker_input"
         )  # "$(find harmoni_tts)/temp_data/tts.wav"
-        self.instance_id = rospy.get_param("instance_id_speaker")
+        self.instance_id = rospy.get_param("instance_id")
         self.result = False
         self.name = ActuatorNameSpace.speaker.name + "_" + self.instance_id
         self.service_client = HarmoniActionClient(self.name)
