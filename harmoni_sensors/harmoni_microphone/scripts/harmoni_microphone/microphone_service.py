@@ -47,7 +47,7 @@ class MicrophoneService(HarmoniServiceManager):
         """ Setup the microphone """
         self.p = pyaudio.PyAudio()
 
-        # TODO: How can we trasform audio_format as an a input parameter?
+        # TODO: How can we trasform audio_format as an a input parameter?/should we?
         self.audio_format = pyaudio.paInt16
         self.stream = None
         self.setup_microphone()
@@ -87,7 +87,7 @@ class MicrophoneService(HarmoniServiceManager):
         """Set the service to success to stop publishing"""
         rospy.loginfo("Pause the %s service" % self.name)
         self.state = State.SUCCESS
-        rospy.sleep(15)
+        # rospy.sleep(15)
         return
 
     def setup_microphone(self):
@@ -121,21 +121,21 @@ class MicrophoneService(HarmoniServiceManager):
 
         While state is START publish audio
         """
+        r = rospy.Rate(10)
         rospy.loginfo("The %s is listening" % self.name)
         while not rospy.is_shutdown():
-            if self.state == State.START:
+            if self.state == State.INIT:
+                r.sleep()
+            elif self.state == State.START:
                 latest_audio_data = self.stream.read(
                     self.chunk_size, exception_on_overflow=False
                 )
                 raw_audio_bitstream = np.fromstring(latest_audio_data, np.uint8)
                 raw_audio = raw_audio_bitstream.tolist()
                 self.raw_mic_pub.publish(raw_audio)  # Publishing raw AudioData
-            else:
+            elif self.state == State.SUCCESS or self.state == State.FAILED:
                 break
-        # try:
-        # except Exception as e:
-        #     self.state = State.FAILED
-        #     rospy.loginfo("Caught the following exception")
+            r.sleep()
 
         rospy.loginfo("Shutting down")
         return

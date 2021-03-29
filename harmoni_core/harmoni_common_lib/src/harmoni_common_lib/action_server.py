@@ -93,7 +93,6 @@ class HarmoniActionServer(object):
             assert self.execute_thread
             self.execute_thread.join()
 
-
     # @brief Accepts a new goal when one is available The status of this
     # goal is set to active upon acceptance, and the status of any
     # previously active goal is set to preempted. Preempts received for the
@@ -310,6 +309,7 @@ class HarmoniActionServer(object):
                 return
 
             if self.is_new_goal_available():
+                rospy.logwarn(f"(Server) The goal is available")
                 # accept_new_goal() is performing its own locking
                 goal = self.accept_new_goal()
                 self.optional_data = goal.optional_data  # input data for the module

@@ -81,18 +81,18 @@ class TestMicrophone(unittest.TestCase):
         rospy.sleep(5)
         assert self.result == True, "Mic should be publishing by now"
         # TODO: Fix preempt requests so stop can interrupt start
-        # rospy.loginfo("Next test by sending the 'off' goal")
-        # self.service_client.send_goal(
-        #     action_goal=ActionType.OFF.value,
-        #     # optional_data=self.data,
-        #     wait=True,
-        # )
-        # rospy.loginfo("Goal sent. Stop publishing please")
-        # rospy.sleep(5)
-        # rospy.loginfo("Should be off now, resetting result")
-        # self.result = False
-        # rospy.sleep(5)
-        # assert self.result == False, "Mic should be off by now"
+        rospy.loginfo("Next test by sending the 'off' goal")
+        self.service_client.send_goal(
+            action_goal=ActionType.OFF.value,
+            # optional_data=self.data,
+            wait=True,
+        )
+        rospy.loginfo("Goal sent. Stop publishing please")
+        rospy.sleep(5)
+        rospy.loginfo("Should be off now, resetting result")
+        self.result = False
+        rospy.sleep(5)
+        assert self.result == False, "Mic should be off by now"
 
     def test_recording(self):
         # TODO use microphone service recording functionality
