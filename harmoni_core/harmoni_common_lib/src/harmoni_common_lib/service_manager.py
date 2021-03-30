@@ -83,7 +83,7 @@ class HarmoniServiceManager(object):
         Raises:
             NotImplementedError: To be used, this function should be overwritten by the child class.
         """
-        raise NotImplementedError()
+        rospy.logwarn("service pause() not implemented. NOTE: This is currently required for goal preemption to work on longrunning processes.")
         return
 
     def stop(self):
