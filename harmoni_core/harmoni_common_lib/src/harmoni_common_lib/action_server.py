@@ -41,7 +41,7 @@ class HarmoniActionServer(object):
     # publishing as soon as it comes up.
     # THIS SHOULD ALWAYS BE SET TO FALSE TO AVOID RACE CONDITIONS and start() should be
     # called after construction of the server.
-    def __init__(self, name, execute_cb=None, auto_start=False):
+    def __init__(self, name, execute_cb=None, preempt_cb=None, auto_start=False):
 
         self.name = name
         self.new_goal = False
@@ -50,7 +50,7 @@ class HarmoniActionServer(object):
 
         self.execute_callback = execute_cb
         self.goal_callback = None
-        self.preempt_callback = None
+        self.preempt_callback = preempt_cb
 
         self.need_to_terminate = False
         self.terminate_mutex = threading.RLock()

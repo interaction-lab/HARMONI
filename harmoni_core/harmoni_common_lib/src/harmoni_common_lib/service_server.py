@@ -20,7 +20,7 @@ class HarmoniServiceServer(HarmoniActionServer, object):
     get_preemption_status
     """
 
-    def __init__(self, name, service_manager, check_premption_rate=10):
+    def __init__(self, name, service_manager, premption_rate=10):
         """ Initialize the service and test that the service manager has been set up
 
         Args:
@@ -30,19 +30,19 @@ class HarmoniServiceServer(HarmoniActionServer, object):
 
         self.name = name
         self.service_manager = service_manager
-        self.check_premption_rate = check_premption_rate
+        self.premption_rate = premption_rate
 
         if self.service_manager.test():
             rospy.loginfo(f"Service Server {self.name} has been successfully set up")
         else:
             rospy.logwarn(f"Service Server {self.name} has not been started")
-        super().__init__(name, self._execute_goal_received_callback)
+        super().__init__(name, self._execute_goal_received_callback, self._preempt_callback)
 
         return
 
     def start_sending_feedback(self, rate=0.2):
         """Provides feedback at a constant rate on the status of the server
-
+            FIXME: this is a blocking function, so it probably needs to be threaded.
         Args:
             rate (float, optional): Rate feedback on state is sent (hz). Defaults to .2.
         """
@@ -55,6 +55,9 @@ class HarmoniServiceServer(HarmoniActionServer, object):
                 r.sleep()
             else:
                 # if state has failed the node should be restarted
+                """FIXME: in general it is unlikely we can detect an unrecoverable 
+                node failure in low level code, so the failure state should be more of 
+                an indicator of wrong input or opportunity to retry than of node restart"""
                 break
         return
 
@@ -76,6 +79,12 @@ class HarmoniServiceServer(HarmoniActionServer, object):
             preempted = True
         return preempted
 
+    def _preempt_callback(self):
+        """Used to signal a cancel/pause to the currently running service so 
+            that a new goal can be received.
+        """
+        self.service_manager.pause()
+
     def _execute_goal_received_callback(self, goal):
         """Turns action goals into calls to the service manager. Is passed to the
         parent class to be used directly by the action server.
@@ -83,7 +92,7 @@ class HarmoniServiceServer(HarmoniActionServer, object):
         Args:
             goal (HarmoniAction):
         """
-        pr = rospy.Rate(self.check_premption_rate)
+        pr = rospy.Rate(self.premption_rate)
 
         if goal.action_type == ActionType.ON:
             rospy.loginfo(f"(Server {self.name}) Received goal. Starting")
@@ -93,13 +102,13 @@ class HarmoniServiceServer(HarmoniActionServer, object):
         elif goal.action_type == ActionType.PAUSE:
             rospy.loginfo(f"(Server {self.name}) Received goal. Pausing")
 
-            self.service_manager.stop()
+            self.service_manager.pause()
 
         elif goal.action_type == ActionType.OFF:
             rospy.loginfo(f"(Server {self.name}) Received goal. Stopping")
 
             self.service_manager.stop()
-            self.service_manager.reset_init
+            self.service_manager.reset_init()
 
         elif goal.action_type == ActionType.DO:
             # For 'do' type actions, we want to start the action and then
