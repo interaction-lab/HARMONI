@@ -78,7 +78,7 @@ class TestMicrophone(unittest.TestCase):
             # optional_data=self.data,
             wait=False,
         )
-        rospy.sleep(5)
+        rospy.sleep(1)
         assert self.result == True, "Mic should be publishing by now"
         # TODO: Fix preempt requests so stop can interrupt start
         rospy.loginfo("Next test by sending the 'off' goal")
@@ -88,10 +88,10 @@ class TestMicrophone(unittest.TestCase):
             wait=True,
         )
         rospy.loginfo("Goal sent. Stop publishing please")
-        rospy.sleep(5)
+        rospy.sleep(1)
         rospy.loginfo("Should be off now, resetting result")
         self.result = False
-        rospy.sleep(5)
+        rospy.sleep(1)
         assert self.result == False, "Mic should be off by now"
 
     def test_recording(self):
