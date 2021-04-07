@@ -20,7 +20,7 @@ import os
 
 class EyesService(HarmoniServiceManager):
     """
-    Eyes service
+    TODO: Eyes service
     """
 
     def __init__(self, name, param):
@@ -202,9 +202,7 @@ class MouthService(HarmoniServiceManager):
         self.speed_viseme = param["speed_viseme"]
         self.timer_interval = param["timer_interval"]
         self.service_id = hf.get_child_id(self.name)
-        """ Setup the face """
         self.setup_face()
-        """ Setup the publisher for the face """
         self.face_pub = rospy.Publisher(
             ActuatorNameSpace.face.value + self.service_id + "/expressing",
             FaceRequest,
@@ -215,7 +213,15 @@ class MouthService(HarmoniServiceManager):
         return
 
     def do(self, data):
-        """ Do the expression"""
+        """Do expression in web face
+
+        Args:
+            data ([str]): stringified json from tts results  
+
+        Returns:
+            response (int): whether SUCCESS of FAIL
+            message (str): result message 
+        """
         rospy.loginfo("Do expressions")
         self.actuation_completed = False
         [valid_face_expression, visemes] = self.get_face_data(data)
@@ -271,7 +277,8 @@ class MouthService(HarmoniServiceManager):
         return {"response": self.state, "message": self.result_msg}
 
     def setup_face(self):
-        """ Setup the face """
+        """Setup the face, waiting for the connection with the web page
+        """
         rospy.loginfo("Setting up the %s mouth" % self.name)
         rospy.loginfo("Checking that face is connected to ROS websocket")
         rospy.wait_for_service("/harmoni/actuating/face/is_connected")
