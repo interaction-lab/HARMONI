@@ -10,7 +10,6 @@ import cv2
 import dlib
 import numpy as np
 from imutils import face_utils
-from box_utils import *
 
 import time
 
