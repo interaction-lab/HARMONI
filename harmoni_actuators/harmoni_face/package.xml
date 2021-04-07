@@ -55,6 +55,8 @@
   <exec_depend>message_runtime</exec_depend>
   <build_export_depend>rospy</build_export_depend>
   <exec_depend>rospy</exec_depend>
+  <test_depend>rosunit</test_depend>
+  <test_depend>rostest</test_depend>
 
 
 

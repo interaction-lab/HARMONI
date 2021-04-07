@@ -30,7 +30,7 @@ class EyesService(HarmoniServiceManager):
         self.gaze_speed = param["gaze_speed"]
         self.service_id = hf.get_child_id(self.name)
         """ Setup the face """
-        # self.setup_face()
+        self.setup_face()
         """ Setup the publisher for the face """
         self.face_pub = rospy.Publisher(
             ActuatorNameSpace.face.value + self.service_id + "/expressing",
@@ -87,17 +87,19 @@ class EyesService(HarmoniServiceManager):
                 rospy.sleep(valid_face_expression[-1]["au_ms"])
             self.state = State.SUCCESS
             self.actuation_completed = True
+            self.result_msg=""
         except Exception:
             self.state = State.FAILED
             self.actuation_completed = True
+            self.result_msg=""
         rospy.loginfo("Completed Expression")
-        return
+        return {"response": self.state, "message": self.result_msg}
 
     def setup_face(self):
         """ Setup the face """
         rospy.loginfo("Setting up the %s eyes" % self.name)
         rospy.loginfo("Checking that face is connected to ROS websocket")
-        rospy.wait_for_service("/harmoni/actuating/face/is_connected")
+        #rospy.wait_for_service("/harmoni/actuating/face/is_connected")
         rospy.loginfo("Done, face is connected to ROS websocket")
         [
             self.face_expression,
@@ -155,9 +157,10 @@ class EyesService(HarmoniServiceManager):
         # rospy.loginfo("The face expressions available are %s" % self.face_expression)
 
         data = ast.literal_eval(data)
-        behavior_data = ast.literal_eval(data["behavior_data"])
-        # print(data)
-
+        if "behavior_data" in data:
+            behavior_data = ast.literal_eval(data["behavior_data"])
+        else:
+            behavior_data = data
         viseme_set = []
         facial_expression = []
         sentence = []
@@ -178,18 +181,7 @@ class EyesService(HarmoniServiceManager):
         validated_face_expr = []
         for fexp in ordered_facial_data:
             validated_face_expr.append(self.face_expression[fexp["id"]])
-
-        for i in range(0, len(viseme_set) - 1):
-            viseme_set[i]["duration"] = (
-                viseme_set[i + 1]["start"] - viseme_set[i]["start"]
-            )
-
-        viseme_set[-1]["duration"] = self.min_duration_viseme
-
-        viseme_behaviors = list(
-            filter(lambda b: b["duration"] >= self.min_duration_viseme, viseme_set)
-        )
-        ordered_visemes = list(sorted(viseme_behaviors, key=lambda b: b["start"]))
+        viseme_set = []
         rospy.loginfo("The validated facial expressions are %s" % validated_face_expr)
         rospy.loginfo("The validated visemes are %s" % viseme_set)
         print("Finished getting face data for sentence:", sentence)
@@ -224,6 +216,7 @@ class MouthService(HarmoniServiceManager):
 
     def do(self, data):
         """ Do the expression"""
+        rospy.loginfo("Do expressions")
         self.actuation_completed = False
         [valid_face_expression, visemes] = self.get_face_data(data)
         try:
@@ -269,11 +262,13 @@ class MouthService(HarmoniServiceManager):
                 rospy.sleep(valid_face_expression[-1]["au_ms"])
             self.state = State.SUCCESS
             self.actuation_completed = True
+            self.result_msg=""
         except Exception:
             self.state = State.FAILED
             self.actuation_completed = True
+            self.result_msg=""
         rospy.loginfo("Completed Expression")
-        return
+        return {"response": self.state, "message": self.result_msg}
 
     def setup_face(self):
         """ Setup the face """
@@ -337,8 +332,10 @@ class MouthService(HarmoniServiceManager):
         # rospy.loginfo("The face expressions available are %s" % self.face_expression)
 
         data = ast.literal_eval(data)
-        behavior_data = ast.literal_eval(data["behavior_data"])
-
+        if "behavior_data" in data:
+            behavior_data = ast.literal_eval(data["behavior_data"])
+        else:
+            behavior_data = data
         viseme_set = []
         facial_expression = []
         sentence = []
@@ -380,34 +377,24 @@ class MouthService(HarmoniServiceManager):
         return (validated_face_expr, viseme_set)
 
 
+
 def main():
+    """Set names, collect params, and give service to server"""
     service_name = ActuatorNameSpace.face.name
-    name = rospy.get_param("/name_" + service_name + "/")
-    test = rospy.get_param("/test_" + service_name + "/")
-    test_input = rospy.get_param("/test_input_" + service_name + "/")
-    instance_id = rospy.get_param("/instance_id_" + service_name + "/")
+    instance_id = rospy.get_param("/instance_id")
+    service_id_mouth = f"{service_name}_mouth_{instance_id}"
+    service_id_eyes = f"{service_name}_eyes_{instance_id}"
     try:
         rospy.init_node(service_name)
-        param_eyes = rospy.get_param(name + "/" + instance_id + "_param/eyes/")
-        param_mouth = rospy.get_param(name + "/" + instance_id + "_param/mouth/")
-
-        service = hf.get_service_server_instance_id(service_name, instance_id)
-        s_eyes = EyesService(service + "_eyes_" + instance_id, param_eyes)
-        s_mouth = MouthService(service + "_mouth_" + instance_id, param_mouth)
-        service_server_eyes = HarmoniServiceServer(
-            name=service + "_eyes_" + instance_id, service_manager=s_eyes
-        )
-        service_server_mouth = HarmoniServiceServer(
-            name=service + "_mouth_" + instance_id, service_manager=s_mouth
-        )
-        if test:
-            rospy.loginfo("Testing the %s" % (service + "_mouth"))
-            rospy.sleep(1)
-            s_mouth.do(str({"behavior_data": str(test_input)}))
-        else:
-            service_server_eyes.start_sending_feedback()
-            service_server_mouth.start_sending_feedback()
-            rospy.spin()
+        param_eyes = rospy.get_param(service_name + "/" + instance_id + "_param/eyes/")
+        param_mouth = rospy.get_param(service_name + "/" + instance_id + "_param/mouth/")
+        s_eyes = EyesService(service_name + "_eyes_" + instance_id, param_eyes)
+        s_mouth = MouthService(service_name + "_mouth_" + instance_id, param_mouth)
+        service_server_eyes = HarmoniServiceServer(service_id_eyes, s_eyes)
+        service_server_mouth = HarmoniServiceServer(service_id_mouth, s_mouth)
+        service_server_eyes.start_sending_feedback()
+        service_server_mouth.start_sending_feedback()
+        rospy.spin()
     except rospy.ROSInterruptException:
         pass
 
