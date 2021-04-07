@@ -7,7 +7,7 @@
 	<arg name="robot_joints" default="qt_robot/joints/state_rad"/>
 	<arg name="simulated_joints" default="simulated_joints"/>
 	<group if="$(arg use_gesture)">
-			<rosparam file="$(find harmoni_gesture)/config/configuration.yaml"/>
+			<rosparam file="$(find harmoni_gesture)/config/configuration.yaml" subst_value="True"/>
 			<param name="/qt/default_param/path" value ="$(find harmoni_gesture)/data"/>
 			<param name="instance_id_gesture" value="$(arg instance_id)"/>
 			<param name="name_gesture" value="$(arg robot_name)"/>

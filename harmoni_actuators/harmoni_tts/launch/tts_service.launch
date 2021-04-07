@@ -3,7 +3,7 @@
 	<arg name="use_aws_tts" default="true"/>
 	<arg name="instance_id" default="default"/>
   	<group if="$(arg use_aws_tts)">
-			<rosparam file="$(find harmoni_tts)/config/configuration.yaml"/>
+			<rosparam file="$(find harmoni_tts)/config/configuration.yaml" subst_value="True"/>
 			<param name="/polly/default_param/outdir" value="$(find harmoni_tts)/temp_data"/>
 			<param name="instance_id_tts" value="$(arg instance_id)"/>
 			<param name="name_tts" value="polly"/>

@@ -1,6 +1,6 @@
 qt:
   default_param:
-    path: "/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_gesture/data"
+    path: "$(find harmoni_gesture)/data"
     rate: 10
     robot_joint_topic: "qt_robot/joints/state"
     robot_joint_radians_topic: "qt_robot/joints/state_rad"

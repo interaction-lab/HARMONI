@@ -3,7 +3,7 @@
 
 PKG = 'test_harmoni_gesture'
 # Common Imports
-import unittest, rospy, roslib, sys
+import unittest, rospy, rospkg, roslib, sys
 #from unittest.mock import Mock, patch
 # Specific Imports
 from actionlib_msgs.msg import GoalStatus
@@ -26,7 +26,14 @@ class TestGesture(unittest.TestCase):
         self.test_gesture_input = "{'gesture':'QT/bye', 'timing': 0.5}"
         self.result = False
         rospy.loginfo("TestGesture: Started up. waiting for gesture startup")
-        self.gesture_service = GestureService("test_gesture", param={"path":"/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_gesture/data",  "rate": 10,"robot_joint_topic": "qt_robot/joints/state", "robot_joint_radians_topic": "qt_robot/joints/state_rad", "robot_gesture_topic":"qt_robot/gesture/play","time_interval":0.01})
+        rospack = rospkg.RosPack()
+        self.gesture_service = GestureService("test_gesture", 
+            param={"path": rospack.get_path("harmoni_gesture") + "/data",  
+                "rate": 10,
+                "robot_joint_topic": "qt_robot/joints/state", 
+                "robot_joint_radians_topic": "qt_robot/joints/state_rad", 
+                "robot_gesture_topic":"qt_robot/gesture/play",
+                "time_interval":0.01})
         rospy.loginfo("TestGesture: Started")
     
     

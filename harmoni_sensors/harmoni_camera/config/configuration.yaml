@@ -5,4 +5,4 @@ camera:
     show: True
     video_format: "rgb8"
     fps: 30
-    test_outdir: "/root/harmoni_catkin_ws/src/HARMONI/harmoni_sensors/harmoni_camera/temp_data/test_example.png"
+    test_outdir: "$(find harmoni_camera)/temp_data/test_example.png"
