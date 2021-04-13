@@ -312,31 +312,54 @@ class SequentialPattern(HarmoniServiceManager):
 
 
 def main():
-    pattern_name = rospy.get_param("/pattern_name/")
-    test = rospy.get_param("/test_" + pattern_name + "/")
-    test_input = rospy.get_param("/test_input_" + pattern_name + "/")
-    instance_id = rospy.get_param("/instance_id_" + pattern_name + "/")
-    # trigger_intent = rospy.get_param("/test_input_" + pattern_name + "/")
+    """Set names, collect params, and give service to server"""
+
+    pattern_to_use = rospy.get_param("pattern_name")
+    instance_id = rospy.get_param("instance_id")  # "default"
+    service_id = f"{pattern_to_use}_{instance_id}"
+
     rospack = rospkg.RosPack()
     pck_path = rospack.get_path("harmoni_pattern")
-    pattern_script_path = pck_path + f"/pattern_scripting/{pattern_name}.json"
+    pattern_script_path = pck_path + f"/pattern_scripting/{pattern_to_use}.json"
     with open(pattern_script_path, "r") as read_file:
         script = json.load(read_file)
+
     try:
-        rospy.init_node(pattern_name)
-        # Initialize the pattern with pattern sequence/loop
-        dp = SequentialPattern(pattern_name, script)
-        service_server = HarmoniServiceServer(name=pattern_name, service_manager=dp)
-        if test:
-            rospy.loginfo(
-                f"START: Set up. Testing first step of {pattern_name} pattern."
-            )
-            dp.start()
-        else:
-            service_server.start_sending_feedback()
+        rospy.init_node(pattern_to_use)
+
+        # multiple_choice/default_param/[all your params]
+        params = rospy.get_param(pattern_to_use + "/" + instance_id + "_param/")
+
+        s = SequentialPattern(pattern_to_use, script)
+
+        service_server = HarmoniServiceServer(service_id, s)
+
+        service_server.start_sending_feedback()
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
+
+    # pattern_to_use = rospy.get_param("/pattern_name/")
+    # test = rospy.get_param("/test_" + pattern_to_use + "/")
+    # # test_input = rospy.get_param("/test_input_" + pattern_to_use + "/")
+    # instance_id = rospy.get_param("/instance_id_" + pattern_to_use + "/")
+    # # trigger_intent = rospy.get_param("/test_input_" + pattern_to_use + "/")
+
+    # try:
+    #     rospy.init_node(pattern_to_use)
+    #     # Initialize the pattern with pattern sequence/loop
+    #     dp = SequentialPattern(pattern_to_use, script)
+    #     service_server = HarmoniServiceServer(name=pattern_to_use, service_manager=dp)
+    #     if test:
+    #         rospy.loginfo(
+    #             f"START: Set up. Testing first step of {pattern_to_use} pattern."
+    #         )
+    #         dp.start()
+    #     else:
+    #         service_server.start_sending_feedback()
+    #     rospy.spin()
+    # except rospy.ROSInterruptException:
+    #     pass
 
 
 if __name__ == "__main__":
