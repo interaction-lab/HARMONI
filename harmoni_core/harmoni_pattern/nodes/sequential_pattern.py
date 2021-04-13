@@ -22,15 +22,37 @@ import threading
 
 
 class SequentialPattern(HarmoniServiceManager):
-    """
-    Dialoging pattern class
+    """Plays through a sequence of steps described in the script json
+
+    Script is made of a sequence of 'set' objects. Each set has a sequence of steps.
+    The steps provide directions for an action request to a node. Steps can consist
+    of a list of steps which will be executed in parallel.
+
+    Set types include:
+        'setup' which plays once at the start
+        'sequence' which plays through once
+        'loop'  which continues indefinitely
+
+    Actions specify the service id (e.g. tts_default), and the following:
+        'action_goal' the type of command to give to the service (e.g. DO, START, STOP, etc.)
+        'resource_type' the type of server expected to provide the service
+        'wait_for' the condition to wait for
+        'trigger' the additional message to send to the service
+
+    Results from services are stored in a single dictionary with the service
+    name as the key and the results in a list. Each result is tagged with the time received
+    and data recieved.
+
+    Detections are gathered with individual callbacks to each detector's topic and stored with
+    the results.
+
     """
 
     def __init__(self, name, script):
         super().__init__(name)
         """Init the behavior pattern and setup the clients"""
         self.script = script
-        self.end_pattern = False
+        self.end_pattern = False  # Variable for interupting the script
         self.scripted_services = set()  # services used in this script
         self.script_set_index = 0
 
@@ -38,20 +60,21 @@ class SequentialPattern(HarmoniServiceManager):
         self._setup_clients()
 
         if script[self.script_set_index]["set"] == "setup":
-            self.setup(script[self.script_set_index]["steps"])
+            self.setup_services(script[self.script_set_index]["steps"])
             self.script_set_index += 1
 
         self.state = State.INIT
         return
 
     def _setup_clients(self):
-        """
-        Set up all clients that have been configured in the
-        harmoni_decision module
+        """Set up clients to all services that have been scripted
+
+        Also checks that the service matches what has been specified in the
+        decision configuration file.
         """
         list_repos = hf.get_all_repos()
         for repo in list_repos:
-            [repo_child_list, child_list] = hf.get_service_list_of_repo(repo)
+            [_, child_list] = hf.get_service_list_of_repo(repo)
             for child in child_list:
                 self.configured_services.extend(hf.get_child_list(child))
 
@@ -63,24 +86,35 @@ class SequentialPattern(HarmoniServiceManager):
         for client in self.scripted_services:
             self.service_clients[client] = HarmoniActionClient(client)
             self.client_results[client] = deque()
+
         rospy.loginfo("Clients created")
         rospy.loginfo(
-            f"{self.name} Pattern needs these services: {self.scripted_services}"
+            f"{self.name} Pattern requires these services: {self.scripted_services}"
         )
 
-        for cl, client in self.service_clients.items():
-            client.setup_client(cl, self._result_callback, self._feedback_callback)
+        for name, client in self.service_clients.items():
+            client.setup_client(name, self._result_callback, self._feedback_callback)
         rospy.loginfo("Behavior interface action clients have been set up!")
         return
 
     def _get_services(self, script):
+        """Extract all the services used in a given script.
+
+        Args:
+            script (list of dicts): list of sets of actions that
+
+        Returns:
+            list: names of all the services
+        """
         service_names = set()
         for s in script:
             steps = s["steps"]
             for step in steps:
+
                 if isinstance(step, list):
                     for parallel_step in step:
                         service_names.add(next(iter(parallel_step)))
+
                 else:
                     service_names.add(next(iter(step)))
         return service_names
@@ -98,37 +132,35 @@ class SequentialPattern(HarmoniServiceManager):
         return
 
     def _feedback_callback(self, feedback):
-        """ Send the feedback state to the Behavior Pattern tree to decide what to do next """
-        rospy.logdebug("The feedback recieved is %s and nothing more" % feedback)
+        """ Feedback is currently just logged """
+        rospy.logdebug("The feedback recieved is %s." % feedback)
         # Check if the state is end, stop the behavior pattern
         # if feedback["state"] == State.END:
         #    self.end_pattern = True
         return
 
     def _detecting_callback(self, data, service_name):
-        """Callback function from subscribing to the detector topic """
-        # HERE WE SHOULD GET THE DATA FOR PASSING THEM TO THE NEXT STEP
+        """Store data from detection to client_results dictionary"""
         data = data.data
         self.client_results[service_name].append({"time": time(), "data": data})
         return
 
     def start(self):
-        """Send goal request to appropriate child"""
+        """Iterate through steps of the script until reaching the end."""
         self.state = State.START
         r = rospy.Rate(1)
         while self.script_set_index < len(self.script) and not rospy.is_shutdown():
+            # If scripts were not setup in the init, they will be here
             if self.script[self.script_set_index]["set"] == "setup":
-                self.setup(self.script[self.script_set_index]["steps"])
+                self.setup_services(self.script[self.script_set_index]["steps"])
 
             elif self.script[self.script_set_index]["set"] == "sequence":
-                self.count = -1
-                self.do_sequence(self.script[self.script_set_index]["steps"])
+                # self.count = -1
+                self.do_steps(self.script[self.script_set_index]["steps"])
 
             elif self.script[self.script_set_index]["set"] == "loop":
-                self.count = -1
-                self.do_sequence(
-                    self.script[self.script_set_index]["steps"], looping=True
-                )
+                # self.count = -1
+                self.do_steps(self.script[self.script_set_index]["steps"], looping=True)
             elif self.end_pattern:
                 # for client in self.scripted_services:
                 #    self.stop(client)
@@ -137,10 +169,11 @@ class SequentialPattern(HarmoniServiceManager):
             r.sleep()
         return
 
-    def stop(self, service):
-        """Stop the Behavior Pattern """
+    def stop(self):
+        """Stop the Pattern Player """
         try:
-            self.service_clients[client].cancel_goal()
+            for _, client in self.service_clients.items():
+                client.cancel_goal()
             self.state = State.SUCCESS
         except Exception as E:
             self.state = State.FAILED
@@ -148,18 +181,26 @@ class SequentialPattern(HarmoniServiceManager):
 
     def pause(self):
         """Pause the Behavior Pattern """
+        # TODO: implement a pause
         return
 
-    def setup(self, children):
-        for child in children:
-            service = next(iter(child))
-            details = child[service]
+    def setup_services(self, setup_steps):
+        """Setup sensor and detector services
+
+        Sensors and detectors are directed to turn 'ON' and a callback
+        is created for detectors.
+
+        Args:
+            setup_steps (list of dicts): call to each sensor/detector to set up.
+        """
+        for service, details in setup_steps.items():
 
             assert details["resource_type"] in [
                 "sensor",
                 "detector",
             ], "Can only set up sensors or detectors"
 
+            # Send request for each sensor service to set themselves up
             self.service_clients[service].send_goal(
                 action_goal=ActionType[details["action_goal"]].value,
                 optional_data="Setup",
@@ -171,8 +212,10 @@ class SequentialPattern(HarmoniServiceManager):
                 service_list = service.split("_")
                 service_id = "_".join(service_list[0:-1])
 
-                topic = f"/harmoni/detecting/{service_id}/default"
-                rospy.loginfo(f"subscribing to {topic}")
+                topic = f"/harmoni/detecting/{service_id}/{service_list[-1]}"
+
+                rospy.loginfo(f"subscribing to topic: {topic}")
+
                 rospy.Subscriber(
                     topic,
                     String,
@@ -183,57 +226,75 @@ class SequentialPattern(HarmoniServiceManager):
 
         return
 
-    def do_sequence(self, sequence, looping=False):
-        """
-        Do sequence, Update state and send the goal according to the current state
+    def do_steps(self, sequence, looping=False):
+        """Directs the services to do each of the steps scripted in the sequence
 
         Args:
-            data: are the optional data to input to the service
+            sequence (list of dicts): Each dict specifies a call to a service
+            looping (bool, optional): If true will loop the sequence indefinitely. Defaults to False.
         """
 
-        result = None
+        passthrough_result = None
         for cnt, step in enumerate(sequence, start=1):
             if rospy.is_shutdown():
                 return
             rospy.loginfo(f"------------- Starting sequence step: {cnt}-------------")
-            if result:
-                rospy.loginfo(f"with prior result length ({len(result)})")
+
+            if passthrough_result:
+                rospy.loginfo(f"with prior result length ({len(passthrough_result)})")
+
             else:
                 rospy.loginfo("no prior result")
-            result = self.request_step(step, result)
+
+            passthrough_result = self.handle_step(step, passthrough_result)
+
             rospy.loginfo(f"************* End of sequence step: {cnt} *************")
 
         if looping:
             rospy.loginfo("Done with a loop!")
-            # TODO check on loop condition before continuing
             if not rospy.is_shutdown():
-                self.do_sequence(sequence, looping=True)
+                self.do_steps(sequence, looping=True)
 
         return
 
-    def request_step(self, step, optional_data=None):
-        """Send goal request to appropriate child"""
+    def handle_step(self, step, optional_data=None):
+        """Handle cases for different types of steps
+
+        Handles:
+            parallel execution of list steps
+            erronious calls to sensors
+            pulling latest data from detectors
+            making requests of actuators or other services
+
+        Args:
+            step ([type]): [description]
+            optional_data ([type], optional): [description]. Defaults to None.
+
+        Returns:
+            [type]: [description]
+        """
+        # If it is an array, it means that is a parallel actions, so I start multiple goals
+        # In the current implementation parallel actions return values will not get passed on
+        # TODO modify to collect results and return them
         if isinstance(step, list):
             threads = []
-            # If it is an array, it means that is a parallel actions, so I start multiple goals
-            # In the current implementation parallel actions return values will not get passed on
             rospy.loginfo("Running action in parallel-ish (launching multiple goals)")
             for i, sub_action in enumerate(step, start=1):
                 t = threading.Thread(
-                    target=self.request_step, args=(sub_action, optional_data)
+                    target=self.handle_step, args=(sub_action, optional_data)
                 )
                 threads.append(t)
                 t.start()
-                # result = self.request_step(sub_action, optional_data)
+                # result = self.handle_step(sub_action, optional_data)
             for t in threads:
                 t.join()
             result = None
             return result
+
         else:
             service = next(iter(step))
             details = step[service]
             rospy.loginfo(f"Step is {service} with details {details}")
-            # rospy.loginfo(f"and optional_data {optional_data}")
             assert details["resource_type"] in [
                 "sensor",
                 "detector",
@@ -243,51 +304,96 @@ class SequentialPattern(HarmoniServiceManager):
 
             self.state = State.REQUEST
 
-            # HANDLE SENSOR AND DETECTOR CASE
             if details["resource_type"] == "sensor":
                 rospy.logwarn("Sensor should be set up during init")
                 result = None
 
             elif details["resource_type"] == "detector":
-                rospy.loginfo(f"Retrieving data from detector: {service}")
-                if details["wait_for"] == "new":
-                    return_data = self.get_new_result(service)
-                else:
-                    rospy.logwarn("Not waiting for a detector may return last result")
-                    if len(self.client_results[service]) > 0:
-                        return_data = self.client_results[service].popleft()["data"]
-                    return_data = None
+                return_data = self.make_detector_request(service, details)
 
-            else:  # Should be a request and response from an actuator or service
-                if "trigger" in details.keys():
-                    optional_data = details["trigger"]
-                elif not optional_data:
-                    optional_data = ""
-                rospy.loginfo(
-                    f"Sending goal to {service} optional_data len {len(optional_data)}"
-                )
-                self.service_clients[service].send_goal(
-                    action_goal=ActionType[details["action_goal"]].value,
-                    optional_data=optional_data,
-                    wait=False,
-                )
-                rospy.loginfo(f"Goal sent to {service}")
-                self.state = State.SUCCESS
-                if details["wait_for"] == "new":
-                    return_data = self.get_new_result(service)
-                else:
-                    rospy.logwarn("Not waiting for a detector may return last result")
-                    if len(self.client_results[service]) > 0:
-                        return_data = self.client_results[service].popleft()["data"]
-                    else:
-                        return_data = None
+            else:
+                return_data = self.make_service_request(service, details, optional_data)
+        return return_data
+
+    def make_service_request(self, service, details, optional_data):
+        """Sends a goal to a service
+
+        Args:
+            service (str): Name of the service
+            details (dict): goal details
+            optional_data (str): can be either the prior result or the trigger from the script
+
+        Returns:
+            str: the result of the request
+        """
+        # The trigger has priority to be passed through, then the prior result
+        # if neither are set it will be left as ""
+        if "trigger" in details.keys():
+            optional_data = details["trigger"]
+        elif not optional_data:
+            optional_data = ""
+
+        rospy.loginfo(
+            f"Sending goal to {service} optional_data len {len(optional_data)}"
+        )
+
+        # The request will be made without waiting as the get_new_result function
+        # can handle the waiting
+        self.service_clients[service].send_goal(
+            action_goal=ActionType[details["action_goal"]].value,
+            optional_data=optional_data,
+            wait=False,
+        )
+
+        rospy.loginfo(f"Goal sent to {service}")
+
+        self.state = State.SUCCESS
+
+        if details["wait_for"] == "new":
+            return_data = self.get_new_result(service)
+
+        else:
+            rospy.logwarn("Not waiting for a detector may return last result")
+            if len(self.client_results[service]) > 0:
+                return_data = self.client_results[service].popleft()["data"]
+
+            else:
+                return_data = None
 
         return return_data
 
+    def make_detector_request(self, service, details):
+        """Get detection result from detector service
+
+        Args:
+            service (str): Name of the detector service
+            details (dict): dictionary of request details. 'wait_for' is the only relevant item
+
+        Returns:
+            str: the string version of the last detection
+        """
+        rospy.loginfo(f"Retrieving data from detector: {service}")
+        if details["wait_for"] == "new":
+            return_data = self.get_new_result(service)
+        else:
+            rospy.logwarn("Not waiting for a detector may return old result")
+            if len(self.client_results[service]) > 0:
+                return_data = self.client_results[service].popleft()["data"]
+            return_data = None
+        return return_data
+
     def get_new_result(self, service):
+        """Waits for a new result for the service to be set
+
+        Args:
+            service (str): Name of the service
+
+        Returns:
+            str: Result data
+        """
         rospy.loginfo("getting result from the service")
-        rospy.loginfo(f"Queue size is {len(self.client_results[service])}")
         rospy.loginfo(f"Queue is {self.client_results[service]}")
+        rospy.loginfo(f"Queue size is {len(self.client_results[service])}")
 
         call_time = time()
         result = {"time": 0, "data": "_the_queue_is_empty"}
@@ -298,8 +404,10 @@ class SequentialPattern(HarmoniServiceManager):
         r = rospy.Rate(1)
         while result["time"] < call_time and not rospy.is_shutdown():
             rospy.loginfo(f"got old message length ({len(result['data'])})")
+
             if len(self.client_results[service]) > 0:
                 result = self.client_results[service].popleft()
+
             r.sleep()
 
         if len(result["data"]) < 500:
@@ -307,7 +415,6 @@ class SequentialPattern(HarmoniServiceManager):
         rospy.loginfo(
             f"Recieved result message length ({len(result['data'])}) from service {service}"
         )
-        # self._result_callback({"do_action": True, "message": result["data"]})
         return result["data"]
 
 
