@@ -304,14 +304,18 @@ def main():
     Main function for starting HarmoniPolly service
     """
     service_name = ActuatorNameSpace.tts.name
-    name = rospy.get_param("/name_" + service_name + "/")
-    instance_id = rospy.get_param("/instance_id_" + service_name + "/")
+    instance_id = rospy.get_param("instance_id")
+    service_id = f"{service_name}_{instance_id}"
+    # name = rospy.get_param("/name_" + service_name + "/")
     try:
         rospy.init_node(service_name)
-        param = rospy.get_param(name + "/" + instance_id + "_param/")
-        service = hf.set_service_server(service_name, instance_id)
-        s = AWSTtsService(service, param)
-        service_server = HarmoniServiceServer(name=service, service_manager=s)
+
+        param = rospy.get_param(service_name + "/" + instance_id + "_param/")
+
+        s = AWSTtsService(service_id, param)
+
+        service_server = HarmoniServiceServer(service_id, s)
+
         service_server.start_sending_feedback()
         rospy.spin()
     except rospy.ROSInterruptException:
