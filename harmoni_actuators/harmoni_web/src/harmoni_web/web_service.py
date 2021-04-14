@@ -48,8 +48,7 @@ class WebService(HarmoniServiceManager):
         return
 
     def setup_web(self):
-        """Setup the web service, and waiting for the web browser to connect
-        """
+        """Setup the web service, and waiting for the web browser to connect"""
         rospy.loginfo("Setting up the %s" % self.name)
         rospy.loginfo("Checking that web is connected to ROS websocket")
         rospy.wait_for_service(
@@ -68,30 +67,43 @@ class WebService(HarmoniServiceManager):
 
         Returns:
             response (int): state of the request (SUCCESS, FAIL)
-            message (str): content of the response message 
+            message (str): content of the response message
         """
         rospy.loginfo("Start the %s do" % self.name)
         self.state = State.REQUEST
         self.actuation_completed = False
-        self.result_msg=""
-        self.end_listening=False
+        self.result_msg = ""
+        self.end_listening = False
         data_array = self._get_web_data(data)
+
         try:
-            def daemon():
-                while not rospy.is_shutdown() and not self.end_listening:
-                    rospy.loginfo(f"Waiting for user, the results is: {self.result_msg}")
-                    if self.end_listening:
-                        break
-                    rospy.sleep(1)
-                rospy.logdebug(
-                    f"Message Received {self.result_msg}"
-                )  # "\"My name is chris\""
-                self.state = State.SUCCESS
-                self.actuation_completed = True
-                self.response_received = True
-                self.end_listening = False
-            d = threading.Thread(target=daemon)
-            d.start()
+            while not rospy.is_shutdown() and not self.end_listening:
+                rospy.loginfo(f"Waiting for user, the results is: {self.result_msg}")
+                if self.end_listening:
+                    break
+                rospy.sleep(0.1)
+            rospy.logdebug(
+                f"Message Received {self.result_msg}"
+            )  # "\"My name is chris\""
+            self.state = State.SUCCESS
+            self.actuation_completed = True
+            self.response_received = True
+            self.end_listening = False
+            # def daemon():
+            #     while not rospy.is_shutdown() and not self.end_listening:
+            #         rospy.loginfo(f"Waiting for user, the results is: {self.result_msg}")
+            #         if self.end_listening:
+            #             break
+            #         rospy.sleep(1)
+            #     rospy.logdebug(
+            #         f"Message Received {self.result_msg}"
+            #     )  # "\"My name is chris\""
+            #     self.state = State.SUCCESS
+            #     self.actuation_completed = True
+            #     self.response_received = True
+            #     self.end_listening = False
+            # d = threading.Thread(target=daemon)
+            # d.start()
         except Exception:
             self.state = State.FAILED
             self.actuation_completed = True
@@ -111,7 +123,7 @@ class WebService(HarmoniServiceManager):
         """
         rospy.loginfo("Start the %s do" % self.name)
         self.state = State.REQUEST
-        self.result_msg=""
+        self.result_msg = ""
         self.actuation_completed = False
         data_array = self._get_web_data(data)
         try:
@@ -133,7 +145,7 @@ class WebService(HarmoniServiceManager):
             data (str): string of behavior_data object from TTS
 
         Returns:
-            web_array (list): array of items with corresponding values of "container_id" and "set_view" to display when speaking 
+            web_array (list): array of items with corresponding values of "container_id" and "set_view" to display when speaking
         """
         data = ast.literal_eval(data)
         web_array = []
@@ -178,7 +190,7 @@ class WebService(HarmoniServiceManager):
         """Callback for subscription to the web page"""
         rospy.loginfo("Received an event from the webpage")
         print(type(event.data))
-        self.end_listening=True
+        self.end_listening = True
         # self.result_msg = str(event)[2:-2]
         self.result_msg = event.data
         return
