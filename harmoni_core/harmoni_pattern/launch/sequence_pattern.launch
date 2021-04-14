@@ -2,10 +2,13 @@
    
 	<arg name="pattern_name" default="multiple_choice"/>
 	<arg name="instance_id" default="default"/>
+    <!-- To start on launch of pattern use the flag start:=true -->
+	<arg name="start" default="false"/>
 
     <rosparam file="$(find harmoni_pattern)/config/configuration.yaml" subst_value="True"/>
     <param name="instance_id" value="$(arg instance_id)"/>
     <param name="pattern_name" value="$(arg pattern_name)"/>
-    <node pkg="harmoni_pattern" type="sequential_pattern.py" name="harmoni_pattern" output="screen"  args="$(arg test) $(arg test_input) $(arg instance_id)"/>
+    <param name="start" value="$(arg start)"/>
+    <node pkg="harmoni_pattern" type="sequential_pattern.py" name="harmoni_pattern" output="screen"  />
 
 </launch>

@@ -151,6 +151,8 @@ class SequentialPattern(HarmoniServiceManager):
         r = rospy.Rate(1)
         while self.script_set_index < len(self.script) and not rospy.is_shutdown():
             # If scripts were not setup in the init, they will be here
+            rospy.loginfo("Running the following steps:")
+            rospy.loginfo(self.script[self.script_set_index]["steps"])
             if self.script[self.script_set_index]["set"] == "setup":
                 self.setup_services(self.script[self.script_set_index]["steps"])
 
@@ -193,36 +195,37 @@ class SequentialPattern(HarmoniServiceManager):
         Args:
             setup_steps (list of dicts): call to each sensor/detector to set up.
         """
-        for service, details in setup_steps.items():
+        for d in setup_steps:
+            for service, details in d.items():
 
-            assert details["resource_type"] in [
-                "sensor",
-                "detector",
-            ], "Can only set up sensors or detectors"
+                assert details["resource_type"] in [
+                    "sensor",
+                    "detector",
+                ], "Can only set up sensors or detectors"
 
-            # Send request for each sensor service to set themselves up
-            self.service_clients[service].send_goal(
-                action_goal=ActionType[details["action_goal"]].value,
-                optional_data="Setup",
-                wait=details["wait_for"],
-            )
-
-            if details["resource_type"] == "detector":
-                # Split off last part of node name to get the topic (e.g. stt_default -> stt)
-                service_list = service.split("_")
-                service_id = "_".join(service_list[0:-1])
-
-                topic = f"/harmoni/detecting/{service_id}/{service_list[-1]}"
-
-                rospy.loginfo(f"subscribing to topic: {topic}")
-
-                rospy.Subscriber(
-                    topic,
-                    String,
-                    self._detecting_callback,
-                    callback_args=service,
-                    queue_size=1,
+                # Send request for each sensor service to set themselves up
+                self.service_clients[service].send_goal(
+                    action_goal=ActionType[details["action_goal"]].value,
+                    optional_data="Setup",
+                    wait=details["wait_for"],
                 )
+
+                if details["resource_type"] == "detector":
+                    # Split off last part of node name to get the topic (e.g. stt_default -> stt)
+                    service_list = service.split("_")
+                    service_id = "_".join(service_list[0:-1])
+
+                    topic = f"/harmoni/detecting/{service_id}/{service_list[-1]}"
+
+                    rospy.loginfo(f"subscribing to topic: {topic}")
+
+                    rospy.Subscriber(
+                        topic,
+                        String,
+                        self._detecting_callback,
+                        callback_args=service,
+                        queue_size=1,
+                    )
 
         return
 
@@ -421,6 +424,7 @@ class SequentialPattern(HarmoniServiceManager):
 def main():
     """Set names, collect params, and give service to server"""
 
+    call_start = rospy.get_param("start")
     pattern_to_use = rospy.get_param("pattern_name")
     instance_id = rospy.get_param("instance_id")  # "default"
     service_id = f"{pattern_to_use}_{instance_id}"
@@ -432,12 +436,14 @@ def main():
         script = json.load(read_file)
 
     try:
-        rospy.init_node(pattern_to_use)
+        rospy.init_node(pattern_to_use, log_level=rospy.INFO)
 
         # multiple_choice/default_param/[all your params]
         params = rospy.get_param(pattern_to_use + "/" + instance_id + "_param/")
 
         s = SequentialPattern(pattern_to_use, script)
+        if call_start:
+            s.start()
 
         service_server = HarmoniServiceServer(service_id, s)
 

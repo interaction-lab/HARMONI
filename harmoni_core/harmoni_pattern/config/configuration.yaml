@@ -3,12 +3,22 @@ dialogue:
     trigger_intent: "Hey"
     pattern_scripting: $(find harmoni_pattern)/pattern_scripting/dialogue.json
 
-multiple-choice:
+multiple_choice:
   default_param:
     trigger_intent: "Hey"
-    pattern_scripting: $(find harmoni_pattern)/pattern_scripting/multiple-choice.json
+    pattern_scripting: $(find harmoni_pattern)/pattern_scripting/multiple_choice.json
 
 type_dialogue:
   default_param:
     trigger_intent: "Hey"
     pattern_scripting: $(find harmoni_pattern)/pattern_scripting/type_dialogue.json
+
+listening:
+  default_param:
+    trigger_intent: "Hey"
+    pattern_scripting: $(find harmoni_pattern)/pattern_scripting/listening.json
+
+mic_test:
+  default_param:
+    trigger_intent: "Hey"
+    pattern_scripting: $(find harmoni_pattern)/pattern_scripting/mic_test.json
