@@ -1,0 +1,10 @@
+<!-- This is an example launch file for how a ROS application could use a node -->
+<launch>
+    <rosparam file="$(find harmoni_face_detect)/config/configuration.yaml"/>
+	<param name="instance_id" value="default"/>
+	<node pkg="harmoni_face_detect" type="facenet_service.py" name="harmoni_face_detect_facenet_default" output="screen"/>
+
+
+	<param name="test_facenet_input" value="$(find harmoni_face_detect)/test/test_data/composer.jpg"/>
+    <test test-name="test_facenet" pkg="harmoni_face_detect" type="test_facenet.py"/>
+</launch>

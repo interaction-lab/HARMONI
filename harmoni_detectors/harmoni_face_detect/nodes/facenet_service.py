@@ -41,14 +41,19 @@ class FacenetFaceDetector(HarmoniServiceManager):
         self._upsampling = param["up_sampling"]
         self._rate = param["rate_frame"]
         self.subscriber_id = param["subscriber_id"]
-        self.update(State.INIT)
+        # self.update(State.INIT)
         self.detector_threshold = detector_threshold
         self.service_id = hf.get_child_id(self.name)
         self._image_source = (
-            SensorNameSpace.camera.value + self.subscriber_id + "watching"
-        )  # /harmoni/sensing/watching/harmoni_camera"
+            SensorNameSpace.camera.value + self.subscriber_id + "/watching"
+        )  # /harmoni/sensing/camera/default/watching"
+        print("Expected image source: ", self._image_source)
         self._image_sub = (
             None  # assign this when start() called. #TODO test subscription during init
+        )
+        print(
+            "Expected detected destination: ",
+            DetectorNameSpace.face_detect.value + self.service_id,
         )
         self._face_pub = rospy.Publisher(
             DetectorNameSpace.face_detect.value + self.service_id,
@@ -154,24 +159,43 @@ class FacenetFaceDetector(HarmoniServiceManager):
 
 
 def main():
-    service_name = DetectorNameSpace.face_detect.name
-    name = rospy.get_param("/name_" + service_name + "/")
-    test = rospy.get_param("/test_" + service_name + "/")
-    test_input = rospy.get_param("/test_input_" + service_name + "/")
-    instance_id = rospy.get_param("/instance_id_" + service_name + "/")
-    try:
-        rospy.init_node(service_name)
-        param = rospy.get_param(name + "/" + instance_id + "_param/")
+    # service_name = DetectorNameSpace.face_detect.name
+    # name = rospy.get_param("/name_" + service_name + "/")
+    # test = rospy.get_param("/test_" + service_name + "/")
+    # test_input = rospy.get_param("/test_input_" + service_name + "/")
+    # instance_id = rospy.get_param("/instance_id_" + service_name + "/")
+    # try:
+    #     rospy.init_node(service_name)
+    #     param = rospy.get_param(name + "/" + instance_id + "_param/")
 
-        service = hf.get_service_server_instance_id(service_name, instance_id)
-        s = FacenetFaceDetector(service, param)
-        service_server = HarmoniServiceServer(name=service, service_manager=s)
-        if test:
-            rospy.loginfo("Testing the %s" % (service))
-            s.start(test_input)
-        else:
-            service_server.start_sending_feedback()
-            rospy.spin()
+    #     service = hf.get_service_server_instance_id(service_name, instance_id)
+    #     s = FacenetFaceDetector(service, param)
+    #     service_server = HarmoniServiceServer(name=service, service_manager=s)
+    #     if test:
+    #         rospy.loginfo("Testing the %s" % (service))
+    #         s.start(test_input)
+    #     else:
+    #         service_server.start_sending_feedback()
+    #         rospy.spin()
+    # except rospy.ROSInterruptException:
+    #     pass
+
+    service_name = DetectorNameSpace.face_detect.name  # "w2l"
+    instance_id = rospy.get_param("instance_id")  # "default"
+    service_id = f"{service_name}_{instance_id}"
+
+    try:
+        rospy.init_node(service_name, log_level=rospy.DEBUG)
+
+        # w2l/default_param/[all your params]
+        params = rospy.get_param(service_name + "/" + instance_id + "_param/")
+
+        s = FacenetFaceDetector(service_id, params)
+        print("CREATING SERVER WITH SERVICE_ID: ", service_id)
+        service_server = HarmoniServiceServer(service_id, s)
+
+        service_server.start_sending_feedback()
+        rospy.spin()
     except rospy.ROSInterruptException:
         pass
 
