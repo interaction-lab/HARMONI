@@ -3,7 +3,7 @@
 # Common Imports
 import rospy
 import roslib
-
+import threading
 from harmoni_common_lib.constants import State
 from harmoni_common_lib.service_server import HarmoniServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
@@ -22,22 +22,18 @@ class WebService(HarmoniServiceManager):
     Web service
     """
 
-    def __init__(self, name, param):
+    def __init__(self, name):
         """ Initialization of variables and web parameters """
         super().__init__(name)
         self.name = name
-        self.user_id = param["user_id"]
-        self.timer_interval = param["timer_interval"]
         self.service_id = hf.get_child_id(self.name)
         self.is_request = True
-        """Setup publisher and subscriber """
         self.web_sub = rospy.Subscriber(
             ActuatorNameSpace.web.value + self.service_id + "/listen_click_event",
             String,
             self._event_click_callback,
             queue_size=1,
         )
-        print(ActuatorNameSpace.web.value + self.service_id + "/set_view")
         self.web_pub = rospy.Publisher(
             ActuatorNameSpace.web.value + self.service_id + "/set_view",
             String,
@@ -46,14 +42,14 @@ class WebService(HarmoniServiceManager):
         self.text_pub = rospy.Publisher(
             DetectorNameSpace.stt.value + self.service_id, String, queue_size=10
         )
-        """ Setup the web request """
         self.setup_web()
         self.result = None
-        """Setup the web service as server """
         self.state = State.INIT
         return
 
     def setup_web(self):
+        """Setup the web service, and waiting for the web browser to connect
+        """
         rospy.loginfo("Setting up the %s" % self.name)
         rospy.loginfo("Checking that web is connected to ROS websocket")
         rospy.wait_for_service(
@@ -63,35 +59,59 @@ class WebService(HarmoniServiceManager):
         return
 
     def request(self, data):
-        """ Do the display view"""
+        """Request to web page: requesting to the webpage to display something and waiting for a user event (e.g., button click, input text)
+
+        Args:
+            data (str): string of json which contains two items: {"container_id": str, "set_view": str}
+                container_id: id of the container found in the ./web/src/config/config.json file
+                set_view: the content you want to set your container of (e.g., string of image location, text)
+
+        Returns:
+            response (int): state of the request (SUCCESS, FAIL)
+            message (str): content of the response message 
+        """
         rospy.loginfo("Start the %s do" % self.name)
         self.state = State.REQUEST
         self.actuation_completed = False
-        self.result_msg = None
+        self.result_msg=""
+        self.end_listening=False
         data_array = self._get_web_data(data)
         try:
-            rospy.sleep(1)
-            for data in data_array:
-                self.send_request(data)
-                rospy.sleep(0.2)
-            while not rospy.is_shutdown() and not self.result_msg:
-                rospy.logdebug("Waiting for user")
-                rospy.sleep(0.2)
-            rospy.loginfo(
-                f"Message Recieved {self.result_msg}"
-            )  # "\"My name is chris\""
-            self.state = State.SUCCESS
-            self.actuation_completed = True
-            self.response_received = True
+            def daemon():
+                while not rospy.is_shutdown() and not self.end_listening:
+                    rospy.loginfo(f"Waiting for user, the results is: {self.result_msg}")
+                    if self.end_listening:
+                        break
+                    rospy.sleep(1)
+                rospy.logdebug(
+                    f"Message Received {self.result_msg}"
+                )  # "\"My name is chris\""
+                self.state = State.SUCCESS
+                self.actuation_completed = True
+                self.response_received = True
+                self.end_listening = False
+            d = threading.Thread(target=daemon)
+            d.start()
         except Exception:
             self.state = State.FAILED
             self.actuation_completed = True
-        return
+        return {"response": self.state, "message": self.result_msg}
 
     def do(self, data):
-        """ Do the display view"""
+        """Do to web page (display a page on the web browser)
+
+        Args:
+            data (str): string of json which contains two items: {"container_id": str, "set_view": str}
+                container_id: id of the container found in the ./web/src/config/config.json file
+                set_view: the content you want to set your container of (e.g., string of image location, text)
+
+        Returns:
+            response (int): state of the request (SUCCESS, FAIL)
+            message (str): empty string (not expecting any response)
+        """
         rospy.loginfo("Start the %s do" % self.name)
         self.state = State.REQUEST
+        self.result_msg=""
         self.actuation_completed = False
         data_array = self._get_web_data(data)
         try:
@@ -104,9 +124,17 @@ class WebService(HarmoniServiceManager):
         except Exception:
             self.state = State.FAILED
             self.actuation_completed = True
-        return
+        return {"response": self.state, "message": self.result_msg}
 
     def _get_web_data(self, data):
+        """Getting web data from the TTS results
+
+        Args:
+            data (str): string of behavior_data object from TTS
+
+        Returns:
+            web_array (list): array of items with corresponding values of "container_id" and "set_view" to display when speaking 
+        """
         data = ast.literal_eval(data)
         web_array = []
         if not isinstance(data, list):
@@ -136,7 +164,11 @@ class WebService(HarmoniServiceManager):
         return web_array
 
     def send_request(self, display_view):
-        """ Send the request to the web page"""
+        """Sending the request to the web page
+
+        Args:
+            display_view (str): string oj json with information to display ("container_id" and "set_view" values)
+        """
         rospy.loginfo("Sending request to webpage")
         print(display_view)
         self.web_pub.publish(display_view)
@@ -146,31 +178,24 @@ class WebService(HarmoniServiceManager):
         """Callback for subscription to the web page"""
         rospy.loginfo("Received an event from the webpage")
         print(type(event.data))
+        self.end_listening=True
         # self.result_msg = str(event)[2:-2]
         self.result_msg = event.data
         return
 
 
 def main():
+    """Set names, collect params, and give service to server"""
     service_name = ActuatorNameSpace.web.name
-    name = rospy.get_param("/name_" + service_name + "/")
-    test = rospy.get_param("/test_" + service_name + "/")
-    test_input = rospy.get_param("/test_input_" + service_name + "/")
-    instance_id = rospy.get_param("/instance_id_" + service_name + "/")
+    instance_id = rospy.get_param("/instance_id")
+    service_id = f"{service_name}_{instance_id}"
     try:
         rospy.init_node(service_name)
-        param = rospy.get_param(name + "/" + instance_id + "_param/")
-
-        service = hf.get_service_server_instance_id(service_name, instance_id)
-        s = WebService(service, param)
-        service_server = HarmoniServiceServer(name=service, service_manager=s)
-        if test:
-            rospy.loginfo("Testing the %s" % (service))
-            rospy.sleep(2)
-            s.do(test_input)
-        else:
-            service_server.start_sending_feedback()
-            rospy.spin()
+        # params = rospy.get_param(service_name + "/" + instance_id + "_param/")
+        s = WebService(service_id)
+        service_server = HarmoniServiceServer(service_id, s)
+        service_server.start_sending_feedback()
+        rospy.spin()
     except rospy.ROSInterruptException:
         pass
 

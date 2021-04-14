@@ -224,6 +224,7 @@ class MouthService(HarmoniServiceManager):
         """
         rospy.loginfo("Do expressions")
         self.actuation_completed = False
+        self.result_msg=""
         [valid_face_expression, visemes] = self.get_face_data(data)
         try:
             self.state = State.REQUEST
@@ -268,11 +269,9 @@ class MouthService(HarmoniServiceManager):
                 rospy.sleep(valid_face_expression[-1]["au_ms"])
             self.state = State.SUCCESS
             self.actuation_completed = True
-            self.result_msg=""
         except Exception:
             self.state = State.FAILED
             self.actuation_completed = True
-            self.result_msg=""
         rospy.loginfo("Completed Expression")
         return {"response": self.state, "message": self.result_msg}
 

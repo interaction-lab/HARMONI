@@ -1,5 +1,4 @@
-var page = "pageContent2";
-//var view = "container_2";
+var page = "pageContent";
 
 $(document).ready(function () {
 
@@ -12,17 +11,34 @@ $(document).ready(function () {
                     var component = v.component;
                     var children = v.children;
                     var id_parent = "body_page";
-                    handleComponents(children, id, component, id_parent);
+                    var comp_class = "";
+                    if(v.hasOwnProperty('comp_class')){
+                        comp_class = v.comp_class
+                    }
+                    handleComponents(children, id, component, id_parent, comp_class);
                     $("#" + id).hide();
                 });
             };
         });
     })
         .done(function () {
-            //$("#"+view).show();
+            if(view.includes("code")){
+                console.log("Added code script")
+                addCode()
+                console.log("Added record script")
+                record()
+            }
+            if(show){
+                $("#"+view).show();
+            }
+            // ADD HERE the event click event
             $("button").on("click", function () {
-                var value_item = $(this).closest('container').find('div.button');
-                var value = value_item.prevObject.prevObject[0].previousSibling
+                var value = ""
+                if(view.includes("code")){
+                    var value_item = $(this).closest('container').find('div.button');
+                    console.log(value_item)
+                    var value = value_item.prevObject.prevObject[0].previousSibling
+                } 
                 setValueButton(this, value);
                 clickListener(this);
             });
@@ -33,6 +49,7 @@ $(document).ready(function () {
 });
 
 function viewListener(view) {
+    console.log("VIEW LISTENER")
     //Waiting for the view request from the ROS package
     console.log(view.data)
     var data = view.data.replace(/'/g, '"')
@@ -44,6 +61,7 @@ function viewListener(view) {
             $("#" + component).attr("src", content);
             $("#" + component).attr("value", content);
             $('img', "#"+component).attr('src', content);
+            $("#"+ component).children().unbind('click');
         }
         else {
             $("#" + component).html(content)
@@ -51,42 +69,102 @@ function viewListener(view) {
     } else if (component.includes("container")) {
         $(".container").hide()
     }
+    disableOptions()
     $("#" + component).show();
+    //setTimeout(function(){ $("#"+ component).children().bind('click'); }, 3000);
+};
+
+
+function requestListener(view) {
+    console.log("REQUEST LISTENER")
+    //Waiting for the view request from the ROS package
+    console.log(view.data)
+    var data = view.data.replace(/'/g, '"')
+    var json_data = JSON.parse(data)
+    var component = json_data.component_id
+    var content = json_data.set_content
+    if (content != "") {
+        if (component.includes("img")) {
+            $("#" + component).attr("src", content);
+            $("#" + component).attr("value", content);
+            $('img', "#"+component).attr('src', content);
+            //$("#"+ component).children().bind('click');
+        }
+        else {
+            $("#" + component).html(content)
+        }
+    } else if (component.includes("container")) {
+        $(".container").hide()
+    }
+    $("#"+ component).children().bind('click'); 
+    enableOptions()
+    $("#" + component).show();
+    //setTimeout(function(){ $("#"+ component).children().bind('click'); enableOptions()}, 3000);
 };
 
 function setValueButton(clicked_button, value_item){
     console.log(value_item)
     var selected_butt = clicked_button.id;
-    var input_value = document.getElementById(value_item.id).value;
-    //$("#"+value_item).attr("value")
-    $("#"+selected_butt).attr("value",input_value);
+    console.log(selected_butt)
+    if(value_item!=null && value_item!=""){
+        if(selected_butt!="start_button"){
+            var input_value = document.getElementById(value_item.id).value;
+            //$("#"+value_item).attr("value")
+            $("#"+selected_butt).attr("value",input_value);
+        }
+    }
 }
 
 function clickListener(clicked_component) {
     var selected_item = clicked_component.id;
-    $("#"+selected_item).css("opacity", "0.5");
+    var selected_item_id = selected_item
+    //$("#"+selected_item).css("opacity", "0.5");
     if (selected_item.includes("img")){
         var selected_item = clicked_component.value;
+        var selected_item_id = clicked_component.id;
     }
     console.log("Clicked")
-    $("#"+selected_item).css("opacity", "1");
-    user_response_publisher.publish({ data: JSON.stringify(clicked_component.getAttribute("value")) })
+    //$("#"+selected_item).css("opacity", "1");
+    if(clicked_component.getAttribute("value")!="" && clicked_component.getAttribute("value")!=null){
+        var body =  {component_id:selected_item_id , set_view:clicked_component.getAttribute("value")}
+    }else{
+        var body =  {component_id:selected_item_id , set_view:""}
+    }
+    console.log("The response is", body)
+    user_response_publisher.publish({data: JSON.stringify(body)})
+    disableOptions()       
     // Send the event clicked to the ROS package
 }
 
-function handleComponents(children, id, component, id_parent) {
+
+function disableOptions(){
+    $(".option_choice").addClass("disabled")
+}
+
+function enableOptions(){
+    if ($(".option_choice").hasClass("disabled")){
+        $(".option_choice").removeClass("disabled")
+    }
+}
+
+
+function handleComponents(children, id, component, id_parent, comp_class) {
     if (Array.isArray(children)) {
-        var component_html = createComponent(component, children, id);
+        var component_html = createComponent(component, children, id, comp_class);
         $("#" + id_parent).append(component_html);
         $.each(children, function (k_c, v_c) {
             console.log(v_c);
             var id_c = v_c.id;
             var component_c = v_c.component;
             var children_c = v_c.children;
-            handleComponents(children_c, id_c, component_c, id);
+            var class_c = "";
+            if(v_c.hasOwnProperty('comp_class')){
+                class_c = v_c.comp_class
+            }
+            handleComponents(children_c, id_c, component_c, id, class_c);
         });
     } else {
-        var component_html = createComponent(component, children, id);
+        var component_html = createComponent(component, children, id, comp_class);
         $("#" + id_parent).append(component_html);
 
 
@@ -94,22 +172,28 @@ function handleComponents(children, id, component, id_parent) {
 }
 
 
-function createComponent(component, content, id) {
+function createComponent(component, content, id, comp_class) {
+    if(comp_class==""){
+        comp_class="default"
+    }
     switch (component) {
         case "container":
-            var html = "<div class ='container' id=" + id + "></div>";
+            var html = "<div class ='container "+comp_class+"' id=" + id + "></div>";
             break;
         case "click_img":
-            var html = "<a id=" + id + "><img src=" + content + "></a>";
+            var html = "<a id=" + id +"><img class="+comp_class+"  src=" + content + "></a>";
             break;
         case "img":
-            var html = "<img src=" + content + " id=" + id + ">";
+            var html = "<img class="+comp_class+"  src='" + content + "' id=" + id + ">";
+            break;
+        case "video":
+            var html = "<video class="+comp_class+"  src='" + content + "' id=" + id + " muted autoplay loop>";
             break;
         case "text":
             if (!Array.isArray(content)) {
-                var html = "<p id=" + id + ">" + content + "</p>";
+                var html = "<p class="+comp_class+"  id=" + id + ">" + content + "</p>";
             } else {
-                var html = "<p id=" + id + "></p>";
+                var html = "<p class="+comp_class+"  id=" + id + "></p>";
             }
             break;
         case "title":
@@ -120,16 +204,24 @@ function createComponent(component, content, id) {
             }
             break;
         case "input_text":
-                var html = "<input id="+ id +" type='text' name='inputext'>";
+                var html = "<input class="+comp_class+"  id="+ id +" type='text' name='inputext' >";
                 break;
+        case "input_number":
+            var html = "<input class="+comp_class+"  id="+ id +" type='number' name='inpnumb' maxlength="+content+">";
+            break;
         case "button":
-            var html = "<button id=" + id + " value= ''>" + content + "</button>";
+            if (!Array.isArray(content)) {
+                var html = "<button class="+comp_class+"  id=" + id + " value= ''>" + content + "</button>";
+            } else {
+                var html = "<button class="+comp_class+"  id=" + id + " value= ''></button>";
+            }    
+        
             break;
         case "row":
-            var html = "<div class='row' id=" + id + "></div>";
+            var html = "<div class='row "+comp_class+"' id=" + id + "></div>";
             break;
         case "col":
-            var html = "<div class='col' id=" + id + "></div>";
+            var html = "<div class='col "+comp_class+"' id=" + id + "></div>";
             break;
     }
     return html;
