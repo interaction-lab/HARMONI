@@ -21,7 +21,7 @@ def nop_cb(goal_handle):
 
 
 # @class HarmoniActionServer
-# @brief The HarmoniActionServer
+# @brief The HarmoniActionServer is a modification of the SimpleActionServer
 # implements a singe goal policy on top of the ActionServer class. The
 # specification of the policy is as follows: only one goal can have an
 # active status at a time, new goals preempt previous goals based on the
@@ -41,7 +41,7 @@ class HarmoniActionServer(object):
     # publishing as soon as it comes up.
     # THIS SHOULD ALWAYS BE SET TO FALSE TO AVOID RACE CONDITIONS and start() should be
     # called after construction of the server.
-    def __init__(self, name, execute_cb=None, auto_start=False):
+    def __init__(self, name, execute_cb=None, preempt_cb=None, auto_start=False):
 
         self.name = name
         self.new_goal = False
@@ -50,7 +50,7 @@ class HarmoniActionServer(object):
 
         self.execute_callback = execute_cb
         self.goal_callback = None
-        self.preempt_callback = None
+        self.preempt_callback = preempt_cb
 
         self.need_to_terminate = False
         self.terminate_mutex = threading.RLock()
@@ -85,19 +85,6 @@ class HarmoniActionServer(object):
         self._result = harmoniResult()
         self.start()
 
-    # def _goal_received_callback(self, goal):
-    #     """ Save the goal data, set the goal to received, and execute the child callback """
-    #     self.optional_data = goal.optional_data  # input data for the module
-    #     self.condition = (
-    #         goal.condition
-    #     )  # event condition to wait before starting the action
-    #     rospy.loginfo(f"(Server) The goal is a {goal.action_type} request")
-    #     self.goal_received = True
-    #     # rospy.loginfo("The goal is: %i" % goal.action_type)
-    #     # Perform the callback set by child
-    #     self.execute_goal_received_callback(goal)
-    #     return
-
     def __del__(self):
         if hasattr(self, "execute_callback") and self.execute_callback:
             with self.terminate_mutex:
@@ -105,14 +92,6 @@ class HarmoniActionServer(object):
 
             assert self.execute_thread
             self.execute_thread.join()
-
-    def get_preemption_status(self):
-        preempted = False
-        if self.is_preempt_requested():
-            rospy.loginfo(f"(Server) {self.action_goal} Action Preemepted")
-            self.set_preempted()
-            preempted = True
-        return preempted
 
     # @brief Accepts a new goal when one is available The status of this
     # goal is set to active upon acceptance, and the status of any
@@ -178,16 +157,6 @@ class HarmoniActionServer(object):
         status = self.current_goal.get_goal_status().status
         return status == GoalStatus.ACTIVE or status == GoalStatus.PREEMPTING
 
-    def send_result(self, do_action, message):
-        """Send the result and action set to succeded"""
-        self._result.do_action = do_action
-        self._result.message = message
-        self.set_succeeded(self._result)
-        rospy.loginfo(
-            f"(Server) sending result {do_action} to actiontype {self.action_goal}"
-        )
-        return
-
     # @brief Sets the status of the active goal to succeeded
     # @param  result An optional result to send back to any clients of the goal
     def set_succeeded(self, result=None, text=""):
@@ -204,17 +173,13 @@ class HarmoniActionServer(object):
                 result = self.get_default_result()
             self.current_goal.set_aborted(result, text)
 
-    def send_feedback(self, state):
-        """ Send the state as feedback"""
-        self._feedback.state = state
-        self.publish_feedback(self._feedback)
-        rospy.logdebug("(Server) The feedback is " + str(self._feedback.state))
-        return
-
     # @brief Publishes feedback for a given goal
     # @param  feedback Shared pointer to the feedback to publish
-    def publish_feedback(self, feedback):
-        self.current_goal.publish_feedback(feedback)
+    def publish_feedback(self, state):
+        self._feedback.state = state
+        rospy.logdebug("(Server) The feedback is " + str(self._feedback.state))
+
+        self.current_goal.publish_feedback(self._feedback)
 
     def get_default_result(self):
         return self.action_server.ActionResultType()
@@ -344,6 +309,7 @@ class HarmoniActionServer(object):
                 return
 
             if self.is_new_goal_available():
+                rospy.logwarn(f"(Server) The goal is available")
                 # accept_new_goal() is performing its own locking
                 goal = self.accept_new_goal()
                 self.optional_data = goal.optional_data  # input data for the module

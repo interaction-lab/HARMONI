@@ -1,0 +1,19 @@
+actions: []
+authors: Chris Birmingham <cbirming@usc.edu>
+brief: ''
+bugtracker: ''
+depends:
+- catkin
+- python-pyaudio
+- python-catkin-pkg
+- rostest
+- rospy
+- rosunit
+description: The harmoni_bot package
+license: MIT
+maintainers: Chris Birmingham <cbirming@usc.edu>
+msgs: []
+package_type: package
+repo_url: ''
+srvs: []
+url: ''

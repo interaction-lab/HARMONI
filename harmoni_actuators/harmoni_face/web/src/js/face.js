@@ -176,7 +176,7 @@ function startFace(
     // -----------------
 
     if (ros_master_uri == "") {
-        ros_master_uri = "ws://" + location.hostname + ":9090"
+        ros_master_uri = "ws://" + location.hostname + ":9000"
     }
     console.log("ROS master URI: " + ros_master_uri)
 

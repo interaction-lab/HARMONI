@@ -57,6 +57,7 @@ RUN \
     # catkin_tools \
     # AWS
     boto3 \
+    wget \
     awscli \
     google-cloud-speech==1.3.2 \
     dialogflow \

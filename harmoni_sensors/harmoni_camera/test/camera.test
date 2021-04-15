@@ -1,0 +1,7 @@
+<launch>
+    <rosparam file="$(find harmoni_camera)/config/configuration.yaml" subst_value="True"/>
+    <node pkg="harmoni_camera" type="camera_service.py" name="harmoni_camera_default" output="screen"/>
+
+    <param name="instance_id" value="default"/>
+    <test test-name="test_camera" pkg="harmoni_camera" type="rostest_camera.py" />
+</launch>
