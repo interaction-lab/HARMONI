@@ -151,16 +151,13 @@ class GestureInterface(HarmoniServiceManager):
 
 def main():
     service_name = ActuatorNameSpace.gesture.name
-    name = rospy.get_param("/name_" + service_name + "/")
-    test = rospy.get_param("/test_" + service_name + "/")
-    test_input = rospy.get_param("/test_input_" + service_name + "/")
-    instance_id = rospy.get_param("/instance_id_" + service_name + "/")
+    instance_id = rospy.get_param("/instance_id")
+    service_id = f"{service_name}_{instance_id}"
+
     try:
-        rospy.init_node(service_name + "_" + name)
-        param = rospy.get_param(name + "/" + instance_id + "_param/")
-        service = hf.get_service_server_instance_id(service_name, instance_id)
-        s = GestureInterface(service, param)
-        # service_server = HarmoniServiceServer(name=service, service_manager=s)
+        rospy.init_node(service_name + "_qt")
+        params = rospy.get_param(service_name + "/" + instance_id + "_param/")
+        s = GestureInterface(service_name, params)
         rospy.spin()
     except rospy.ROSInterruptException:
         pass

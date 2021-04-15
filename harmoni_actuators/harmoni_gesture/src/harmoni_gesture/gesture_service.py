@@ -21,16 +21,14 @@ class GestureService(HarmoniServiceManager):
     """
 
     def __init__(self, name, param):
-        """ Gesture"""
+        """ Initialization of variables and gesture parameters """
         super().__init__(name)
         self.gestures_name = []
         self.gestures_duration = []
         self.gesture_list_received = False
         self.gesture_done = False
-        """ Setup Params """
         self.name = name
         self.service_id = hf.get_child_id(self.name)
-        """ Setup the gesture """
         self.gesture_pub = rospy.Publisher(
             ActuatorNameSpace.gesture.value + self.service_id, String, queue_size=1
         )
@@ -46,18 +44,25 @@ class GestureService(HarmoniServiceManager):
             self._gesture_done_callback,
             queue_size=1,
         )
-        """Setup the gesture service as server """
         self.state = State.INIT
         self.setup_gesture()
         return
 
     def _gesture_done_callback(self, data):
-        """Gesture done """
+        """Callback function for gesture done
+
+        Args:
+            data (bool): gesture done (True)
+        """
         if data:
             self.gesture_done = True
 
     def _get_list_callback(self, data):
-        """Gesture list """
+        """Getting the list from the gesture reader
+
+        Args:
+            data (str): json of items of gesture for a specific robot 
+        """
         print("List callback")
         if self.gestures_name == []:
             rospy.loginfo("Gesture list received")
@@ -77,19 +82,34 @@ class GestureService(HarmoniServiceManager):
         return
 
     def do(self, data):
-        """ Do the gesture """
-        print("Do the gesture")
+        """Do the gesture
+
+        Args:
+            data (str): it could be a string of:
+             - object containing {"behavior_data": str} (as results of the TTS synthetization)
+             - object of: {"name": str, "timing": int}
+
+        Returns:
+            response (int): state of the DO action
+        """
         self.state = State.REQUEST
         self.actuation_completed = False
         if type(data) == str:
             data = ast.literal_eval(data)
         try:
             rospy.loginfo(f"length of data is {len(data)}")
-            gesture_data = self._get_gesture_data(data)
+            if "behavior_data" in data:
+                data = ast.literal_eval(data["behavior_data"])
+                gesture_data = self._get_gesture_data(data)
+            else:
+                gesture_data = data
+                self.gesture_pub.publish(str(data))
+            print(gesture_data)
             if gesture_data:
                 while not self.gesture_done:
                     self.state = State.REQUEST
             self.state = State.SUCCESS
+            self.gesture_done = False
             self.actuation_completed = True
         except IOError:
             rospy.logwarn("Gesture failed")
@@ -98,7 +118,14 @@ class GestureService(HarmoniServiceManager):
         return {"response": self.state}
 
     def _get_gesture_data(self, data):
-        """ Get only gesture data"""
+        """Getting the gesture data parsing the output of TTS
+
+        Args:
+            data (str): string of json {"behavior_data":str}
+
+        Returns:
+            [bool]: getting the gesture done (True)
+        """
         if type(data) == str:
             data = ast.literal_eval(data)
         behavior_data = ast.literal_eval(data["behavior_data"])
@@ -195,16 +222,13 @@ class GestureService(HarmoniServiceManager):
 
 def main():
     service_name = ActuatorNameSpace.gesture.name
-    name = rospy.get_param("/name_" + service_name + "/")
-    test = rospy.get_param("/test_" + service_name + "/")
-    test_input = rospy.get_param("/test_input_" + service_name + "/")
-    instance_id = rospy.get_param("/instance_id_" + service_name + "/")
+    instance_id = rospy.get_param("/instance_id")
+    service_id = f"{service_name}_{instance_id}"
     try:
         rospy.init_node(service_name)
-        param = rospy.get_param(name + "/" + instance_id + "_param/")
-        service = hf.get_service_server_instance_id(service_name, instance_id)
-        s = GestureService(service, param)
-        service_server = HarmoniServiceServer(name=service, service_manager=s)
+        params = rospy.get_param(service_name + "/" + instance_id + "_param/")
+        s = GestureService(service_name, params)
+        service_server = HarmoniServiceServer(service_id, s)
         service_server.start_sending_feedback()
         rospy.spin()
     except rospy.ROSInterruptException:
