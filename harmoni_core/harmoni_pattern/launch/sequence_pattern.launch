@@ -1,20 +1,14 @@
-<!-- This is an example launch file for how a ROS application could use a node -->
 <launch>
    
-	<arg name="use_pattern_dialogue" default="false"/>
-	<arg name="use_sequential_pattern" default="true"/>
-	<arg name="use_pattern_multiple_choice" default="false"/>
 	<arg name="pattern_name" default="multiple_choice"/>
-	<arg name="test" default="false"/>
-	<arg name="test_input" default="Hey"/>
-	<arg name="test_id" default="default"/>
-	<group if="$(arg use_sequential_pattern)">
-			<rosparam file="$(find harmoni_pattern)/config/configuration.yaml"/>
-			<param name="test_$(arg pattern_name)" value="$(arg test)"/>
-			<param name="test_input_$(arg pattern_name)" value="$(arg test_input)"/>
-			<param name="test_id_$(arg pattern_name)" value="$(arg test_id)"/>
-			<param name="pattern_name" value="$(arg pattern_name)"/>
-			<node pkg="harmoni_pattern" type="sequential_pattern.py" name="harmoni_pattern" output="screen"  args="$(arg test) $(arg test_input) $(arg test_id)"/>
-  	</group>
+	<arg name="instance_id" default="default"/>
+    <!-- To start on launch of pattern use the flag start:=true -->
+	<arg name="start" default="false"/>
+
+    <rosparam file="$(find harmoni_pattern)/config/configuration.yaml" subst_value="True"/>
+    <param name="instance_id" value="$(arg instance_id)"/>
+    <param name="pattern_name" value="$(arg pattern_name)"/>
+    <param name="start" value="$(arg start)"/>
+    <node pkg="harmoni_pattern" type="sequential_pattern.py" name="harmoni_pattern" output="screen"  />
 
 </launch>

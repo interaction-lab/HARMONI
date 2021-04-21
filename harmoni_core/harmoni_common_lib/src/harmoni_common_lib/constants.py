@@ -5,6 +5,9 @@ from enum import IntEnum, Enum
 
 
 class ActionType(IntEnum):
+    """Specifies all valid action types.
+    
+    """
     OFF = 0
     ON = 1
     PAUSE = 2
@@ -13,6 +16,15 @@ class ActionType(IntEnum):
 
 
 class State(IntEnum):
+    """State describes the status of a service.
+
+    INIT: The service has been initialized and is ready to recieve a request.
+    START: The service is doing a long running action.
+    REQUEST: The service has made a request and is waiting for the response.
+    SUCCESS: The service has successfully completed an action or request.
+    FAILED: The service failed to complete an action or request.
+    PAUSE: The service is paused.
+    """
     INIT = 0
     START = 1
     REQUEST = 2
@@ -21,17 +33,9 @@ class State(IntEnum):
     PAUSE = 5
 
 
-class Router(Enum):
-    SENSOR = "sensor"
-    DIALOGUE = "dialogue"
-    ACTUATOR = "actuator"
-    DETECTOR = "detector"
-
-
 class SensorNameSpace(Enum):
     microphone = "/harmoni/sensing/microphone/"
     camera = "/harmoni/sensing/camera/"
-    ROUTER = "/harmoni/sensing/"
 
 
 class ActuatorNameSpace(Enum):
@@ -40,18 +44,15 @@ class ActuatorNameSpace(Enum):
     tts = "/harmoni/actuating/tts/"
     web = "/harmoni/actuating/web/"
     gesture = "/harmoni/actuating/gesture/"
-    ROUTER = "/harmoni/actuating/"
 
 
 class DialogueNameSpace(Enum):
     bot = "/harmoni/dialoging/bot/"
-    ROUTER = "/harmoni/dialoging/"
 
 
 class DetectorNameSpace(Enum):
     stt = "/harmoni/detecting/stt/"
     face_detect = "/harmoni/detecting/face_detect/"
-    ROUTER = "/harmoni/detecting/"
 
 
 class Resources(Enum):

@@ -1,21 +1,21 @@
 # This is a script of example tests you can run in the command line
 
-roslaunch harmoni_tts tts_service.launch test:=true
+rostest harmoni_tts tts.test
 
-roslaunch harmoni_bot bot_service.launch test:=true
+rostest harmoni_bot bot.test
 
-roslaunch harmoni_face face_service.launch test:=true
+rostest harmoni_face face.test
 
-roslaunch harmoni_web web_service.launch test:=true
+rostest harmoni_web web.test
 
-roslaunch harmoni_speaker speaker_service.launch test:=true
+rostest harmoni_speaker speaker.test
 
-roslaunch harmoni_stt stt_service.launch test:=true
+rostest harmoni_stt w2l.test
 
-roslaunch harmoni_face_detect face_detect_service.launch test:=true
+rostest harmoni_face_detect face_detect.test
 
-roslaunch harmoni_camera camera_service.launch test:=true
+rostest harmoni_camera camera.test
 
-roslaunch harmoni_microphone microphone_service.launch test:=true
+rostest harmoni_microphone microphone.test
 
-harmoni_decision launcher.launch service:='harmoni,hardware'
+# harmoni_decision launcher.launch service:='harmoni,hardware'

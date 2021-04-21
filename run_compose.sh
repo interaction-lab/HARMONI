@@ -12,4 +12,4 @@ docker-compose up --remove-orphans
 # a new terminal:
 # docker exec -it [container_name] bash
 # for example:
-# docker exec -it harmoni_core bash
+# docker exec -it harmoni_full bash
