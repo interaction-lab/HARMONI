@@ -1,0 +1,10 @@
+<launch>
+   
+    <arg name="instance_id" default="default"/>
+
+    <param name="name_face_detect" value="facenet"/>
+    <param name="instance_id" value="$(arg instance_id)"/>
+
+    <node pkg="harmoni_face_detect" type="facenet_service.py" name="$(arg instance_id)" output="screen"/>
+
+</launch>

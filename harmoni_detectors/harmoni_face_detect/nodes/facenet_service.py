@@ -16,8 +16,11 @@ from harmoni_common_msgs.msg import Object2D, Object2DArray
 from sensor_msgs.msg import Image
 import sys
 
-sys.path.remove("/opt/ros/kinetic/lib/python2.7/dist-packages")
-sys.path.append("/opt/ros/kinetic/lib/python2.7/dist-packages")
+path = sys.path
+using_kinetic = any([True for p in path if ("kinetic" in p)])
+if using_kinetic:
+    sys.path.remove("/opt/ros/kinetic/lib/python2.7/dist-packages")
+    sys.path.append("/opt/ros/kinetic/lib/python2.7/dist-packages")
 
 from facenet_pytorch import MTCNN
 import cv2
@@ -41,12 +44,11 @@ class FacenetFaceDetector(HarmoniServiceManager):
         self._upsampling = param["up_sampling"]
         self._rate = param["rate_frame"]
         self.subscriber_id = param["subscriber_id"]
-        # self.update(State.INIT)
         self.detector_threshold = detector_threshold
-        self.service_id = hf.get_child_id(self.name)
+        self.service_id = name
         self._image_source = (
-            SensorNameSpace.camera.value + self.subscriber_id + "/watching"
-        )  # /harmoni/sensing/camera/default/watching"
+            SensorNameSpace.camera.value + self.subscriber_id
+        ) 
         print("Expected image source: ", self._image_source)
         self._image_sub = (
             None  # assign this when start() called. #TODO test subscription during init
@@ -117,7 +119,7 @@ class FacenetFaceDetector(HarmoniServiceManager):
         Args:
             image(Image): the image we want to run face detection on.
         """
-        frame = self._cv_bridge.imgmsg_to_cv2(image, desired_encoding="passthrough")
+        frame = self._cv_bridge.imgmsg_to_cv2(image, desired_encoding="rgb8")
         if frame is not None:
             h, w, _ = frame.shape
             boxes, probs, landmarks = MTCNN().detect(frame, landmarks=True)
@@ -191,7 +193,7 @@ def main():
         params = rospy.get_param(service_name + "/" + instance_id + "_param/")
 
         s = FacenetFaceDetector(service_id, params)
-        print("CREATING SERVER WITH SERVICE_ID: ", service_id)
+        rospy.loginfo(f"CREATING SERVER WITH SERVICE_ID: {service_id}")
         service_server = HarmoniServiceServer(service_id, s)
 
         service_server.start_sending_feedback()

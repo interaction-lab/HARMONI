@@ -59,7 +59,7 @@ class HarmoniServiceServer(HarmoniActionServer, object):
             else:
                 # if state has failed the node should be restarted
                 """FIXME: in general it is unlikely we can detect an unrecoverable
-                node failure in low level code, so the failure state should be more of
+                node failure in low level code (e.g. segfault), so the failure state should be more of
                 an indicator of wrong input or opportunity to retry than of node restart"""
                 break
         return
