@@ -1,0 +1,5 @@
+<launch>
+    <param name="instance_id" value="default"/>
+	<param name="test_db_input" value="{'name':'Chris'}"/>
+    <test test-name="test_db" pkg="harmoni_recorder" type="rostest_db.py" />
+</launch>

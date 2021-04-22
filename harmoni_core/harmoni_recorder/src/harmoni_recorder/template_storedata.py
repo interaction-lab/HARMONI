@@ -5,6 +5,7 @@ import rospy
 import roslib
 from mongodb_client import MongoDBClient
 
+
 def main():
     try:
         name="mongodb_client"
