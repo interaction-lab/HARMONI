@@ -12,6 +12,8 @@ import harmoni_common_lib.helper_functions as hf
 # Specific Imports
 from audio_common_msgs.msg import AudioData
 import numpy as np
+import base64 
+import requests
 
 # import wget
 import contextlib
@@ -27,7 +29,7 @@ class SpeakerService(HarmoniServiceManager):
         HarmoniServiceManager ([type]): [description]
     """
 
-    def __init__(self, name):
+    def __init__(self, name, robot_ip):
         """ Initialization of variables and camera parameters """
         super().__init__(name)
         self.audio_publisher = rospy.Publisher(
@@ -37,6 +39,7 @@ class SpeakerService(HarmoniServiceManager):
         )
         self.state = State.INIT
         self.rospack = rospkg.RosPack()
+        self.robot_ip = robot_ip
         return
 
     def do(self, data):
@@ -63,7 +66,16 @@ class SpeakerService(HarmoniServiceManager):
             data = data["audio_data"]
             rospy.loginfo("Writing data for speaker")
             rospy.loginfo(f"length of data is {len(data)}")
-            self.audio_publisher.publish(data)
+            self.audio_publisher.publish(data)#.tostring() TODO test if tostring is necessary
+            #Maximum size for the file is 3 Mb
+            response = requests.post('https://{}/api/audio'.format(self.robot_ip), 
+                                            data = {'filename':'test.wav', 
+                                                    "data":data,
+                                                    "ImmediatelyApply": true, 
+    #ImmediatelyApply flag make the robot reproduce the file
+                                                    "OverwriteExisting": true}) 
+    #Always overwrite the same file, so it's discarded the next time something is reproduced
+
             rospy.sleep(duration)
             self.state = State.SUCCESS
             self.actuation_completed = True
@@ -84,7 +96,7 @@ class SpeakerService(HarmoniServiceManager):
 
         Returns:
             json: return an object with two fields:
-                        - audio_data: string
+                        - audio_data: base64 encoded file
                         - duration: int (duration of the file)
         """
         file_handle = path
@@ -95,8 +107,11 @@ class SpeakerService(HarmoniServiceManager):
                 self.rospack.get_path("harmoni_speaker") + "/temp_data/test.wav"
             )
             # wget.download(url, file_handle)
-        data = np.fromfile(file_handle, np.uint8)[24:]  # Loading wav file
-        data = data.astype(np.uint8).tostring()
+        #data = np.fromfile(file_handle, np.uint8)[24:]  # Loading wav file
+        #it could be possible also to pass directly wav file 
+        data = base64.b64encode(open(file_handle).read())
+        #data = data.astype(np.uint8).tostring()
+
         with contextlib.closing(wave.open(file_handle, "r")) as f:
             frames = f.getnframes()
             rate = f.getframerate()

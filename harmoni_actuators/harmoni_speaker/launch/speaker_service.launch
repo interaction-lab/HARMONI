@@ -1,9 +1,9 @@
 <!-- This is an example launch file for how a ROS application could use a node -->
 <launch>
-   
+    <arg name="robot_ip"/>
 	<arg name="instance_id" default="default"/>
 	<param name="instance_id" value="$(arg instance_id)"/>
-    <node pkg="harmoni_speaker" type="speaker_service.py" name="harmoni_speaker_$(arg instance_id)" output="screen"/>
+    <node pkg="harmoni_speaker" type="speaker_service.py" name="harmoni_speaker_$(arg instance_id)" args ="$(arg robot_ip)" output="screen"/>
     
     <include file="$(find audio_play)/launch/play.launch">
         <arg name="do_timestamp" value = "false"/> 

@@ -7,6 +7,13 @@ Parameters input for the speaker service:
 |total_channels        |            |        |
 |audio_rate            |            |        |
 
+# Using Misty API
+An argument robot_ip has been added to the launch file. In order to launch the service the Ip of the robot needs to be provided to the launch file as argument. In the speaker_service class, the ip_is saved.
+In misty, the file must either be encoded in base64 or provided as file. 
+To reproduce the file the flag ImmediatelyApply has been set to True in the API call.
+The flag OverwriteExisting makes the new file replace the old, since the file is always called with the same name. 
+Another possible way of doing this was to separate into two different API call, SaveAudio with ImmediatelyApply set to false and then PlayAudioClip.
+
 # Setting up your speaker
 The speaker device is configured in the dockerfiles/config/asoundrc file, whose contents are shown below:
 
