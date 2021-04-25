@@ -14,6 +14,7 @@ from audio_common_msgs.msg import AudioData
 import numpy as np
 import base64 
 import requests
+from requests.exceptions import Timeout
 
 # import wget
 import contextlib
@@ -67,22 +68,30 @@ class SpeakerService(HarmoniServiceManager):
             rospy.loginfo("Writing data for speaker")
             rospy.loginfo(f"length of data is {len(data)}")
             self.audio_publisher.publish(data)#.tostring() TODO test if tostring is necessary
+            print("audiopub ok\n")
             #Maximum size for the file is 3 Mb
             response = requests.post('https://{}/api/audio'.format(self.robot_ip), 
                                             data = {'filename':'test.wav', 
                                                     "data":data,
-                                                    "ImmediatelyApply": true, 
+                                                    "ImmediatelyApply": True, 
     #ImmediatelyApply flag make the robot reproduce the file
-                                                    "OverwriteExisting": true}) 
+                                                    "OverwriteExisting": True},
     #Always overwrite the same file, so it's discarded the next time something is reproduced
-
+                                                    timeout = 1) 
+    #Timeout is set to one second. TODO test if it's enough
+            print("apicall ok\n")
             rospy.sleep(duration)
             self.state = State.SUCCESS
             self.actuation_completed = True
-        except IOError:
+        except Timeout:
+            rospy.logwarn("Speaker failed: The ip of the robot appears unreachable")
+            self.state = State.FAILED
+            self.actuation_completed = True
+        except IOError as e:
             rospy.logwarn("Speaker failed: Audio appears too busy")
             self.state = State.FAILED
             self.actuation_completed = True
+            print(e)
         return {"response": self.state}
 
     def file_path_to_audio_data(self, path):
@@ -109,7 +118,9 @@ class SpeakerService(HarmoniServiceManager):
             # wget.download(url, file_handle)
         #data = np.fromfile(file_handle, np.uint8)[24:]  # Loading wav file
         #it could be possible also to pass directly wav file 
-        data = base64.b64encode(open(file_handle).read())
+        with open(file_handle, 'rb') as f:
+            text = f.read()
+            data = base64.b64encode(text)
         #data = data.astype(np.uint8).tostring()
 
         with contextlib.closing(wave.open(file_handle, "r")) as f:
@@ -133,8 +144,10 @@ def main():
         rospy.init_node(service_name)
 
         # params = rospy.get_param(service_name + "/" + instance_id + "_param/")
+        param = rospy.get_param("/robot_ip")
+        rospy.loginfo(param)
 
-        s = SpeakerService(service_id)
+        s = SpeakerService(service_id, param)
 
         service_server = HarmoniServiceServer(service_id, s)
 
