@@ -32,7 +32,7 @@ class SpeakerService(HarmoniServiceManager):
 
     def __init__(self, name, robot_ip):
         """ Initialization of variables and camera parameters """
-        super().__init__(name)
+        super().__init__(name, robot_ip)
         self.audio_publisher = rospy.Publisher(
             "/audio/audio",
             AudioData,
@@ -40,7 +40,6 @@ class SpeakerService(HarmoniServiceManager):
         )
         self.state = State.INIT
         self.rospack = rospkg.RosPack()
-        self.robot_ip = robot_ip
         return
 
     def do(self, data):

@@ -33,3 +33,4 @@ ctl.!default {
 The speaker device is controlled by the hw values, currently listed as 0,0. To choose a speaker you may need to use the command ```aplay -L ``` to see what devices are available.
 
 To test that the speaker has been configured properly, use the command ```roslaunch harmoni_speaker speaker_service.launch test:=true``` which will play a short phrase through the configured device. You may need to experiement with different values to ensure the proper speaker is set up.
+Be sure to add the correct robot_ip argument to the launch file if you want to test the case with no exception, or to add a mock one if you to test the exception.

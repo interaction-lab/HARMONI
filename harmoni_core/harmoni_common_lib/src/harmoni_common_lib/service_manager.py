@@ -20,7 +20,7 @@ class HarmoniServiceManager(object):
 
     """
 
-    def __init__(self, name):
+    def __init__(self, name, robot_ip):
         """The service setup will instantiate the publishers, subscribers,
         class variables and clients.
 
@@ -31,6 +31,7 @@ class HarmoniServiceManager(object):
         # Default variables
         self.name = name
         self.service_clients = defaultdict(HarmoniActionClient)
+        self.robot_ip = robot_ip
         self.configured_services = []  # available services
         self.client_results = defaultdict(deque)  # store state of the service
 
