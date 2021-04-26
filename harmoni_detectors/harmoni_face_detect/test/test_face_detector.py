@@ -69,9 +69,8 @@ class TestFaceDetector_Common(unittest.TestCase):
         self.client = HarmoniActionClient(self.server)
         print("***********SETTING UP CLIENT")
         self.client.setup_client(
-            self.server, self._result_callback, self._feedback_callback, wait=False
+            self.server, self._result_callback, self._feedback_callback, wait=True
         )
-        rospy.sleep(3) # FIXME not sure why this is needed, but waits don't work and nothing goes through without it.
         print("DONE SETTING UP****************")
         rospy.loginfo("TestFaceDetector: Turning ON face_detect server")
         self.client.send_goal(
@@ -118,7 +117,7 @@ class TestFaceDetector_Valid(TestFaceDetector_Common):
         print("TEST_IO")
         rospy.loginfo(
             "TestFaceDetector[TEST]: basic IO test to ensure data "
-            + "(example image) is received and responded to. Waiting for transcription..."
+            + "(example image) is received and responded to. Waiting for detection..."
         )
         while not rospy.is_shutdown() and not self.result:
             # print("waiting for result")

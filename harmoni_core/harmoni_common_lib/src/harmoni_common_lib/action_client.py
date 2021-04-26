@@ -11,6 +11,15 @@ import roslib
 from harmoni_common_msgs.msg import harmoniGoal, harmoniAction
 from harmoni_common_lib.constants import State
 
+# Weird gcc threading workaround for ROS Kinetic. Reference: https://stackoverflow.com/a/65908383
+import sys
+path = sys.path
+using_kinetic = any([True for p in path if ("kinetic" in p)])
+if using_kinetic:
+    import ctypes
+    libgcc_s = ctypes.CDLL('libgcc_s.so.1')
+
+
 
 class SimpleGoalState:
     PENDING = 0
