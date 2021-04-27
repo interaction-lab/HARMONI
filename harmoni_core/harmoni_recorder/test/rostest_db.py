@@ -4,7 +4,7 @@
 PKG = "test_harmoni_recorder"
 # Common Imports
 import unittest, rospy, roslib, sys
-
+import rostest
 # Specific Imports
 from actionlib_msgs.msg import GoalStatus
 from harmoni_common_msgs.msg import harmoniAction, harmoniFeedback, harmoniResult
@@ -26,6 +26,7 @@ class TestDB(unittest.TestCase):
         self.data = rospy.get_param(
             "test_db_input"
         ) 
+        self.data = ast.literal_eval(self.data)
         self.instance_id = rospy.get_param("instance_id")
         self.result = False
         rospy.loginfo("TestDB: Started")
@@ -34,6 +35,7 @@ class TestDB(unittest.TestCase):
         rospy.loginfo(f"The input data is {self.data}")
         mdb_client = MongoDBClient(client_uri="mongodb://172.18.3.3:27017/", username="root", password="example")
         client = mdb_client.get_client()
+        print(client)
         id_inserted = client.harmoni.users.insert_one(self.data)
         if id_inserted:
             self.result=True
@@ -41,8 +43,6 @@ class TestDB(unittest.TestCase):
 
 
 def main():
-    import rostest
-
     rospy.loginfo("test_recorder started")
     rospy.loginfo("TestDB: sys.argv: %s" % str(sys.argv))
     rostest.rosrun(PKG, "test_recorder", TestDB, sys.argv)

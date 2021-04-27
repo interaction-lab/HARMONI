@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 
-PKG = 'test_harmoni_speaker'
+PKG = 'test_harmoni_recorder'
 # Common Imports
 import unittest, rospy, rospkg, roslib, sys
 #from unittest.mock import Mock, patch
@@ -27,6 +27,7 @@ class TestDB(unittest.TestCase):
         self.data = rospy.get_param(
             "test_db_input"
         ) 
+        self.data = ast.literal_eval(self.data)
         self.mdb_client = MongoDBClient(client_uri="mongodb://172.18.3.3:27017/", username="root", password="example")
         self.instance_id = rospy.get_param("instance_id")
         self.result = False

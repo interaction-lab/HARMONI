@@ -44,6 +44,7 @@ class RecordingManager(HarmoniServiceManager):
         self.merge_child = child_names[
             "audio_video_data"
         ]  # it returns an array: [0]: audio child, [1]: video child
+        self.state = State.INIT
         self.audio_children = {}
         self.video_children = {}
         self.path_audio = {}
@@ -114,7 +115,7 @@ class RecordingManager(HarmoniServiceManager):
                     child,
                     queue_size=1,
                 )
-        self.state = State.INIT
+        
 
     def start(self):
         self.state = State.START
@@ -207,20 +208,14 @@ class RecordingManager(HarmoniServiceManager):
 
 def main():
     name = rospy.get_param("/unit_name/")
-    test = rospy.get_param("/test_" + name + "/")
-    test_input = rospy.get_param("/test_input_" + name + "/")
-    instance_id = rospy.get_param("/instance_id_" + name + "/")
+    instance_id = rospy.get_param("/instance_id/")
     child_names = rospy.get_param("/" + name + "/")
     try:
         rospy.init_node(name)
         # Initialize the pattern with pattern sequence/loop
         rm = RecordingManager(name, child_names)
         service_server = HarmoniServiceServer(name=name, service_manager=rm)
-        if test:
-            rospy.loginfo(f"START: Set up. Testing first step of {name} pattern.")
-            rm.start()
-        else:
-            service_server.start_sending_feedback()
+        service_server.start_sending_feedback()
         rospy.spin()
     except rospy.ROSInterruptException:
         pass

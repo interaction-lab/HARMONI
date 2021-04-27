@@ -6,7 +6,7 @@ import roslib
 import pymongo  # package for working with MongoDB
 
 
-class MongoDBClient:
+class MongoDBClient(object):
 
     def __init__(self, client_uri, username, password):
         self.client = self.mongodb_connect(client_uri, username, password)
