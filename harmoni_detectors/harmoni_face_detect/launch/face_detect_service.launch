@@ -1,16 +1,20 @@
-<!-- This is an example launch file for how a ROS application could use a node -->
 <launch>
    
-	<arg name="use_face_detect" default="true"/>
-	<arg name="test" default="false"/>
-	<arg name="test_input" default="10"/>
-	<arg name="instance_id" default="default"/>
-  	<group if="$(arg use_face_detect)">
-	  		<rosparam file="$(find harmoni_face_detect)/config/configuration.yaml"/>
-	  		<param name="test_face_detect" value="$(arg test)"/>
-			<param name="test_input_face_detect" value="$(arg test_input)"/>
-			<param name="instance_id_face_detect" value="$(arg instance_id)"/>
-			<param name="name_face_detect" value="face_detect"/>
-			<node pkg="harmoni_face_detect" type="detector.py" name="harmoni_face_detect_$(arg instance_id)" output="screen"/>
-  	</group>
+    <arg name="service_to_use" default="dlib"/>
+    <arg name="instance_id" default="default"/>
+    <rosparam file="$(find harmoni_face_detect)/config/configuration.yaml" ns="/harmoni/detecting" subst_value="True"/>
+
+    <group ns="/harmoni/detecting/face_detect">
+        <group if="$(eval service_to_use == 'facenet')">
+            <include file="$(find harmoni_face_detect)/launch/include/facenet.launch">
+                <arg name="instance_id" value = "$(arg instance_id)"/> 
+            </include>
+        </group>
+        <group if="$(eval service_to_use == 'dlib')">
+            <include file="$(find harmoni_face_detect)/launch/include/dlib.launch">
+                <arg name="instance_id" value = "$(arg instance_id)"/> 
+            </include>
+        </group>
+    </group>
+
 </launch>

@@ -1,5 +1,3 @@
 web:
   default_param:
-    user_id: "user_id"
-    timer_interval: 0.01 #s
   

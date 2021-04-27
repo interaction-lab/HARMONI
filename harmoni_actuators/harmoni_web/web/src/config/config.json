@@ -1,125 +1,8 @@
 {
-    "pageContent2": [
+    "pageContent": [
         {
             "component": "container",
-            "id": "container_1",
-            "children": [
-                {
-                    "component": "row",
-                    "id": "row_1",
-                    "children": [
-                        {
-                            "component": "click_img",
-                            "children": "../assets/imgs/test.jpg",
-                            "id": "img_1"
-                        },
-                        {
-                            "component": "click_img",
-                            "children": "../assets/imgs/test.jpg",
-                            "id": "img_2"
-                        },
-                        {
-                            "component": "click_img",
-                            "children": "../assets/imgs/test.jpg",
-                            "id": "img_3"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "component": "container",
-            "id": "container_2",
-            "children": [
-                {
-                    "component": "row",
-                    "id": "row_3",
-                    "children": [
-                        {
-                            "component": "input_text",
-                            "children": "",
-                            "id": "input_1"
-                        },
-                        {
-                            "component": "button",
-                            "children": "Send",
-                            "id": "button_1"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "component": "container",
-            "id": "container_3",
-            "children": [
-                {
-                    "component": "img",
-                    "id": "img_bkg",
-                    "children": "../assets/imgs/test.jpg"
-                }
-            ]
-        }
-    ],
-    "pageContent1": [
-        {
-            "component": "container",
-            "id": "container_1",
-            "children": [
-                {
-                    "component": "img",
-                    "children": "../assets/imgs/test.jpg",
-                    "id": "img_1"
-                },
-                {
-                    "component": "title",
-                    "id": "title_1",
-                    "children": [
-                        {
-                            "component": "text",
-                            "id": "text_2",
-                            "children": "Text 2"
-                        }
-                    ]
-                },
-                {
-                    "component": "text",
-                    "children": "Insert text here",
-                    "id": "text_1"
-                },
-                {
-                    "component": "button",
-                    "children": "Click here!",
-                    "id": "button_1"
-                }
-            ]
-        },
-        {
-            "component": "container",
-            "id": "container_2",
-            "children": [
-                {
-                    "component": "img",
-                    "children": "../assets/imgs/test.jpg",
-                    "id": "img_2"
-                },
-                {
-                    "component": "text",
-                    "children": "Insert text here",
-                    "id": "text_2"
-                },
-                {
-                    "component": "button",
-                    "children": "Click here!",
-                    "id": "button_2"
-                }
-            ]
-        }
-    ],
-    "test": [
-        {
-            "component": "container",
-            "id": "container_1",
+            "id": "test_container",
             "children": [
                 {
                     "component": "title",
@@ -131,19 +14,19 @@
                     "id": "row_1",
                     "children": [
                         {
-                            "component": "click_img",
+                            "component": "img",
                             "children": "../assets/imgs/test.jpg",
-                            "id": "img_1"
+                            "id": "img_test1"
                         },
                         {
                             "component": "img",
                             "children": "../assets/imgs/test.jpg",
-                            "id": "img_2"
+                            "id": "img_test2"
                         },
                         {
                             "component": "img",
                             "children": "../assets/imgs/test.jpg",
-                            "id": "img_3"
+                            "id": "img_test3"
                         }
                     ]
                 },
@@ -172,51 +55,315 @@
         },
         {
             "component": "container",
-            "id": "container_2",
+            "id": "code_container",
+            "children": [
+                {
+                    "component": "img",
+                    "children": "../assets/imgs/logo.svg",
+                    "id": "back_video"
+                },
+                {
+                    "component": "row",
+                    "id": "insert_code",
+                    "comp_class":"overlay",
+                    "children": [
+                        {
+                            "component": "row",
+                            "id": "r_code_1",
+                            "comp_class":"",
+                            "children": [{
+                                "component": "text",
+                                "children": "Inserisci il codice qui!",
+                                "id": "p_1",
+                                "comp_class":""
+                            }]
+                            
+                        },
+                        
+                        {
+                            "component": "row",
+                            "id": "r_code_2",
+                            "comp_class":"",
+                            "children": [{
+                                "component": "input_number",
+                                "children": "1",
+                                "id": "code_1",
+                                "comp_class":"code"
+                            },
+                            {
+                                "component": "input_number",
+                                "children": "1",
+                                "id": "code_2",
+                                "comp_class":"code"
+                            },
+                            {
+                                "component": "input_number",
+                                "children": "1",
+                                "id": "code_3",
+                                "comp_class":"code"
+                            },
+                            {
+                                "component": "input_number",
+                                "children": "1",
+                                "id": "code_4",
+                                "comp_class":"code"
+                            },
+                            {
+                                "component": "input_number",
+                                "children": "1",
+                                "id": "code_5",
+                                "comp_class":"code"
+                            },
+                            {
+                                "component": "input_number",
+                                "children": "1",
+                                "id": "code_6",
+                                "comp_class":"code"
+                            }]
+                        }
+                         
+                    ]
+                }
+            ]
+        },
+        {
+            "component": "container",
+            "id": "idle_container",
+            "children": [
+                {
+                    "component": "img",
+                    "children": "../assets/imgs/logo.svg",
+                    "id": "back_video_idle"
+                },
+                {
+                    "component": "row",
+                    "id": "idle",
+                    "comp_class":"overlay",
+                    "children": [
+                        {
+                            "component": "text",
+                            "children": "Ciao!",
+                            "id": "p_idle",
+                            "comp_class":""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "component": "container",
+            "id": "sentence_repetition_container",
+            "children": [
+                {
+                    "component": "img",
+                    "children": "../assets/imgs/logo.svg",
+                    "id": "back_video_sr"
+                },
+                {
+                    "component": "row",
+                    "id": "sr",
+                    "comp_class":"overlay",
+                    "children": [
+                        {
+                            "component": "row",
+                            "id": "sr_1",
+                            "children":[
+                                {
+                                    "component": "text",
+                                    "children": "Clicca il bottone per registrare",
+                                    "id": "sr_text"
+                                }]
+                        },
+                        {
+                            "component": "row",
+                            "id": "sr_2",
+                            "children":[
+                                {
+                                    "component": "button",
+                                    "id": "start_button",
+                                    "children": [
+                                       
+                                        {
+                                            "component": "img",
+                                            "children": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22none%22%20d%3D%22M0%200h24v24H0V0z%22%2F%3E%3Cpath%20d%3D%22M12%2015c1.66%200%202.99-1.34%202.99-3L15%206c0-1.66-1.34-3-3-3S9%204.34%209%206v6c0%201.66%201.34%203%203%203zm-1.2-9.1c0-.66.54-1.2%201.2-1.2s1.2.54%201.2%201.2l-.01%206.2c0%20.66-.53%201.2-1.19%201.2s-1.2-.54-1.2-1.2V5.9zm6.5%206.1c0%203-2.54%205.1-5.3%205.1S6.7%2015%206.7%2012H5c0%203.41%202.72%206.23%206%206.72V22h2v-3.28c3.28-.48%206-3.3%206-6.72h-1.7z%22%2F%3E%3C%2Fsvg%3E",
+                                            "id": "start_img"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },{
+                            "component": "row",
+                            "id": "sr_3",
+                            "children":[{
+                                "component": "img",
+                                "id": "main_img_ret",
+                                "children": ""}
+                            ]
+                            
+                        }
+                        
+                    ]
+                }
+                
+            ]
+        },
+        {
+            "component": "container",
+            "id": "type_dialogue_container",
             "children": [
                 {
                     "component": "row",
                     "id": "row_3",
                     "children": [
                         {
-                            "component": "click_img",
-                            "children": "../assets/imgs/test.jpg",
-                            "id": "img_4"
+                            "component": "input_text",
+                            "children": "",
+                            "id": "input_1"
                         },
                         {
-                            "component": "img",
-                            "children": "../assets/imgs/test.jpg",
-                            "id": "img_5"
-                        },
+                            "component": "button",
+                            "children": "Send",
+                            "id": "button_1"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "component": "container",
+            "id": "multiple_choice_full_container",
+            "children": [
+                {
+                    "component": "row",
+                    "id": "row_back",
+                    "children": [
                         {
                             "component": "img",
-                            "children": "../assets/imgs/test.jpg",
-                            "id": "img_6"
+                            "id": "main_img_full",
+                            "children": ""
                         }
                     ]
                 },
                 {
                     "component": "row",
-                    "id": "row_4",
+                    "id": "row_options",
                     "children": [
                         {
-                            "component": "button",
-                            "children": "Click here!",
-                            "id": "button_5"
+                            "component": "click_img",
+                            "children": "",
+                            "id": "target_img_full",
+                            "comp_class":"option_choice"
                         },
                         {
-                            "component": "button",
-                            "children": "Click here!",
-                            "id": "button_6"
+                            "component": "click_img",
+                            "children": "",
+                            "id": "comp_img_full",
+                            "comp_class":"option_choice"
                         },
                         {
-                            "component": "button",
-                            "children": "Click here!",
-                            "id": "button_7"
+                            "component": "click_img",
+                            "children": "",
+                            "id": "distr_img_full",
+                            "comp_class":"option_choice"
                         }
                     ]
                 }
             ]
-        }
+        },{
+            "component": "container",
+            "id": "multiple_choice_alt_container",
+            "children": [
+                {
+                    "component": "row",
+                    "id": "row_options_alt",
+                    "children": [
+                        {
+                            "component": "click_img",
+                            "children": "",
+                            "id": "target_img_alt",
+                            "comp_class":"option_choice"
+                        },
+                        {
+                            "component": "click_img",
+                            "children": "",
+                            "id": "comp_img_alt",
+                            "comp_class":"option_choice"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "component": "container",
+            "id": "display_image_container",
+            "children": [ 
+                {
+                    "component": "img",
+                    "children": "../assets/imgs/logo.svg",
+                    "id": "main_img_alt"
+                }
+            ]
+        },
+        {
+            "component": "container",
+            "id": "multiple_choice_choices_container",
+            "children": [
+                {
+                    "component": "row",
+                    "id": "row_options_choices",
+                    "children": [
+                        {
+                            "component": "click_img",
+                            "children": "",
+                            "id": "target_img_choices",
+                            "comp_class":"option_choice"
+                        },
+                        {
+                            "component": "click_img",
+                            "children": "",
+                            "id": "comp_img_choices",
+                            "comp_class":"option_choice"
+                        },
+                        {
+                            "component": "click_img",
+                            "children": "",
+                            "id": "distr_img_choices",
+                            "comp_class":"option_choice"
+                        }
+                    ]
+                }
+                
+            ]
+        },
+        {
+            "component": "container",
+            "id": "multiple_choice_composed_container",
+            "children": [
+                {
+                    "component": "row",
+                    "id": "row_options_composed",
+                    "children": [
+                        {
+                            "component": "click_img",
+                            "children": "../assets/imgs/test.jpg",
+                            "id": "first_img",
+                            "comp_class":"option_choice"
+                        },
+                        {
+                            "component": "click_img",
+                            "children": "../assets/imgs/test.jpg",
+                            "id": "second_img",
+                            "comp_class":"option_choice"
+                        },
+                        {
+                            "component": "click_img",
+                            "children": "../assets/imgs/test.jpg",
+                            "id": "third_img",
+                            "comp_class":"option_choice"
+                        }
+                    ]
+                }
+        ]
+    }
     ]
 }

@@ -8,7 +8,7 @@
 	<arg name="instance_id" default="default"/>
 	<arg name="url" default="http://i3lab.elet.polimi.it/letssayresources/img/1_1_"/>
   	<group if="$(arg use_decision)">
-			<rosparam file="$(find harmoni_pattern)/config/configuration.yaml"/>
+			<rosparam file="$(find harmoni_pattern)/config/configuration.yaml" subst_value="True"/>
 			<param name="test_$(arg pattern_name)" value="$(arg test)"/>
 			<param name="test_input_$(arg pattern_name)" value="$(arg test_input)"/>
 			<param name="instance_id_$(arg pattern_name)" value="$(arg instance_id)"/>

@@ -110,9 +110,7 @@ def get_all_repos():
 
 
 def get_service_server_instance_id(service_name, input_id):
-    # FIXME this doesn't actually set anything, it gets a service server instance id.
-    # Change the name and all that call it.
-    """Set the service server name """
+    """Get the service server name """
     name = ""
     if _check_if_resources(service_name):
         service_server = get_child(service_name)  # child
@@ -142,6 +140,38 @@ def check_if_sensor(service_name):
             return True
     return False
 
+def topic_active(topic, msg_type):
+    """Determines if a topic has been published recently
+
+    Args:
+        topic (str): The topic path
+        msg_type (type): A message type, such as sensor_msgs.msg.Image
+
+    Returns:
+        bool: True if topic found with correct type
+    """
+    found = False
+    topics = rospy.get_published_topics()
+    type_str = msg_type_to_str(msg_type)
+    try:
+        # index() throws exception if not found
+        topics.index([topic,type_str])
+        found = True
+    except ValueError:
+        found = False
+    return found
+
+
+def msg_type_to_str(msg_type):
+    """Converts a message type to ROS topic type string
+
+    Args:
+        msg_type (type): A message type, such as sensor_msgs.msg.Image
+
+    Returns:
+        str: The message type string in ROS format: 'msg_set/TypeName'
+    """
+    return f"{str.split(str(msg_type)[8:],'.')[0]}/{msg_type.__name__}"
 
 def _check_if_resources(service):
     """Check if the service contains many resources """

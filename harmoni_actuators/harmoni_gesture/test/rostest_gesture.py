@@ -29,7 +29,7 @@ class TestGesture(unittest.TestCase):
         self.data = rospy.get_param(
             "test_gesture_input"
         )  # "{'gesture':'QT/bye', 'timing': 0.5}"
-        self.instance_id = rospy.get_param("instance_id_gesture")
+        self.instance_id = rospy.get_param("instance_id")
         self.result = False
         self.name = ActuatorNameSpace.gesture.name + "_" + self.instance_id
         self.service_client = HarmoniActionClient(self.name)
@@ -68,7 +68,7 @@ class TestGesture(unittest.TestCase):
             optional_data=self.data,
             wait=True,
         )
-        s.gesture_pub.publish(test_input)
+        #s.gesture_pub.publish(test_input)
         assert self.result == True
 
 

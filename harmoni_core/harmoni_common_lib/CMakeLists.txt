@@ -204,4 +204,4 @@ install(DIRECTORY src
 # endif()
 
 ## Add folders to be run by python nosetests
-catkin_add_nosetests(src/harmoni_common_lib/test)
+catkin_add_nosetests(test)

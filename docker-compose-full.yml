@@ -37,7 +37,7 @@ services:
       # Configuration
       - ~/.aws:/root/.aws/
       - ./dockerfiles/config/.asoundrc:/root/.asoundrc
-      - ~/.gcp/private-keys.json:/root/private-keys.json
+      - ~/.gcp/private-keys.json:/root/.gcp/private-keys.json
       # Other
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /etc/timezone:/etc/timezone:ro

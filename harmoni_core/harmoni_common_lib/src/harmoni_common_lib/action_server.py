@@ -41,7 +41,7 @@ class HarmoniActionServer(object):
     # publishing as soon as it comes up.
     # THIS SHOULD ALWAYS BE SET TO FALSE TO AVOID RACE CONDITIONS and start() should be
     # called after construction of the server.
-    def __init__(self, name, execute_cb=None, auto_start=False):
+    def __init__(self, name, execute_cb=None, preempt_cb=None, auto_start=False):
 
         self.name = name
         self.new_goal = False
@@ -50,7 +50,7 @@ class HarmoniActionServer(object):
 
         self.execute_callback = execute_cb
         self.goal_callback = None
-        self.preempt_callback = None
+        self.preempt_callback = preempt_cb
 
         self.need_to_terminate = False
         self.terminate_mutex = threading.RLock()
@@ -92,7 +92,6 @@ class HarmoniActionServer(object):
 
             assert self.execute_thread
             self.execute_thread.join()
-
 
     # @brief Accepts a new goal when one is available The status of this
     # goal is set to active upon acceptance, and the status of any
@@ -310,6 +309,7 @@ class HarmoniActionServer(object):
                 return
 
             if self.is_new_goal_available():
+                rospy.logwarn(f"(Server) The goal is available")
                 # accept_new_goal() is performing its own locking
                 goal = self.accept_new_goal()
                 self.optional_data = goal.optional_data  # input data for the module

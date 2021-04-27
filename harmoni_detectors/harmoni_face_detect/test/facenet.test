@@ -1,0 +1,9 @@
+<launch>
+    <include file="$(find harmoni_face_detect)/launch/face_detect_service.launch">
+        <arg name="service_to_use" value="facenet"/>
+        <arg name="instance_id" value = "default"/> 
+    </include>
+
+    <param name="test_face_detector_input" value="$(find harmoni_face_detect)/test/test_data/composer.jpg"/>
+    <test test-name="test_facenet" pkg="harmoni_face_detect" type="test_face_detector.py"/>
+</launch>

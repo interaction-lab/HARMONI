@@ -1,5 +1,5 @@
 <launch>
-    <rosparam file="$(find harmoni_microphone)/config/configuration.yaml"/>
+    <rosparam file="$(find harmoni_microphone)/config/configuration.yaml" subst_value="True"/>
     <node pkg="harmoni_microphone" type="microphone_service.py" name="harmoni_microphone_default" output="screen"/>
 
     <param name="instance_id" value="default"/>

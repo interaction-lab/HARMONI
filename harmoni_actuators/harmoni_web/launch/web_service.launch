@@ -2,25 +2,10 @@
 <launch>
     <arg name="web_directory_path" value="$(find harmoni_web)/web"/>
     <arg name="port" default="8082"/>
-	<arg name="use_web" default="true"/>
-	<arg name="test" default="false"/>
-	<arg name="test_input" default="{'component_id':'container_1', 'set_content': ''}"/>
 	<arg name="instance_id" default="default"/>
-  	<group if="$(arg use_web)">
-			<rosparam file="$(find harmoni_web)/config/configuration.yaml"/>
-			<param name="test_web" value="$(arg test)"/>
-			<param name="test_input_web" value="$(arg test_input)"/>
-			<param name="instance_id_web" value="$(arg instance_id)"/>
-			<param name="name_web" value="web"/>
-			<node pkg="harmoni_web" type="http_server_runner.py" name="web_http_server_$(arg instance_id)" output="screen" args="$(arg web_directory_path) $(arg port)" />
-			<node pkg="harmoni_web" type="web_service.py" name="harmoni_web_$(arg instance_id)" output="screen"/>
-  			<include ns="bridge_web" file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" /> 
-     		<!--	<arg name="port" value="9000"/>
-  			</include>
-			  <include  file="$(find rosbridge_server)/launch/rosbridge_websocket.launch">
-				<arg name="port" value="9000"/>
-  			</include/>-->
-			  
-  	</group>
+	<param name="instance_id" value="$(arg instance_id)"/>
+	<!-- <rosparam file="$(find harmoni_web)/config/configuration.yaml"/>-->
+	<node pkg="harmoni_web" type="http_server_runner.py" name="web_http_server" output="screen" args="$(arg web_directory_path) $(arg port)" />
+	<node pkg="harmoni_web" type="web_service.py" name="harmoni_web_$(arg instance_id)" output="screen"/>
+	<include ns="bridge_web" file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
 </launch>
-

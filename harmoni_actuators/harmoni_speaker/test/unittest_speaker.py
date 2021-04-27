@@ -3,7 +3,7 @@
 
 PKG = 'test_harmoni_speaker'
 # Common Imports
-import unittest, rospy, roslib, sys
+import unittest, rospy, rospkg, roslib, sys
 #from unittest.mock import Mock, patch
 # Specific Imports
 from actionlib_msgs.msg import GoalStatus
@@ -23,7 +23,8 @@ class TestSpeaker(unittest.TestCase):
         rospy.init_node("test_speaker")
 
     def setUp(self):
-        self.path = "/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/temp_data/tts.wav"
+        rospack = rospkg.RosPack()
+        self.path = rospack.get_path("harmoni_tts") + "/temp_data/tts.wav"
         self.result = False
         rospy.loginfo("TestSpeaker: Started up. waiting for speaker startup")
         self.speaker_service = SpeakerService("test_speaker")

@@ -3,7 +3,7 @@
 
 PKG = 'test_harmoni_tts'
 # Common Imports
-import unittest, rospy, roslib, sys
+import unittest, rospy, rospkg, roslib, sys
 #from unittest.mock import Mock, patch
 # Specific Imports
 from actionlib_msgs.msg import GoalStatus
@@ -24,7 +24,13 @@ class TestPolly(unittest.TestCase):
         self.text = "Hello"
         self.result = False
         rospy.loginfo("TestPolly: Started up. waiting for polly startup")
-        self.aws_service = AWSTtsService("test_aws_polly", param={"region_name":"us-west-2",  "language": "en-US","outdir": "/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/temp_data", "wav_header_length": 24, "voice":"Ivy"})
+        rospack = rospkg.RosPack()
+        self.aws_service = AWSTtsService("test_aws_polly", 
+            param={"region_name":"us-west-2",  
+                "language": "en-US",
+                "outdir": rospack.get_path("harmoni_tts") + "/temp_data", 
+                "wav_header_length": 24, 
+                "voice":"Ivy"})
         rospy.loginfo("TestPolly: Started")
     
     
