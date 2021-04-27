@@ -444,10 +444,9 @@ def main():
         s = SequentialPattern(pattern_to_use, script)
         if call_start:
             s.start()
-
-        service_server = HarmoniServiceServer(service_id, s)
-
-        service_server.start_sending_feedback()
+        else:
+            service_server = HarmoniServiceServer(service_id, s)
+            service_server.start_sending_feedback()
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
