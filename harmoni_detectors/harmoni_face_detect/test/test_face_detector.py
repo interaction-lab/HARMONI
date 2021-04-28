@@ -26,10 +26,10 @@ if using_kinetic:
     sys.path.remove("/opt/ros/kinetic/lib/python2.7/dist-packages")
     sys.path.append("/opt/ros/kinetic/lib/python2.7/dist-packages")
 import cv2
+
 # from std_msgs.msg import String
 import time
 import os, io
-
 
 
 class TestFaceDetector_Common(unittest.TestCase):
@@ -56,9 +56,7 @@ class TestFaceDetector_Common(unittest.TestCase):
             Object2DArray,
             self._detecting_callback,
         )
-        print(
-            "Testside-Image source: ", SensorNameSpace.camera.value + "default"
-        )
+        print("Testside-Image source: ", SensorNameSpace.camera.value + "default")
         print(
             "Testside-expected detection: ",
             DetectorNameSpace.face_detect.value + "default",
@@ -84,7 +82,9 @@ class TestFaceDetector_Common(unittest.TestCase):
 
         rospy.loginfo("TestFaceDetector: publishing image")
 
-        self.image_pub.publish(self.cv_bridge.cv2_to_imgmsg(self.image, encoding="bgr8"))
+        self.image_pub.publish(
+            self.cv_bridge.cv2_to_imgmsg(self.image, encoding="bgr8")
+        )
         # self.image_pub.publish(self.image[:14000])
 
         rospy.loginfo(
@@ -97,15 +97,15 @@ class TestFaceDetector_Common(unittest.TestCase):
 
     def _status_callback(self, data):
         rospy.loginfo(f"TestFaceDetector: Status: {data}")
-        self.result = True
+        # self.result = True
 
     def _result_callback(self, data):
         rospy.loginfo(f"TestFaceDetector: Result: {data}")
-        self.result = True
+        # self.result = True
 
     def text_received_callback(self, data):
         rospy.loginfo(f"TestFaceDetector: Text back: {data}")
-        self.result = True
+        # self.result = True
 
     def _detecting_callback(self, data):
         rospy.loginfo(f"TestFaceDetector: Detecting: {data}")
@@ -114,27 +114,26 @@ class TestFaceDetector_Common(unittest.TestCase):
 
 class TestFaceDetector_Valid(TestFaceDetector_Common):
     def test_IO(self):
-        print("TEST_IO")
         rospy.loginfo(
             "TestFaceDetector[TEST]: basic IO test to ensure data "
             + "(example image) is received and responded to. Waiting for detection..."
         )
         while not rospy.is_shutdown() and not self.result:
             # print("waiting for result")
-            self.image_pub.publish(self.cv_bridge.cv2_to_imgmsg(self.image, encoding="rgb8"))
+            self.image_pub.publish(
+                self.cv_bridge.cv2_to_imgmsg(self.image, encoding="rgb8")
+            )
             self.rate.sleep()
         assert self.result == True
 
 
 def main():
-    print("MAIN")
     # TODO combine validity tests into test suite so that setup doesn't have to run over and over.
     import rostest
 
     rospy.loginfo("test_facenet started")
     rospy.loginfo("TestFaceDetector: sys.argv: %s" % str(sys.argv))
     rostest.rosrun(PKG, "test_face_detector", TestFaceDetector_Valid, sys.argv)
-    print("DONE")
 
 
 if __name__ == "__main__":
