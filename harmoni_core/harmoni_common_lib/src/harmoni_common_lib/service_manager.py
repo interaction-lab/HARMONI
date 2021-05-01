@@ -3,6 +3,7 @@
 # Importing the libraries
 import rospy
 import roslib
+import rosparam
 from collections import deque, defaultdict
 from harmoni_common_lib.action_client import HarmoniActionClient
 import warnings
@@ -20,7 +21,7 @@ class HarmoniServiceManager(object):
 
     """
 
-    def __init__(self, name, robot_ip):
+    def __init__(self, name):
         """The service setup will instantiate the publishers, subscribers,
         class variables and clients.
 
@@ -28,10 +29,10 @@ class HarmoniServiceManager(object):
             name (str): Name of the service (useful for logging)
         """
         rospy.loginfo(f"Initializing the {name} service")
+        rospy.set_param("robot_ip", "192.168.100.171")
         # Default variables
         self.name = name
         self.service_clients = defaultdict(HarmoniActionClient)
-        self.robot_ip = robot_ip
         self.configured_services = []  # available services
         self.client_results = defaultdict(deque)  # store state of the service
 
