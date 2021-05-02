@@ -29,7 +29,7 @@ class HarmoniServiceManager(object):
             name (str): Name of the service (useful for logging)
         """
         rospy.loginfo(f"Initializing the {name} service")
-        rospy.set_param("robot_ip", "192.168.100.171")
+        rospy.set_param("robot_ip", "192.168.100.171") # TODO check where's the best position to set this parameter
         # Default variables
         self.name = name
         self.service_clients = defaultdict(HarmoniActionClient)

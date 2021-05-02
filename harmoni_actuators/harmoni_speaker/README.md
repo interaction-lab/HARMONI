@@ -8,11 +8,14 @@ Parameters input for the speaker service:
 |audio_rate            |            |        |
 
 # Using Misty API
-An argument robot_ip has been added to the launch file. In order to launch the service the Ip of the robot needs to be provided to the launch file as argument. In the speaker_service_misty class, the ip_is saved.
-In misty, the file must either be encoded in base64 or provided as file. 
+An argument robot_ip is provided in the service_manager class. 
+In misty, the file must either be encoded in base64 or provided as file. In the speaker_service_misty class the data are converted after being uploaded from a .wav file, either that they are provided to the class directly or via path. 
+
 To reproduce the file the flag ImmediatelyApply has been set to True in the API call.
 The flag OverwriteExisting makes the new file replace the old, since the file is always called with the same name. 
 Another possible way of doing this was to separate into two different API call, SaveAudio with ImmediatelyApply set to false and then PlayAudioClip.
+
+When replacing harmoni's speaker_service with speaker_service_misty, the type of action that the class performs has been changed from DO to REQUEST: this was done because conceptually we are requesting to an external service (the robot) to perform an action, and not performing the action directly inside HARMONI. This change requires to modify everything that interfaces with the speaker service 
 
 # Setting up your speaker
 The speaker device is configured in the dockerfiles/config/asoundrc file, whose contents are shown below:
