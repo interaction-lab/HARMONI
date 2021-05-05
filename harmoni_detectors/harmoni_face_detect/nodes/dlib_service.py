@@ -51,11 +51,11 @@ class DlibFaceDetector(HarmoniServiceManager):
         self.service_id = name
         camera_topic = SensorNameSpace.camera.value + self.subscriber_id
         self._image_source = camera_topic
-        self._image_sub = (
-            None  # assign this when start() called.
-        )
-        if (not hf.topic_active(camera_topic,Image)):
-            rospy.logwarn(f"Unable to find topic {camera_topic} with correct type. Is it publishing yet?")
+        self._image_sub = None  # assign this when start() called.
+        if not hf.topic_active(camera_topic, Image):
+            rospy.logwarn(
+                f"Unable to find topic {camera_topic} with correct type. Is it publishing yet?"
+            )
         self._face_pub = rospy.Publisher(
             self.service_id,
             Object2DArray,
@@ -137,17 +137,20 @@ class DlibFaceDetector(HarmoniServiceManager):
 
 def main():
     # default doesn't really matter as the launch file overrides it anyway, so string literals are OK
-    default_name = "face_detect" 
+    service_name = DetectorNameSpace.face_detect.name  # "face_detect"
     instance_id = rospy.get_param("instance_id")
     service_id = DetectorNameSpace.face_detect.value + instance_id
 
     try:
-        rospy.init_node(default_name, log_level=rospy.INFO)
+        rospy.init_node(service_name, log_level=rospy.INFO)
+
         rospy.logdebug(f"Node namespace: {rospy.get_namespace()}")
         params = rospy.get_param(instance_id + "_param/")
+
         s = DlibFaceDetector(service_id, params)
-        service_server = HarmoniServiceServer(name=service_id, service_manager=s)
-        
+
+        service_server = HarmoniServiceServer(service_id, s)
+
         service_server.start_sending_feedback()
         rospy.spin()
     except rospy.ROSInterruptException:

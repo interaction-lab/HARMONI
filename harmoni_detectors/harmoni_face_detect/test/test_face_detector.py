@@ -39,7 +39,7 @@ class TestFaceDetector_Common(unittest.TestCase):
         self.result = False
         self.image = cv2.imread(rospy.get_param("test_face_detector_input"))
         rospy.init_node("test_face_detector", log_level=rospy.INFO)
-        self.rate = rospy.Rate(20)
+        self.rate = rospy.Rate(1)
         self.cv_bridge = CvBridge()
 
     def setUp(self):
