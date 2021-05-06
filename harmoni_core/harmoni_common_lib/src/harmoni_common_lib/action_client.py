@@ -13,12 +13,13 @@ from harmoni_common_lib.constants import State
 
 # Weird gcc threading workaround for ROS Kinetic. Reference: https://stackoverflow.com/a/65908383
 import sys
+
 path = sys.path
 using_kinetic = any([True for p in path if ("kinetic" in p)])
 if using_kinetic:
     import ctypes
-    libgcc_s = ctypes.CDLL('libgcc_s.so.1')
 
+    libgcc_s = ctypes.CDLL("libgcc_s.so.1")
 
 
 class SimpleGoalState:
@@ -71,7 +72,12 @@ class HarmoniActionClient(object):
     # for this goal is received.  Takes one parameter: the feedback.
     # destroys the old goal handle
     def send_goal(
-        self, action_goal, optional_data="", condition="", time_out=60, wait=True,
+        self,
+        action_goal,
+        optional_data="",
+        condition="",
+        time_out=60,
+        wait=True,
     ):
         """Sends a goal to the action server tied to this client.
 
@@ -81,13 +87,15 @@ class HarmoniActionClient(object):
         Reset of check variables. Send goal and set the time out
         """
         if len(optional_data) < 50:
-            rospy.loginfo(f"Client ({self.name}) Sending goal. Data: {optional_data}")
+            rospy.logdebug(f"Client ({self.name}) Sending goal. Data: {optional_data}")
         else:
-            rospy.loginfo(f"Client ({self.name}) Sending Goal.")
+            rospy.logdebug(f"Client ({self.name}) Sending Goal.")
 
         self.stop_tracking_goal()
         goal = harmoniGoal(
-            action_type=action_goal, optional_data=optional_data, condition=condition,
+            action_type=action_goal,
+            optional_data=optional_data,
+            condition=condition,
         )
 
         self.simple_state = SimpleGoalState.PENDING
@@ -95,19 +103,23 @@ class HarmoniActionClient(object):
             goal, self._handle_transition, self._handle_feedback
         )
 
-        rospy.loginfo(f"Client ({self.name}) Goal Sent")
+        rospy.logdebug(f"Client ({self.name}) Goal Sent")
         if wait:
-            rospy.loginfo(f"Client ({self.name}) Waiting for return: {time_out}")
+            rospy.logdebug(f"Client ({self.name}) Waiting for return: {time_out}")
             self.wait_for_result(rospy.Duration(time_out))
             # self.wait_for_result(rospy.Duration.from_sec(time_out))
-            rospy.loginfo(f"Client ({self.name}) done waiting.")
+            rospy.logdebug(f"Client ({self.name}) done waiting.")
 
         else:
-            rospy.loginfo(f"Client ({self.name}) Not waiting for result.")
+            rospy.logdebug(f"Client ({self.name}) Not waiting for result.")
         return
 
     def setup_client(
-        self, action_type, result_cb_fnc=None, feedback_cb_fnc=None, wait=True,
+        self,
+        action_type,
+        result_cb_fnc=None,
+        feedback_cb_fnc=None,
+        wait=True,
     ):
         """Init client action variables and setup client
 
@@ -126,12 +138,14 @@ class HarmoniActionClient(object):
         self.done_condition = threading.Condition()
 
         if wait:
-            rospy.loginfo(f"action_client waiting for {action_type} server to connect.")
+            rospy.logdebug(
+                f"action_client waiting for {action_type} server to connect."
+            )
             self.action_client.wait_for_server()
 
         self.result_cb_fnc = result_cb_fnc
         self.feedback_cb_fnc = feedback_cb_fnc
-        rospy.loginfo(f"action_client {action_type} server connected.")
+        rospy.logdebug(f"action_client {action_type} server connected.")
         return
 
     def wait_for_server(self, timeout=rospy.Duration()):
@@ -173,8 +187,8 @@ class HarmoniActionClient(object):
                     preempt_timeout.to_sec(),
                 )
             else:
-                rospy.logdebug(
-                    "Preempt didn't finish specified preempt_timeout [%.2f]",
+                rospy.loginfo(
+                    "Preempt did not finish specified preempt_timeout [%.2f]",
                     preempt_timeout.to_sec(),
                 )
         return self.get_state()
@@ -199,11 +213,11 @@ class HarmoniActionClient(object):
             while not rospy.is_shutdown():
                 time_left = timeout_time - rospy.get_rostime()
                 if timeout > rospy.Duration(0.0) and time_left <= rospy.Duration(0.0):
-                    rospy.loginfo("Time break")
+                    rospy.logdebug("Time break")
                     break
 
                 if self.simple_state == SimpleGoalState.DONE:
-                    rospy.loginfo("state break")
+                    rospy.logdebug("state break")
                     break
 
                 if time_left > loop_period or timeout == rospy.Duration():
@@ -283,13 +297,10 @@ class HarmoniActionClient(object):
     def _handle_transition(self, gh):
         comm_state = gh.get_comm_state()
 
-        error_msg = (
-            "Received comm state %s when in simple state %s with SimpleActionClient in NS %s"
-            % (
-                CommState.to_string(comm_state),
-                SimpleGoalState.to_string(self.simple_state),
-                rospy.resolve_name(self.action_client.ns),
-            )
+        error_msg = "Received comm state %s when in simple state %s with SimpleActionClient in NS %s" % (
+            CommState.to_string(comm_state),
+            SimpleGoalState.to_string(self.simple_state),
+            rospy.resolve_name(self.action_client.ns),
         )
 
         if comm_state == CommState.ACTIVE:
@@ -342,13 +353,13 @@ class HarmoniActionClient(object):
         return
 
     def _result_cb(self, terminal_state, result):
-        """Save the action result """
-        rospy.loginfo(f"Client ({self.name}) Heard back result")
-        rospy.loginfo(f"Client ({self.name}) Do action?... {result.do_action}")
+        """Save the action result"""
+        rospy.logdebug(f"Client ({self.name}) Heard back result")
+        rospy.logdebug(f"Client ({self.name}) Do action?... {result.do_action}")
         if len(result.message) < 500:
-            rospy.loginfo(f"Client ({self.name}) Message was : {result.message}")
+            rospy.logdebug(f"Client ({self.name}) Message was : {result.message}")
         else:
-            rospy.loginfo(f"Client ({self.name}) Message was : (too long to display)")
+            rospy.logdebug(f"Client ({self.name}) Message was : (too long to display)")
 
         self.action_result["service"] = self.name
         self.action_result["do_action"] = result.do_action
@@ -356,4 +367,3 @@ class HarmoniActionClient(object):
         if self.result_cb_fnc:
             self.result_cb_fnc(self.action_result)
         return
-
