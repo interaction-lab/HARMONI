@@ -1,0 +1,1 @@
+Build the docks with `sphinx-build -b html . _build`
