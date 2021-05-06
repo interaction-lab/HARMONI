@@ -7,5 +7,4 @@
 
     <param name="/polly/default_param/outdir" value="$(find harmoni_tts)/temp_data"/>
     <node pkg="harmoni_tts" type="aws_tts_service.py" name="harmoni_tts_polly_$(arg instance_id)" output="screen"/>
-  	</group>
 </launch>

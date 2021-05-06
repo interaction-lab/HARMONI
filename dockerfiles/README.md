@@ -1,4 +1,4 @@
-# Using Harmoni with Docker
+# Docker Details
 
 **Important** Please note that the kinetic build is not currently functional and the noetic build uses a kinetic w2l image because the w2l is not supported on 20.04. 
 

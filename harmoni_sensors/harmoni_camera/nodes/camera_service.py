@@ -23,7 +23,6 @@ from harmoni_common_lib.constants import SensorNameSpace
 from sensor_msgs.msg import Image
 import cv2
 
-
 class CameraService(HarmoniServiceManager):
     """Reads from a camera and publishes image data.
 
@@ -121,6 +120,8 @@ class CameraService(HarmoniServiceManager):
         """
         while not rospy.is_shutdown():
             _, frame = self.video_cap.read()
+            if (frame is None):
+                raise RuntimeError("No camera frame available. Is the configured device accessible?")
             image = self.cv_bridge.cv2_to_imgmsg(frame, self.video_format)
             self._video_pub.publish(image)
             if self.show:
@@ -140,7 +141,7 @@ def main():
     service_id = f"{service_name}_{instance_id}"
 
     try:
-        rospy.init_node(service_name)
+        rospy.init_node(service_name, log_level=rospy.INFO)
 
         # camera/default_param/[all your params]
         params = rospy.get_param(service_name + "/" + instance_id + "_param/")

@@ -22,3 +22,9 @@ mic_test:
   default_param:
     trigger_intent: "Hey"
     pattern_scripting: $(find harmoni_pattern)/pattern_scripting/mic_test.json
+
+
+speak_test:
+  default_param:
+    trigger_intent: "Hey"
+    pattern_scripting: $(find harmoni_pattern)/pattern_scripting/speak_test.json
