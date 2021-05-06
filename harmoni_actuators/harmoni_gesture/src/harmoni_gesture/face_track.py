@@ -51,7 +51,7 @@ class FaceTracker(HarmoniServiceManager):
         #start outputting actuator directions for head motor and face/eye movement
         #TODO send commands to actuators instead of just printing desired behavior
         #TODO handle multiple faces instead of just first one.
-        face = data.objects[0]
+        face = data.data[0]
         if face == None:
             print("Face Tracker: No face to track.")
         elif isinstance(face, Object2D):

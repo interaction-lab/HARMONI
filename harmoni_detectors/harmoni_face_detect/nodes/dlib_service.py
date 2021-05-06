@@ -13,6 +13,7 @@ import harmoni_common_lib.helper_functions as hf
 # Specific Imports
 from harmoni_common_lib.constants import DetectorNameSpace, SensorNameSpace
 from harmoni_common_msgs.msg import Object2D, Object2DArray
+from sensor_msgs.msg import Image
 
 import sys
 
@@ -24,7 +25,6 @@ if using_kinetic:
 import cv2
 from cv_bridge import CvBridge, CvBridgeError
 import dlib
-import numpy as np
 
 
 class DlibFaceDetector(HarmoniServiceManager):
@@ -41,29 +41,30 @@ class DlibFaceDetector(HarmoniServiceManager):
     # UPSAMPLING = 0
     # DEFAULT_RATE = 10 # Hz
 
-    def __init__(self, name, param, detector_threshold=0):
+    def __init__(self, name, params, detector_threshold=0):
         super().__init__(name)
-        self._upsampling = param["up_sampling"]
-        self._rate = param["rate_frame"]
-        self.subscriber_id = param["subscriber_id"]
-        self.update(State.INIT)
+        self._upsampling = params["up_sampling"]
+        self._rate = params["rate_frame"]
+        self.subscriber_id = params["subscriber_id"]
+        self.state = State.INIT
         self.detector_threshold = detector_threshold
-        self.service_id = hf.get_child_id(self.name)
-        self._image_source = (
-            SensorNameSpace.camera.value + self.subscriber_id + "watching"
-        )  # /harmoni/sensing/watching/harmoni_camera"
-        self._image_sub = (
-            None  # assign this when start() called. #TODO test subscription during init
-        )
+        self.service_id = name
+        camera_topic = SensorNameSpace.camera.value + self.subscriber_id
+        self._image_source = camera_topic
+        self._image_sub = None  # assign this when start() called.
+        if not hf.topic_active(camera_topic, Image):
+            rospy.logwarn(
+                f"Unable to find topic {camera_topic} with correct type. Is it publishing yet?"
+            )
         self._face_pub = rospy.Publisher(
-            DetectorNameSpace.face_detect.value + self.service_id,
+            self.service_id,
             Object2DArray,
             queue_size=1,
         )
 
         self._hogFaceDetector = dlib.get_frontal_face_detector()
         self._cv_bridge = CvBridge()
-        self.state = State.INIT
+        rospy.get_published_topics()
 
     def start(self, rate=None):
         """
@@ -76,12 +77,12 @@ class DlibFaceDetector(HarmoniServiceManager):
         self._image_sub = rospy.Subscriber(
             self._image_source, Image, self.detect_callback
         )
-        print(self._image_source)
+        rospy.logdebug(f"Image source: {self._image_source}")
         if self._image_sub != None:
-            self.update(State.START)
+            self.state = State.START
             rospy.loginfo("Face detector started.")
         else:
-            self.update(State.FAILED)
+            self.state = State.FAILED
             rospy.logerr("Face detector failed to start.")
         return
 
@@ -102,17 +103,15 @@ class DlibFaceDetector(HarmoniServiceManager):
         Args:
             image(Image): the image we want to run face detection on.
         """
-        frame = self._cv_bridge.imgmsg_to_cv2(image, desired_encoding="passthrough")
+        frame = self._cv_bridge.imgmsg_to_cv2(image, desired_encoding="rgb8")
         if frame is not None:
             h, w, _ = frame.shape
-
-            # preprocess img acquired
-            # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # convert bgr to rgb
             faces = []
             dets, probs, idx = self._hogFaceDetector.run(
                 frame, self._upsampling, self.detector_threshold
             )
             for i, d in enumerate(dets):
+                rospy.logdebug(f"Detections: {d}")
                 center = d.center()
                 x1 = d.left()
                 y1 = d.top()
@@ -137,24 +136,23 @@ class DlibFaceDetector(HarmoniServiceManager):
 
 
 def main():
-    service_name = DetectorNameSpace.face_detect.name
-    name = rospy.get_param("/name_" + service_name + "/")
-    test = rospy.get_param("/test_" + service_name + "/")
-    test_input = rospy.get_param("/test_input_" + service_name + "/")
-    instance_id = rospy.get_param("/instance_id_" + service_name + "/")
-    try:
-        rospy.init_node(service_name)
-        param = rospy.get_param(name + "/" + instance_id + "_param/")
+    # default doesn't really matter as the launch file overrides it anyway, so string literals are OK
+    service_name = DetectorNameSpace.face_detect.name  # "face_detect"
+    instance_id = rospy.get_param("instance_id")
+    service_id = DetectorNameSpace.face_detect.value + instance_id
 
-        service = hf.get_service_server_instance_id(service_name, instance_id)
-        s = DlibFaceDetector(service, param)
-        service_server = HarmoniServiceServer(name=service, service_manager=s)
-        if test:
-            rospy.loginfo("Testing the %s" % (service))
-            s.start(test_input)
-        else:
-            service_server.start_sending_feedback()
-            rospy.spin()
+    try:
+        rospy.init_node(service_name, log_level=rospy.INFO)
+
+        rospy.logdebug(f"Node namespace: {rospy.get_namespace()}")
+        params = rospy.get_param(instance_id + "_param/")
+
+        s = DlibFaceDetector(service_id, params)
+
+        service_server = HarmoniServiceServer(service_id, s)
+
+        service_server.start_sending_feedback()
+        rospy.spin()
     except rospy.ROSInterruptException:
         pass
 

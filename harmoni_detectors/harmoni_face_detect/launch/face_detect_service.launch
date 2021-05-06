@@ -1,14 +1,20 @@
-<!-- This is an example launch file for how a ROS application could use a node -->
 <launch>
-
    
-	<arg name="service_to_use" default="facenet"/>
-	<arg name="instance_id" default="default"/>
-    
-	<group if="$(eval service_to_use == 'facenet')">
-        <include file="$(find harmoni_face_detect)/launch/face_detect_facenet_service.launch">
-            <arg name="instance_id" value = "$(arg instance_id)"/> 
-        </include>
+    <arg name="service_to_use" default="dlib"/>
+    <arg name="instance_id" default="default"/>
+    <rosparam file="$(find harmoni_face_detect)/config/configuration.yaml" ns="/harmoni/detecting" subst_value="True"/>
+
+    <group ns="/harmoni/detecting/face_detect">
+        <group if="$(eval service_to_use == 'facenet')">
+            <include file="$(find harmoni_face_detect)/launch/include/facenet.launch">
+                <arg name="instance_id" value = "$(arg instance_id)"/> 
+            </include>
+        </group>
+        <group if="$(eval service_to_use == 'dlib')">
+            <include file="$(find harmoni_face_detect)/launch/include/dlib.launch">
+                <arg name="instance_id" value = "$(arg instance_id)"/> 
+            </include>
+        </group>
     </group>
 
 </launch>

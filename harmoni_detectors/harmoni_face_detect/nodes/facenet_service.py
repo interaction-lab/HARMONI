@@ -15,9 +15,13 @@ from harmoni_common_lib.constants import DetectorNameSpace, SensorNameSpace
 from harmoni_common_msgs.msg import Object2D, Object2DArray
 from sensor_msgs.msg import Image
 import sys
+from cv_bridge import CvBridge
 
-sys.path.remove("/opt/ros/kinetic/lib/python2.7/dist-packages")
-sys.path.append("/opt/ros/kinetic/lib/python2.7/dist-packages")
+path = sys.path
+using_kinetic = any([True for p in path if ("kinetic" in p)])
+if using_kinetic:
+    sys.path.remove("/opt/ros/kinetic/lib/python2.7/dist-packages")
+    sys.path.append("/opt/ros/kinetic/lib/python2.7/dist-packages")
 
 from facenet_pytorch import MTCNN
 import cv2
@@ -41,12 +45,9 @@ class FacenetFaceDetector(HarmoniServiceManager):
         self._upsampling = param["up_sampling"]
         self._rate = param["rate_frame"]
         self.subscriber_id = param["subscriber_id"]
-        # self.update(State.INIT)
         self.detector_threshold = detector_threshold
-        self.service_id = hf.get_child_id(self.name)
-        self._image_source = (
-            SensorNameSpace.camera.value + self.subscriber_id + "/watching"
-        )  # /harmoni/sensing/camera/default/watching"
+        self.service_id = name
+        self._image_source = SensorNameSpace.camera.value + self.subscriber_id
         print("Expected image source: ", self._image_source)
         self._image_sub = (
             None  # assign this when start() called. #TODO test subscription during init
@@ -56,16 +57,16 @@ class FacenetFaceDetector(HarmoniServiceManager):
             DetectorNameSpace.face_detect.value + self.service_id,
         )
         self._face_pub = rospy.Publisher(
-            DetectorNameSpace.face_detect.value + self.service_id,
+            self.service_id,
             Object2DArray,
             queue_size=1,
         )
 
         # self._hogFaceDetector = dlib.get_frontal_face_detector()
-        # self._cv_bridge = CvBridge()
+        self._cv_bridge = CvBridge()
         self.state = State.INIT
 
-    def start(self, rate):
+    def start(self, rate=""):
         """
         Args:
             rate(int): How often the detector should run per second (Hz).
@@ -89,35 +90,15 @@ class FacenetFaceDetector(HarmoniServiceManager):
     def pause(self):
         self.stop()
 
-    # def paint(self, frame, boxes, probability, landmarks):
-    #     try:
-    #         for box, probability, ld in zip(boxes, probability, landmarks):
-    #             cv2.rectangle(frame, (box[0], box[1]), (box[2], box[3]), (0, 0, 255), 10)
-    #     except:
-    #         pass
-    #     return frame
-    #
-    # def run(self):
-    #     cap = cv2.VideoCapture(0)
-    #     while True:
-    #         ret, img = cap.read()
-    #         try:
-    #             boxes, probability, landmarks = self.mtcnn.detect(img, landmarks=True)
-    #             self.paint(img, boxes, probability, landmarks)
-    #         except:
-    #             pass
-    #         cv2.imshow('img', img)
-    #         if cv2.waitKey(1) & 0xFF == ord('q'):
-    #             break
-    #     cap.release()
-    #     cv2.destroyAllWindows()
-
     def detect_callback(self, image):
         """Uses image to detect and publish face info.
         Args:
             image(Image): the image we want to run face detection on.
         """
-        frame = self._cv_bridge.imgmsg_to_cv2(image, desired_encoding="passthrough")
+        # FIXME: code crashes without these log statements???
+        rospy.loginfo("DETECTING A CALLBACK HERE")
+        frame = self._cv_bridge.imgmsg_to_cv2(image, desired_encoding="rgb8")
+        rospy.loginfo("Made it past the bridge")
         if frame is not None:
             h, w, _ = frame.shape
             boxes, probs, landmarks = MTCNN().detect(frame, landmarks=True)
@@ -133,65 +114,34 @@ class FacenetFaceDetector(HarmoniServiceManager):
 
                 faces.append(
                     Object2D(
-                        width=w,
-                        height=h,
+                        width=int(w),
+                        height=int(h),
                         id=i,
-                        center_x=cx,
-                        center_y=cy,
-                        topleft_x=x1,
-                        topleft_y=y1,
-                        botright_x=x2,
-                        botright_y=y2,
+                        center_x=int(cx),
+                        center_y=int(cy),
+                        topleft_x=int(x1),
+                        topleft_y=int(y1),
+                        botright_x=int(x2),
+                        botright_y=int(y2),
                         confidence=probs,
                     )
                 )
 
-                # cv2.rectangle(frame, (box[0], box[1]), (box[2], box[3]), (0, 0, 255), 10)
-                # cv2.circle(frame, tuple((int(cx), int(cy))), 5, (0, 0, 255), -1)
-                # cv2.putText(frame, str(
-                #     probs), (box[2], box[3]), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
-
             self._face_pub.publish(Object2DArray(faces))
-
-            # cv2.imshow('img', frame)
-            # cv2.waitKey(0)
-            # cv2.destroyAllWindows()
 
 
 def main():
-    # service_name = DetectorNameSpace.face_detect.name
-    # name = rospy.get_param("/name_" + service_name + "/")
-    # test = rospy.get_param("/test_" + service_name + "/")
-    # test_input = rospy.get_param("/test_input_" + service_name + "/")
-    # instance_id = rospy.get_param("/instance_id_" + service_name + "/")
-    # try:
-    #     rospy.init_node(service_name)
-    #     param = rospy.get_param(name + "/" + instance_id + "_param/")
-
-    #     service = hf.get_service_server_instance_id(service_name, instance_id)
-    #     s = FacenetFaceDetector(service, param)
-    #     service_server = HarmoniServiceServer(name=service, service_manager=s)
-    #     if test:
-    #         rospy.loginfo("Testing the %s" % (service))
-    #         s.start(test_input)
-    #     else:
-    #         service_server.start_sending_feedback()
-    #         rospy.spin()
-    # except rospy.ROSInterruptException:
-    #     pass
 
     service_name = DetectorNameSpace.face_detect.name  # "w2l"
     instance_id = rospy.get_param("instance_id")  # "default"
-    service_id = f"{service_name}_{instance_id}"
+    service_id = DetectorNameSpace.face_detect.value + instance_id
 
     try:
-        rospy.init_node(service_name, log_level=rospy.DEBUG)
+        rospy.init_node(service_name, log_level=rospy.INFO)
 
-        # w2l/default_param/[all your params]
-        params = rospy.get_param(service_name + "/" + instance_id + "_param/")
+        params = rospy.get_param(instance_id + "_param/")
 
         s = FacenetFaceDetector(service_id, params)
-        print("CREATING SERVER WITH SERVICE_ID: ", service_id)
         service_server = HarmoniServiceServer(service_id, s)
 
         service_server.start_sending_feedback()
