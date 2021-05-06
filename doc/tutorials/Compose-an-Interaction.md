@@ -1,6 +1,7 @@
-# Interaction Script Development
+# Interaction Scripting with Pattern Player
 
-[[/images/PatternBehaviorTree.png]]  
+![packges](images/PatternBehaviorTree.png)
+
 _An example interaction script pictured as a behavior tree._
 
 ## Description 

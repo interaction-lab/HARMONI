@@ -1,6 +1,6 @@
 # Welcome To HARMONI
 
-![](https://raw.githubusercontent.com/interaction-lab/HARMONI/folder_reorg/logo.svg)
+![logo](../../logo.svg)
 Welcome to the HARMONI wiki!
 
 Human And Robot Modular OpeN Interactions (HARMONI) is a comprehensive tool containing all the components and capabilities you need to quickly get your social interaction up and running on a robot. 

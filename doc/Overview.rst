@@ -6,5 +6,8 @@ Overview
    :caption: Contents:
    :glob:
 
-   tutorials/Home
+   tutorials/Introduction
    tutorials/Architecture
+   tutorials/Harmoni-and-Docker
+   tutorials/Package-Organization
+   tutorials/Package-List

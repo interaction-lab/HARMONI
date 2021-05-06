@@ -1,10 +1,4 @@
-# Usage
-
-### Table of Contents  
-[Running HARMONI in Docker](#running-harmoni-in-docker) \
-[Run HARMONI in Multiple Containers](#run-harmoni-in-multiple-containers) \
-
-
+# Misc. To Be Sorted
 
 # Running HARMONI in Docker
 ### Starting up HARMONI with the harmoni_full container
@@ -39,7 +33,7 @@ If the terminal prints the following message "Hello! Welcome to Harmoni", you su
     ```
     The contents are shown below:
     
-    ```yml
+    ```
     pcm.!default {
       type plug
       slave {
@@ -59,7 +53,7 @@ If the terminal prints the following message "Hello! Welcome to Harmoni", you su
     card 1: PCH [HDA Intel PCH], device 0: ALC283 Analog [ALC283 Analog]
     ```
     In this case the `.asoundrc` file will be:
-    ```yml
+    ```
     pcm.!default {
       type plug
       slave {
@@ -103,42 +97,7 @@ If the terminal prints the following message "Hello! Welcome to Harmoni", you su
 
     If you cannot listen to the audio, please check again in the container the `/root/.asoundrc` file and edit it according to your sound card (see Step 1 of Run).
 
-# Run HARMONI in Multiple Containers
-### Starting up HARMONI with multiple containers
-Open the folder:
-```bash
-cd ~/catkin_ws/src/HARMONI
-```
-**(Optional)** In order to run with window forwarding on linux use:
-```bash
-xhost +local:
-```
- Use docker compose to launch the complete system (will build if necessary, use --build to force) for developing:
-```bash
-docker-compose -f docker-compose-harmoni-dev.yml up
-```
 
-If the terminal prints: "Hello, rosmaster", you successfully setup the HARMONI full container.  
-*Note: We provide a bash script for launching multiple containers called run_compose.sh*
-
-Four terminals (1 for the core, 1 for the platform, and 1 for each detector) will be open up:
-1. harmoni_core (the ROS master)
-2. ros_hardware (hardware services)
-3. ros_w2l (Words-to-Letter for the speech-to-text detector)
-4. harmoni_visual_detector (face detector)
-
-
-### Run HARMONI with multiple containers
- 
-To begin working with ROS, we must start with roscore. The docker containers have been networked so we only need to invoke one core in one of the containers. In the harmoni_core terminal run:
-```bash
-roscore
-```
-
-We provide a set of alias shortcuts for launching your project quickly and easily. The full list is defined in dockerfiles/config/setup_script.sh. 
-
-
-> In harmoni we seek to provide a single point of truth for the configuration of the routers and services. Rather than generating multiple launch files for each configuration set, we use the python api for roslaunch to dynamically launch files based on the current configuration. We use launcher.launch to start the launcher.py node, which will start up the routers and services listed in the configuration.yaml file.
 
 #### Setting Up the Configuration
 Before running the whole interaction, you need to setup the configuration.yaml file in the _harmoni_decision_ package.
@@ -175,22 +134,6 @@ ita_param:
 ```
 The default harmoni_decision/config/configuration.yaml file is set to run the "multiple-choice" interaction. You can keep the configuration if you want to run it for testing. However, remember to set the configuration parameters of the services according to your platform hardwares or external service.
 
-#### Launching Services
-After launching the ROS master, you can also launch the other services. For instance, go to the ros_hardware terminal and launch all the hardware services with the following command:
-```bash
-rlhardwareservices
-#alias rlhardwareservices="roslaunch harmoni_decision launcher.launch service:='hardware'"
-```
-After launching the ROS master, you can also launch the other detectors. For instance, go to the w2l terminal and launch speech-to-text detector with the following command:
-```bash
-rlspeech
-#alias rlspeech="roslaunch harmoni_stt stt_service.launch"
-```
-or launch the face detector in the harmoni_visual_detector terminal
-```bash
-rlfacedetect
-#alias rlfacedetect="roslaunch harmoni_face_detect face_detect_service.launch"
-```
 
 #### Running an Interaction
 Now everything is setup for testing.
@@ -201,33 +144,7 @@ rlmultiplechoice
 #alias rlmultiplechoice="roslaunch harmoni_decision harmoni_decision.launch test:=true pattern_name:='multiple-choice'"
 ```
 
-## Run Package
-If you want to run a single package, you can directly launch the node from the command line.
 
-### Run a Service
-If it is an HARMONI service (except for detectors, which are run in their own containers), you can run it in the _harmoni_core_ container:
-```bash
-roslaunch harmoni_$PACKAGE $PACKAGE_service.launch
-```
-For example:
-```bash
-roslaunch harmoni_tts tts_service.launch
-```
-This command allows you to verify if the package is correctly setup. If you want to test it, look at the "Running a test" Section.
-If you want to run a detector, use the same command but in the corresponding container. For example, for the stt package, use the ros_w2l container for running the script.
-If it is an hardware service (except for detectors), you can run it in the _ros_hardware_ container:
-```bash
-roslaunch harmoni_$PACKAGE $PACKAGE_service.launch
-```
-For example:
-```bash
-roslaunch pc_microphone microphone_service.launch
-```
-
-Each launch file provides the user a set of arguments:
-- test: bool (set it to true if you want to run a test, see Section "Running a test")
-- test_input: string (set it according to the data that you want to input to the package)
-- test_id: string (set it as the id you chose for the _configuration.yaml_ file setting in the harmoni_decision)
 
 ### Run a behavior pattern
 If you want to run a behavior pattern and test it, in harmoni_core run:
@@ -239,8 +156,3 @@ For example, if you want to test the multiple_choice pattern run:
 ```bash
 roslaunch harmoni_pattern sequential_pattern.launch pattern_name:="multiple-choice"
 ```
-
-## Working with Cordial Face
-We provide an implementation of a face from the [cordial package](https://github.com/ndennler/cordial-public) implemented by the Interaction Lab. Although it is started as one face, we have implemented separate services for the eyes and mouth, allowing them to be controlled independently.
-
-[[images/screen_demo.png]]

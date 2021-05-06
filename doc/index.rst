@@ -3,11 +3,21 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to HARMONI's documentation! This is the root index
-==========================================================
+Human And Robot Modular OpeN Interactions
+==========================================
+
+.. image:: ../logo.svg
+  :width: 1000
+  :alt: Alternative text
+
+Welcome to HARMONI! 
+
+HARMONI is a ROS based tool for creating and controlling human-robot interaction. HARMONI is an open source (MIT License) tool meant to speed up development, collaboration, and experimentation for the HRI community.
+
+Below you will find an overview of the HARMONI platform, walkthroughs and tutorials, guides for testing and contributing, as well as the complete API.
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Contents:
    :glob:
 
@@ -15,4 +25,3 @@ Welcome to HARMONI's documentation! This is the root index
    Sample-Tutorials
    Testing
    Contributions
-   autoapi/index

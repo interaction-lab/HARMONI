@@ -1,7 +1,4 @@
 # Architecture
-*************
-
-Todo Check Out
 
 ## HARMONI Repository
 The HARMONI repository is organized into the following packages, based on the fundamental capabilities needed for human-robot interaction:
@@ -16,34 +13,12 @@ The HARMONI repository is organized into the following packages, based on the fu
   - harmoni_dialogues - _processing user speech (text) and return robot speech (text)_
   - harmoni_sensors - _reading physical sensors and publishing sensor streams_
 
-[[/images/PackageOrganization.png]]
+![packges](images/PackageOrganization.png)
 
-## Harmoni Packages
-Harmoni follows the standard ROS conventions for package structure, as follows:
-``` bash
-$NAME
-    |__ config
-       |__ configuration.yaml
-    |__ launch
-       |__ $NAME_service.launch
-    |__ nodes
-        |__ $NAME
-            |__ $NAME_service.py
-            |__ *.py
-    |__ src
-        |__ $NAME
-            |__ *.py
-    |__ tests
-        |__ *.py
-    |__ CMakeLists.txt
-    |__ package.xml
-    |__ setup.py
-```
-For setting the parameters of the different packages, the HARMONI team provided a configuration.yaml file, which can be changed according to the user setup requirements.
 
 ## HARMONI Unit
 
-[[/images/HarmoniUnitUML.png]]
+![unit](images/HarmoniUnitUML.png)
 
 Nearly everything in HARMONI is a ROS node called a HARMONI unit. The HARMONI unit consists of two classes, a Service Server and a Service Manager, which standardize the interface for a given node as shown above.
 

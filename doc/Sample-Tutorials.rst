@@ -6,9 +6,14 @@ Tutorials
    :caption: Contents:
    :glob:
 
-   tutorials/Harmoni-and-Docker
+   tutorials/Docker-Quickstart
+   tutorials/Multi-Container
+   tutorials/Setup
+   tutorials/Launching-Services
+   tutorials/Running-Packages
+   tutorials/Cordial
    tutorials/Compose-an-Interaction
    tutorials/Setting-Up-a-New-Robot
-   tutorials/Setup
-   tutorials/Usage
    tutorials/Configuration
+   tutorials/Cloud-Services
+   tutorials/Usage
