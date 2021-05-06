@@ -95,6 +95,7 @@ class FacenetFaceDetector(HarmoniServiceManager):
         Args:
             image(Image): the image we want to run face detection on.
         """
+        # FIXME: code crashes without these log statements???
         rospy.loginfo("DETECTING A CALLBACK HERE")
         frame = self._cv_bridge.imgmsg_to_cv2(image, desired_encoding="rgb8")
         rospy.loginfo("Made it past the bridge")
@@ -136,7 +137,7 @@ def main():
     service_id = DetectorNameSpace.face_detect.value + instance_id
 
     try:
-        rospy.init_node(service_name, log_level=rospy.DEBUG)
+        rospy.init_node(service_name, log_level=rospy.INFO)
 
         params = rospy.get_param(instance_id + "_param/")
 
