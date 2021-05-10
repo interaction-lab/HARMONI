@@ -7,6 +7,7 @@ from mongodb_client import MongoDBClient
 
 
 def main():
+    # TODO: this template is supposed to include some useful functions (e.g., insert(), getFromTable(id)) that people can just import and use
     try:
         name="mongodb_client"
         rospy.init_node(name)
