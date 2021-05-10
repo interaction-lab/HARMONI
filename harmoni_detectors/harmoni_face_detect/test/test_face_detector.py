@@ -35,14 +35,15 @@ import os, io
 class TestFaceDetector_Common(unittest.TestCase):
     def __init__(self, *args):
         super(TestFaceDetector_Common, self).__init__(*args)
+       
+
+    def setUp(self):
         self.feedback = State.INIT
         self.result = False
         self.image = cv2.imread(rospy.get_param("test_face_detector_input"))
         rospy.init_node("test_face_detector", log_level=rospy.INFO)
         self.rate = rospy.Rate(20)
         self.cv_bridge = CvBridge()
-
-    def setUp(self):
         # provide mock camera
         self.camera_topic = SensorNameSpace.camera.value + "default"
         self.image_pub = rospy.Publisher(

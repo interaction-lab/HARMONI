@@ -24,12 +24,7 @@ import os, io
 class TestW2L_Common(unittest.TestCase):
     def __init__(self, *args):
         super(TestW2L_Common, self).__init__(*args)
-        self.feedback = State.INIT
-        self.result = False
-        self.test_file = rospy.get_param("test_w2l_input")
-        self.audio = self.wav_to_data(self.test_file)
-        rospy.init_node("test_w2l", log_level=rospy.INFO)
-        self.rate = rospy.Rate(20)
+        
 
     def wav_to_data(self, path):
         with io.open(path, "rb") as f:
@@ -37,6 +32,12 @@ class TestW2L_Common(unittest.TestCase):
         return content
 
     def setUp(self):
+        self.feedback = State.INIT
+        self.result = False
+        self.test_file = rospy.get_param("test_w2l_input")
+        self.audio = self.wav_to_data(self.test_file)
+        rospy.init_node("test_w2l", log_level=rospy.INFO)
+        self.rate = rospy.Rate(20)
         self.output_sub = rospy.Subscriber(
             "/harmoni/detecting/stt/default", String, self._detecting_callback
         )
