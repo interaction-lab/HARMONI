@@ -18,8 +18,6 @@ import ast
 
 
 class TestFaceMouth(unittest.TestCase):
-    def __init__(self, *args):
-        super(TestFaceMouth, self).__init__(*args)
 
     def setUp(self):
         """

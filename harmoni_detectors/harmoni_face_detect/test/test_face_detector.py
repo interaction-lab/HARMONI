@@ -33,10 +33,7 @@ import os, io
 
 
 class TestFaceDetector_Common(unittest.TestCase):
-    def __init__(self, *args):
-        super(TestFaceDetector_Common, self).__init__(*args)
        
-
     def setUp(self):
         self.feedback = State.INIT
         self.result = False

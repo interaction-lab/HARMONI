@@ -22,8 +22,6 @@ import os, io
 
 
 class TestW2L_Common(unittest.TestCase):
-    def __init__(self, *args):
-        super(TestW2L_Common, self).__init__(*args)
         
 
     def wav_to_data(self, path):

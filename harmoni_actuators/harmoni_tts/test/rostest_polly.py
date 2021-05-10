@@ -18,8 +18,6 @@ import ast
 
 
 class TestPolly(unittest.TestCase):
-    def __init__(self, *args):
-        super(TestPolly, self).__init__(*args)
 
     def setUp(self):
         """

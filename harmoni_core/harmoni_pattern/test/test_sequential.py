@@ -27,11 +27,6 @@ class TestSequential(unittest.TestCase):
     If the mic is launched and starts successfully (as verified by the subscriber)
     then the test is passed.
     """
-
-    def __init__(self, *args):
-        super(TestSequential, self).__init__(*args)
-        
-
     def setUp(self):
         self.feedback = State.INIT
         self.result = False

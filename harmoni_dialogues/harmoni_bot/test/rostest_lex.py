@@ -18,8 +18,6 @@ import ast
 
 
 class TestLex(unittest.TestCase):
-    def __init__(self, *args):
-        super(TestLex, self).__init__(*args)
 
     def setUp(self):
         """

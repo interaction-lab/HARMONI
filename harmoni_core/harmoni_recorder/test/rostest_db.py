@@ -13,8 +13,6 @@ from harmoni_recorder.mongodb_client import MongoDBClient
 
 
 class TestDB(unittest.TestCase):
-    def __init__(self, *args):
-        super(TestDB, self).__init__(*args)
 
     def setUp(self):
         """
