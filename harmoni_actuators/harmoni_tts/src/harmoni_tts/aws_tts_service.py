@@ -306,7 +306,6 @@ def main():
     service_name = ActuatorNameSpace.tts.name
     instance_id = rospy.get_param("instance_id")
     service_id = f"{service_name}_{instance_id}"
-    # name = rospy.get_param("/name_" + service_name + "/")
     try:
         rospy.init_node(service_name)
 

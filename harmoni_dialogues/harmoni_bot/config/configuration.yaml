@@ -1,5 +1,5 @@
 # Configuration file for the microphone
-lex:
+bot:
   micol_param:
     user_id: "micol_testing_1"
     bot_name: "QTRobot"

@@ -18,8 +18,6 @@ import ast
 
 
 class TestPolly(unittest.TestCase):
-    def __init__(self, *args):
-        super(TestPolly, self).__init__(*args)
 
     def setUp(self):
         """
@@ -27,7 +25,7 @@ class TestPolly(unittest.TestCase):
         """
         rospy.init_node("test_polly", log_level=rospy.INFO)
         self.text = rospy.get_param("test_polly_input")
-        self.instance_id = rospy.get_param("instance_id_tts")
+        self.instance_id = rospy.get_param("instance_id")
         self.result = False
         self.name = ActuatorNameSpace.tts.name + "_" + self.instance_id
         self.service_client = HarmoniActionClient(self.name)

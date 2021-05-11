@@ -28,11 +28,7 @@ class MockPolly(BaseHTTPRequestHandler):
 
 
 class TestPolly(unittest.TestCase):
-
-    def __init__(self, *args):
-        super(TestPolly, self).__init__(*args)
         
-
     def setUp(self):
         rospy.init_node("test_polly", log_level=rospy.INFO)
         self.text = rospy.get_param("test_polly_input")

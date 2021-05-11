@@ -18,8 +18,6 @@ import ast
 
 
 class TestLex(unittest.TestCase):
-    def __init__(self, *args):
-        super(TestLex, self).__init__(*args)
 
     def setUp(self):
         """
@@ -27,7 +25,7 @@ class TestLex(unittest.TestCase):
         """
         rospy.init_node("test_lex", log_level=rospy.INFO)
         self.text = rospy.get_param("test_lex_input")
-        self.instance_id = rospy.get_param("instance_id_bot")
+        self.instance_id = rospy.get_param("instance_id")
         self.result = False
         self.name = DialogueNameSpace.bot.name + "_" + self.instance_id
         self.service_client = HarmoniActionClient(self.name)
