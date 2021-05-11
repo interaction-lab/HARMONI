@@ -1,9 +1,7 @@
 <launch>
    
     <arg name="instance_id" default="default"/>
-
-    <param name="name" value="dlib"/>
     <param name="instance_id" value="$(arg instance_id)"/>
-
     <node pkg="harmoni_face_detect" type="dlib_service.py" name="$(arg instance_id)" output="screen"/>
+
 </launch>

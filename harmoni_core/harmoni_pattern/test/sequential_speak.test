@@ -15,5 +15,5 @@
 	<node pkg="harmoni_pattern" type="sequential_pattern.py" name="harmoni_pattern_default" output="screen"/> -->
 
 
-    <test test-name="test_sequential" pkg="harmoni_pattern" type="test_sequential_speak.py"/>
+    <test test-name="test_sequential" pkg="harmoni_pattern" type="test_sequential_speak.py" time-limit="120.00"/>
 </launch>

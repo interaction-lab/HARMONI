@@ -17,8 +17,6 @@ import ast
 
 
 class TestMicrophone(unittest.TestCase):
-    def __init__(self, *args):
-        super(TestMicrophone, self).__init__(*args)
 
     def setUp(self):
         """

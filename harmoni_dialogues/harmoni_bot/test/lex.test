@@ -1,7 +1,7 @@
 <!-- This is an example launch file for how a ROS application could use a node -->
 <launch>
 	<rosparam file="$(find harmoni_bot)/config/configuration.yaml" subst_value="True"/>
-    <param name="instance_id_bot" value="default"/>
+    <param name="instance_id" value="default"/>
     <param name="name_bot" value="lex"/>
     <node pkg="harmoni_bot" type="aws_lex_service.py" name="harmoni_bot_lex_default" output="screen"/>
 

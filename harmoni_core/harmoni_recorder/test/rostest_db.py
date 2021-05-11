@@ -6,17 +6,13 @@ PKG = "test_harmoni_recorder"
 import unittest, rospy, roslib, sys
 import rostest
 # Specific Imports
-from actionlib_msgs.msg import GoalStatus
 from harmoni_common_msgs.msg import harmoniAction, harmoniFeedback, harmoniResult
-from std_msgs.msg import String
 import os, io
 import ast
 from harmoni_recorder.mongodb_client import MongoDBClient
 
 
 class TestDB(unittest.TestCase):
-    def __init__(self, *args):
-        super(TestDB, self).__init__(*args)
 
     def setUp(self):
         """

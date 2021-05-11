@@ -22,20 +22,24 @@ import os, io
 
 
 class TestSequential(unittest.TestCase):
-    """This test of the sequential pattern player uses a simple mic test script.
+    """This test of the sequential pattern player uses a speak test script.
 
-    If the mic is launched and starts successfully (as verified by the subscriber)
-    then the test is passed.
+    This is a sequence of:
+    - bot
+    - tts
+    - speak and lip-sync (open the browser at the following address to display the face: http://172.18.3.4:8081)
+    If all the requests succeed, the test passes.
     """
 
     def __init__(self, *args):
         super(TestSequential, self).__init__(*args)
+       
+
+    def setUp(self):
         self.feedback = State.INIT
         self.result = False
         rospy.init_node("test_sequence", log_level=rospy.INFO)
         self.rate = rospy.Rate(20)
-
-    def setUp(self):
         self.server = "speak_test_default"
         self.client = HarmoniActionClient(self.server)
         self.client.setup_client(
@@ -43,7 +47,7 @@ class TestSequential(unittest.TestCase):
         )
         rospy.loginfo("TestSequential: Turning ON sequential server")
         self.client.send_goal(
-            action_goal=ActionType.ON, optional_data="Setup", wait=False
+            action_goal=ActionType.ON, optional_data="Setup", wait=True
         )
         rospy.loginfo("TestSequential: Started up. waiting for sequence startup")
 

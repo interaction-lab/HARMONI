@@ -1,7 +1,7 @@
 # Configuration file for the camera
 camera:
   default_param:
-    input_device_index: 2
+    input_device_index: 0
     show: True
     video_format: "bgr8"
     fps: 30
