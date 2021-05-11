@@ -95,14 +95,13 @@ def main():
     Main function for starting HarmoniLex service
     """
     service_name = DialogueNameSpace.bot.name
-    name = rospy.get_param("/name_" + service_name + "/")
-    instance_id = rospy.get_param("/instance_id_" + service_name + "/")
+    instance_id = rospy.get_param("instance_id")  # "default"
+    service_id = f"{service_name}_{instance_id}"
     try:
-        rospy.init_node(service_name)
-        param = rospy.get_param(name + "/" + instance_id + "_param/")
-        service = hf.get_service_server_instance_id(service_name, instance_id)
-        s = AWSLexService(service, param)
-        service_server = HarmoniServiceServer(name=service, service_manager=s)
+        rospy.init_node(service_name, log_level=rospy.DEBUG)
+        params = rospy.get_param(service_name + "/" + instance_id + "_param/")
+        s = AWSLexService(service_id, params)
+        service_server = HarmoniServiceServer(service_id, s)
         service_server.start_sending_feedback()
         rospy.spin()
     except rospy.ROSInterruptException:

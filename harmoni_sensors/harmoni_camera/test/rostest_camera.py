@@ -17,8 +17,6 @@ import ast
 
 
 class TestCamera(unittest.TestCase):
-    def __init__(self, *args):
-        super(TestCamera, self).__init__(*args)
 
     def setUp(self):
         """

@@ -1,4 +1,3 @@
-# Configuration file for the microphone
 face_detect:
   default_param:
     rate_frame: 10

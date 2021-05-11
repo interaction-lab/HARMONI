@@ -18,6 +18,10 @@ RUN \
     APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+    # TERMINAL TOOLS
+    nano \
+    vim \
+    tmux \
     # BUILD TOOLS
     build-essential \
     ca-certificates \

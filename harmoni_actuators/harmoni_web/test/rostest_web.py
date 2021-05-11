@@ -18,8 +18,6 @@ import ast
 
 
 class TestWeb(unittest.TestCase):
-    def __init__(self, *args):
-        super(TestWeb, self).__init__(*args)
 
     def setUp(self):
         """

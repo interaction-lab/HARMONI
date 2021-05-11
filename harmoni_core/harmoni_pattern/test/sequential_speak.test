@@ -1,0 +1,19 @@
+<launch>
+
+    <!-- This is an integrative test that requires the speaker interaction -->
+    <include file="$(find harmoni_speaker)/launch/speaker_service.launch"></include>
+    <include file="$(find harmoni_tts)/launch/tts_service.launch"></include>
+    <include file="$(find harmoni_bot)/launch/bot_service.launch"></include>
+    <include file="$(find harmoni_face)/launch/face_service.launch"></include>
+    <include file="$(find harmoni_pattern)/launch/sequence_pattern.launch">
+        <arg name="pattern_name" default="speak_test"/>
+    </include>
+
+
+    <!-- <rosparam file="$(find harmoni_pattern)/config/configuration.yaml" subst_value="True"/>
+    <param name="instance_id" value="default"/>
+	<node pkg="harmoni_pattern" type="sequential_pattern.py" name="harmoni_pattern_default" output="screen"/> -->
+
+
+    <test test-name="test_sequential" pkg="harmoni_pattern" type="test_sequential_speak.py" time-limit="120.00"/>
+</launch>
