@@ -1,3 +1,5 @@
+# harmoni_face_detect
+
 Based on work from https://github.com/fyr91/face_detection
 
 Requires python2.6 - python3.6. Python 3.7 and newer will require dlib compilation from source.

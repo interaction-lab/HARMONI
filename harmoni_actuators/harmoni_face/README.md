@@ -1,8 +1,2 @@
-# Face Service Parameters:
-Parameters input for the microphone service: 
+## Face Service Parameters
 
-| Parameters           | Definition | Values |
-|----------------------|------------|--------|
-|chunk_size            |            |        |
-|total_channels        |            |        |
-|audio_rate            |            |        |

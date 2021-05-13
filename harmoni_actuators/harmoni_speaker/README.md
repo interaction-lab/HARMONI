@@ -1,4 +1,6 @@
-# Speaker Service Parameters:
+# harmoni_speaker
+
+## Speaker Service Parameters:
 Parameters input for the speaker service: 
 
 | Parameters           | Definition | Values |
@@ -7,7 +9,7 @@ Parameters input for the speaker service:
 |total_channels        |            |        |
 |audio_rate            |            |        |
 
-# Setting up your speaker
+## Setting up your speaker
 The speaker device is configured in the dockerfiles/config/asoundrc file, whose contents are shown below:
 
 ```

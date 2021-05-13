@@ -1,4 +1,6 @@
-# camera Service Parameters:
+# harmoni_camera
+
+## camera Service Parameters:
 Parameters input for the microphone service: 
 
 | Parameters           | Definition | Values |

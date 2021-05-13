@@ -1,7 +1,5 @@
 # Contributing
 
-## Repository Management
-
 If you would like to submit to the HARMONI official repository, fork the develop branch, make your changes, and then submit a pull request to bring the new content from your fork into the official repository. The maintainers will review your update and let you know if there are any issues.
 
 ## Developing in HARMONI

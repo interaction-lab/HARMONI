@@ -1,6 +1,8 @@
-# Interaction Scripting with Pattern Player
+# Compose Interaction
 
-![packges](images/PatternBehaviorTree.png)
+_This example uses the sequential pattern player found in the harmoni_pattern package._
+
+![packges](../images/PatternBehaviorTree.png)
 
 _An example interaction script pictured as a behavior tree._
 
@@ -41,7 +43,7 @@ HARMONI enables to compose an interaction very easily. The interaction consists 
 The `set` of interaction can be: "sequence" or "loop".
 The `steps` field contains the array of the module that you want to run in sequence, or in parallel (if you add the modules into another array). Each `steps` is then defined into an array of dict which refer to different `action`.
 Each `action` has the name of the module  (e.g., bot, tts, face_mouth, speaker) plus the id that you find in the `/HARMONI/harmoni_core/harmoni_decision/config/configuration.yaml`(e.g., default, micol).
-The name is: $MODULENAME + "_" + $MODULEID.
+The name is: \$MODULENAME + "_" + \$MODULEID.
 If the actions should start in parallel, you need to insert them into an array.
 Each action contains the following fields:
 - action_goal: enum (DO, REQUEST, START, STOP)

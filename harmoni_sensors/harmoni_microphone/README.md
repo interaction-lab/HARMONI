@@ -1,4 +1,6 @@
-# Microphone Service Parameters:
+# harmoni_microphone
+
+## Microphone Service Parameters:
 Parameters input for the microphone service: 
 
 | Parameters           | Definition | Values |

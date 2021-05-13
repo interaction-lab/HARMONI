@@ -1,5 +1,7 @@
+# harmoni_bot
 
-# AWS Lex Service Parameters:
+## AWS Lex Service Parameters:
+
 Parameters input for the aws lex service: 
 
 | Parameters           | Definition | Values |
