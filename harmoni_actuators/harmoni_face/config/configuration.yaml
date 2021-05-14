@@ -1,10 +1,6 @@
 # Configuration file for the microphone
 face:
   default_param:
-    min_duration_viseme: 0.05 #s
-    speed_viseme: 10 #ms
-    timer_interval: 0.01 #s
-    gaze_speed: 10 #ms
     mouth:
       min_duration_viseme: 0.05 #s
       speed_viseme: 10 #ms
