@@ -61,7 +61,7 @@ autoapi_template_dir = "_autoapi_templates"
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
-autoapi_ignore = ["*test*"]
+autoapi_ignore = ["*/test*"]
 
 # -- Options for HTML output -------------------------------------------------
 
