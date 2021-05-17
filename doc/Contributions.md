@@ -1,5 +1,6 @@
 # Contributing
 
+HARMONI is intended to serve the needs of the HRI community. We hope that HARMONI currently supports the basic needs of most HRI developers but we acknowledge there will always be room for new capabilities and improvements. As you use HARMONI for your own work we hope you will contribute back the new capabilities and robots you work with for the good of the whole community.
 If you would like to submit to the HARMONI official repository, fork the develop branch, make your changes, and then submit a pull request to bring the new content from your fork into the official repository. The maintainers will review your update and let you know if there are any issues.
 
 ## Developing in HARMONI
