@@ -1,7 +1,7 @@
 harmoni_core
 ================================
 
-Everything needed to make the HARMONI system functional.
+Everything needed to make the HARMONI packages function together.
 
 .. toctree::
    :maxdepth: 2
