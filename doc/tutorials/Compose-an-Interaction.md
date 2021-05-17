@@ -6,8 +6,12 @@ _This example uses the sequential pattern player found in the harmoni_pattern pa
 
 _An example interaction script pictured as a behavior tree._
 
-## Description 
+## Interaction Definition 
 HARMONI enables to compose an interaction very easily. The interaction consists of different steps, that can be ran all together, or they can wait for another action to accomplish.
+
+### Template
+
+Below is a template for all possible interaction definitions. It is not valid JSON until you choose one of the options in each group (X, Y, Z) of items and remove comments. See [the example](#example) in the next subsection to see what a full interaction would look like.
 
 ```javascript
 [{"set": string (sequence, loop), 
@@ -50,8 +54,11 @@ Each action contains the following fields:
 - resource_type: string (actuator, detector, sensor)
 - wait_for: string (new: if you are waiting for the results of the previous module to start the action)
 
+### Example
+
 For example, the _demo.json_ example is the following:
-```javascript
+
+```json
 [{"set": "sequence", 
   "steps": 
       [
@@ -84,14 +91,14 @@ In this example, we want to run in sequence (`"set": "sequence"`) the following 
 
 At this point you can interact with the robot through the chat in the browser.
 
-## Modify the interaction
-To compose or modify the interaction, you only need to add a new action into the `HARMONI/harmoni_core/harmoni_pattern/pattern_scripting/demo.json` file. 
-You can use VisualStudio Code for editing the json file in your host machine. 
+## Modify an interaction
+To compose or modify an interaction, you only need to add a new action into the `HARMONI/harmoni_core/harmoni_pattern/pattern_scripting/demo.json` file. 
+You can use your preferred text editor (for example, we use VSCode here) for editing the json file on your host machine. 
 In your terminal run: `code` or whatever editor you prefer to edit the json file.
 For example, if you need to add the gesture (which is an actuator) of the robot in parallel with the speaker for seeing the robot movements you should send a command. Add the following in `demo.json`:
 
 
-```javascript
+```json
 [{"set": "sequence", 
   "steps": 
       [

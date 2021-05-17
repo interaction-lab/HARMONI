@@ -76,4 +76,4 @@ You will also need to install docker-compose. Instructions can be found here: [h
    started core service [/rosout]
    ```
 
-You are now set up for Harmoni with Docker! Take a look [here](../tutorials/Launching-Services) to test out some services.
+You are now set up for Harmoni with Docker! Check on your [configuration here](../Configuration) and then [start some services here](../tutorials/Launching-Services).
