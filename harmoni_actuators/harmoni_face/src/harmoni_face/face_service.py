@@ -12,7 +12,9 @@ import harmoni_common_lib.helper_functions as hf
 # Specific Imports
 from harmoni_common_lib.constants import ActuatorNameSpace
 from harmoni_face.msg import FaceRequest
+from geometry_msgs.msg import Point
 from threading import Timer
+from collections import deque
 import json
 import ast
 import os
@@ -36,6 +38,7 @@ class EyesService(HarmoniServiceManager):
         self.gaze_speed = param_eyes["gaze_speed"]
         self.service_id = hf.get_child_id(self.name)
         self.mouth = MouthService("face_mouth_default", param_mouth)
+        self.timer_interval = self.mouth.timer_interval_expressions
         self.setup_face()
         self.face_eyes_pub = rospy.Publisher(
             ActuatorNameSpace.face.value + self.service_id + "/expressing/eyes",
@@ -55,38 +58,46 @@ class EyesService(HarmoniServiceManager):
             response (int): whether SUCCESS of FAIL
             message (str): result message 
         """
-        print("Do expression")
         self.actuation_completed = False
-        valid_face_expression = self.mouth.get_facial_expression_data(data)
-        aus = self._get_face_eyes_data(data)
-        print(aus)
+        face_expressions = self.mouth.get_facial_expression_data(data)
+        [au_bool, aus] = self._get_face_eyes_data(data)
+        [gaze_bool, gaze_data] = self._get_gaze_data(data)
+        if au_bool:
+            face_expressions.append(aus)
         try:
             self.state = State.REQUEST
-            if valid_face_expression != []:
-                rospy.loginfo("Valid face expression not null")
-                if len(valid_face_expression) > 1:
-                    for ind, f in range(0, len(valid_face_expression) - 1):
-                        rospy.loginfo("The valid expression is %s" % f)
-                        aus = list(map(lambda s: s[2:], f["aus"]))
-                        au_ms = f["au_ms"] * 1000
-                        self.face_request = FaceRequest(
-                            aus=aus, au_degrees=f["au_degrees"], au_ms=au_ms
-                        )
-                        t = Timer(self.timer_interval, self.send_face_eyes_request)
-                        t.start()
-                        start_time = rospy.Time.now()
-                aus = list(map(lambda s: s[2:], valid_face_expression[-1]["aus"]))
-                au_ms = valid_face_expression[-1]["au_ms"] * 1000
-                self.face_request = FaceRequest(
-                    aus=aus,
-                    au_degrees=valid_face_expression[-1]["au_degrees"],
-                    au_ms=au_ms,
-                )
-                t = Timer(self.timer_interval, self.send_face_eyes_request)
-                t.start()
-                start_time = rospy.Time.now()
-                rospy.loginfo("The last facial expression")
-                rospy.sleep(valid_face_expression[-1]["au_ms"])
+            if gaze_bool:
+                rospy.loginfo("Valid gaze")
+                rospy.loginfo(f"The valid gaze is {gaze_data}")
+                self.face_request_eyes = FaceRequest(
+                                retarget_gaze=gaze_bool, gaze_target=gaze_data, hold_gaze=2
+                            )
+                self.send_face_eyes_request()
+            if face_expressions != []:
+                rospy.loginfo("Valid face expression or action unit not null")
+                for face_expression in face_expressions:
+                    if len(face_expression) > 1:
+                        for ind in range(0,len(face_expression)-1):
+                            f = face_expression[ind]
+                            rospy.loginfo("The valid expression is %s" % f)
+                            aus = list(map(lambda s: s[2:], f["aus"]))
+                            au_ms = f["au_ms"] * 1000
+                            au_degrees = f["au_degrees"]
+                            self.face_request_eyes = FaceRequest(
+                                aus=aus, au_degrees=au_degrees, au_ms=int(au_ms)
+                            )
+                            self.send_face_eyes_request()
+                            rospy.sleep(self.timer_interval) 
+                    aus = list(map(lambda s: s[2:], face_expression[-1]["aus"]))
+                    au_ms = face_expression[-1]["au_ms"] * 1000
+                    self.face_request_eyes = FaceRequest(
+                        aus=aus,
+                        au_degrees=face_expression[-1]["au_degrees"],
+                        au_ms=int(au_ms),
+                    )
+                    self.send_face_eyes_request()
+                    rospy.sleep(self.timer_interval) 
+                    rospy.loginfo("The last facial expression ends")
             self.state = State.SUCCESS
             self.actuation_completed = True
             self.result_msg=""
@@ -109,18 +120,37 @@ class EyesService(HarmoniServiceManager):
             self.face_expression,
             self.face_expression_names,
         ] = self.mouth.get_facial_expressions_list()
-        self.action_units = [ "au1", "au2", "au5", "au12", "au17", "au43", "au4", "au7", "au10", "au18", "au20", "au23", "au27", "au13"]
+        self.action_units = [ "au1", "au2", "au5", "au12", "au17", "au43", "au4", "au7", "au10", "au18", "au20", "au23", "au27", "au13", "au11"]
         return
 
     def send_face_eyes_request(self):
         """ Send the request to the web page"""
-        rospy.loginfo("Sending request to webpage of the face")
-        self.face_eyes_pub.publish(self.face_request)
+        rospy.loginfo("Sending request to webpage of the face eyes")
+        self.face_eyes_pub.publish(self.face_request_eyes)
         return
+
+    def _get_gaze_data(self, data):
+        """Get target gaze data"""
+        data = ast.literal_eval(data)
+        if "behavior_data" in data:
+            behavior_data = ast.literal_eval(data["behavior_data"])
+        else:
+            behavior_data = data
+        gaze_bool = False
+        gaze_target = Point()
+        for b in behavior_data:
+            if "id" in b.keys():
+                if b["id"] == "target":
+                    gaze_target.x = b["point"][0]
+                    gaze_target.y = b["point"][1]
+                    gaze_target.z = b["point"][2]
+                    gaze_bool = True
+        return gaze_bool, gaze_target
 
     def _get_face_eyes_data(self, data):
         """ Get the validated data of the face"""
         data = ast.literal_eval(data)
+        au_bool = False
         if "behavior_data" in data:
             behavior_data = ast.literal_eval(data["behavior_data"])
         else:
@@ -138,11 +168,13 @@ class EyesService(HarmoniServiceManager):
             if fexp["id"] in self.action_units:
                 validated_au_expr.append({
                         "aus": [fexp["id"]],
-                        "au_degrees": [int(fexp["start"])],
-                        "au_ms": fexp["time"]/1000,
+                        "au_degrees": [fexp["pose"]],
+                        "au_ms": int(fexp["time"]),
                     })
         rospy.loginfo("The validated action units are %s" % validated_au_expr)
-        return validated_au_expr
+        if validated_au_expr!=[]:
+            au_bool = True
+        return au_bool, validated_au_expr
 
 
 class MouthService(HarmoniServiceManager):
@@ -166,6 +198,7 @@ class MouthService(HarmoniServiceManager):
         self.min_duration_viseme = param["min_duration_viseme"]
         self.speed_viseme = param["speed_viseme"]
         self.timer_interval = param["timer_interval"]
+        self.timer_interval_expressions = param["timer_interval_expression"]
         self.connected = False
         self.service_id = hf.get_child_id(self.name)
         self.setup_face()
@@ -190,49 +223,49 @@ class MouthService(HarmoniServiceManager):
         rospy.loginfo("Do expressions")
         self.actuation_completed = False
         self.result_msg=""
-        valid_face_expression = self.get_facial_expression_data(data)
-        visemes = self._get_viseme_data(data)
+        face_expressions = self.get_facial_expression_data(data)
+        [viseme_bool, visemes] = self._get_viseme_data(data)
         try:
             self.state = State.REQUEST
 
-            if visemes != []:
+            if viseme_bool:
                 viseme_ids = list(map(lambda b: b["id"], visemes))
                 viseme_times = list(map(lambda b: b["start"], visemes))
                 self.face_request = FaceRequest(
                     visemes=viseme_ids, viseme_ms=self.speed_viseme, times=viseme_times
                 )
-
                 t = Timer(self.timer_interval, self.send_face_request)
                 t.start()
                 start_time = rospy.Time.now()
                 rospy.loginfo("The last viseme lasts %i" % viseme_times[-1])
                 time_sleep = int(viseme_times[-1]) + self.min_duration_viseme
                 rospy.sleep(time_sleep)
-            if valid_face_expression != []:
-                rospy.loginfo("Valid face expression not null")
-                if len(valid_face_expression) > 1:
-                    for ind, f in range(0, len(valid_face_expression) - 1):
-                        rospy.loginfo("The valid expression is %s" % f)
-                        aus = list(map(lambda s: s[2:], f["aus"]))
-                        au_ms = f["au_ms"] * 1000
-                        self.face_request = FaceRequest(
-                            aus=aus, au_degrees=f["au_degrees"], au_ms=au_ms
-                        )
-                        t = Timer(self.timer_interval, self.send_face_request)
-                        t.start()
-                        start_time = rospy.Time.now()
-                aus = list(map(lambda s: s[2:], valid_face_expression[-1]["aus"]))
-                au_ms = valid_face_expression[-1]["au_ms"] * 1000
-                self.face_request = FaceRequest(
-                    aus=aus,
-                    au_degrees=valid_face_expression[-1]["au_degrees"],
-                    au_ms=int(au_ms),
-                )
-                t = Timer(self.timer_interval, self.send_face_request)
-                t.start()
-                start_time = rospy.Time.now()
-                rospy.loginfo("The last facial expression")
-                rospy.sleep(valid_face_expression[-1]["au_ms"])
+            if face_expressions != []:
+                rospy.loginfo("Valid face expression or action unit not null")
+                for face_expression in face_expressions:
+                    if len(face_expression) > 1:
+                        for ind in range(0,len(face_expression)-1):
+                            f = face_expression[ind]
+                            rospy.loginfo("The valid expression is %s" % f)
+                            aus = list(map(lambda s: s[2:], f["aus"]))
+                            au_ms = f["au_ms"] * 1000
+                            au_degrees = f["au_degrees"]
+                            print(aus, au_ms, au_degrees)
+                            self.face_request = FaceRequest(
+                                aus=aus, au_degrees=au_degrees, au_ms=int(au_ms)
+                            )
+                            self.send_face_request()
+                            rospy.sleep(self.timer_interval_expressions) 
+                    aus = list(map(lambda s: s[2:], face_expression[-1]["aus"]))
+                    au_ms = face_expression[-1]["au_ms"] * 1000
+                    self.face_request = FaceRequest(
+                        aus=aus,
+                        au_degrees=face_expression[-1]["au_degrees"],
+                        au_ms=int(au_ms),
+                    )
+                    self.send_face_request()
+                    rospy.sleep(self.timer_interval_expressions) 
+                    rospy.loginfo("The last facial expression ends")
             self.state = State.SUCCESS
             self.actuation_completed = True
         except Exception:
@@ -288,16 +321,17 @@ class MouthService(HarmoniServiceManager):
                 facial_expression_list.append(facial_expression)
                 au_name = str(facial_expression)
                 aus = []
+                face_expression_au[au_name] = []
                 for dofs in data[facial_expression]["dofs"]:
                     aus.append(str(dofs))
                 for keyframe in data[facial_expression]["keyframes"]:
                     au_degrees = keyframe["pose"]
                     au_ms = keyframe["time"]
-                    face_expression_au[au_name] = {
+                    face_expression_au[au_name].append({
                         "aus": aus,
                         "au_degrees": au_degrees,
                         "au_ms": au_ms,
-                    }
+                    })
         return face_expression_au, facial_expression_list
 
     def get_facial_expression_data(self,data):
@@ -307,13 +341,10 @@ class MouthService(HarmoniServiceManager):
         else:
             behavior_data = data
         facial_expression = []
-        sentence = []
         for b in behavior_data:
             if "id" in b.keys():
                 if b["id"] in self.face_expression_names:
                     facial_expression.append(b)
-            if "character" in b.keys():
-                sentence.append(b["value"])
         rospy.loginfo("These facial expressions include %s" % facial_expression)
         ordered_facial_data = list(
             sorted(facial_expression, key=lambda face: face["start"])
@@ -326,6 +357,7 @@ class MouthService(HarmoniServiceManager):
 
     def _get_viseme_data(self, data):
         """ Get the validated data of the face"""
+        viseme_bool = False
         data = ast.literal_eval(data)
         if "behavior_data" in data:
             behavior_data = ast.literal_eval(data["behavior_data"])
@@ -336,18 +368,20 @@ class MouthService(HarmoniServiceManager):
             if "id" in b.keys():
                 if b["id"] in self.visemes:
                     viseme_set.append(b)
-        for i in range(0, len(viseme_set) - 1):
-            viseme_set[i]["duration"] = (
-                viseme_set[i + 1]["start"] - viseme_set[i]["start"]
-            )
+                    viseme_bool = True
+        if viseme_bool:
+            for i in range(0, len(viseme_set) - 1):
+                viseme_set[i]["duration"] = (
+                    viseme_set[i + 1]["start"] - viseme_set[i]["start"]
+                )
 
-        viseme_set[-1]["duration"] = self.min_duration_viseme
-        viseme_behaviors = list(
-            filter(lambda b: b["duration"] >= self.min_duration_viseme, viseme_set)
-        )
-        ordered_visemes = list(sorted(viseme_behaviors, key=lambda b: b["start"]))
-        rospy.loginfo("The validated visemes are %s" % viseme_set)
-        return viseme_set
+            viseme_set[-1]["duration"] = self.min_duration_viseme
+            viseme_behaviors = list(
+                filter(lambda b: b["duration"] >= self.min_duration_viseme, viseme_set)
+            )
+            ordered_visemes = list(sorted(viseme_behaviors, key=lambda b: b["start"]))
+            rospy.loginfo("The validated visemes are %s" % viseme_set)
+        return viseme_bool, viseme_set
 
 
 
