@@ -79,7 +79,7 @@ class TestFace(unittest.TestCase):
     def result_eyes_cb(self, data):
         rospy.loginfo(f"Result: {data}")
         self.result_eyes = True
-    """
+    
     def test_request_response_mouth(self):
         rospy.loginfo(f"The input data is {self.data}")
         self.service_client_mouth.send_goal(
@@ -88,7 +88,6 @@ class TestFace(unittest.TestCase):
             wait=True,
         )
         assert self.result_mouth == True
-    """
     
     def test_request_response_eyes(self):
         rospy.loginfo(f"The input data is {self.data}")

@@ -4,6 +4,7 @@ face:
     mouth:
       min_duration_viseme: 0.05 #s
       speed_viseme: 10 #ms
+      timer_interval_expression: 0.6 #s
       timer_interval: 0.01 #s
     eyes:
       gaze_speed: 10 #ms
