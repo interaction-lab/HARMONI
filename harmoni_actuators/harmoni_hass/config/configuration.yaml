@@ -1,0 +1,5 @@
+# Configuration file for home assistant
+hass:
+  default_param:
+    hass_uri: "http://10.254.254.50:8123/"
+    token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI0YTlkZWU1ZWM2ZjI0YmRlYjE3ZTAxNzU5NTdhMmVjMyIsImlhdCI6MTYyMDM4MjIyNCwiZXhwIjoxOTM1NzQyMjI0fQ.itt5Ui6evx0uONe7FWDSU9FoL2tKjlc0HFKkd607ygc"
