@@ -1,5 +1,7 @@
 # harmoni_tts
 
+The Text To Speech package takes text as action arguments and produces audio and vizemes for speech.
+
 ## AWS Polly Service Parameters:
 Parameters input for the aws polly service: 
 

@@ -1,10 +1,3 @@
 # harmoni_camera
 
-## camera Service Parameters:
-Parameters input for the microphone service: 
-
-| Parameters           | Definition | Values |
-|----------------------|------------|--------|
-|chunk_size            |            |        |
-|total_channels        |            |        |
-|audio_rate            |            |        |
+The harmoni_camera package provides a simple wrapper around the camera for publishing images. 
