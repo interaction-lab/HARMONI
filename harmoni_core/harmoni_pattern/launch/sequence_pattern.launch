@@ -1,9 +1,9 @@
 <launch>
    
-	<arg name="pattern_name" default="multiple_choice"/>
+	<arg name="pattern_name" default="context_dialogue"/>
 	<arg name="instance_id" default="default"/>
     <!-- To start on launch of pattern use the flag start:=true -->
-	<arg name="start" default="false"/>
+	<arg name="start" default="true"/>
 
     <rosparam file="$(find harmoni_pattern)/config/configuration.yaml" subst_value="True"/>
     <param name="instance_id" value="$(arg instance_id)"/>
