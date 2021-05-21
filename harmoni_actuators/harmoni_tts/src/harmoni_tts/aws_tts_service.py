@@ -21,7 +21,6 @@ import json
 import ast
 import sys
 
-
 class AWSTtsService(HarmoniServiceManager):
     """
     Amazon tts service

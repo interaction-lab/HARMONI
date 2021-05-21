@@ -10,4 +10,4 @@ hardware:
   #camera: ["default"]
   face: ["default"]
   speaker: ["default"]
-  # gesture: ["default"]
+  gesture: ["misty"]

@@ -22,11 +22,6 @@
                             "component": "img",
                             "children": "../assets/imgs/test.jpg",
                             "id": "img_test2"
-                        },
-                        {
-                            "component": "img",
-                            "children": "../assets/imgs/test.jpg",
-                            "id": "img_test3"
                         }
                     ]
                 },
@@ -48,6 +43,264 @@
                             "component": "button",
                             "children": "Click here!",
                             "id": "button_4"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "component": "container",
+            "id": "QA_container",
+            "children": [
+            {   
+                "component": "title",
+                "children": "Scegli la risposta corretta. Oggetto che serve a divertire i bambini",
+                "id": "title_1"
+            },
+                {
+                    "component": "row",
+                    "id": "row_4",
+                    "children": [
+                        {
+                            "component": "img",
+                            "children": "../assets/imgs/General/qa_1_1_target.jpg",
+                            "id": "img_test4"
+                        },
+                        {
+                            "component": "img",
+                            "children": "../assets/imgs/General/qa_1_1_comp.jpg",
+                            "id": "img_test5"
+                        }
+                    ]
+                },
+                {
+                    "component": "row",
+                    "id": "row_5",
+                    "children": [
+                        {
+                            "component": "button",
+                            "children": "Giocattolo.",
+                            "id": "button_5"
+                        },
+                        {
+                            "component": "button",
+                            "children": "Gettone.",
+                            "id": "button_6"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "component": "container",
+            "id": "QA_container2",
+            "children": [
+            {   
+                "component": "title",
+                "children": "Scegli la risposta corretta. Si indossano ai piedi",
+                "id": "title_2"
+            },
+                {
+                    "component": "row",
+                    "id": "row_1_2_1",
+                    "children": [
+                        {
+                            "component": "img",
+                            "children": "../assets/imgs/General/qa_1_2_target.jpg",
+                            "id": "img_test1_2_target"
+                        },
+                        {
+                            "component": "img",
+                            "children": "../assets/imgs/General/qa_1_2_comp.jpg",
+                            "id": "img_test1_2_comp"
+                        }
+                    ]
+                },
+                {
+                    "component": "row",
+                    "id": "row_1_2_2",
+                    "children": [
+                        {
+                            "component": "button",
+                            "children": "Scarpe.",
+                            "id": "button_1_2_target"
+                        },
+                        {
+                            "component": "button",
+                            "children": "Guanti.",
+                            "id": "button_1_2_comp"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "component": "container",
+            "id": "QA_container3",
+            "children": [
+            {   
+                "component": "title",
+                "children": "Scegli la risposta corretta. Li usa chi non vede bene",
+                "id": "title_3"
+            },
+                {
+                    "component": "row",
+                    "id": "row_1_3_1",
+                    "children": [
+                        {
+                            "component": "img",
+                            "children": "../assets/imgs/General/qa_1_3_comp.jpg",
+                            "id": "img_test1_3_comp"
+                        },
+                        {
+                            "component": "img",
+                            "children": "../assets/imgs/General/qa_1_3_target.jpg",
+                            "id": "img_test1_3_target"
+                        }
+                    ]
+                },
+                {
+                    "component": "row",
+                    "id": "row_1_3_2",
+                    "children": [
+                        {
+                            "component": "button",
+                            "children": "Cappello.",
+                            "id": "button_1_3_comp"
+                        },
+                        {
+                            "component": "button",
+                            "children": "Occhiali.",
+                            "id": "button_1_3_target"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "component": "container",
+            "id": "QA_container4",
+            "children": [
+            {   
+                "component": "title",
+                "children": "Scegli la risposta corretta. Si da' all'autista per poter viaggiare ",
+                "id": "title_4"
+            },
+                {
+                    "component": "row",
+                    "id": "row_1_4_1",
+                    "children": [
+                        {
+                            "component": "img",
+                            "children": "../assets/imgs/General/qa_1_4_comp.jpg",
+                            "id": "img_test1_4_comp"
+                        },
+                        {
+                            "component": "img",
+                            "children": "../assets/imgs/General/qa_1_4_target.jpg",
+                            "id": "img_test1_4_target"
+                        }
+                    ]
+                },
+                {
+                    "component": "row",
+                    "id": "row_1_4_2",
+                    "children": [
+                        {
+                            "component": "button",
+                            "children": "Ombrello.",
+                            "id": "button_1_4_comp"
+                        },
+                        {
+                            "component": "button",
+                            "children": "Biglietto.",
+                            "id": "button_1_4_target"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "component": "container",
+            "id": "QA_container5",
+            "children": [
+            {   
+                "component": "title",
+                "children": "Scegli la risposta corretta. Si indossa per andare al mare",
+                "id": "title_5"
+            },
+                {
+                    "component": "row",
+                    "id": "row_1_5_1",
+                    "children": [
+                        {
+                            "component": "img",
+                            "children": "../assets/imgs/General/qa_1_5_target.jpg",
+                            "id": "img_test1_5_target"
+                        },
+                        {
+                            "component": "img",
+                            "children": "../assets/imgs/General/qa_1_5_comp.jpg",
+                            "id": "img_test1_5_comp"
+                        }
+                    ]
+                },
+                {
+                    "component": "row",
+                    "id": "row_1_5_2",
+                    "children": [
+                        {
+                            "component": "button",
+                            "children": "Costume da bagno.",
+                            "id": "button_1_5_target"
+                        },
+                        {
+                            "component": "button",
+                            "children": "Stivali.",
+                            "id": "button_1_5_comp"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "component": "container",
+            "id": "QA_container6",
+            "children": [
+            {   
+                "component": "title",
+                "children": "Scegli la risposta corretta. E' un animale da compagnia",
+                "id": "title_6"
+            },
+                {
+                    "component": "row",
+                    "id": "row_1_6_1",
+                    "children": [
+                        {
+                            "component": "img",
+                            "children": "../assets/imgs/General/qa_1_6_comp.jpg",
+                            "id": "img_test1_6_comp"
+                        },
+                        {
+                            "component": "img",
+                            "children": "../assets/imgs/General/qa_1_6_target.jpg",
+                            "id": "img_test1_6_target"
+                        }
+                    ]
+                },
+                {
+                    "component": "row",
+                    "id": "row_1_6_2",
+                    "children": [
+                        {
+                            "component": "button",
+                            "children": "Toro.",
+                            "id": "button_1_6_comp"
+                        },
+                        {
+                            "component": "button",
+                            "children": "Gatto.",
+                            "id": "button_1_6_target"
                         }
                     ]
                 }

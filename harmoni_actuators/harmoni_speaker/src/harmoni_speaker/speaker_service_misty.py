@@ -14,7 +14,9 @@ from audio_common_msgs.msg import AudioData
 import numpy as np
 import base64 
 import requests
+from requests import Request, Session
 from requests.exceptions import Timeout
+import json 
 
 # import wget
 import contextlib
@@ -30,7 +32,7 @@ class SpeakerService(HarmoniServiceManager):
         HarmoniServiceManager ([type]): [description]
     """
 
-    def __init__(self, name, robot_ip):
+    def __init__(self, name):
         """ Initialization of variables and camera parameters """
         super().__init__(name)
         self.audio_publisher = rospy.Publisher(
@@ -40,7 +42,7 @@ class SpeakerService(HarmoniServiceManager):
         )
         self.state = State.INIT
         self.rospack = rospkg.RosPack()
-        self.robot_ip = robot_ip
+        self.robot_ip = rospy.get_param("/robot_ip")
         return
 
     def request(self, data):
@@ -58,39 +60,48 @@ class SpeakerService(HarmoniServiceManager):
             object: It containes information about the response received (bool) and response message (str)
                 response: the state of the request
         """
-        duration = 0
-        print(data)
+        #print(data)
         self.state = State.REQUEST
         self.actuation_completed = False
         try:
-            #data="/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/temp_data/tts.wav"
             if type(data) == str:
                 if ".wav" in data:
                     data = self.file_path_to_audio_data(data)
                     duration = data["duration"]
                     data = data["audio_data"]
                 else:
-                    data = ast.literal_eval(data)
-                    data = base64.b64encode(data["audio_data"]) #test if this works
-                    data = data.decode('utf-8')
+                    data = self.file_path_to_audio_data("/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/temp_data/tts.wav")
+                    duration = data["duration"]
+                    data = data["audio_data"]
+
             rospy.loginfo("Writing data for speaker")
             rospy.loginfo(f"length of data is {len(data)}")
-            print(data)
             #Maximum size for the file is 3 Mb
             payload = {'fileName':'test.wav', 
                         "data": data,
+                        #"file" : open("/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/temp_data/tts.wav", 'rb'),
                         "ImmediatelyApply": True, 
     #ImmediatelyApply flag make the robot reproduce the file
                         "OverwriteExisting": True
     #Always overwrite the same file, so it's discarded the next time something is reproduced
             }
+            headers = {'Content-type':'application/json'}
             print("Sending request")
             print('http://{}/api/audio'.format(self.robot_ip))
-            response = requests.post('http://{}/api/audio'.format(self.robot_ip), 
-                                            params = payload,
-                                            timeout = 1)
+            s = Session()
+            req = Request('POST','http://{}/api/audio'.format(self.robot_ip), 
+                            data = json.dumps(payload),
+                            headers = headers)
+                            #headers = headers,
+            prepped = req.prepare()
+            print(prepped.url)
+
+            response = s.send(prepped,
+                timeout=1
+            )
             print("receiving response")
-            rospy.sleep(duration) #is it necessary? 
+            print(response)
+            rospy.sleep(duration)  
             self.state = State.SUCCESS
             self.response_received = True
             self.result_msg = response.text
@@ -100,8 +111,9 @@ class SpeakerService(HarmoniServiceManager):
             self.state = State.FAILED
             self.response_received = True
             self.result_msg = ""
-        except IOError as e: #can this really happen? i don't think so
+        except IOError as e: 
             rospy.logwarn("Speaker failed: Audio appears too busy")
+            print(e)
             self.state = State.FAILED
             self.response_received = True
             self.result_msg = ""
@@ -153,10 +165,7 @@ def main():
     try:
         rospy.init_node(service_name)
 
-        param = rospy.get_param("/robot_ip")
-        rospy.loginfo(param)
-
-        s = SpeakerService(service_id, param)
+        s = SpeakerService(service_id)
 
         service_server = HarmoniServiceServer(service_id, s)
 

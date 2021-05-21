@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<gesture>
+    <name>no</name>
+    <duration>2.0</duration>
+    <waypoints count="1">
+        <point time="1537967193275253450">
+            <gesture_type>move_head</gesture_type> 
+            <Pitch> 0 </Pitch>
+            <Roll> 0 </Roll>
+            <Yaw> 90 </Yaw> 
+            <Time> 0 </Time> 
+        </point>
+    </waypoints>
+</gesture>

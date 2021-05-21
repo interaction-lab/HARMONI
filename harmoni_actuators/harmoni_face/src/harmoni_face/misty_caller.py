@@ -35,7 +35,7 @@ if __name__ == "__main__":
     try:
         response = requests.post('http://{}/api/webviews/display'.format(robot_ip), 
                                     params = payload,
-                                   timeout = 1)
+                                   timeout = 4)
     except Timeout:
         rospy.logwarn("web_player failed: The ip of the robot appears unreachable")
     while not rospy.is_shutdown():

@@ -16,7 +16,6 @@ body {
     width: 100%;
     margin: auto;
     text-align: center;
-    display: flex;
 }
 
 button{
@@ -34,7 +33,7 @@ img{
     margin: auto;
     text-align: center;
     vertical-align: auto;
-    width: 100%;
+    width: 50%;
 }
 
 

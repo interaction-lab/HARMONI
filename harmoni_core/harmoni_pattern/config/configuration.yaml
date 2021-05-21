@@ -27,3 +27,8 @@ misty_demo:
   default_param:
     trigger_intent: "Hey"
     pattern_scripting: $(find harmoni_pattern)/pattern_scripting/misty_demo.json
+
+misty_interaction:
+  default_param:
+    trigger_intent: "Hey"
+    pattern_scripting: $(find harmoni_pattern)/pattern_scripting/misty_interaction.json

@@ -1,0 +1,39 @@
+[
+    {
+        "set": "sequence",
+        "steps": [         
+            {
+                "tts_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": "new",
+                    "trigger":"Sono lillo!"
+                }
+            },
+            [
+                {
+                    "gesture_misty": {
+                        "action_goal": "REQUEST",
+                        "resource_type": "actuator",
+                        "wait_for": "new",
+                        "trigger":"{'gesture':'Misty/bye', 'timing': 0.5}"
+                    }
+                },      
+                {
+                    "speaker_default": {
+                        "action_goal": "REQUEST",
+                        "resource_type": "actuator",
+                        "wait_for": "new"
+                    }
+                },
+                {
+                    "face_mouth_default": {
+                        "action_goal": "DO",
+                        "resource_type": "actuator",
+                        "wait_for": "new"
+                    }
+                }
+            ]
+        ]
+    }
+]
