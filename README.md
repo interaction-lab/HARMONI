@@ -99,28 +99,43 @@ The docker-compose-full.yml file have been modified in order to be able to run d
 #### harmoni_face
 
 the service of this package does not need to be modified.
+
 A "caller" node file has been added, it's only role is to call the "Display web page" API of the robot. 
+
 The node needs to be added to the test and launch files.
+
 The face has been adapted to better fit the robot display, modifying the web/src/js/face.js file.
 
 #### harmoni_gesture
 
 This part of the implementation is still not completed, so the documentation will be adjusted.
+
 Two files have been added to the package: gesture_service_misty.py and misty_gesture_interface.py.
+
 The first one is meant to replace the normal gesture_service file, and thus has been substituted in the launch and test files.
+
 In it, the DO operation that was used before for ordering the robot to make a gesture, has been replaced by a REQUEST operation, which is more in line with the API nature of the interaction. 
+
 It is important to remember that when a REQUEST operation is called, it is necessary to set the flag response_received = True when the API call is over. 
+
 The parse_gesture_misty() function has been added to the file, and there the gesture described in the xml files in the data folder are processed and for each command composing the gesture an API call is made. A function which prepares the url and the payload for each possible API call has been added to the file, and then the request is forwared to the robot. If the call for any reason timed-out, a second call is made with a longer timeout (sometimes connection problem can happen), and if also that one fails, the function return setting the done flag to false.
+
 Currently the misty_gesture_interface file only publishes some required parameters to ros, but we are planning on moving the api calls described above in this file, in the attempt to better resamble the previous work done on qt. The documentation will be updated consequently.
+
 The xml files contained in data/Misty folder resemble the format for the API calls of the robot, adding only a time parameter which is used for choosing after how much time each single movemente should be performed. Be aware that the time for sending the call is not calculated in a strict manner, so the execution time may consequently be not completely precise.
 
 #### harmoni_speaker
 
 In this package, the speaker_service_misty.py has been added, and the launch and test files have been modified consequently.
+
 In it, the DO operation that was used before for ordering the robot to play a recording, has been replaced by a REQUEST operation, which is more in line with the API nature of the interaction. 
+
 It is important to remember that when a REQUEST operation is called, it is necessary to set the flag response_received = True when the API call is over. 
+
 Since Misty needs to recieve the files in base64 format, the file_path_to_audio_data function has been modified to convert the wav file in that format. Currently, the implementation of the robot call providing directly the data is not implemented, and the data must always be given to the node as a wav file. In case free data are provided, the node assumes that it is the tts package calling the speaker, and so retrieve the data where the tts node saves the file as a temporary .wav file.
+
 The function prepares the url and the payload for the API call has been added to the file, and then the request is forwared to the robot. If the call for any reason timed-out, a second call is made with a longer timeout (sometimes connection problem can happen), and if also that one fails, the function return setting the done flag to false.
+
 It is important to note that, since the wav file can be heavier than the maximum file size for the parameters, the payload must be passed as data and not as a parameter to the API call.
 
 #### harmoni_tts
@@ -144,6 +159,7 @@ the configuration file has been modified, adding the parameter   gesture: ["mist
 #### harmoni_pattern
 
 two interactions have been added: pattern_scripting/misty_demo.json pattern_scripting/misty_interaction.json  and (one for tests and one for the actual interactions). The interactions name must be added also to configuration file too. currently the demos are sort of "mock-ups" of real interactions. 
+
 The node has not been relevantly modified.
 
 ### harmoni_detectors
