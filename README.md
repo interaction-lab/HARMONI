@@ -23,7 +23,6 @@ HARMONI is built to be Robot-Agnostic, Modular, and Composable. By building on t
 
 # HARMONI Integrations
 
-Most robots need some combination of the abilities to sense, plan, and act. For complex social interactions these abilities can be further disected to the following categories: sense, detect, dialogue, plan, and act. Although it is not the only way to break down a social robot architecture, it is helpful to group the modules in this way. Listed modules have already been integrated with HARMONI and can be used seperately or in place of one another.
 
 ## Sense 
 Sensing involves reading sensor data, such as audio, video, and depth sensors. Further sensor integrations will be added as needed or can be contributed by the community.
