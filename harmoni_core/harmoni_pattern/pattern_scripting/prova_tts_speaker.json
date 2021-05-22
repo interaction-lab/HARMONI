@@ -1,0 +1,24 @@
+[
+    {
+        "set": "sequence",
+        "steps": [
+            {
+                "tts_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": "new",
+                    "trigger": "ciao corrado e tharu"
+                }
+            },
+            {
+                "speaker_default": {
+                    "action_goal": "DO",
+                    "resource_type": "actuator",
+                    "wait_for": "",
+                    "trigger": "ciao"
+                }
+            }
+        
+        ]
+    }
+]
