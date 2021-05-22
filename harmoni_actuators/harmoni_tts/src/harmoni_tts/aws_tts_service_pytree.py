@@ -37,7 +37,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         il costruttore del behaviour tree 
         """
         self.name = name
-        self.mode = false
+        self.mode = False
         self.aws_service = None
         self.result_data = None
         self.service_client_tts = None
@@ -57,7 +57,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         """
         self.mode = mode
         self.aws_service=AWSTtsService(self.name,param)
-        if(not mode):
+        if(not self.mode):
             self.service_client_tts = HarmoniActionClient(self.name)
             self.client_result = deque()
             self.service_client_tts.setup_client(name, self._result_callback, self._feedback_callback)
@@ -74,7 +74,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         """
         #TODO: blackboards per inputText
         input_text="ciao CT, stiamo provando"
-        if(mode):
+        if(self.mode):
             self.aws_service.request(input_text)
             #Qui non abbiamo capito dove andare a prendere il risultato, (dovremmo chiedercelo anche nell' update)
         else:
@@ -95,7 +95,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         """
         
         """
-        if(mode):
+        if(self.mode):
             #non abbiamo capito dove prendere il risultato
             if(self.aws_service.state == State.REQUEST):
                 new_status = py_trees.common.Status.RUNNING
@@ -134,11 +134,13 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
             - SUCCESS || FAILURE : your behaviour's work cycle has finished
             - INVALID : a higher priority branch has interrupted, or shutting down
         """
-        if(mode):
-            pass
-
+        if(self.mode):
+            self.mode = False
+            self.aws_service = None
         else:
-            pass
+            self.service_client_tts = None
+            self.client_result = deque()
+
         #Here we would like to put:
         #self.logger.debug("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))
         print("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))
