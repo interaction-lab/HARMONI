@@ -29,6 +29,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
     true: opzione 1 (utilizzo come una classe python)
     false: opzione 2 (utilizzo mediate action_goal)
     """
+    #TTS è un actuators
 
     def __init__(self, name = "AWSTtsServicePytree"):
         """
@@ -38,6 +39,9 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         self.name = name
         self.mode = false
         self.aws_service = None
+        self.result_data = None
+        self.service_client_tts = None
+        self.client_result = None
 
         super(AWSTtsServicePytree, self).__init__(name)
         #Here we would like to put:
@@ -57,9 +61,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
             self.service_client_tts = HarmoniActionClient(self.name)
             self.client_result = deque()
             self.service_client_tts.setup_client(name, self._result_callback, self._feedback_callback)
-            #Here we would like to put:
-            #rospy.loginfo("Behavior interface action clients have been set up!")
-            print("Behavior interface action clients have been set up!")
+            rospy.loginfo("Behavior interface action clients have been set up!")
         
         
         #Here we would like to put:
@@ -74,8 +76,17 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         input_text="ciao CT, stiamo provando"
         if(mode):
             self.aws_service.request(input_text)
+            #Qui non abbiamo capito dove andare a prendere il risultato, (dovremmo chiedercelo anche nell' update)
         else:
-            pass
+            rospy.loginfo(f"Sending goal to {self.aws_service.__name__} optional_data len {len(input_text)}")
+
+            # Dove posso prendere details["action_goal"]?
+            self.service_client_tts.send_goal(
+                action_goal=ActionType[details["action_goal"]].value,
+                optional_data=input_text,
+                wait=False,
+            )
+            rospy.loginfo(f"Goal sent to {self.aws_service.__name__}")
             
         #Here we would like to put:
         #self.logger.debug("%s.initialise()" % (self.__class__.__name__))
@@ -85,14 +96,30 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         
         """
         if(mode):
-            if(self.aws_service.state==State.REQUEST):
-                new_status=py_trees.common.Status.RUNNING
-            elif(self.aws_service.state==State.SUCCESS):
-                new_status=py_trees.common.Status.SUCCESS
+            #non abbiamo capito dove prendere il risultato
+            if(self.aws_service.state == State.REQUEST):
+                new_status = py_trees.common.Status.RUNNING
+            elif(self.aws_service.state == State.SUCCESS):
+                new_status = py_trees.common.Status.SUCCESS
             else:
-                new_status=py_trees.common.Status.FAILURE
+                new_status = py_trees.common.Status.FAILURE
         else:
-            pass
+            #non siamo sicuro degli stati
+            if len(self.client_result) > 0:
+                rospy.loginfo("getting result from the service")
+                rospy.loginfo(f"Queue is {self.client_result}")
+                rospy.loginfo(f"Queue size is {len(self.client_result)}")
+                #se siamo qui vuol dire che il risultato c'è e quindi possiamoterninare la foglia
+                self.return_data = self.client_result.popleft()["data"]
+                new_status = py_trees.common.Status.SUCCESS
+            else:
+                #se siamo qui vuol dire che il risultato ancora non c'è
+                new_status = py_trees.common.Status.RUNNING
+
+            #incerti di questa riga
+            if(self.service_client_tts.state == State.FAILED):
+                new_status = py_trees.common.Status.FAILURE
+
         #Here we would like to put:
         #self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         print("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
