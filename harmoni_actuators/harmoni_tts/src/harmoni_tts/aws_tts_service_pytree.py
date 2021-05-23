@@ -169,6 +169,20 @@ def main():
     """[summary]
     Main function for starting HarmoniPolly service
     """
+    #command_line_argument_parser().parse_args()
+
+    py_trees.logging.level = py_trees.logging.Level.DEBUG
+
+    ttsPyTree = AWSTtsServicePytree("AwsPyTreeTest")
+    ttsPyTree.setup()
+    try:
+        for unused_i in range(0, 7):
+            ttsPyTree.tick_once()
+            time.sleep(0.5)
+        print("\n")
+    except KeyboardInterrupt:
+        print("Exception occurred")
+        pass
     
 
 if __name__ == "__main__":
