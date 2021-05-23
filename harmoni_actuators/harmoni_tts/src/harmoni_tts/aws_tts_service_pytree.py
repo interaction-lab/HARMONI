@@ -8,7 +8,7 @@ from harmoni_common_lib.constants import State
 from harmoni_common_lib.service_server import HarmoniServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 import harmoni_common_lib.helper_functions as hf
-from harmoni_tts import AWSTtsService
+from harmoni_tts import aws_tts_service
 # Specific Imports
 from harmoni_common_lib.constants import ActuatorNameSpace
 from botocore.exceptions import BotoCoreError, ClientError
@@ -20,6 +20,12 @@ import re
 import json
 import ast
 import sys
+
+#py_tree
+import py_trees
+import time
+
+import py_trees.console as console
 
 class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
 
@@ -172,9 +178,12 @@ def main():
     #command_line_argument_parser().parse_args()
 
     py_trees.logging.level = py_trees.logging.Level.DEBUG
-
+    service_name = ActuatorNameSpace.tts.name
+    instance_id = rospy.get_param("instance_id")
     ttsPyTree = AWSTtsServicePytree("AwsPyTreeTest")
-    ttsPyTree.setup()
+
+    param = rospy.get_param(service_name + "/" + instance_id + "_param/")
+    ttsPyTree.setup(param,False)
     try:
         for unused_i in range(0, 7):
             ttsPyTree.tick_once()
