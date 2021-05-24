@@ -15,7 +15,7 @@
                 "bot_default": {
                     "action_goal": "REQUEST",
                     "resource_type": "service",
-                    "wait_for": ""
+                    "wait_for": "new"
                 }
             },
             {

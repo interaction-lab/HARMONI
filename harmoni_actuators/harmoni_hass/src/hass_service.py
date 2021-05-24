@@ -72,6 +72,12 @@ class HassService(HarmoniServiceManager):
 
             elif(json_data["action"] == "turn_on"):    
                 hass_response = self.post(json_data)
+
+            rospy.loginfo(f"The status code for Home Assistant's response is {hass_response.status_code}")
+            # rospy.loginfo(f"Home assistant request text: {hass_response.text}") 
+            # rospy.loginfo(f"Home assistant request url: {hass_response.request.url}")
+            # rospy.loginfo(f"Home assistant request headers: {hass_response.request.headers}")
+            # rospy.loginfo(f"Home assistant request body: {hass_response.request.body}")           
      
             if hass_response is not None and hass_response.status_code == 200:
                 self.state = State.SUCCESS
@@ -94,6 +100,17 @@ class HassService(HarmoniServiceManager):
 
 
     def check_log(self, json_data):
+        """Check if an appliance has been on for some time
+
+        Args:
+            data (str): string of json which contains 3 items: {"action": str, "entity": str, "type": str} ....
+                action: "check_log"
+                type: the entity type of the device (e.g., media_player, switch, light)
+                entity: the device on which to do the action (e.g. googlehome8554)
+
+        Returns:
+            hass_response (str): It containes the response to the API request api/logbook
+        """
 
         rospy.loginfo("Entity type: %s " % json_data["type"])
         rospy.loginfo("Entity: %s " % json_data["entity"])
@@ -103,7 +120,7 @@ class HassService(HarmoniServiceManager):
         dateTimeObj = datetime.now(pytz.utc)
         rospy.loginfo("Current time: %s " % str(dateTimeObj))
 
-        # How much time before the current time I want to check
+        # How much time before the current time I want to check for events
         delta = timedelta(
             # days = 1,
             hours = 3,
@@ -125,11 +142,6 @@ class HassService(HarmoniServiceManager):
             headers=myHeaders
             )
         
-        rospy.loginfo(f"The status code for Home Assistant's response is {hass_response.status_code}")
-        # rospy.loginfo(f"Home assistant request url: {hass_response.request.url}")
-        # rospy.loginfo(f"Home assistant request headers: {hass_response.request.headers}")
-        # rospy.loginfo(f"Home assistant request text: {hass_response.text}")
-
         json_array = hass_response.json()
 
         for item in json_array:
@@ -141,7 +153,7 @@ class HassService(HarmoniServiceManager):
                 elif item["context_service"] == "turn_off":
                     eventTime = ""
 
-            # TODO ALSO CHECK STATE "OFF" IF ENTITY_ID IS THE CORRECT ONE
+            # TODO ALSO CHECK STATE = "OFF" IF ENTITY_ID IS THE CORRECT ONE
 
         alertUser = False
         
@@ -170,6 +182,17 @@ class HassService(HarmoniServiceManager):
 
 
     def post(self, json_data):
+        """ Do an API POST call
+
+        Args:
+            data (str): string of json which contains 3 items: {"action": str, "entity": str, "type": str} ....
+                action: "turn_on" or "turn_off" or other "post" actions
+                type: the entity type of the device (e.g., media_player, switch, light)
+                entity: the device on which to do the action (e.g. googlehome8554)
+
+        Returns:
+            hass_response (str): It containes the response to the API request api/services
+        """
 
         rospy.loginfo("Entity type: %s " % json_data["type"])
         rospy.loginfo("Entity: %s " % json_data["entity"])
@@ -184,11 +207,6 @@ class HassService(HarmoniServiceManager):
             json=myJson,
             headers=myHeaders
             )
-
-        rospy.loginfo(f"The status code for Home Assistant's response is {hass_response.status_code}")
-        # rospy.loginfo(f"Home assistant request url: {hass_response.request.url}")
-        # rospy.loginfo(f"Home assistant request headers: {hass_response.request.headers}")
-        # rospy.loginfo(f"Home assistant request body: {hass_response.request.body}")
 
         self.result_msg = hass_response.text
 

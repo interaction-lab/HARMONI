@@ -32,4 +32,9 @@ speak_test:
 context_dialogue:
   default_param:
     trigger_intent: "sono stanca"
-    pattern_scripting: $(find harmoni_pattern)/pattern_scripting/context_dialogue.json    
+    pattern_scripting: $(find harmoni_pattern)/pattern_scripting/context_dialogue.json 
+    
+system_initiative:
+  default_param:
+    trigger_intent: "{ \"action\":\"check_log\", \"entity\":\"googlehome8554\", \"type\":\"media_player\"}"
+    pattern_scripting: $(find harmoni_pattern)/pattern_scripting/system_initiative.json     
