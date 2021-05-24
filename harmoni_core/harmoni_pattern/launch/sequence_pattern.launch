@@ -1,6 +1,6 @@
 <launch>
    
-	<arg name="pattern_name" default="context_dialogue"/>
+	<arg name="pattern_name" default="listening"/>
 	<arg name="instance_id" default="default"/>
     <!-- To start on launch of pattern use the flag start:=true -->
 	<arg name="start" default="true"/>

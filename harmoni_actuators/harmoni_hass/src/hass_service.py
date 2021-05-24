@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # Common Imports
+from typing_extensions import OrderedDict
 import rospy
 import roslib
 
@@ -14,6 +15,8 @@ from std_msgs.msg import String, Bool
 import numpy as np
 import json
 import requests
+from datetime import datetime, timedelta
+import pytz
 #import ast
 
 class HassService(HarmoniServiceManager):
@@ -33,6 +36,9 @@ class HassService(HarmoniServiceManager):
         # The authorization token (from Home Assistant's settings) set in the configuration file
         self.token = param["token"]
 
+        # Pretend that an appliance has been on for a few hours
+        self.simulation = param["simulation"]
+
         self.state = State.INIT
         return
 
@@ -41,7 +47,7 @@ class HassService(HarmoniServiceManager):
 
         Args:
             data (str): string of json which contains 3 items: {"action": str, "entity": str, "type": str} ....
-                action: the action you want to send to home assistant (e.g. turn_on, turn_off)
+                action: the action you want to send to home assistant (e.g. turn_on, turn_off or check_log)
                 type: the entity type of the device (e.g., media_player, switch, light)
                 entity: the device on which to do the action (e.g. googlehome8554)
 
@@ -59,27 +65,15 @@ class HassService(HarmoniServiceManager):
             rospy.loginfo("Request: %s " % data)
             json_data= json.loads(data)
             rospy.loginfo("Action: %s " % json_data["action"])
-            rospy.loginfo("Entity type: %s " % json_data["type"])
-            rospy.loginfo("Entity: %s " % json_data["entity"])
 
-            # POST request
-            myJson= {"entity_id": json_data["type"] + "." + json_data["entity"]}
-            myHeaders = {"Authorization": "Bearer "+ self.token}
+            # Check log
+            if(json_data["action"] == "check_log"):
+                hass_response = self.check_log(json_data)
 
-            url = self.hass_uri + 'api/services/' + json_data["type"] +'/' + json_data["action"]
-            
-            hass_response = requests.post(
-                url,
-                json=myJson,
-                headers=myHeaders
-                )
-
-            rospy.loginfo(f"The status code for Home Assistant's response is {hass_response.status_code}")
-            # rospy.loginfo(f"Home assistant request url: {hass_response.request.url}")
-            # rospy.loginfo(f"Home assistant request headers: {hass_response.request.headers}")
-            # rospy.loginfo(f"Home assistant request body: {hass_response.request.body}")
-
-            if hass_response.status_code == 200:
+            elif(json_data["action"] == "turn_on"):    
+                hass_response = self.post(json_data)
+     
+            if hass_response is not None and hass_response.status_code == 200:
                 self.state = State.SUCCESS
                 self.response_received = True
                 
@@ -90,8 +84,6 @@ class HassService(HarmoniServiceManager):
                 rospy.loginfo("Did you put the correct uri and token in the configuration file?")
                 self.response_received = True
 
-            self.result_msg = hass_response.text
-
         except rospy.ServiceException:
             self.start = State.FAILED
             rospy.loginfo("Service call failed")
@@ -100,6 +92,107 @@ class HassService(HarmoniServiceManager):
 
         return {"response": self.state, "message": self.result_msg}
 
+
+    def check_log(self, json_data):
+
+        rospy.loginfo("Entity type: %s " % json_data["type"])
+        rospy.loginfo("Entity: %s " % json_data["entity"])
+        myHeaders = {"Authorization": "Bearer "+ self.token}
+
+        # Home Assistant returns all info in UTC
+        dateTimeObj = datetime.now(pytz.utc)
+        rospy.loginfo("Current time: %s " % str(dateTimeObj))
+
+        # How much time before the current time I want to check
+        delta = timedelta(
+            # days = 1,
+            hours = 3,
+            # minutes = 15,
+            # seconds = 30
+            )
+
+        rospy.loginfo("Timespan to check: %s " % str(delta))
+        timeToCheck = dateTimeObj - delta
+
+        # formatting "2021-05-24T10:00:00+00:00"       
+        timeToCheckFormatted = str(timeToCheck.year) + "-" + str(timeToCheck.month)  + "-" + str(timeToCheck.day) + "T" + str(timeToCheck.hour) +":"+ str(timeToCheck.minute) + ":" + str(timeToCheck.second) + "+00:00"
+        rospy.loginfo("Time to check: %s " % timeToCheckFormatted)
+
+        url = self.hass_uri + 'api/logbook/' + timeToCheckFormatted +'?' + "entity:"+ json_data["type"] + "." + json_data["entity"]
+        
+        hass_response = requests.get(
+            url,
+            headers=myHeaders
+            )
+        
+        rospy.loginfo(f"The status code for Home Assistant's response is {hass_response.status_code}")
+        # rospy.loginfo(f"Home assistant request url: {hass_response.request.url}")
+        # rospy.loginfo(f"Home assistant request headers: {hass_response.request.headers}")
+        # rospy.loginfo(f"Home assistant request text: {hass_response.text}")
+
+        json_array = hass_response.json()
+
+        for item in json_array:
+            if "context_service" in item: 
+
+                if item["context_service"] == "turn_on":
+                    eventTime = item["when"]
+
+                elif item["context_service"] == "turn_off":
+                    eventTime = ""
+
+            # TODO ALSO CHECK STATE "OFF" IF ENTITY_ID IS THE CORRECT ONE
+
+        alertUser = False
+        
+        if eventTime is not "":
+            dateEventTime = datetime.strptime(eventTime, '%Y-%m-%dT%H:%M:%S.%f+00:00')
+            dateEventTime = dateEventTime.replace(tzinfo=pytz.utc)
+            delta = dateTimeObj - dateEventTime
+            rospy.loginfo(f"Timespan appliance on: {str(delta)}")
+
+            # Check if the home appliance has been on for a few hours
+            if delta > timedelta(hours=2):
+                alertUser = True
+
+            if alertUser == True:
+                self.result_msg = "LOG: oven still on"
+            else:
+                self.result_msg = "NONE"
+            rospy.loginfo(f"Is appliance on? {alertUser}")
+
+            # Check if this is a simulation
+            if self.simulation == True:
+                self.result_msg = "LOG: oven still on"
+            rospy.loginfo(f"Is simulation on? {self.simulation}")
+        
+        return hass_response
+
+
+    def post(self, json_data):
+
+        rospy.loginfo("Entity type: %s " % json_data["type"])
+        rospy.loginfo("Entity: %s " % json_data["entity"])
+
+        myJson= {"entity_id": json_data["type"] + "." + json_data["entity"]}
+        myHeaders = {"Authorization": "Bearer "+ self.token}
+
+        url = self.hass_uri + 'api/services/' + json_data["type"] +'/' + json_data["action"]
+        
+        hass_response = requests.post(
+            url,
+            json=myJson,
+            headers=myHeaders
+            )
+
+        rospy.loginfo(f"The status code for Home Assistant's response is {hass_response.status_code}")
+        # rospy.loginfo(f"Home assistant request url: {hass_response.request.url}")
+        # rospy.loginfo(f"Home assistant request headers: {hass_response.request.headers}")
+        # rospy.loginfo(f"Home assistant request body: {hass_response.request.body}")
+
+        self.result_msg = hass_response.text
+
+        return hass_response
 
 
 def main():

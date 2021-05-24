@@ -1,0 +1,85 @@
+[
+  
+    {
+        "set": "sequence",
+        "steps": [
+            {
+                "hass_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": "new",
+                    "trigger": "{ \"action\":\"check_log\", \"entity\":\"googlehome8554\", \"type\":\"media_player\"}"
+                }
+            },
+            {
+                "bot_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": ""
+                }
+            },
+            {
+                "tts_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": "new"
+                }
+            },
+            [
+                {
+                    "speaker_default": {
+                        "action_goal": "DO",
+                        "resource_type": "actuator",
+                        "wait_for": ""
+                    }
+                },
+                {
+                    "face_mouth_default": {
+                        "action_goal": "DO",
+                        "resource_type": "actuator",
+                        "wait_for": "new"
+                    }
+                }
+            ],
+            {
+                "bot_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": "new",
+                    "trigger": "sì, grazie"
+                }
+            },
+            {
+                "tts_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": "new"
+                }
+            },
+            [
+                {
+                    "speaker_default": {
+                        "action_goal": "DO",
+                        "resource_type": "actuator",
+                        "wait_for": ""
+                    }
+                },
+                {
+                    "face_mouth_default": {
+                        "action_goal": "DO",
+                        "resource_type": "actuator",
+                        "wait_for": "new"
+                    }
+                }
+            ],
+            {
+                "hass_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": "new",
+                    "trigger": "{ \"action\":\"turn_on\", \"entity\":\"googlehome8554\", \"type\":\"media_player\"}"
+                }
+            }
+        ]
+    }
+]
