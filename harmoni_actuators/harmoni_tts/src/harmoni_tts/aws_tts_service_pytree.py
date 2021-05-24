@@ -11,7 +11,7 @@ from harmoni_common_lib.action_client import HarmoniActionClient
 import harmoni_common_lib.helper_functions as hf
 from aws_tts_service import AWSTtsService
 # Specific Imports
-from harmoni_common_lib.constants import ActuatorNameSpace
+from harmoni_common_lib.constants import ActuatorNameSpace, ActionType
 from botocore.exceptions import BotoCoreError, ClientError
 from contextlib import closing
 from collections import deque 
@@ -65,10 +65,17 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         """
         self.mode = mode
         self.aws_service = AWSTtsService(self.name,param)
+
+
+        #pattern_to_use = rospy.get_param("pattern_name")
+        rospy.init_node("tts_default", log_level=rospy.INFO)
+
         if(not self.mode):
             self.service_client_tts = HarmoniActionClient(self.name)
             self.client_result = deque()
-            self.service_client_tts.setup_client(self.name, self._result_callback, self._feedback_callback)
+            self.service_client_tts.setup_client("tts_default", 
+                                                self._result_callback,
+                                                self._feedback_callback)
             rospy.loginfo("Behavior interface action clients have been set up!")
         
         
@@ -86,15 +93,15 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
             self.aws_service.request(input_text)
             #Qui non abbiamo capito dove andare a prendere il risultato, (dovremmo chiedercelo anche nell' update)
         else:
-            rospy.loginfo(f"Sending goal to {self.aws_service.__name__} optional_data len {len(input_text)}")
+            rospy.loginfo(f"Sending goal to {self.aws_service} optional_data len {len(input_text)}")
 
             # Dove posso prendere details["action_goal"]?
             self.service_client_tts.send_goal(
-                action_goal=ActionType[details["action_goal"]].value,
+                action_goal = ActionType["REQUEST"].value,
                 optional_data=input_text,
                 wait=False,
             )
-            rospy.loginfo(f"Goal sent to {self.aws_service.__name__}")
+            rospy.loginfo(f"Goal sent to {self.aws_service}")
             
         #Here we would like to put:
         #self.logger.debug("%s.initialise()" % (self.__class__.__name__))
@@ -125,7 +132,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
                 new_status = py_trees.common.Status.RUNNING
 
             #incerti di questa riga
-            if(self.service_client_tts.state == State.FAILED):
+            if(self.aws_service.state == State.FAILED):
                 new_status = py_trees.common.Status.FAILURE
 
         #Here we would like to put:
@@ -136,6 +143,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         
 
     def terminate(self, new_status):
+        #Sbagliato, non possiamo fare = None 
         """
         When is this called?
            Whenever your behaviour switches to a non-running state.
@@ -143,10 +151,11 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
             - INVALID : a higher priority branch has interrupted, or shutting down
         """
         if(self.mode):
-            self.mode = False
-            self.aws_service = None
+            pass
+            #self.mode = False
+            #self.aws_service = None
         else:
-            self.service_client_tts = None
+            #self.service_client_tts = None
             self.client_result = deque()
 
         #Here we would like to put:
@@ -160,7 +169,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
             f"The result callback message from {result['service']} was {len(result['message'])} long"
         )
         self.client_result.append(
-            {"time": time(), "data": result["message"]}
+            {"data": result["message"]}
         )
         # TODO add handling of errors and continue=False
         return
