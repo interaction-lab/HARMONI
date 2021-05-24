@@ -7,12 +7,14 @@ import roslib
 from harmoni_common_lib.constants import State
 from harmoni_common_lib.service_server import HarmoniServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
+from harmoni_common_lib.action_client import HarmoniActionClient
 import harmoni_common_lib.helper_functions as hf
-from harmoni_tts import aws_tts_service
+from aws_tts_service import AWSTtsService
 # Specific Imports
 from harmoni_common_lib.constants import ActuatorNameSpace
 from botocore.exceptions import BotoCoreError, ClientError
 from contextlib import closing
+from collections import deque 
 import soundfile as sf
 import numpy as np
 import boto3
@@ -62,11 +64,11 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         creati all'interno del metodo stesso.  
         """
         self.mode = mode
-        self.aws_service=AWSTtsService(self.name,param)
+        self.aws_service = AWSTtsService(self.name,param)
         if(not self.mode):
             self.service_client_tts = HarmoniActionClient(self.name)
             self.client_result = deque()
-            self.service_client_tts.setup_client(name, self._result_callback, self._feedback_callback)
+            self.service_client_tts.setup_client(self.name, self._result_callback, self._feedback_callback)
             rospy.loginfo("Behavior interface action clients have been set up!")
         
         
