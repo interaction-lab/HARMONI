@@ -58,5 +58,3 @@ class DetectorNameSpace(Enum):
 class Resources(Enum):
     face = ["eyes", "mouth"]
 
-class Actions:
-    post_actions = { "turn_on", "turn_off" }

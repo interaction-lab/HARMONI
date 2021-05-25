@@ -5,7 +5,7 @@ from typing_extensions import OrderedDict
 import rospy
 import roslib
 
-from harmoni_common_lib.constants import State, ActuatorNameSpace, Actions
+from harmoni_common_lib.constants import State, ActuatorNameSpace
 from harmoni_common_lib.service_server import HarmoniServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 import harmoni_common_lib.helper_functions as hf
@@ -33,8 +33,14 @@ class HassService(HarmoniServiceManager):
         # The Home Assistant uri set in the configuration file
         self.hass_uri = param["hass_uri"]
 
-        # The authorization token (from Home Assistant's settings) set in the configuration file
-        self.token = param["token"]
+        # The path where the authorization token (from Home Assistant's settings) is
+        self.credential_path = param["credential_path"]
+        with open(self.credential_path) as f:
+            d = json.load(f)
+            self.token = d["token"]
+        
+        # POST ACTIONS
+        self.post_actions = { "turn_on", "turn_off" }
 
         # Pretend that an appliance has been on for a few hours
         self.simulation = param["simulation"]
@@ -70,7 +76,7 @@ class HassService(HarmoniServiceManager):
             if(json_data["action"] == "check_log"):
                 hass_response = self.check_log(json_data)
 
-            elif(json_data["action"] in Actions.post_actions):    
+            elif(json_data["action"] in self.post_actions):    
                 hass_response = self.post(json_data)
 
             rospy.loginfo(f"The status code for Home Assistant's response is {hass_response.status_code}")
@@ -147,10 +153,10 @@ class HassService(HarmoniServiceManager):
         for item in json_array:
             if "context_service" in item: 
 
-                if item["context_service"] in Actions.post_actions:
+                if item["context_service"] in self.post_actions:
                     eventTime = item["when"]
 
-                elif item["context_service"] in Actions.post_actions:
+                elif item["context_service"] in self.post_actions:
                     eventTime = ""
 
             # TODO ALSO CHECK STATE = "OFF" IF ENTITY_ID IS THE CORRECT ONE

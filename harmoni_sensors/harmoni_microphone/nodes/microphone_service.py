@@ -158,10 +158,11 @@ class MicrophoneService(HarmoniServiceManager):
         for i in range(self.p.get_device_count()):
             device = self.p.get_device_info_by_index(i)
             # rospy.loginfo(device)
-            # rospy.loginfo(f"Found device with name {self.device_name} at index {i}")
+            # rospy.loginfo(f"Found device with name " +  device["name"] + " at index "+ str(i))
             if device["name"] == self.device_name:
                 rospy.loginfo(device)
                 self.input_device_index = i
+                break
         return
 
     def start_recording_data(self):
