@@ -8,7 +8,7 @@
                     "action_goal": "REQUEST",
                     "resource_type": "service",
                     "wait_for": "new",
-                    "trigger": "{ \"action\":\"check_log\", \"entity\":\"googlehome8554\", \"type\":\"media_player\"}"
+                    "trigger": "{ \"action\":\"check_log\", \"entity\":\"oven_power\", \"type\":\"switch\"}"
                 }
             },
             {
@@ -77,7 +77,7 @@
                     "action_goal": "REQUEST",
                     "resource_type": "service",
                     "wait_for": "new",
-                    "trigger": "{ \"action\":\"turn_on\", \"entity\":\"googlehome8554\", \"type\":\"media_player\"}"
+                    "trigger": "{ \"action\":\"turn_off\", \"entity\":\"oven_power\", \"type\":\"switch\"}"
                 }
             }
         ]

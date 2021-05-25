@@ -5,7 +5,7 @@ from typing_extensions import OrderedDict
 import rospy
 import roslib
 
-from harmoni_common_lib.constants import State, ActuatorNameSpace
+from harmoni_common_lib.constants import State, ActuatorNameSpace, Actions
 from harmoni_common_lib.service_server import HarmoniServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 import harmoni_common_lib.helper_functions as hf
@@ -70,7 +70,7 @@ class HassService(HarmoniServiceManager):
             if(json_data["action"] == "check_log"):
                 hass_response = self.check_log(json_data)
 
-            elif(json_data["action"] == "turn_on"):    
+            elif(json_data["action"] in Actions.post_actions):    
                 hass_response = self.post(json_data)
 
             rospy.loginfo(f"The status code for Home Assistant's response is {hass_response.status_code}")
@@ -147,10 +147,10 @@ class HassService(HarmoniServiceManager):
         for item in json_array:
             if "context_service" in item: 
 
-                if item["context_service"] == "turn_on":
+                if item["context_service"] in Actions.post_actions:
                     eventTime = item["when"]
 
-                elif item["context_service"] == "turn_off":
+                elif item["context_service"] in Actions.post_actions:
                     eventTime = ""
 
             # TODO ALSO CHECK STATE = "OFF" IF ENTITY_ID IS THE CORRECT ONE
@@ -173,10 +173,10 @@ class HassService(HarmoniServiceManager):
                 self.result_msg = "NONE"
             rospy.loginfo(f"Is appliance on? {alertUser}")
 
-            # Check if this is a simulation
-            if self.simulation == True:
-                self.result_msg = "LOG: oven still on"
-            rospy.loginfo(f"Is simulation on? {self.simulation}")
+        # Check if this is a simulation
+        if self.simulation == True:
+            self.result_msg = "LOG: oven still on"
+        rospy.loginfo(f"Is simulation on? {self.simulation}")
         
         return hass_response
 
