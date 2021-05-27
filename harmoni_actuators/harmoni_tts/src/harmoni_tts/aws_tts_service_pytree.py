@@ -90,8 +90,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         #TODO: blackboards per inputText
         input_text="ciao CT, stiamo provando"
         if(self.mode):
-            self.aws_service.request(input_text)
-            #Qui non abbiamo capito dove andare a prendere il risultato, (dovremmo chiedercelo anche nell' update)
+            self.result_data = self.aws_service.request(input_text)
         else:
             rospy.loginfo(f"Sending goal to {self.aws_service} optional_data len {len(input_text)}")
 
@@ -111,13 +110,12 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         
         """
         if(self.mode):
-            #non abbiamo capito dove prendere il risultato
-            if(self.aws_service.state == State.REQUEST):
-                new_status = py_trees.common.Status.RUNNING
-            elif(self.aws_service.state == State.SUCCESS):
+            if(self.result_data["response"] == State.SUCCESS):
                 new_status = py_trees.common.Status.SUCCESS
             else:
                 new_status = py_trees.common.Status.FAILURE
+            #il risultato è qui: self.result_data["message"]
+            print(f"Il risultato è {self.result_data['message']}")
         else:
             #non siamo sicuro degli stati
             if len(self.client_result) > 0:
@@ -150,13 +148,16 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
             - SUCCESS || FAILURE : your behaviour's work cycle has finished
             - INVALID : a higher priority branch has interrupted, or shutting down
         """
-        if(self.mode):
-            pass
-            #self.mode = False
-            #self.aws_service = None
+        if(new_status == py_trees.common.Status.INVALID):
+            #esegui codice per interrupt 
+            #TODO 
+            if(self.mode):
+                pass
+            else:
+                pass
         else:
-            #self.service_client_tts = None
-            self.client_result = deque()
+            #esegui codice per terminare (SUCCESS || FAILURE)
+            self.client_result = []
 
         #Here we would like to put:
         #self.logger.debug("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))
@@ -189,6 +190,7 @@ def main():
     #command_line_argument_parser().parse_args()
 
     py_trees.logging.level = py_trees.logging.Level.DEBUG
+    
     service_name = ActuatorNameSpace.tts.name
     instance_id = rospy.get_param("instance_id")
     ttsPyTree = AWSTtsServicePytree("AwsPyTreeTest")
