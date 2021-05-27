@@ -1,7 +1,8 @@
-# Full Setup
-
+# Desktop Setup
 
 Prerequisites: ROS Kinetic, Melodic, or Noetic Installed
+
+_Warning: If you are installing on some OS other than Ubuntu, you may run into dependency issues that you will have to handle yourself. HARMONI is written in Python 3, which can cause some hiccups if you are not used to running Python 3 in ROS Kinetic or Melodic_
 
 1. Clone the repository:
    ```bash
@@ -20,13 +21,14 @@ Prerequisites: ROS Kinetic, Melodic, or Noetic Installed
    ```bash
    catkin build harmoni_common_lib harmoni_common_msgs harmoni_decision harmoni_pattern harmoni_recorder
    ```
-   If you do not have catkin tools installed, follow this instruction (https://catkin-tools.readthedocs.io/en/latest/installing.html) or also install from pip running:
+   If you do not have catkin tools installed, follow [these instructions](https://catkin-tools.readthedocs.io/en/latest/installing.html) or also install from pip running:
    
    ```bash
    pip3 install --user git+https://github.com/catkin/catkin_tools.git
    ```
-#### TODO
-For now this is a WIP. We recommend installing with python3 from source, like [here](https://www.miguelalonsojr.com/blog/robotics/ros/python3/2019/08/20/ros-melodic-python-3-build.html)
+## TODO
+
+For now this is a WIP. Some dependencies may need to be updated. We recommend installing with python3 from source, like [here](https://www.miguelalonsojr.com/blog/robotics/ros/python3/2019/08/20/ros-melodic-python-3-build.html)
 
 We recommend extending the blacklist packages to include those shown in the following sample command:
 ```bash

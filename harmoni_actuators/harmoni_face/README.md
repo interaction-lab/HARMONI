@@ -1,8 +1,5 @@
-# Face Service Parameters:
-Parameters input for the microphone service: 
+# harmoni_face
 
-| Parameters           | Definition | Values |
-|----------------------|------------|--------|
-|chunk_size            |            |        |
-|total_channels        |            |        |
-|audio_rate            |            |        |
+Harmoni provides a wrapper on the cordial face, which is capable of expressing speech and emotion.
+## Face Service Parameters
+
