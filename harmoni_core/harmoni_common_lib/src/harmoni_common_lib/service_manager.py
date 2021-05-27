@@ -87,7 +87,6 @@ class HarmoniServiceManager(object):
             NotImplementedError: To be used, this function should be overwritten by the child class.
         """
         rospy.logerr(f"HarmoniServiceManager {self.name} pause() not implemented.")
-        raise NotImplementedError()
         return
 
     def stop(self):
