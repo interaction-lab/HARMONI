@@ -184,9 +184,6 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         return
 
 def main():
-    """[summary]
-    Main function for starting HarmoniPolly service
-    """
     #command_line_argument_parser().parse_args()
 
     py_trees.logging.level = py_trees.logging.Level.DEBUG
@@ -196,7 +193,7 @@ def main():
     ttsPyTree = AWSTtsServicePytree("AwsPyTreeTest")
 
     param = rospy.get_param(service_name + "/" + instance_id + "_param/")
-    ttsPyTree.setup(param,False)
+    ttsPyTree.setup(param,True)
     try:
         for unused_i in range(0, 7):
             ttsPyTree.tick_once()
