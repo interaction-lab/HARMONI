@@ -27,11 +27,11 @@ import sys
 import py_trees
 import time
 
-import py_trees.console as console
+import py_trees.console
 
 class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
 
-
+    #TODO tutte le print devono diventare console py_tree
     """
     mode è il boolean che controlla la modalità di funzionamento:
     true: opzione 1 (utilizzo come una classe python)
@@ -50,6 +50,10 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         self.result_data = None
         self.service_client_tts = None
         self.client_result = None
+        self.blackboard = self.attach_blackboard_client(name=self.name, namespace="harmoni_tts")
+        self.blackboard.register_key("result_data", access=py_trees.common.Access.WRITE)
+        self.blackboard.register_key("result_message", access=py_trees.common.Access.WRITE)
+        self.blackboard.result_message = "INVALID"
 
         super(AWSTtsServicePytree, self).__init__(name)
         #Here we would like to put:
@@ -65,8 +69,6 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         """
         self.mode = mode
         self.aws_service = AWSTtsService(self.name,param)
-
-
         #pattern_to_use = rospy.get_param("pattern_name")
         rospy.init_node("tts_default", log_level=rospy.INFO)
 
@@ -87,7 +89,10 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         """
         
         """
-        #TODO: blackboards per inputText
+        #il result message dice anche in che stato è la foglia
+        self.blackboard.result_message = "RUNNING"
+        self.blackboard.result_data = ""
+        #TODO prendi l'input text da una blackboard
         input_text="ciao CT, stiamo provando"
         if(self.mode):
             self.result_data = self.aws_service.request(input_text)
@@ -111,26 +116,36 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         """
         if(self.mode):
             if(self.result_data["response"] == State.SUCCESS):
+                self.blackboard.result_message = "SUCCESS"
+                self.blackboard.result_data = self.result_data['message']
+                #il risultato è qui: self.result_data["message"]
+                self.result_data = self.result_data['message']
+                print(f"Il risultato è {self.result_data}")
                 new_status = py_trees.common.Status.SUCCESS
             else:
+                self.blackboard.result_message = "FAILURE"
                 new_status = py_trees.common.Status.FAILURE
-            #il risultato è qui: self.result_data["message"]
-            print(f"Il risultato è {self.result_data['message']}")
+            
         else:
             #non siamo sicuro degli stati
             if len(self.client_result) > 0:
+                #se siamo qui vuol dire che il risultato c'è e quindi 
+                #possiamo terminare la foglia
                 rospy.loginfo("getting result from the service")
                 rospy.loginfo(f"Queue is {self.client_result}")
                 rospy.loginfo(f"Queue size is {len(self.client_result)}")
-                #se siamo qui vuol dire che il risultato c'è e quindi possiamoterninare la foglia
-                self.return_data = self.client_result.popleft()["data"]
+                self.result_data = self.client_result.popleft()["data"]
+                self.blackboard.result_message = "SUCCESS"
+                self.blackboard.result_data = self.result_data
                 new_status = py_trees.common.Status.SUCCESS
             else:
                 #se siamo qui vuol dire che il risultato ancora non c'è
+                self.blackboard.result_message = "RUNNING"
                 new_status = py_trees.common.Status.RUNNING
 
             #incerti di questa riga
             if(self.aws_service.state == State.FAILED):
+                self.blackboard.result_message = "FAILURE"
                 new_status = py_trees.common.Status.FAILURE
 
         #Here we would like to put:
@@ -141,7 +156,6 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         
 
     def terminate(self, new_status):
-        #Sbagliato, non possiamo fare = None 
         """
         When is this called?
            Whenever your behaviour switches to a non-running state.
@@ -150,6 +164,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         """
         if(new_status == py_trees.common.Status.INVALID):
             #esegui codice per interrupt 
+            self.blackboard.result_message = "INVALID"
             #TODO 
             if(self.mode):
                 pass
@@ -188,6 +203,11 @@ def main():
 
     py_trees.logging.level = py_trees.logging.Level.DEBUG
     
+    blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace="harmoni_tts")
+    blackboardProva.register_key("result_data", access=py_trees.common.Access.READ)
+    blackboardProva.register_key("result_message", access=py_trees.common.Access.READ)
+    print(blackboardProva)
+
     service_name = ActuatorNameSpace.tts.name
     instance_id = rospy.get_param("instance_id")
     ttsPyTree = AWSTtsServicePytree("AwsPyTreeTest")
@@ -198,6 +218,8 @@ def main():
         for unused_i in range(0, 7):
             ttsPyTree.tick_once()
             time.sleep(0.5)
+            print(blackboardProva.result_data)
+            print(blackboardProva.result_message)
         print("\n")
     except KeyboardInterrupt:
         print("Exception occurred")
