@@ -40,6 +40,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
     #TTS è un actuators
 
     def __init__(self, name = "AWSTtsServicePytree"):
+        
         """
         Qui abbiamo pensato di chiamare soltanto 
         il costruttore del behaviour tree 
@@ -50,6 +51,8 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         self.result_data = None
         self.service_client_tts = None
         self.client_result = None
+
+        self.blackboards = []
         self.blackboard = self.attach_blackboard_client(name=self.name, namespace="harmoni_tts")
         self.blackboard.register_key("result_data", access=py_trees.common.Access.WRITE)
         self.blackboard.register_key("result_message", access=py_trees.common.Access.WRITE)
@@ -78,12 +81,9 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
             self.service_client_tts.setup_client("tts_default", 
                                                 self._result_callback,
                                                 self._feedback_callback)
-            rospy.loginfo("Behavior interface action clients have been set up!")
+            self.logger.debug("Behavior interface action clients have been set up!")
         
-        
-        #Here we would like to put:
-        #self.logger.debug("%s.setup()" % (self.__class__.__name__))
-        print("%s.setup()" % (self.__class__.__name__))
+        self.logger.debug("%s.setup()" % (self.__class__.__name__))
 
     def initialise(self):
         """
@@ -97,7 +97,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         if(self.mode):
             self.result_data = self.aws_service.request(input_text)
         else:
-            rospy.loginfo(f"Sending goal to {self.aws_service} optional_data len {len(input_text)}")
+            self.logger.debug(f"Sending goal to {self.aws_service} optional_data len {len(input_text)}")
 
             # Dove posso prendere details["action_goal"]?
             self.service_client_tts.send_goal(
@@ -105,11 +105,9 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
                 optional_data=input_text,
                 wait=False,
             )
-            rospy.loginfo(f"Goal sent to {self.aws_service}")
+            self.logger.debug(f"Goal sent to {self.aws_service}")
             
-        #Here we would like to put:
-        #self.logger.debug("%s.initialise()" % (self.__class__.__name__))
-        print("%s.initialise()" % (self.__class__.__name__))
+        self.logger.debug("%s.initialise()" % (self.__class__.__name__))
     def update(self):
         """
         
@@ -118,9 +116,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
             if(self.result_data["response"] == State.SUCCESS):
                 self.blackboard.result_message = "SUCCESS"
                 self.blackboard.result_data = self.result_data['message']
-                #il risultato è qui: self.result_data["message"]
                 self.result_data = self.result_data['message']
-                print(f"Il risultato è {self.result_data}")
                 new_status = py_trees.common.Status.SUCCESS
             else:
                 self.blackboard.result_message = "FAILURE"
@@ -131,9 +127,6 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
             if len(self.client_result) > 0:
                 #se siamo qui vuol dire che il risultato c'è e quindi 
                 #possiamo terminare la foglia
-                rospy.loginfo("getting result from the service")
-                rospy.loginfo(f"Queue is {self.client_result}")
-                rospy.loginfo(f"Queue size is {len(self.client_result)}")
                 self.result_data = self.client_result.popleft()["data"]
                 self.blackboard.result_message = "SUCCESS"
                 self.blackboard.result_data = self.result_data
@@ -147,10 +140,8 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
             if(self.aws_service.state == State.FAILED):
                 self.blackboard.result_message = "FAILURE"
                 new_status = py_trees.common.Status.FAILURE
-
-        #Here we would like to put:
-        #self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
-        print("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
+            
+            self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status
 
         
@@ -172,16 +163,14 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
                 pass
         else:
             #esegui codice per terminare (SUCCESS || FAILURE)
-            self.client_result = []
+            self.client_result = deque()
 
-        #Here we would like to put:
-        #self.logger.debug("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))
-        print("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))
+        self.logger.debug("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))
 
     def _result_callback(self, result):
         """ Recieve and store result with timestamp """
-        rospy.loginfo("The result of the request has been received")
-        rospy.loginfo(
+        self.logger.debug("The result of the request has been received")
+        self.logger.debug(
             f"The result callback message from {result['service']} was {len(result['message'])} long"
         )
         self.client_result.append(
@@ -192,7 +181,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
 
     def _feedback_callback(self, feedback):
         """ Feedback is currently just logged """
-        rospy.logdebug("The feedback recieved is %s." % feedback)
+        self.logger.debug("The feedback recieved is %s." % feedback)
         # Check if the state is end, stop the behavior pattern
         # if feedback["state"] == State.END:
         #    self.end_pattern = True
@@ -213,13 +202,12 @@ def main():
     ttsPyTree = AWSTtsServicePytree("AwsPyTreeTest")
 
     param = rospy.get_param(service_name + "/" + instance_id + "_param/")
-    ttsPyTree.setup(param,True)
+    ttsPyTree.setup(param,False)
     try:
         for unused_i in range(0, 7):
             ttsPyTree.tick_once()
             time.sleep(0.5)
-            print(blackboardProva.result_data)
-            print(blackboardProva.result_message)
+            print(blackboardProva)
         print("\n")
     except KeyboardInterrupt:
         print("Exception occurred")
