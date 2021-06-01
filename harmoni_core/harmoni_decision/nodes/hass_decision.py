@@ -125,15 +125,40 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
         if result['service'] == self.scripted_services[1]:
 
             # TODO Check if it has an action for hass, otherwise do reverse dialogue again
-            rospy.loginfo("Index " + str(self.index))
             service = "reverse_dialogue" # or hass
             self.index += 1
+            rospy.loginfo("Index " + str(self.index))
+
+            # Get message from bot
+            for item in result_data:
+                if "b" in item.keys():
+                    msg = item["b"]["data"]
+                    break
+            else:
+                msg = ""
 
             # Testing: 2 sequences of same pattern but different optional_data
             if(self.index==2):
                 self.do_request(self.index, service, optional_data="Sono stanca")
+            
+            if(self.index==3):
+                self.do_request(self.index, service, optional_data="Sì") 
 
-            # self.do_request(self.index, service, optional_data="action to do")
+            # delete if condition when mic and stt work
+            elif self.index > 3:
+
+                # Character used to split the message received from bot
+                # format: message_for_other_services|some_json_string_for_home_assistant
+                if "{" not in msg:
+                    rospy.loginfo("No { in msg")
+                    service = self.scripted_services[1]
+                else:
+                    rospy.loginfo("{ in msg")
+                    service = self.scripted_services[2]
+
+                self.do_request(self.index, service, optional_data = msg) 
+
+
             self.state = State.SUCCESS
 
         elif result['service'] == self.scripted_services[2]:

@@ -2,14 +2,7 @@
     {
         "set": "sequence",
         "steps": [
-            
-            {
-                "bot_default": {
-                    "action_goal": "REQUEST",
-                    "resource_type": "service",
-                    "wait_for": "new"
-                }
-            },
+
             {
                 "tts_default": {
                     "action_goal": "REQUEST",
@@ -32,7 +25,20 @@
                         "wait_for": "new"
                     }
                 }
-            ]
+            ],
+            {
+                "stt_default": {
+                    "resource_type": "detector",
+                    "wait_for": "new"
+                }
+            },
+            {
+                "bot_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": "new"
+                }
+            }
         ]
     }
 ]

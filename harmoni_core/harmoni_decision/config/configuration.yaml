@@ -15,7 +15,7 @@ hardware:
   # gesture: ["default"]
 hass:
   microphone: ["default"]
-  #stt: ["default"]
+  stt: ["default"]
   bot: ["default"]
   tts: ["default"]
   face: ["default"]

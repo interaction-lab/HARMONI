@@ -67,34 +67,42 @@ class HassService(HarmoniServiceManager):
         self.state = State.REQUEST
 
         try:
-            # Parse request
+
             rospy.loginfo("Request: %s " % data)
             json_data= json.loads(data)
-            rospy.loginfo("Action: %s " % json_data["action"])
 
-            # Check log
-            if(json_data["action"] == "check_log"):
-                hass_response = self.check_log(json_data)
+            if(json_data["answer"] == "No"):   
 
-            elif(json_data["action"] in self.post_actions):    
-                hass_response = self.post(json_data)
-
-            rospy.loginfo(f"The status code for Home Assistant's response is {hass_response.status_code}")
-            # rospy.loginfo(f"Home assistant request text: {hass_response.text}") 
-            # rospy.loginfo(f"Home assistant request url: {hass_response.request.url}")
-            # rospy.loginfo(f"Home assistant request headers: {hass_response.request.headers}")
-            # rospy.loginfo(f"Home assistant request body: {hass_response.request.body}")           
-     
-            if hass_response is not None and hass_response.status_code == 200:
                 self.state = State.SUCCESS
                 self.response_received = True
-                
-            else:
-                self.start = State.FAILED
-                rospy.loginfo("Service call failed")
-                rospy.loginfo(f"Home Assistant's response is {hass_response.text}, with status code {hass_response.status_code}")
-                rospy.loginfo("Did you put the correct uri and token in the configuration file?")
-                self.response_received = True
+                self.result_msg = "No action done"
+
+            else:            
+                rospy.loginfo("Action: %s " % json_data["action"])
+
+                # Check log
+                if(json_data["action"] == "check_log"):
+                    hass_response = self.check_log(json_data)
+
+                elif(json_data["action"] in self.post_actions):    
+                    hass_response = self.post(json_data)
+
+                rospy.loginfo(f"The status code for Home Assistant's response is {hass_response.status_code}")
+                # rospy.loginfo(f"Home assistant request text: {hass_response.text}") 
+                # rospy.loginfo(f"Home assistant request url: {hass_response.request.url}")
+                # rospy.loginfo(f"Home assistant request headers: {hass_response.request.headers}")
+                # rospy.loginfo(f"Home assistant request body: {hass_response.request.body}")           
+        
+                if hass_response is not None and hass_response.status_code == 200:
+                    self.state = State.SUCCESS
+                    self.response_received = True
+                    
+                else:
+                    self.start = State.FAILED
+                    rospy.loginfo("Service call failed")
+                    rospy.loginfo(f"Home Assistant's response is {hass_response.text}, with status code {hass_response.status_code}")
+                    rospy.loginfo("Did you put the correct uri and token in the configuration file?")
+                    self.response_received = True
 
         except rospy.ServiceException:
             self.start = State.FAILED
@@ -173,6 +181,8 @@ class HassService(HarmoniServiceManager):
             if delta > timedelta(hours=2):
                 alertUser = True
 
+# TODO custom return msg, saved outside of this code
+
             if alertUser == True:
                 self.result_msg = "LOG: oven still on"
             else:
@@ -215,6 +225,8 @@ class HassService(HarmoniServiceManager):
             )
 
         self.result_msg = hass_response.text
+
+        #TODO CHANGE RETURN MSG TO SOMETHING THAT CAN BE SAID
 
         return hass_response
 
