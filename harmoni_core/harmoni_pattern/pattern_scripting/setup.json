@@ -1,0 +1,14 @@
+[
+    {
+        "set": "setup",
+        "steps": [
+            {
+                "microphone_default": {
+                    "action_goal": "ON",
+                    "resource_type": "sensor",
+                    "wait_for": ""
+                }
+            }
+        ]
+    }
+]

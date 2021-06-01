@@ -1,6 +1,6 @@
 <launch>
    
-	<arg name="pattern_name" default="system_initiative"/>
+	<arg name="pattern_name" default="reverse_dialogue"/>
 	<arg name="instance_id" default="default"/>
     <!-- To start on launch of pattern use the flag start:=true -->
 	<arg name="start" default="true"/>

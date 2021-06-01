@@ -58,6 +58,9 @@ class MicrophoneService(HarmoniServiceManager):
             self.microphone_topic, AudioData, queue_size=1
         )
 
+        #initialize variable
+        self.input_device_index = 24
+
         self.state = State.INIT
         return
 
@@ -158,7 +161,7 @@ class MicrophoneService(HarmoniServiceManager):
         for i in range(self.p.get_device_count()):
             device = self.p.get_device_info_by_index(i)
             # rospy.loginfo(device)
-            # rospy.loginfo(f"Found device with name " +  device["name"] + " at index "+ str(i))
+            rospy.loginfo(f"Found device with name " +  device["name"] + " at index "+ str(i))
             if device["name"] == self.device_name:
                 rospy.loginfo(device)
                 self.input_device_index = i
