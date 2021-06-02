@@ -53,15 +53,12 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         self.client_result = None
 
         self.blackboards = []
-        self.blackboard = self.attach_blackboard_client(name=self.name, namespace="harmoni_tts")
-        self.blackboard.register_key("result_data", access=py_trees.common.Access.WRITE)
-        self.blackboard.register_key("result_message", access=py_trees.common.Access.WRITE)
-        self.blackboard.result_message = "INVALID"
+        self.blackboard_tts = self.attach_blackboard_client(name=self.name, namespace="harmoni_tts")
+        self.blackboard_tts.register_key("result_data", access=py_trees.common.Access.WRITE)
+        self.blackboard_tts.register_key("result_message", access=py_trees.common.Access.WRITE)
 
         super(AWSTtsServicePytree, self).__init__(name)
-        #Here we would like to put:
-        #self.logger.debug("%s.__init__()" % (self.__class__.__name__))
-        print(("%s.__init__()" % (self.__class__.__name__)))
+        self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self,param,mode):
         """
@@ -74,6 +71,8 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         self.aws_service = AWSTtsService(self.name,param)
         #pattern_to_use = rospy.get_param("pattern_name")
         rospy.init_node("tts_default", log_level=rospy.INFO)
+
+        self.blackboard_tts.result_message = "INVALID"
 
         if(not self.mode):
             self.service_client_tts = HarmoniActionClient(self.name)
@@ -90,10 +89,12 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         
         """
         #il result message dice anche in che stato è la foglia
-        self.blackboard.result_message = "RUNNING"
-        self.blackboard.result_data = ""
+        self.blackboard_tts.result_message = "RUNNING"
+        self.blackboard_tts.result_data = ""
         #TODO prendi l'input text da una blackboard
         input_text="my name is Corrado, nice to meet you"
+        #TODO Queste cose devono andare nell'update, 
+        #dopo aver controllato di avere o meno input_text
         if(self.mode):
             self.result_data = self.aws_service.request(input_text)
         else:
@@ -102,7 +103,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
             # Dove posso prendere details["action_goal"]?
             self.service_client_tts.send_goal(
                 action_goal = ActionType["REQUEST"].value,
-                optional_data=input_text,
+                optional_data = input_text,
                 wait=False,
             )
             self.logger.debug(f"Goal sent to {self.aws_service}")
@@ -112,33 +113,33 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         """
         
         """
+        #TODO rivedi
         if(self.mode):
             if(self.result_data["response"] == State.SUCCESS):
-                self.blackboard.result_message = "SUCCESS"
-                self.blackboard.result_data = self.result_data['message']
+                self.blackboard_tts.result_message = "SUCCESS"
+                self.blackboard_tts.result_data = self.result_data['message']
                 self.result_data = self.result_data['message']
                 new_status = py_trees.common.Status.SUCCESS
             else:
-                self.blackboard.result_message = "FAILURE"
+                self.blackboard_tts.result_message = "FAILURE"
                 new_status = py_trees.common.Status.FAILURE
-            
         else:
             #non siamo sicuro degli stati
             if len(self.client_result) > 0:
                 #se siamo qui vuol dire che il risultato c'è e quindi 
                 #possiamo terminare la foglia
                 self.result_data = self.client_result.popleft()["data"]
-                self.blackboard.result_message = "SUCCESS"
-                self.blackboard.result_data = self.result_data
+                self.blackboard_tts.result_message = "SUCCESS"
+                self.blackboard_tts.result_data = self.result_data
                 new_status = py_trees.common.Status.SUCCESS
             else:
                 #se siamo qui vuol dire che il risultato ancora non c'è
-                self.blackboard.result_message = "RUNNING"
+                self.blackboard_tts.result_message = "RUNNING"
                 new_status = py_trees.common.Status.RUNNING
 
             #incerti di questa riga
             if(self.aws_service.state == State.FAILED):
-                self.blackboard.result_message = "FAILURE"
+                self.blackboard_tts.result_message = "FAILURE"
                 new_status = py_trees.common.Status.FAILURE
             
             self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
@@ -155,7 +156,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         """
         if(new_status == py_trees.common.Status.INVALID):
             #esegui codice per interrupt 
-            self.blackboard.result_message = "INVALID"
+            self.blackboard_tts.result_message = "INVALID"
             #TODO 
             if(self.mode):
                 pass
