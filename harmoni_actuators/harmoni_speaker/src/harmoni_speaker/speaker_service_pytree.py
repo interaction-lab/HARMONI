@@ -7,6 +7,7 @@ from harmoni_common_lib.constants import State, ActuatorNameSpace
 from harmoni_common_lib.service_server import HarmoniServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 from harmoni_common_lib.action_client import HarmoniActionClient
+from actionlib_msgs.msg import GoalStatus
 import harmoni_common_lib.helper_functions as hf
 from speaker_service import SpeakerService
 
@@ -51,17 +52,18 @@ class SpeakerServicePyTree(py_trees.behaviour.Behaviour):
         """
         self.name = name
         self.mode = False
-        self.aws_service = None
+        self.speaker_service = None
         self.result_data = None
-        self.service_client_tts = None
+        self.service_client_speaker = None
         self.client_result = None
-        self.optional_data = None
+        self.audio_data = None
 
         self.blackboards = []
-        self.blackboard = self.attach_blackboard_client(name=self.name, namespace="harmoni_tts")
-        self.blackboard.register_key("result_data", access=py_trees.common.Access.READ)
-        self.blackboard.register_key("result_message", access=py_trees.common.Access.READ)
-        self.blackboard.result_message = "INVALID"
+        #serve una blackboard a speaker?
+        self.blackboard_tts = self.attach_blackboard_client(name=self.name, namespace="harmoni_tts")
+        self.blackboard_tts.register_key("result_data", access=py_trees.common.Access.READ)
+        self.blackboard_tts.register_key("result_message", access=py_trees.common.Access.READ)
+        self.blackboard_tts.result_message = "INVALID"
 
         super(SpeakerServicePyTree, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
@@ -95,32 +97,52 @@ class SpeakerServicePyTree(py_trees.behaviour.Behaviour):
         
         """
         if(self.mode):
-            if self.blackboard.result_message == "SUCCESS":
-                pass
-            elif self.blackboard.result_message == "RUNNING":
-                pass
-            elif self.blackboard.result_message == "FAILURE":
-                pass
-            else:
-                #lo stato è "INVALID"
-                pass
-        else:
-            if self.blackboard.result_message == "SUCCESS":
-                self.optional_data = self.blackboard.result_data
-                self.logger.debug(f"Sending goal to {self.speaker_service}")
-                self.service_client_speaker.send_goal(
-                    action_goal = ActionType["DO"].value,
-                    optional_data = self.optional_data,
-                    wait=False,
-                )
-                self.logger.debug(f"Goal sent to {self.aws_service}")
-                new_status = py_trees.common.Status.RUNNING
-            elif self.blackboard.result_message == "INVALID":
-                pass
+            if self.blackboard_tts.result_message == "SUCCESS":
+                self.audio_data = self.blackboard_tts.result_data
+                self.result_data = self.speaker_service.do(self.audio_data)
+                #vedi che succede
+                #new_status = py_trees.common.Status.SUCCESS
+            elif self.blackboard_tts.result_message == "INVALID":
+                new_status = py_trees.common.Status.INVALID
             else:
                 #lo stato o è "RUNNING" o è "FAILURE" e quindi in ogni caso sarà:
-                new_status = self.blackboard.result_message
-            
+                new_status = self.blackboard_tts.result_message
+        else:
+            if self.blackboard_tts.result_message == "SUCCESS":
+                #ho già fatto la richiesta? se si non la faccio se no la faccio
+                #TODO sicuro non è LOST
+                if self.service_client_speaker.get_state == GoalStatus.LOST:
+                    self.audio_data = self.blackboard_tts.resul
+t_data
+                    self.logger.debug(f"Sending goal to {self.speaker_service}")
+                    self.service_client_speaker.send_goal(
+                        action_goal = ActionType["DO"].value,
+                        optional_data = self.audio_data,
+                        wait=False,
+                    )
+                    self.logger.debug(f"Goal sent to {self.aws_service}")
+                    new_status = py_trees.common.Status.RUNNING
+                else:
+                    if len(self.client_result) > 0:
+                        #se siamo qui vuol dire che il risultato c'è e quindi 
+                        #possiamo terminare la foglia
+                        self.result_data = self.client_result.popleft()["response"]
+                        #se vuoi sapere cosa c'è scritto nel risultato usa self.result_data["response"]
+                        new_status = py_trees.common.Status.SUCCESS
+                    else:
+                        #se siamo qui vuol dire che il risultato ancora non c'è, dunque
+                        #si è rotto tutto o dobbiamo solo aspettare?
+                        #incerti di questa riga, vedi 408 sequential_pattern.py
+                        if(self.speaker_service.state == State.FAILED):
+                            self.blackboard_tts.result_message = "FAILURE"
+                            new_status = py_trees.common.Status.FAILURE
+                        else:
+                            new_status = py_trees.common.Status.RUNNING
+            elif self.blackboard_tts.result_message == "INVALID":
+                new_status = py_trees.common.Status.INVALID
+            else:
+                #lo stato o è "RUNNING" o è "FAILURE" e quindi in ogni caso sarà:
+                new_status = self.blackboard_tts.result_message
             
         self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status
@@ -172,5 +194,5 @@ def main():
     pass
     
 
-if __name__ == "__main__":
+if name == "__main__":
     main()
