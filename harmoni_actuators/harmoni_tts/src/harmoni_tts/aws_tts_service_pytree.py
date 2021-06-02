@@ -93,7 +93,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         self.blackboard.result_message = "RUNNING"
         self.blackboard.result_data = ""
         #TODO prendi l'input text da una blackboard
-        input_text="ciao CT, stiamo provando"
+        input_text="my name is Corrado, nice to meet you"
         if(self.mode):
             self.result_data = self.aws_service.request(input_text)
         else:
