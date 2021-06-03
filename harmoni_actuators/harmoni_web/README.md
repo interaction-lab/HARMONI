@@ -2,9 +2,12 @@
 
 Harmoni web supports the creation of a custom web interface for use with HARMONI.
 
-## Web Service Parameters:
-Parameters input for the web service: 
+## Usage
+## Parameters
 
 | Parameters           | Definition | Values |
 |----------------------|------------|--------|
 |                      |            |        |
+## Testing
+## References
+[Documentation](https://harmoni.readthedocs.io/en/latest/packages/harmoni_web.html)
