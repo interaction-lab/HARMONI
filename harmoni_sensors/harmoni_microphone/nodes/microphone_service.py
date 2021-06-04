@@ -19,13 +19,10 @@ import numpy as np
 
 class MicrophoneService(HarmoniServiceManager):
     """Reads from a microphone and publishes audio data.
-
     As a sensor service, the microphone is responsible for reading the audio data
     from a physical microphone and publishing it so that it can be recorded or
     transcribed by a detector.
-
     The microphone has many parameters which are set in the configuration.yaml
-
     The public functions exposed by the microphone include start(), stop(), and pause()
     """
 
@@ -57,9 +54,6 @@ class MicrophoneService(HarmoniServiceManager):
         self.raw_mic_pub = rospy.Publisher(
             self.microphone_topic, AudioData, queue_size=1
         )
-
-        #initialize variable
-        self.input_device_index = 24
 
         self.state = State.INIT
         return
@@ -127,7 +121,6 @@ class MicrophoneService(HarmoniServiceManager):
 
     def _read_stream_and_publish(self):
         """Continously publish audio data from the microphone
-
         While state is START publish audio
         """
         r = rospy.Rate(10)
@@ -158,19 +151,27 @@ class MicrophoneService(HarmoniServiceManager):
         Find the input audio devices configured in ~/.asoundrc.
         If the device is not found, pyaudio will use your machine default device
         """
+        device_found = False
+        default_index = 0
         for i in range(self.p.get_device_count()):
             device = self.p.get_device_info_by_index(i)
-            # rospy.loginfo(device)
+            rospy.loginfo(device)
             rospy.loginfo(f"Found device with name " +  device["name"] + " at index "+ str(i))
             if device["name"] == self.device_name:
                 rospy.loginfo(device)
                 self.input_device_index = i
-                break
+                device_found = True
+            
+            if device["name"] == "default":
+                default_index = i
+
+        if not device_found:
+            self.input_device_index = default_index
+        
         return
 
     def start_recording_data(self):
         """Init the subscriber to microphone/default for recording audio.
-
         The callback in the subscriber will save the audio to a file
         specified in the configuration yaml.
         """

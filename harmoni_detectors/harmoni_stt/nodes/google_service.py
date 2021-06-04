@@ -17,7 +17,8 @@ from std_msgs.msg import String
 import numpy as np
 import os
 import io
-
+import re
+import sys
 
 class STTGoogleService(HarmoniServiceManager):
     """
@@ -46,19 +47,13 @@ class STTGoogleService(HarmoniServiceManager):
 
         """Setup publishers and subscribers"""
         rospy.Subscriber(
-            SensorNameSpace.microphone.value + self.subscriber_id + "/talking",
+            SensorNameSpace.microphone.value + self.subscriber_id,
             AudioData,
             self.callback,
         )
         rospy.Subscriber("/audio/audio", AudioData, None)
         self.text_pub = rospy.Publisher(
             DetectorNameSpace.stt.value + self.service_id, String, queue_size=10
-        )
-        """aggiunta""" 
-        rospy.Subscriber(
-            "/harmoni/actuating/web/default/listen_click_event",
-            String,
-            self._web_callback,
         )
         """Setup the stt service as server """
         self.state = State.INIT
@@ -88,28 +83,17 @@ class STTGoogleService(HarmoniServiceManager):
 
     def callback(self, data):
         """ Callback function subscribing to the microphone topic"""
-        # data = np.fromstring(data.data, np.uint8)
-        # self.data = self.data.join(data)
+        # data_stream = np.fromstring(data.data, np.uint8)
+        # audio = data_stream.tolist()
+        # self.data = self.data.join(self.data) +
         # self.data = data.data
-        rospy.loginfo(self.state)
+        # rospy.loginfo(self.state)
         if self.state == State.START:
+            # rospy.loginfo("Transcribing data")
             self.transcribe_stream_request(data.data)
         else:
             rospy.loginfo("Not Transcribing data")
 
-    def _web_callback(self, data):
-        "DATA FROM WEB"
-        data = str(data)
-        x = data.split("set_view\\\":\\\"")
-        x = x[1].split("\\\"}\"")
-        buttonValue = x[0]
-        rospy.loginfo(buttonValue)
-        if buttonValue == "Stop":
-            self.finished_message = True
-            self.state = State.PAUSE
-        else:
-            self.state = State.START
-            self.stt_response = ''
 
     def transcribe_stream_request(self, data):
         # TODO: streaming transcription https://github.com/googleapis/python-speech/blob/master/samples/microphone/transcribe_streaming_infinite.py
@@ -119,8 +103,25 @@ class STTGoogleService(HarmoniServiceManager):
         responses = self.client.streaming_recognize(
             config=self.streaming_config,
             requests=[speech.StreamingRecognizeRequest(audio_content=data)])
-        rospy.loginfo(f"Responses: {responses}")
+        
+        count = 0
+
         for response in responses:
+            count = count + 1
+            if not response.results:
+                continue
+
+            # The `results` list is consecutive. For streaming, we only care about
+            # the first result being considered, since once it's `is_final`, it
+            # moves on to considering the next utterance.
+            result = response.results[0]
+            if not result.alternatives:
+                continue
+
+            # Display the transcription of the top alternative.
+            transcript = result.alternatives[0].transcript
+            rospy.loginfo(transcript)
+
             rospy.loginfo(f"Response: {response}")
             for result in response.results:
                 if result.is_final:
@@ -130,6 +131,8 @@ class STTGoogleService(HarmoniServiceManager):
                     rospy.loginfo("Questo è il response_text")
                     rospy.loginfo("Stt response text:  "+ self.stt_response)
                     self.response_received = True
+
+        rospy.loginfo("Responses count " + str(count))
         return
 
     def transcribe_file_request(self, data):
@@ -195,7 +198,7 @@ class STTGoogleService(HarmoniServiceManager):
         rospy.loginfo("Start the %s service" % self.name)
         if self.state == State.INIT:
             self.state = State.START
-            # self.transcribe_stream()  # Start the microphone service at the INIT
+            #self.transcribe_stream_request(data.data)  # Start the microphone service at the INIT
         else:
             self.state = State.START
         return

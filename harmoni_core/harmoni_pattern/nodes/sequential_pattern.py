@@ -306,7 +306,7 @@ class SequentialPattern(HarmoniServiceManager):
 
             data = self.handle_step(step, data)
 
-
+            data_to_save = ""
             # Save data and return it, if it comes from a bot
             if next(iter(step)) == "bot_default":
                 data_to_save = data

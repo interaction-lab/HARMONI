@@ -3,7 +3,7 @@
    
 	<arg name="instance_id" default="default"/>
 	<param name="instance_id" value="$(arg instance_id)"/>
-    <param name="test_stt" value="true"/>
+    <param name="test_stt" value="false"/>
     <arg name="test_input" default="$(find harmoni_stt)/test_data/hello.wav"/>
     <param name="test_input_stt" value="$(arg test_input)"/>
     <rosparam file="$(find harmoni_stt)/config/google_configuration.yaml" subst_value="True"/>
