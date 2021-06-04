@@ -41,13 +41,9 @@ class TestGoogleStt_Common(unittest.TestCase):
             "/harmoni/detecting/stt/default", String, self._detecting_callback
         )
 
-
-        rospy.loginfo("id2 " +rospy.get_param("stt/default_param/subscriber_id"))
-
         # provide mock microphone
         self.audio_pub = rospy.Publisher(
-            SensorNameSpace.microphone.value
-            + rospy.get_param("stt/default_param/subscriber_id"),
+            SensorNameSpace.microphone.value + "default",
             AudioData,
             queue_size=10,
         )
@@ -64,17 +60,18 @@ class TestGoogleStt_Common(unittest.TestCase):
             self.server, self._result_callback, self._feedback_callback, wait=True
         )
         rospy.loginfo("TestGoogleStt: Turning ON stt server")
-        self.client.send_goal(
-                        action_goal=ActionType.REQUEST.value,
-            wait=False
-            #action_goal=ActionType.ON, optional_data="Setup", wait=False
-        )
+        self.client.send_goal(action_goal=ActionType.ON, optional_data="Setup", wait=False)
+        
+        time.sleep(3)
+        # self.client.send_goal(
+        #                 action_goal=ActionType.REQUEST.value,
+        #     wait=False
+        # )
         rospy.loginfo("TestGoogleStt: Started up. waiting for google stt startup")
 
         # wait for start state
         #while not rospy.is_shutdown() and self.feedback != State.START:
         #    self.rate.sleep()
-        time.sleep(5)
 
         rospy.loginfo("TestGoogleStt: publishing audio")
         
@@ -84,6 +81,8 @@ class TestGoogleStt_Common(unittest.TestCase):
         rospy.loginfo(
             f"TestGoogleStt: audio subscribed to by #{self.output_sub.get_num_connections()} connections."
         )
+
+        time.sleep(5)
 
     def _feedback_callback(self, data):
         rospy.loginfo(f"TestGoogleStt: Feedback: {data}")

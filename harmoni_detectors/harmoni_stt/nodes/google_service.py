@@ -17,8 +17,6 @@ from std_msgs.msg import String
 import numpy as np
 import os
 import io
-import re
-import sys
 
 class STTGoogleService(HarmoniServiceManager):
     """
@@ -83,9 +81,8 @@ class STTGoogleService(HarmoniServiceManager):
 
     def callback(self, data):
         """ Callback function subscribing to the microphone topic"""
-        # data_stream = np.fromstring(data.data, np.uint8)
-        # audio = data_stream.tolist()
-        # self.data = self.data.join(self.data) +
+        # data = np.fromstring(data.data, np.uint8)
+        # self.data = self.data.join(data)
         # self.data = data.data
         # rospy.loginfo(self.state)
         if self.state == State.START:
