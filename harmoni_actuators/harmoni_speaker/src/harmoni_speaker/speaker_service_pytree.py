@@ -9,7 +9,7 @@ from harmoni_common_lib.service_manager import HarmoniServiceManager
 from harmoni_common_lib.action_client import HarmoniActionClient
 from actionlib_msgs.msg import GoalStatus
 import harmoni_common_lib.helper_functions as hf
-from speaker_service import SpeakerService
+from harmoni_speaker.speaker_service import SpeakerService
 
 # Specific Imports
 from audio_common_msgs.msg import AudioData
@@ -68,11 +68,20 @@ class SpeakerServicePyTree(py_trees.behaviour.Behaviour):
         super(SpeakerServicePyTree, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
-    def setup(self,service_id,mode):
+    def setup(self,**additional_parameters):
         """
 
         """
-        self.mode = mode
+        for parameter in additional_parameters:
+            print(parameter, additional_parameters[parameter])  
+            if(parameter =="SpeakerServicePyTree_mode"):
+                print("Setto la modalità")
+                self.mode = additional_parameters[parameter]  
+
+        service_name = ActuatorNameSpace.speaker.name
+        instance_id = rospy.get_param("/instance_id")
+        service_id = f"{service_name}_{instance_id}"
+
         self.speaker_service = SpeakerService(service_id)
         rospy.init_node("speaker_default", log_level=rospy.INFO)
     
@@ -190,14 +199,13 @@ class SpeakerServicePyTree(py_trees.behaviour.Behaviour):
 def main():
     #command_line_argument_parser().parse_args()
     py_trees.logging.level = py_trees.logging.Level.DEBUG
-
-    service_name = ActuatorNameSpace.speaker.name
-    instance_id = rospy.get_param("/instance_id")
-    service_id = f"{service_name}_{instance_id}"
     
     speakerPyTree =  SpeakerServicePyTree("SpeakerPyTreeTest")
 
-    speakerPyTree.setup(service_id,False)
+    additional_parameters = dict([
+        ("mode",False)])    
+
+    speakerPyTree.setup(**additional_parameters)
     try:
         for unused_i in range(0, 4):
             speakerPyTree.tick_once()

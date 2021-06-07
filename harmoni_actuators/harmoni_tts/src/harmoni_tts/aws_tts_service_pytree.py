@@ -9,7 +9,7 @@ from harmoni_common_lib.service_server import HarmoniServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 from harmoni_common_lib.action_client import HarmoniActionClient
 import harmoni_common_lib.helper_functions as hf
-from aws_tts_service import AWSTtsService
+from harmoni_tts.aws_tts_service import AWSTtsService
 # Specific Imports
 from harmoni_common_lib.constants import ActuatorNameSpace, ActionType
 from botocore.exceptions import BotoCoreError, ClientError
@@ -60,16 +60,25 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         super(AWSTtsServicePytree, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
-    def setup(self,param,mode):
+    def setup(self,**additional_parameters):
         """
         Qui chiamiamo l'inizializzazione del servizio AWSTtsService, 
         motivo per cui abbiamo aggiunto param al metodo che 
         pensiamo debbano essere passati dal chiamante e non possono essere
         creati all'interno del metodo stesso.  
         """
-        self.mode = mode
+        for parameter in additional_parameters:
+            print(parameter, additional_parameters[parameter])  
+            if(parameter =="AWSTtsServicePytree_mode"):
+                print("Setto la modalità")
+                self.mode = additional_parameters[parameter]        
+
+        service_name = ActuatorNameSpace.tts.name
+        instance_id = rospy.get_param("instance_id")
+
+        param = rospy.get_param(service_name + "/" + instance_id + "_param/")
+
         self.aws_service = AWSTtsService(self.name,param)
-        #pattern_to_use = rospy.get_param("pattern_name")
         rospy.init_node("tts_default", log_level=rospy.INFO)
 
         self.blackboard_tts.result_message = "INVALID"
@@ -198,12 +207,12 @@ def main():
     blackboardProva.register_key("result_message", access=py_trees.common.Access.READ)
     print(blackboardProva)
 
-    service_name = ActuatorNameSpace.tts.name
-    instance_id = rospy.get_param("instance_id")
     ttsPyTree = AWSTtsServicePytree("AwsPyTreeTest")
 
-    param = rospy.get_param(service_name + "/" + instance_id + "_param/")
-    ttsPyTree.setup(param,False)
+    additional_parameters = dict([
+        ("mode",False)])
+
+    ttsPyTree.setup(**additional_parameters)
     try:
         for unused_i in range(0, 7):
             ttsPyTree.tick_once()
