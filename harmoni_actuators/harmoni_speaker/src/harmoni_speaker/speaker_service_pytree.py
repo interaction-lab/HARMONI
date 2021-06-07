@@ -110,10 +110,8 @@ class SpeakerServicePyTree(py_trees.behaviour.Behaviour):
         else:
             if self.blackboard_tts.result_message == "SUCCESS":
                 #ho già fatto la richiesta? se si non la faccio se no la faccio
-                #TODO sicuro non è LOST
                 if self.service_client_speaker.get_state == GoalStatus.LOST:
-                    self.audio_data = self.blackboard_tts.resul
-t_data
+                    self.audio_data = self.blackboard_tts.result_data
                     self.logger.debug(f"Sending goal to {self.speaker_service}")
                     self.service_client_speaker.send_goal(
                         action_goal = ActionType["DO"].value,
@@ -165,7 +163,7 @@ t_data
                 pass
         else:
             #esegui codice per terminare (SUCCESS || FAILURE)
-            pass
+            self.client_result = deque()
 
         self.logger.debug("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))
 
@@ -194,5 +192,5 @@ def main():
     pass
     
 
-if name == "__main__":
+if __name__ == "__main__":
     main()
