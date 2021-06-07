@@ -24,6 +24,7 @@ import re
 import json
 import ast
 import sys
+import time
 
 # import wget
 import contextlib
@@ -63,7 +64,6 @@ class SpeakerServicePyTree(py_trees.behaviour.Behaviour):
         self.blackboard_tts = self.attach_blackboard_client(name=self.name, namespace="harmoni_tts")
         self.blackboard_tts.register_key("result_data", access=py_trees.common.Access.READ)
         self.blackboard_tts.register_key("result_message", access=py_trees.common.Access.READ)
-        self.blackboard_tts.result_message = "INVALID"
 
         super(SpeakerServicePyTree, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
@@ -73,7 +73,7 @@ class SpeakerServicePyTree(py_trees.behaviour.Behaviour):
 
         """
         self.mode = mode
-        self.speaker_service = SpeakerService(self.name,service_id)
+        self.speaker_service = SpeakerService(service_id)
         rospy.init_node("speaker_default", log_level=rospy.INFO)
     
         if(not self.mode):
@@ -189,7 +189,23 @@ class SpeakerServicePyTree(py_trees.behaviour.Behaviour):
 
 def main():
     #command_line_argument_parser().parse_args()
-    pass
+    py_trees.logging.level = py_trees.logging.Level.DEBUG
+
+    service_name = ActuatorNameSpace.speaker.name
+    instance_id = rospy.get_param("/instance_id")
+    service_id = f"{service_name}_{instance_id}"
+    
+    speakerPyTree =  SpeakerServicePyTree("SpeakerPyTreeTest")
+
+    speakerPyTree.setup(service_id,False)
+    try:
+        for unused_i in range(0, 4):
+            speakerPyTree.tick_once()
+            time.sleep(0.5)
+        print("\n")
+    except KeyboardInterrupt:
+        print("Exception occurred")
+        pass
     
 
 if __name__ == "__main__":
