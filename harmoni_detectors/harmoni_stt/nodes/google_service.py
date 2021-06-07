@@ -17,6 +17,7 @@ from std_msgs.msg import String
 import numpy as np
 import os
 import io
+from six.moves import queue
 
 class STTGoogleService(HarmoniServiceManager):
     """
@@ -35,6 +36,10 @@ class STTGoogleService(HarmoniServiceManager):
         self.result_msg = ""
         self.stt_response = ""
         self.finished_message = False
+
+
+        self._buff = queue.Queue()
+        self.closed = False
 
         """ Setup the google request """
         self.setup_google()
@@ -81,30 +86,19 @@ class STTGoogleService(HarmoniServiceManager):
 
     def callback(self, data):
         """ Callback function subscribing to the microphone topic"""
-        # data = np.fromstring(data.data, np.uint8)
-        # self.data = self.data.join(data)
-        # self.data = data.data
-        # rospy.loginfo(self.state)
+
         if self.state == State.START:
-            # rospy.loginfo("Transcribing data")
-            self.transcribe_stream_request(data.data)
-        else:
-            rospy.loginfo("Not Transcribing data")
+            # rospy.loginfo("Add data to buffer")
+            self._buff.put(data.data)
+            # rospy.loginfo("Items in buffer: "+ str(self._buff.qsize()))
 
+        # else:
+            # rospy.loginfo("Not Transcribing data")
 
-    def transcribe_stream_request(self, data):
-        # TODO: streaming transcription https://github.com/googleapis/python-speech/blob/master/samples/microphone/transcribe_streaming_infinite.py
-        if self.state == State.PAUSE:
-            return
-        rospy.loginfo("Transcribing Stream")
-        responses = self.client.streaming_recognize(
-            config=self.streaming_config,
-            requests=[speech.StreamingRecognizeRequest(audio_content=data)])
-        
-        count = 0
+    def listen_print_loop(self,responses):
+        """ Prints responses coming from Google STT """ 
 
         for response in responses:
-            count = count + 1
             if not response.results:
                 continue
 
@@ -129,10 +123,9 @@ class STTGoogleService(HarmoniServiceManager):
                     rospy.loginfo("Stt response text:  "+ self.stt_response)
                     self.response_received = True
 
-        rospy.loginfo("Responses count " + str(count))
-        return
 
     def transcribe_file_request(self, data):
+        """ Transcribes a single audio file """
         rate = ""  # TODO: TBD
         audio = {"content": data}
         try:
@@ -164,7 +157,10 @@ class STTGoogleService(HarmoniServiceManager):
             self.result_msg = ""
         return
 
+
+    # TODO implement request
     def request(self, input_data):
+
         self.finished_message = False
         #self.data = self.data.join(input_data)
         rospy.loginfo("Start the %s request" % self.name)
@@ -191,19 +187,58 @@ class STTGoogleService(HarmoniServiceManager):
             content = f.read()
         return content
 
+    def generator(self):
+        """ Generator of data for Google STT """
+        # From https://cloud.google.com/speech-to-text/docs/streaming-recognize
+        while not self.closed:
+            # Use a blocking get() to ensure there's at least one chunk of
+            # data, and stop iteration if the chunk is None, indicating the
+            # end of the audio stream.
+            chunk = self._buff.get()
+            if chunk is None:
+                return
+            data = [chunk]
+
+            # Now consume whatever other data's still buffered.
+            while True:
+                try:
+                    chunk = self._buff.get(block=False)
+                    if chunk is None:
+                        return
+                    data.append(chunk)
+                except queue.Empty:
+                    break
+
+            yield b"".join(data)
+
+
     def start(self, rate=""):
         rospy.loginfo("Start the %s service" % self.name)
         if self.state == State.INIT:
             self.state = State.START
-            #self.transcribe_stream_request(data.data)  # Start the microphone service at the INIT
+            
+            # Transcribes data coming from microphone 
+            audio_generator = self.generator()
+            requests = (
+                speech.StreamingRecognizeRequest(audio_content=content)
+                for content in audio_generator
+            )
+            responses = self.client.streaming_recognize(self.streaming_config, requests)
+            self.listen_print_loop(responses)
+
+
         else:
             self.state = State.START
         return
 
     def stop(self):
         rospy.loginfo("Stop the %s service" % self.name)
-        try:
-            # self.close_stream()
+        try:            
+            # Signal the STT input data generator to terminate so that the client's
+            # streaming_recognize method will not block the process termination.
+            self.closed = True
+            self._buff.put(None)
+
             self.state = State.SUCCESS
         except Exception:
             self.state = State.FAILED
@@ -236,10 +271,12 @@ def main():
         s = STTGoogleService(service_id, param)
         service_server = HarmoniServiceServer(name=service_id, service_manager=s)
         if test:
+            # Single audio file
             rospy.loginfo("Testing the %s" % (service_id))
             data = s.wav_to_data(test_input)
             s.transcribe_file_request(data)
         else:
+            # Streaming audio from mic
             service_server.start_sending_feedback()
             rospy.spin()
         
