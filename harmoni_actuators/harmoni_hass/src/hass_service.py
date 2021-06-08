@@ -78,6 +78,7 @@ class HassService(HarmoniServiceManager):
             else:
                 rospy.loginfo("{ in data")
                 data_list = data.split("{")
+                message_to_forward = data_list[0]
                 data_list[1] = "{"+ data_list[1]
                 rospy.loginfo(data_list[0])
                 rospy.loginfo(data_list[1])
@@ -90,7 +91,7 @@ class HassService(HarmoniServiceManager):
                 if(json_data["answer"] == "No"):  
                     self.state = State.SUCCESS
                     self.response_received = True
-                    self.result_msg = "Ok" # No action done
+                    self.result_msg = message_to_forward # No action done
 
                 else:            
                     rospy.loginfo("Action: %s " % json_data["action"])
@@ -111,7 +112,7 @@ class HassService(HarmoniServiceManager):
                     if hass_response is not None and hass_response.status_code == 200:
                         self.state = State.SUCCESS
                         self.response_received = True
-                        self.result_msg = "Fatto" # Action done
+                        self.result_msg = message_to_forward + "Fatto" # Action done
                         
                     else:
                         self.start = State.FAILED

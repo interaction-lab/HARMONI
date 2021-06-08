@@ -26,7 +26,7 @@
                     "action_goal": "REQUEST",
                     "resource_type": "service",
                     "wait_for": "new",
-                    "trigger": "ciao"
+                    "trigger": "sono stanca"
                 }
             },
             {

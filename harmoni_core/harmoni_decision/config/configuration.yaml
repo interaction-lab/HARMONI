@@ -14,11 +14,11 @@ hardware:
   speaker: ["default"]
   # gesture: ["default"]
 hass:
+  face: ["default"]
   microphone: ["default"]
   stt: ["default"]
   bot: ["default"]
   tts: ["default"]
-  face: ["default"]
   speaker: ["default"]
   hass: ["default"]
 # pattern:
