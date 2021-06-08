@@ -49,10 +49,11 @@ class HassService(HarmoniServiceManager):
         return
 
     def request(self, data):
-        """Complete the request received
+        """Completes the home assistant request if the input data is json, otherwise forwards the input data.
 
         Args:
-            data (str): string of json which contains 3 items: {"action": str, "entity": str, "type": str} ....
+            data (str):  if it contains "{", the string is interpreted as json.
+            This string of json which contains 3 items: {"action": str, "entity": str, "type": str} ....
                 action: the action you want to send to home assistant (e.g. turn_on, turn_off or check_log)
                 type: the entity type of the device (e.g., media_player, switch, light)
                 entity: the device on which to do the action (e.g. googlehome8554)
@@ -68,41 +69,56 @@ class HassService(HarmoniServiceManager):
 
         try:
 
-            rospy.loginfo("Request: %s " % data)
-            json_data= json.loads(data)
-
-            if(json_data["answer"] == "No"):   
-
+            if "{" not in data:
+                rospy.loginfo("No { in data, forwarding message")
+                self.result_msg = data
                 self.state = State.SUCCESS
                 self.response_received = True
-                self.result_msg = "No action done"
 
-            else:            
-                rospy.loginfo("Action: %s " % json_data["action"])
+            else:
+                rospy.loginfo("{ in data")
+                data_list = data.split("{")
+                data_list[1] = "{"+ data_list[1]
+                rospy.loginfo(data_list[0])
+                rospy.loginfo(data_list[1])
+                # TODO MANAGE MULTIPLE COMMANDS or ONLY COMMANDS NO TEXT
 
-                # Check log
-                if(json_data["action"] == "check_log"):
-                    hass_response = self.check_log(json_data)
+                rospy.loginfo("Request: %s " % data_list[1])
+                json_data= json.loads(data_list[1])
 
-                elif(json_data["action"] in self.post_actions):    
-                    hass_response = self.post(json_data)
-
-                rospy.loginfo(f"The status code for Home Assistant's response is {hass_response.status_code}")
-                # rospy.loginfo(f"Home assistant request text: {hass_response.text}") 
-                # rospy.loginfo(f"Home assistant request url: {hass_response.request.url}")
-                # rospy.loginfo(f"Home assistant request headers: {hass_response.request.headers}")
-                # rospy.loginfo(f"Home assistant request body: {hass_response.request.body}")           
-        
-                if hass_response is not None and hass_response.status_code == 200:
+                # Responses from bot may have json commands in them but they can also be ignored using this parameter
+                if(json_data["answer"] == "No"):  
                     self.state = State.SUCCESS
                     self.response_received = True
-                    
-                else:
-                    self.start = State.FAILED
-                    rospy.loginfo("Service call failed")
-                    rospy.loginfo(f"Home Assistant's response is {hass_response.text}, with status code {hass_response.status_code}")
-                    rospy.loginfo("Did you put the correct uri and token in the configuration file?")
-                    self.response_received = True
+                    self.result_msg = "Ok" # No action done
+
+                else:            
+                    rospy.loginfo("Action: %s " % json_data["action"])
+
+                    # Check log
+                    if(json_data["action"] == "check_log"):
+                        hass_response = self.check_log(json_data)
+
+                    elif(json_data["action"] in self.post_actions):    
+                        hass_response = self.post(json_data)
+
+                    rospy.loginfo(f"The status code for Home Assistant's response is {hass_response.status_code}")
+                    # rospy.loginfo(f"Home assistant request text: {hass_response.text}") 
+                    # rospy.loginfo(f"Home assistant request url: {hass_response.request.url}")
+                    # rospy.loginfo(f"Home assistant request headers: {hass_response.request.headers}")
+                    # rospy.loginfo(f"Home assistant request body: {hass_response.request.body}")           
+            
+                    if hass_response is not None and hass_response.status_code == 200:
+                        self.state = State.SUCCESS
+                        self.response_received = True
+                        self.result_msg = "Fatto" # Action done
+                        
+                    else:
+                        self.start = State.FAILED
+                        rospy.loginfo("Service call failed")
+                        rospy.loginfo(f"Home Assistant's response is {hass_response.text}, with status code {hass_response.status_code}")
+                        rospy.loginfo("Did you put the correct uri and token in the configuration file?")
+                        self.response_received = True
 
         except rospy.ServiceException:
             self.start = State.FAILED

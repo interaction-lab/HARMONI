@@ -143,6 +143,12 @@ class SequentialPattern(HarmoniServiceManager):
     def _detecting_callback(self, data, service_name):
         """Store data from detection to client_results dictionary"""
         data = data.data
+
+        # rospy.loginfo("--------")
+        # rospy.loginfo("Data from detector " + data)
+        # rospy.loginfo("time-> " + str(time()))
+        # rospy.loginfo("--------")
+        
         self.client_results[service_name].append({"time": time(), "data": data})
         return
 
@@ -315,7 +321,6 @@ class SequentialPattern(HarmoniServiceManager):
                     {"time": time(), "data": data}
                 )   
 
-
             rospy.loginfo(f"************* End of sequence step: {cnt} *************")
 
         if looping:
@@ -476,6 +481,7 @@ class SequentialPattern(HarmoniServiceManager):
 
             if len(self.client_results[service]) > 0:
                 result = self.client_results[service].popleft()
+                break
 
             r.sleep()
 

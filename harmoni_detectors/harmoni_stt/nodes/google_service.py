@@ -55,9 +55,11 @@ class STTGoogleService(HarmoniServiceManager):
             self.callback,
         )
         rospy.Subscriber("/audio/audio", AudioData, None)
+
         self.text_pub = rospy.Publisher(
             DetectorNameSpace.stt.value + self.service_id, String, queue_size=10
         )
+
         """Setup the stt service as server """
         self.state = State.INIT
         return
@@ -97,10 +99,13 @@ class STTGoogleService(HarmoniServiceManager):
 
     def listen_print_loop(self,responses):
         """ Prints responses coming from Google STT """ 
+        self.stt_response = ""
 
         for response in responses:
             if not response.results:
                 continue
+
+            rospy.loginfo(f"Response: {response}")
 
             # The `results` list is consecutive. For streaming, we only care about
             # the first result being considered, since once it's `is_final`, it
@@ -111,21 +116,22 @@ class STTGoogleService(HarmoniServiceManager):
 
             # Display the transcription of the top alternative.
             transcript = result.alternatives[0].transcript
-            rospy.loginfo(transcript)
-
-            rospy.loginfo(f"Response: {response}")
+            # self.text_pub.publish(transcript)
+            # self.response_received = True
+            
             for result in response.results:
                 if result.is_final:
-                    #rospy.loginfo(result.alternatives[0].transcript)
-                    self.stt_response += result.alternatives[0].transcript
-                    self.stt_response += "\n"
-                    rospy.loginfo("Questo è il response_text")
-                    rospy.loginfo("Stt response text:  "+ self.stt_response)
+                    # rospy.loginfo(result.alternatives[0].transcript)
+                    # self.stt_response += result.alternatives[0].transcript
+                    # self.stt_response += "\n"
+                    rospy.loginfo("STT response text: "+ result.alternatives[0].transcript)
+                    self.text_pub.publish(result.alternatives[0].transcript)
                     self.response_received = True
 
 
     def transcribe_file_request(self, data):
         """ Transcribes a single audio file """
+
         rate = ""  # TODO: TBD
         audio = {"content": data}
         try:
