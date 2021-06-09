@@ -79,7 +79,9 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         param = rospy.get_param(service_name + "/" + instance_id + "_param/")
 
         self.aws_service = AWSTtsService(self.name,param)
-        rospy.init_node("tts_default", log_level=rospy.INFO)
+        #TODO questo dobbiamo farlo nell'if 
+        #rospy init node mi fa diventare un nodo ros
+        #rospy.init_node("tts_default", log_level=rospy.INFO)
 
         self.blackboard_tts.result_message = "INVALID"
 
@@ -123,6 +125,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         
         """
         #TODO rivedi
+        
         if(self.mode):
             if(self.result_data["response"] == State.SUCCESS):
                 self.blackboard_tts.result_message = "SUCCESS"
@@ -165,7 +168,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         """
         if(new_status == py_trees.common.Status.INVALID):
             #esegui codice per interrupt 
-            self.blackboard_tts.result_message = "INVALID"
+            #self.blackboard_tts.result_message = "INVALID"
             #TODO 
             if(self.mode):
                 pass

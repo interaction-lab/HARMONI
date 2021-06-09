@@ -1,6 +1,8 @@
+#!/usr/bin/env python3
 ##############################################################################
 # Imports
 ##############################################################################
+import rospy
 from harmoni_tts.aws_tts_service_pytree import AWSTtsServicePytree
 from harmoni_speaker.speaker_service_pytree import SpeakerServicePyTree
 import argparse
@@ -68,6 +70,8 @@ def main():
     """
     Entry point for the demo script.
     """
+    rospy.init_node("prova_nodo", log_level=rospy.INFO)
+
     args = command_line_argument_parser().parse_args()
     print(description())
     py_trees.logging.level = py_trees.logging.Level.DEBUG
@@ -79,13 +83,15 @@ def main():
     ####################
     print("Tree Stewardship")
     behaviour_tree = py_trees.trees.BehaviourTree(root)
-
+    behaviour_tree.visitors.append(py_trees.visitors.DebugVisitor())
+    behaviour_tree.visitors.append(py_trees.visitors.SnapshotVisitor())
     additional_parameters = dict([
         ("AWSTtsServicePytree_mode",False),
         ("SpeakerServicePyTree_mode",False)])
-    behaviour_tree.setup(timeout=15,visitor=py_trees.visitors.DebugVisitor(),**additional_parameters)
-    
+    behaviour_tree.setup(timeout=15,**additional_parameters)
+
     print(py_trees.display.unicode_tree(root=root))
+    
     ####################
     # Execute
     ####################
@@ -93,13 +99,13 @@ def main():
     def print_tree(tree):
         print(py_trees.display.unicode_tree(root=tree.root, show_status=True))
     try:
-        for i in range(1, 12):
+        for i in range(1, 10):
             print("\n--------- Tick {0} ---------\n".format(i))
             behaviour_tree.tick(
                 pre_tick_handler=None,
                 post_tick_handler=print_tree
             )
-            #time.sleep(1.0)
+            time.sleep(1.0)
             if behaviour_tree.root.status ==  py_trees.common.Status.SUCCESS:
                 break
     except KeyboardInterrupt:

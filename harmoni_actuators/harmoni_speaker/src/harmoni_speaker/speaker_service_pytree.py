@@ -83,7 +83,7 @@ class SpeakerServicePyTree(py_trees.behaviour.Behaviour):
         service_id = f"{service_name}_{instance_id}"
 
         self.speaker_service = SpeakerService(service_id)
-        rospy.init_node("speaker_default", log_level=rospy.INFO)
+        #rospy.init_node("speaker_default", log_level=rospy.INFO)
     
         if(not self.mode):
             self.service_client_speaker = HarmoniActionClient(self.name)
@@ -105,14 +105,13 @@ class SpeakerServicePyTree(py_trees.behaviour.Behaviour):
         """
         
         """
+        #TODO vediti meglio INVALID
         if(self.mode):
             if self.blackboard_tts.result_message == "SUCCESS":
                 self.audio_data = self.blackboard_tts.result_data
                 self.result_data = self.speaker_service.do(self.audio_data)
                 #vedi che succede
                 #new_status = py_trees.common.Status.SUCCESS
-            elif self.blackboard_tts.result_message == "INVALID":
-                new_status = py_trees.common.Status.INVALID
             else:
                 #lo stato o è "RUNNING" o è "FAILURE" e quindi in ogni caso sarà:
                 new_status = self.blackboard_tts.result_message
@@ -145,8 +144,6 @@ class SpeakerServicePyTree(py_trees.behaviour.Behaviour):
                             new_status = py_trees.common.Status.FAILURE
                         else:
                             new_status = py_trees.common.Status.RUNNING
-            elif self.blackboard_tts.result_message == "INVALID":
-                new_status = py_trees.common.Status.INVALID
             else:
                 #lo stato o è "RUNNING" o è "FAILURE" e quindi in ogni caso sarà:
                 new_status = self.blackboard_tts.result_message
