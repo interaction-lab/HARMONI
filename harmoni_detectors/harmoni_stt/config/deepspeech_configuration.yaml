@@ -1,0 +1,13 @@
+stt:
+    default_param:
+        lm_alpha: 0.75 
+        lm_beta: 1.85
+        beam_width: 700
+        t_wait: 2
+        subscriber_id: "default"
+    ita_param:
+        lm_alpha: 0.75 
+        lm_beta: 1.85
+        beam_width: 700
+        t_wait: 2
+        subscriber_id: "default"
