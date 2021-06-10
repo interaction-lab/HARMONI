@@ -69,7 +69,7 @@ Once all the packages have been started up, you can run the interaction by runni
 If you want to run the "multiple-choice" interaction, run:
 ```bash
 rlmultiplechoice
-#alias rlmultiplechoice="roslaunch harmoni_decision harmoni_decision.launch test:=true pattern_name:='multiple-choice'"
+#alias rlmultiplechoice="roslaunch harmoni_decision harmoni_decision.launch pattern_name:='multiple-choice'"
 ```
 
 
