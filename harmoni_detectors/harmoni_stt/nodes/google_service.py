@@ -238,22 +238,26 @@ class STTGoogleService(HarmoniServiceManager):
 
 
     def start(self, rate=""):
-        rospy.loginfo("Start the %s service" % self.name)
-        if self.state == State.INIT:
-            self.state = State.START
-            
-            # Transcribes data coming from microphone 
-            audio_generator = self.generator()
-            requests = (
-                speech.StreamingRecognizeRequest(audio_content=content)
-                for content in audio_generator
-            )
-            responses = self.client.streaming_recognize(self.streaming_config, requests)
-            self.listen_print_loop(responses)
+        try:
+            rospy.loginfo("Start the %s service" % self.name)
+            if self.state == State.INIT:
+                self.state = State.START
+                
+                # Transcribes data coming from microphone 
+                audio_generator = self.generator()
+                requests = (
+                    speech.StreamingRecognizeRequest(audio_content=content)
+                    for content in audio_generator
+                )
+                responses = self.client.streaming_recognize(self.streaming_config, requests)
+                self.listen_print_loop(responses)
 
 
-        else:
-            self.state = State.START
+            else:
+                self.state = State.START
+
+        except Exception:
+            rospy.loginfo("Killed the %s service" % self.name)
         return
 
     def stop(self):
