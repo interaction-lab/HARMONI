@@ -63,6 +63,7 @@ class AWSTtsService(HarmoniServiceManager):
             "o": "OPEN_BACK_VOWEL",
             "O": "OPEN_BACK_VOWEL",
             "sil": "IDLE",
+            "J": "PALATAL",
         }
         return
 

@@ -40,23 +40,46 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
     This class is a singleton ROS node and should only be instantiated once.
     """
 
-    def __init__(self, name, script, instance_id ,test_input):
+    def __init__(self, name, pattern_list, instance_id ,test_input):
         super().__init__(name)
         self.name = name
         self.service_id = instance_id
-        self.script = script
+        self.scripted_services = pattern_list
         self.index = 0
+        
         self.class_clients={}
         self._setup_classes()
         self.state = State.INIT
 
-    def start(self, service="setup"):
+
+    def _setup_classes(self):
+        """
+        Set up the pattern classes from the patterns found in pattern parameter in configuration.yaml
+        """
+        rospack = rospkg.RosPack()
+        pck_path = rospack.get_path("harmoni_pattern")
+
+        for pattern in self.scripted_services:
+            pattern_script_path = pck_path + f"/pattern_scripting/{pattern}.json"
+            with open(pattern_script_path, "r") as read_file:
+                script = json.load(read_file)
+            rospy.loginfo(pattern)
+            self.class_clients[pattern] = SequentialPattern(pattern, script)
+        # self.client_results[pattern] = deque()
+
+        rospy.loginfo("Classes instantiate")
+        rospy.loginfo(
+            f"{self.name} Decision manager needs these pattern classes: {self.scripted_services}"
+        )
+        rospy.loginfo("Decision interface classes clients have been set up!")
+        return
+
+    def start(self, service="dialogue"):
         self.index = 0
         self.state = State.START
-        self.dp = SequentialPattern(self.name, self.script)
-
         self.do_request(self.index, service, 'Ciao')
         return
+
 
     def do_request(self, index, service, optional_data=None):
         rospy.loginfo("_____START STEP " + str(index) + " DECISION MANAGER FOR SERVICE " + service + "_______")
@@ -67,9 +90,9 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
 
         def daemon():
             rospy.loginfo("Starting")
-            self.dp.reset_init()
+            self.class_clients[service].reset_init()
 
-            result_msg = self.dp.request(optional_data)
+            result_msg = self.class_clients[service].request(optional_data)
 
             result = {"service": service, "message": result_msg}
             rospy.loginfo("Received result from class")
@@ -97,62 +120,41 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
 
         rospy.loginfo(result_data)
 
-        if result['service'] == self.scripted_services[1]:
+# parse result of sequence  simple_dialogue and send to hass maybe
 
-            # TODO Check if it has an action for hass, otherwise do reverse dialogue again
-            service = "reverse_dialogue" # or hass
-            self.index += 1
+        if result['service'] == "simple_dialogue":
+            
             rospy.loginfo("Index " + str(self.index))
 
-            # Get message from bot
+        #     # Get message from bot
             for item in result_data:
                 if "b" in item.keys():
                     msg = item["b"]["data"]
                     break
             else:
                 msg = ""
-
-            # Testing: 2 sequences of same pattern but different optional_data
-            if(self.index==2):
-                self.do_request(self.index, service, optional_data="Sono stanca")
             
-            if(self.index==3):
-                self.do_request(self.index, service, optional_data="Sì") 
+            if "{" in msg:
+                rospy.loginfo("{ in msg")
+                service = "hass"
+            else:
+                rospy.loginfo("No { in msg")
+                service = "simple_dialogue"
 
-            # delete if condition when mic and stt work
-            elif self.index > 3:
-
-                # Character used to split the message received from bot
-                # format: message_for_other_services|some_json_string_for_home_assistant
-                if "{" not in msg:
-                    rospy.loginfo("No { in msg")
-                    service = self.scripted_services[1]
-                else:
-                    rospy.loginfo("{ in msg")
-                    service = self.scripted_services[2]
-
-                self.do_request(self.index, service, optional_data = msg) 
-
+            self.do_request(self.index, service, optional_data = msg) 
 
             self.state = State.SUCCESS
 
-        elif result['service'] == self.scripted_services[2]:
+        elif result['service'] == "hass":
 
             # TODO depending on the code received send a different message to reverse dialogue (ok / not ok)
             # TODO manage multiple consecutive hass requests
 
-            service = "reverse_dialogue"
-            self.index += 1
-            # self.do_request(self.index, service, optional_data="action success or not")
-            self.state = State.SUCCESS
+            # TODO FORWARD MSG
 
-        elif result['service'] == self.scripted_services[0]:
+            service = "simple_dialogue"
             
-            # After setup, start the sequential pattern
-
-            service = self.scripted_services[1]
-            self.index += 1
-            self.do_request(self.index, service, optional_data="Ciao")
+            self.do_request(self.index, service, optional_data="action success or not")
             self.state = State.SUCCESS
 
         else:
@@ -170,18 +172,19 @@ if __name__ == "__main__":
     test_input = "Input"
     instance_id = rospy.get_param("/instance_id_" + name + "/")
     
-    rospack = rospkg.RosPack()
-    pck_path = rospack.get_path("harmoni_pattern")
-    pattern_script_path = pck_path + f"/pattern_scripting/{name}.json"
-    with open(pattern_script_path, "r") as read_file:
-        script = json.load(read_file)
+    pattern_list = []
+
+    # pattern_list.append("simple_dialogue")
+    pattern_list.append("simple_dialogue")
+    pattern_list.append("hass")
+
 
     try:
         rospy.init_node(name + "_decision")
-        bc = HomeAssistantDecisionManager(name, script, instance_id, test_input)
+        bc = HomeAssistantDecisionManager(name, pattern_list, instance_id, test_input)
         rospy.loginfo(f"START from the first step of {name} decision.")
 
-        bc.start(service="setup")
+        bc.start(service="simple_dialogue")
 
         rospy.spin()
     except rospy.ROSInterruptException:

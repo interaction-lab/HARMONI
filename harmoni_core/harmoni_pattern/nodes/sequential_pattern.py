@@ -144,8 +144,8 @@ class SequentialPattern(HarmoniServiceManager):
         """Store data from detection to client_results dictionary"""
         data = data.data
 
-        # rospy.loginfo("--------")
-        # rospy.loginfo("Data from detector " + data)
+        rospy.loginfo("--------")
+        rospy.loginfo("Data from detector " + data)
         # rospy.loginfo("time-> " + str(time()))
         # rospy.loginfo("--------")
         
@@ -495,7 +495,6 @@ class SequentialPattern(HarmoniServiceManager):
 
             if len(self.client_results[service]) > 0:
                 result = self.client_results[service].popleft()
-                break
 
             r.sleep()
 

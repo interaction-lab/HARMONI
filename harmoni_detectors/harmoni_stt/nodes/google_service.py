@@ -35,8 +35,6 @@ class STTGoogleService(HarmoniServiceManager):
         self.service_id = hf.get_child_id(self.name)
         self.result_msg = ""
         self.stt_response = ""
-        self.finished_message = False
-
 
         self._buff = queue.Queue()
         self.closed = False
@@ -58,6 +56,12 @@ class STTGoogleService(HarmoniServiceManager):
 
         self.text_pub = rospy.Publisher(
             DetectorNameSpace.stt.value + self.service_id, String, queue_size=10
+        )
+
+        rospy.Subscriber(
+            DetectorNameSpace.stt.value + self.service_id,
+            String,
+            self.stt_callback,
         )
 
         """Setup the stt service as server """
@@ -164,29 +168,44 @@ class STTGoogleService(HarmoniServiceManager):
         return
 
 
-    # TODO implement request
-    def request(self, input_data):
 
-        self.finished_message = False
-        #self.data = self.data.join(input_data)
+    def stt_callback(self, data):
+        """ Callback function subscribing to the microphone topic"""
+        self.response_received = True
+
+
+#TODO 
+    def request(self, data):
+
         rospy.loginfo("Start the %s request" % self.name)
-        #self.state = State.REQUEST
+        self.state = State.REQUEST
+        self.response_received = False
+
         try:
-            i = 0
-            while not self.finished_message:
-                i += 1
+
+            # Transcribes data coming from microphone 
+            audio_generator = self.generator()
+            requests = (
+                speech.StreamingRecognizeRequest(audio_content=content)
+                for content in audio_generator
+            )
+            responses = self.client.streaming_recognize(self.streaming_config, requests)
+            self.listen_print_loop(responses)
+        
+            r = rospy.Rate(1)
+            while not self.response_received:
+                r.sleep()
+
             self.state = State.SUCCESS
-            self.response_received = True
             self.result_msg = self.stt_response
-            self.message = self.stt_response
-            self.result = self.stt_response
-            rospy.loginfo("Request successfully completed")
-        except:
-            rospy.logerr("The erros ")
-            self.state = State.FAILED
+
+        except rospy.ServiceException:
+            self.start = State.FAILED
+            rospy.loginfo("Service call failed")
             self.response_received = True
             self.result_msg = ""
-        return
+
+        return {"response": self.state, "message": self.result_msg}
 
     def wav_to_data(self, path):
         with io.open(path, "rb") as f:

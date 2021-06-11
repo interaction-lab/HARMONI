@@ -22,14 +22,6 @@
         "set": "sequence",
         "steps": [
             {
-                "bot_default": {
-                    "action_goal": "REQUEST",
-                    "resource_type": "service",
-                    "wait_for": "new",
-                    "trigger": "sono stanca"
-                }
-            },
-            {
                 "tts_default": {
                     "action_goal": "REQUEST",
                     "resource_type": "service",
@@ -41,7 +33,7 @@
                     "speaker_default": {
                         "action_goal": "DO",
                         "resource_type": "actuator",
-                        "wait_for": "v"
+                        "wait_for": "new"
                     }
                 },
                 {
@@ -51,12 +43,7 @@
                         "wait_for": "new"
                     }
                 }
-            ]
-        ]
-    },
-    {
-        "set": "loop",
-        "steps": [
+            ],
             {
                 "stt_default": {
                     "resource_type": "detector",
@@ -69,37 +56,8 @@
                     "resource_type": "service",
                     "wait_for": "new"
                 }
-            },
-            {
-                "hass_default": {
-                    "action_goal": "REQUEST",
-                    "resource_type": "service",
-                    "wait_for": "new"
-                }
-            },
-            {
-                "tts_default": {
-                    "action_goal": "REQUEST",
-                    "resource_type": "service",
-                    "wait_for": "new"
-                }
-            },
-            [
-                {
-                    "speaker_default": {
-                        "action_goal": "DO",
-                        "resource_type": "actuator",
-                        "wait_for": "new"
-                    }
-                },
-                {
-                    "face_mouth_default": {
-                        "action_goal": "DO",
-                        "resource_type": "actuator",
-                        "wait_for": "new"
-                    }
-                }
-            ]
+            }
+            
         ]
     }
 ]
