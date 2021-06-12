@@ -118,7 +118,7 @@ class SpeakerServicePyTree(py_trees.behaviour.Behaviour):
         else:
             if self.blackboard_tts.result_message == "SUCCESS":
                 #ho già fatto la richiesta? se si non la faccio se no la faccio
-                if self.service_client_speaker.get_state == GoalStatus.LOST:
+                if self.service_client_speaker.get_state() == GoalStatus.LOST:
                     self.audio_data = self.blackboard_tts.result_data
                     self.logger.debug(f"Sending goal to {self.speaker_service}")
                     self.service_client_speaker.send_goal(
@@ -126,13 +126,13 @@ class SpeakerServicePyTree(py_trees.behaviour.Behaviour):
                         optional_data = self.audio_data,
                         wait=False,
                     )
-                    self.logger.debug(f"Goal sent to {self.aws_service}")
+                    self.logger.debug(f"Goal sent to {self.speaker_service}")
                     new_status = py_trees.common.Status.RUNNING
                 else:
                     if len(self.client_result) > 0:
                         #se siamo qui vuol dire che il risultato c'è e quindi 
                         #possiamo terminare la foglia
-                        self.result_data = self.client_result.popleft()["response"]
+                        self.result_data = self.client_result.popleft()["data"]
                         #se vuoi sapere cosa c'è scritto nel risultato usa self.result_data["response"]
                         new_status = py_trees.common.Status.SUCCESS
                     else:
