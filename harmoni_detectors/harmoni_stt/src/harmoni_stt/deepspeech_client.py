@@ -31,10 +31,11 @@ class DeepSpeechClient:
 
 		self._model.setScorerAlphaBeta(alpha, beta)
 		self._model.setBeamWidth(beam_width)
+
+		self._is_streaming = False
         
         # Create a Streaming session
 		self._ds_stream = self._model.createStream()
-
 		self._text = ''
 		self._t_start = time.time()
 		self._t_wait = t_wait
@@ -42,6 +43,7 @@ class DeepSpeechClient:
 
 	def process_audio(self, data16):
 		self._is_final = False
+		
 		self._ds_stream.feedAudioContent(data16)
 		text = self._ds_stream.intermediateDecode()
 
@@ -54,29 +56,47 @@ class DeepSpeechClient:
 
 			elif text != '' and (time.time() - self._t_start > self._t_wait):
 				if text not in ["i ", "he ", "the "]:
-					logging.info("Finishing stream")
-					text = self._ds_stream.finishStream()
-					logging.info('Final text = {}.\n'.format(text))
 					self._text = text
+					logging.info(f"Final text = {self._text}\n")
 					self._is_final = True
 
 		except Exception as e:
-			logging.info(f"Text: '{text}'; So far: '{self.text_so_far}")
+			logging.info(f"Text: '{text}'; So far: '{self._text}")
 			logging.info(self._t_start)
 			raise e
 
-		return text
+		return self._text
+
+	def start_stream(self):
+		"""Starts DeepSpeech streaming inference state if it is not already open."""
+		if not self._is_streaming:
+			self._ds_stream = self._model.createStream()
+			self._is_streaming = True
+		else:
+			logging.info("Tried to start stream when DeepSpeech client already streaming.")
 
 	def finish_stream(self):
-		text = self._ds_client.finishStream()
+		"""Ends DeepSpeech streaming inference state if it is still open.
+		Returns the transcrbed text,
+		"""
+		if self._is_streaming:
+			self._text = self._ds_stream.finishStream()
+			self._is_streaming = False
+		else:
+			logging.info("Tried to end stream when DeepSpeech client currently not streaming")
 		return text
 
 	def transcribe_from_file(self, audio_file):
+		#TODO: Return transcription of an audio file.
 		pass
-	
+
 	@property
 	def is_final(self):
 		return self._is_final
+
+	@property
+	def is_streaming(self):
+		return self._is_streaming
 
 
 if __name__ == "__main__":
