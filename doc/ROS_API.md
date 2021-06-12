@@ -1,4 +1,4 @@
-# ROS API
+# HARMONI's ROS API
 
 _How are the various services communicated with in HARMONI?_
 
