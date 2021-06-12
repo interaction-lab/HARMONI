@@ -25,21 +25,17 @@ class SpeechToTextService(HarmoniServiceManager):
 	"""
 
 	def __init__(self, name, param):
-		""" Initialization of variables and deepspeech parameters """
+		""" Initialization of variables and DeepSpeech parameters """
 		super().__init__(name)
-		# self.model_file_path = param["model_file_path"]
-		# self.scorer_path = param["scorer_path"]
-		self.model_file_path = os.path.join(
-			"/root", "harmoni_catkin_ws", "src", "speechbot", "models", "deepspeech-0.9.3-models.pbmm"
-		)
-		self.scorer_path = os.path.join(
-			"/root", "harmoni_catkin_ws", "src", "speechbot", "models", "deepspeech-0.9.3-models.scorer"
-		)
+		self.model_file_path = param["model_file_path"]
+		self.scorer_path = param["scorer_path"]
 		self.lm_alpha = param["lm_alpha"]
 		self.lm_beta = param["lm_beta"]
 		self.beam_width = param["beam_width"]
 		self.t_wait = param["t_wait"]
 		self.subscriber_id = param["subscriber_id"]
+		# If False, stream transcription will end after DeepSpeech client determines its transcription as final (dependent on the t_wait param)
+		self.is_transcribe_continuously = param["is_transcribe_continuously"]
 
 		self.service_id = hf.get_child_id(self.name)
 
@@ -49,7 +45,7 @@ class SpeechToTextService(HarmoniServiceManager):
 			self.lm_alpha,
 			self.lm_beta,
 			self.beam_width,
-			t_wait=2
+			self.t_wait
 		)
 
 		"""Setup publishers and subscribers"""
@@ -67,9 +63,12 @@ class SpeechToTextService(HarmoniServiceManager):
 		return
 
 	def start(self, rate=""):
+		"""Start the DeepSpeech stream"""
 		rospy.loginfo("Start the %s service" % self.name)
-		if self.state == State.INIT:
+		if self.state == State.INIT or self.state == State.FAILED:
 			self.state = State.START
+			# Start the DeepSpeech client streaming inference state
+			self.ds_client.start_stream()
 		else:
 			self.state = State.START
 		return
@@ -77,6 +76,7 @@ class SpeechToTextService(HarmoniServiceManager):
 	def stop(self):
 		rospy.loginfo("Stop the %s service" % self.name)
 		try:
+			# Close the DeepSpeech streaming inference state
 			text = self.ds_client.finish_stream()
 			rospy.loginfo(f"Final text: {text}")
 			self.state = State.SUCCESS
@@ -90,8 +90,8 @@ class SpeechToTextService(HarmoniServiceManager):
 		return
 
 	def sound_data_callback(self, data):
-		"""Callback function subscribing to the microphone topic
-		Passes audio data to DeepSpeech client
+		"""Callback function subscribing to the microphone topic.
+		Passes audio data to DeepSpeech client.
 		"""
 		data = np.fromstring(data.data, np.uint8)
 		if self.state == State.START:
@@ -104,8 +104,12 @@ class SpeechToTextService(HarmoniServiceManager):
 		text = self.ds_client.process_audio(data)
 		rospy.loginfo(f"I heard: {text}")
 		if self.ds_client.is_final:
+		# Once the DeepSpeech client determines the text as final,
+		# the text will be published. 
 			rospy.loginfo(f"Final text: {text}")
 			self.text_pub.publish(text)
+			if not self.is_transcribe_continuously:
+				self.stop()
 		return
 
 	def request(self, input_data):
