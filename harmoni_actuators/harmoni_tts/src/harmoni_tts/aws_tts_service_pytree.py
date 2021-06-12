@@ -70,7 +70,6 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         for parameter in additional_parameters:
             print(parameter, additional_parameters[parameter])  
             if(parameter =="AWSTtsServicePytree_mode"):
-                print("Setto la modalità")
                 self.mode = additional_parameters[parameter]        
 
         service_name = ActuatorNameSpace.tts.name

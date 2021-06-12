@@ -4,7 +4,8 @@
 ##############################################################################
 import rospy
 from harmoni_tts.aws_tts_service_pytree import AWSTtsServicePytree
-from harmoni_speaker.speaker_service_pytree import SpeakerServicePyTree
+from harmoni_speaker.speaker_service_pytree import SpeakerServicePytree
+from harmoni_face.face_service_pytree import FaceServicePytree
 import argparse
 import py_trees
 import sys
@@ -56,9 +57,13 @@ def command_line_argument_parser():
 def create_root():
     root = py_trees.composites.Sequence("Sequence")
     tts = AWSTtsServicePytree("AwsPyTreeTest")
+    speaker = SpeakerServicePytree("SpeakerPyTreeTest")
+    face = FaceServicePytree("FacePyTreeTest")
+    parall_speaker_face = py_trees.composites.Parallel("Parallel")
     root.add_child(tts)
-    speaker = SpeakerServicePyTree("SpeakerPyTreeTest")
-    root.add_child(speaker)
+    root.add_child(parall_speaker_face)
+    parall_speaker_face.add_child(speaker)
+    parall_speaker_face.add_child(face)
     return root
 
 
@@ -87,7 +92,8 @@ def main():
     behaviour_tree.visitors.append(py_trees.visitors.SnapshotVisitor())
     additional_parameters = dict([
         ("AWSTtsServicePytree_mode",False),
-        ("SpeakerServicePyTree_mode",False)])
+        ("SpeakerServicePytree_mode",False),
+        ("FaceServicePytree_mode",True)])
     behaviour_tree.setup(timeout=15,**additional_parameters)
 
     print(py_trees.display.unicode_tree(root=root))
@@ -99,7 +105,7 @@ def main():
     def print_tree(tree):
         print(py_trees.display.unicode_tree(root=tree.root, show_status=True))
     try:
-        for i in range(1, 10):
+        for i in range(1, 12):
             print("\n--------- Tick {0} ---------\n".format(i))
             behaviour_tree.tick(
                 pre_tick_handler=None,
