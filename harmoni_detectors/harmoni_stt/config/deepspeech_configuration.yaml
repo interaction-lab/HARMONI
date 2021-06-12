@@ -1,13 +1,19 @@
 stt:
     default_param:
+        model_file_path: "/root/harmoni_catkin_ws/src/speechbot/models/deepspeech-0.9.3-models.pbmm"
+        scorer_path: "/root/harmoni_catkin_ws/src/speechbot/models/deepspeech-0.9.3-models.scorer"
         lm_alpha: 0.75 
         lm_beta: 1.85
         beam_width: 700
-        t_wait: 2
+        t_wait: 0.5
+        is_transcribe_continuously: False
         subscriber_id: "default"
     ita_param:
+        model_file_path: "/root/harmoni_catkin_ws/src/speechbot/models/deepspeech-0.9.3-models.pbmm"
+        scorer_path: "/root/harmoni_catkin_ws/src/speechbot/models/deepspeech-0.9.3-models.scorer"
         lm_alpha: 0.75 
         lm_beta: 1.85
         beam_width: 700
-        t_wait: 2
+        t_wait: 0.5
+        is_transcribe_continuously: False
         subscriber_id: "default"
