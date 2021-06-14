@@ -312,28 +312,16 @@ class SequentialPattern(HarmoniServiceManager):
 
             data_to_save = ""
 
-            # Some services may be skippable, like hass
-            if next(iter(step)) == "hass_default":
-                
-                if data[-1] is "}":
-                    data = self.handle_step(step, data)                    
-                else:
-                    rospy.loginfo("No home assistant command found")
-                    
-                # Pass the data through
-                data_to_save = data
+            data = self.handle_step(step, data)
             
-            else:
-                data = self.handle_step(step, data)
-
-                
-                # Save data and return it, if it comes from a bot
-                if next(iter(step)) == "bot_default":
-                    data_to_save = data
-                    # rospy.loginfo("Data from bot_default "+ data)
-                    self.client_results["bot_default"].append(
-                        {"time": time(), "data": data}
-                    )   
+            # Save data and return it, if it comes from a bot or from hass
+            # TODO save for all data from services (maybe if it has a flag)
+            if next(iter(step)) == "bot_default" or next(iter(step)) == "hass_default":
+                data_to_save = data
+                # rospy.loginfo("Data from bot_default "+ data)
+                self.client_results[next(iter(step))].append(
+                    {"time": time(), "data": data}
+                )   
 
             rospy.loginfo(f"************* End of sequence step: {cnt} *************")
 

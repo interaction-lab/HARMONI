@@ -26,7 +26,7 @@ from std_msgs.msg import String
 from harmoni_common_lib.action_client import HarmoniActionClient
 from harmoni_common_lib.constants import DetectorNameSpace, ActionType, ActuatorNameSpace
 from collections import deque
-from time import time
+from time import sleep, time
 import threading
 
 # CHECK if needed
@@ -47,6 +47,10 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
         self.scripted_services = pattern_list
         self.index = 0
         
+        self.text_pub = rospy.Publisher(
+            "/harmoni/detecting/stt/default", String, queue_size=10
+        )
+
         self.class_clients={}
         self._setup_classes()
         self.state = State.INIT
@@ -65,7 +69,7 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
                 script = json.load(read_file)
             rospy.loginfo(pattern)
             self.class_clients[pattern] = SequentialPattern(pattern, script)
-        # self.client_results[pattern] = deque()
+            self.client_results[pattern] = deque()
 
         rospy.loginfo("Classes instantiate")
         rospy.loginfo(
@@ -77,9 +81,56 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
     def start(self, service="dialogue"):
         self.index = 0
         self.state = State.START
+
+        self.check_log_request()
+
         self.do_request(self.index, service, 'Ciao')
+
+        # rospy.loginfo("sleep")
+        # sleep(8)
+
+        # rospy.loginfo("published")
+        # self.text_pub.publish("LOG: oven still on")
+
         return
 
+
+    def check_log_request(self):
+        
+        # in thread
+        # in loop
+
+        def daemon():
+            for i in range(1, 3):
+                rospy.loginfo("Starting home assistant check thread")
+
+                sleep(15)
+
+                service = "hass"
+                self.class_clients[service].reset_init()
+
+                optional_data = "{ \"action\":\"check_log\", \"entity\":\"oven_power\", \"type\":\"switch\", \"answer\":\"yes\"}"
+
+                result_msg = self.class_clients[service].request(optional_data)
+
+                result_msg = ast.literal_eval(result_msg)
+
+                for item in result_msg:
+                    if "h" in item.keys():
+                        msg = item["h"]["data"]
+                        break
+                else:
+                    msg = ""
+
+                rospy.loginfo("Received result from home assistant "+ msg)
+
+                self.text_pub.publish(msg)
+
+        d = threading.Thread(target=daemon)
+        d.setDaemon(True)
+        d.start()
+        
+        return
 
     def do_request(self, index, service, optional_data=None):
         rospy.loginfo("_____START STEP " + str(index) + " DECISION MANAGER FOR SERVICE " + service + "_______")
@@ -100,7 +151,6 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
             self._result_callback(result) 
 
             rospy.loginfo('Exiting')
-
         d = threading.Thread(target=daemon)
         d.setDaemon(True)
         d.start()
@@ -120,13 +170,11 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
 
         rospy.loginfo(result_data)
 
-# parse result of sequence  simple_dialogue and send to hass maybe
-
         if result['service'] == "simple_dialogue":
             
             rospy.loginfo("Index " + str(self.index))
 
-        #     # Get message from bot
+            # Get message from bot
             for item in result_data:
                 if "b" in item.keys():
                     msg = item["b"]["data"]
@@ -145,16 +193,22 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
 
             self.state = State.SUCCESS
 
+            # Get message from hass
         elif result['service'] == "hass":
 
             # TODO depending on the code received send a different message to reverse dialogue (ok / not ok)
             # TODO manage multiple consecutive hass requests
 
-            # TODO FORWARD MSG
-
             service = "simple_dialogue"
+
+            for item in result_data:
+                if "h" in item.keys():
+                    msg = item["h"]["data"]
+                    break
+            else:
+                msg = ""
             
-            self.do_request(self.index, service, optional_data="action success or not")
+            self.do_request(self.index, service, msg)
             self.state = State.SUCCESS
 
         else:

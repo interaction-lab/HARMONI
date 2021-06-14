@@ -102,6 +102,7 @@ class HassService(HarmoniServiceManager):
 
                     elif(json_data["action"] in self.post_actions):    
                         hass_response = self.post(json_data)
+                        self.result_msg = message_to_forward + self.result_msg
 
                     rospy.loginfo(f"The status code for Home Assistant's response is {hass_response.status_code}")
                     # rospy.loginfo(f"Home assistant request text: {hass_response.text}") 
@@ -112,8 +113,7 @@ class HassService(HarmoniServiceManager):
                     if hass_response is not None and hass_response.status_code == 200:
                         self.state = State.SUCCESS
                         self.response_received = True
-                        self.result_msg = message_to_forward + "Fatto" # Action done
-                        
+
                     else:
                         self.start = State.FAILED
                         rospy.loginfo("Service call failed")
@@ -174,6 +174,7 @@ class HassService(HarmoniServiceManager):
             )
         
         json_array = hass_response.json()
+        eventTime = ""
 
         for item in json_array:
             if "context_service" in item: 
@@ -241,9 +242,8 @@ class HassService(HarmoniServiceManager):
             headers=myHeaders
             )
 
-        self.result_msg = hass_response.text
-
-        #TODO CHANGE RETURN MSG TO SOMETHING THAT CAN BE SAID
+        # self.result_msg = hass_response.text
+        self.result_msg = " Fatto"
 
         return hass_response
 
