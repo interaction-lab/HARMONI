@@ -3,17 +3,12 @@
 
 PKG = 'test_harmoni_tts'
 # Common Imports
-import unittest, rospy, rospkg, roslib, sys
+import unittest, rospy, rospkg, sys
 #from unittest.mock import Mock, patch
 # Specific Imports
-from actionlib_msgs.msg import GoalStatus
 from harmoni_common_lib.constants import State
-from harmoni_common_msgs.msg import harmoniAction, harmoniFeedback, harmoniResult
-from std_msgs.msg import String
-import os, io
-import ast
-from harmoni_tts.aws_tts_service import AWSTtsService
-import json
+from HARMONI.harmoni_actuators.harmoni_tts.nodes.aws_tts_service import AWSTtsService
+
 
 class TestPolly(unittest.TestCase):
 
