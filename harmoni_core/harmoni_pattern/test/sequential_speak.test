@@ -1,7 +1,10 @@
 <launch>
 
     <!-- This is an integrative test that requires the speaker interaction -->
-    <include file="$(find harmoni_speaker)/launch/speaker_service.launch"></include>
+    <arg name="play" default="true"/>
+    <include file="$(find harmoni_speaker)/launch/speaker_service.launch">
+        <arg name="play" default="$(arg play)"/>
+    </include>
     <include file="$(find harmoni_tts)/launch/tts_service.launch"></include>
     <include file="$(find harmoni_bot)/launch/bot_service.launch"></include>
     <include file="$(find harmoni_face)/launch/face_service.launch"></include>

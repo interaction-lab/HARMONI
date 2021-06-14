@@ -7,7 +7,7 @@ import os
 
 def callback_srv(data):
     os.system("pkill luakit")
-    shell_command = "luakit --display:=0 -U http://172.18.3.5:8080"
+    shell_command = "export DISPLAY=:0 && luakit http://192.168.100.2:8081"
     process = subprocess.Popen(shell_command, shell=True)
     # process = subprocess.Popen("echo hi", shell=True)
 
