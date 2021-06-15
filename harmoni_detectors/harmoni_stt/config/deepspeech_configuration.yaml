@@ -6,7 +6,6 @@ stt:
         lm_beta: 1.85
         beam_width: 700
         t_wait: 0.5
-        is_transcribe_continuously: False
         subscriber_id: "default"
     ita_param:
         model_file_path: /root/model/deepspeech/deepspeech-0.9.3-models.pbmm
@@ -15,5 +14,4 @@ stt:
         lm_beta: 1.85
         beam_width: 700
         t_wait: 0.5
-        is_transcribe_continuously: False
         subscriber_id: "default"

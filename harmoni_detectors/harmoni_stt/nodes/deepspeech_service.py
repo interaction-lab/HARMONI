@@ -31,10 +31,6 @@ class SpeechToTextService(HarmoniServiceManager):
         self.t_wait = param["t_wait"]
         self.subscriber_id = param["subscriber_id"]
 
-        # If False, stream transcription will end after DeepSpeech client
-        # determines its transcription as final (dependent on the t_wait param)
-        self.is_transcribe_continuously = param["is_transcribe_continuously"]
-
         self.service_id = hf.get_child_id(self.name)
 
         self.ds_client = DeepSpeechClient(
@@ -96,22 +92,29 @@ class SpeechToTextService(HarmoniServiceManager):
             self.transcribe_stream_request(data)
 
     def transcribe_stream_request(self, data):
+        text = self._transcribe_once(data)
+        self.text_pub.publish(text)
+        return
+
+    def request(self, data):
+        rospy.loginfo("Start the %s request" % self.name)
+        self.state = State.START
+
+        text = self._transcribe_once(data)
+        self.text_pub.publish(text)
+        self.stop()
+
+        return
+
+    def _transcribe_once(self, data):
         text = self.ds_client.process_audio(data)
         rospy.loginfo(f"I heard: {text}")
+
         if self.ds_client.is_final:
             # Once the DeepSpeech client determines the text as final,
             # the text will be published.
             rospy.loginfo(f"Final text: {text}")
-            self.text_pub.publish(text)
-            if not self.is_transcribe_continuously:
-                self.stop()
-        return
-
-    def request(self, input_data):
-        rospy.loginfo("Start the %s request" % self.name)
-        self.state = State.START
-        self.transcribe_stream_request(input_data)
-        return
+            return text
 
     def playing_sound_pause_callback(self, data):
         """Sleeps when data is being published to the speaker"""
