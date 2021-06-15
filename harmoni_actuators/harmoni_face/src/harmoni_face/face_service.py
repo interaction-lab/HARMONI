@@ -131,10 +131,11 @@ class EyesService(HarmoniServiceManager):
         """ Get facial expression list from the resource file"""
         facial_expression_list = []
         face_expression_au = {}
-        parent_dir = os.path.dirname(__file__)
-        base_dir = os.path.dirname(parent_dir)
+        base_dir = os.path.dirname(__file__)
+
         with open(
-            base_dir + "/src/harmoni_face/resource/cordial_face_expression.json", "r"
+            base_dir + "/resource/cordial_face_expression.json", "r"
+
         ) as json_file:
             data = json.load(json_file)
             for facial_expression in data:
