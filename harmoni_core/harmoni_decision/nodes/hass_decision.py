@@ -206,7 +206,7 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
             else:
                 if msg == "ACTIVITY-1":
                     service = "catena_di_parole"
-                    msg = "Giochiamo alla catena di parole. La prima parola è: casa."
+                    msg = "Giochiamo alla catena di parole. A turno bisogna dire una parola che comincia con la sillaba finale di quella precedente. La prima parola è: casa."
                 else:
                     service = "simple_dialogue"
 
@@ -237,7 +237,9 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
                 
                 if word == "passo":
                     rospy.loginfo("User passed")
-                    msg = "Cambiamo parola: " + self._retrieve_word_starting_with_last_syllable(word)
+                    new_word = self._retrieve_word_starting_with_last_syllable(word)
+                    self.last_word = new_word
+                    msg = "Cambiamo parola: " + new_word
 
                 elif word !="":
                     if self._check_word_in_dictionary(word):
@@ -256,13 +258,13 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
 
                             else:
                                 rospy.loginfo("wrong word syllable")
-                                msg = "La parola " + word + " inizia per la sillaba sbagliata. Io ho detto: "+ self.last_word
+                                msg = "La parola: " + word + ": non inizia con la sillaba: " + self._get_last_syllable(self.last_word) + ". Riprova"
                         else:
                             rospy.loginfo("word already used")
-                            msg = "La parola " + word + " è già stata detta. Riprova."
+                            msg = "La parola: " + word + ": è già stata detta. Riprova."
                     else:
                         rospy.loginfo("wrong word not in dict")
-                        msg = "La parola " + word + " non è presente nel mio dizionario. Riprova."
+                        msg = "La parola: " + word + ": non è presente nel mio dizionario. Riprova."
                 else:
                     msg = self.last_word
 
