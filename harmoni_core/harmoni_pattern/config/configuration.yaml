@@ -48,3 +48,9 @@ hass:
   default_param:
     trigger_intent: "{ \"action\":\"check_log\", \"entity\":\"googlehome8554\", \"type\":\"media_player\"}"
     pattern_scripting: $(find harmoni_pattern)/pattern_scripting/hass.json          
+
+catena_di_parole:
+  default_param:
+    trigger_intent: "casa"
+    pattern_scripting: $(find harmoni_pattern)/pattern_scripting/catena_di_parole.json  
+    

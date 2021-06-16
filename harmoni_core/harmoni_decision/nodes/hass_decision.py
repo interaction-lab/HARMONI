@@ -55,6 +55,7 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
         self.class_clients={}
         self._setup_classes()
 
+        self.last_word = "casa"
         self.words = set()
         self.used_words = set()
         self._setup_activities(words_file_path)
@@ -71,17 +72,17 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
             rospy.loginfo(self._divide(word))
 
 
-        # Find a word with the first syllable equal to the last syllable of the input word
-        input_word = "rata"
+        # # Find a word with the first syllable equal to the last syllable of the input word
+        # input_word = "rata"
 
-        output_word = self.retrieve_word_starting_with_last_syllable(input_word)
-        if output_word != "":
-            rospy.loginfo("The next word is: "+ output_word)
-            self.used_words.add(output_word)
-        else:
-            rospy.loginfo("I could not find any word")
+        # output_word = self._retrieve_word_starting_with_last_syllable(input_word)
+        # if output_word != "":
+        #     rospy.loginfo("The next word is: "+ output_word)
+        #     self.used_words.add(output_word)
+        # else:
+        #     rospy.loginfo("I could not find any word")
 
-        rospy.loginfo(f"Found {len(self.used_words)} used words")
+        # rospy.loginfo(f"Found {len(self.used_words)} used words")
 
 
 
@@ -217,14 +218,75 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
                 rospy.loginfo("{ in msg")
                 service = "hass"
             else:
-                rospy.loginfo("No { in msg")
-                service = "simple_dialogue"
+                if msg == "ACTIVITY-1":
+                    service = "catena_di_parole"
+                    msg = "casa"
+                else:
+                    service = "simple_dialogue"
 
             self.do_request(self.index, service, optional_data = msg) 
 
             self.state = State.SUCCESS
 
-            # Get message from hass
+        elif result['service'] == "catena_di_parole":
+
+            # prendi da stt
+            for item in result_data:
+                if "s" in item.keys():
+                    word = item["s"]["data"]
+                    break
+                else:
+                    word = ""
+            
+            # Remove whitespace and keep the first word
+            word = word.lstrip()
+            sep = ' '
+            word = word.split(sep, 1)[0]            
+
+            rospy.loginfo("Word by user: " + word)
+
+            if word != "stop":
+                service = "catena_di_parole"
+
+                if self._check_word_in_dictionary(word):
+                    rospy.loginfo("Word is in dictionary")
+
+                    if self._check_word_not_used_yet(word):
+                        rospy.loginfo("Syllables are the same")
+
+                        if self._compare_word_syllable(self.last_word, word):
+                            rospy.loginfo("Syllables are the same")
+
+                            self.used_words.add(word)
+                            msg = self._retrieve_word_starting_with_last_syllable(word)
+                            self.used_words.add(msg)
+                            self.last_word = msg
+
+                        else:
+                            rospy.loginfo("wrong word syllable")
+                            msg = "Hai detto una parola che inizia per la sillaba sbagliata. Ho detto: "+ self.last_word
+                    else:
+                        rospy.loginfo("word already used")
+                    msg = "Questa parola è già stata detta. Riprova."
+                else:
+                    rospy.loginfo("wrong word not in dict")
+                    msg = "Questa parola non è presente nel mio dizionario. Riprova."
+
+                # rospy.loginfo("Word in dictionary: "+)
+                # controlla che sia una parola valida, nel dizionario e con l'inizio uguale alla fine di quella vecchia
+                # se è valida fornisci una nuova parola
+                # se non è valida richiedi una parola che inizia con la stessa fine
+                # se non è ancora valida allora ??
+
+                # se il messaggio è "stop" allora chiudi l'attività e torna simple_dialogue  
+
+                self.do_request(self.index, service, optional_data = msg) 
+
+            else:
+                self.do_request(self.index, "simple_dialogue", optional_data = "Fine dell'attività") 
+
+            self.state = State.SUCCESS
+
         elif result['service'] == "hass":
 
             # TODO depending on the code received send a different message to reverse dialogue (ok / not ok)
@@ -261,6 +323,9 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
 	    return "AEIOUÁÉÍÓÚÀÈÌÒÙ".find(c.upper()) != -1
 
     def _divide(self, word):
+        if word == "":
+            return
+
         rospy.loginfo("Dividing word: " + word)
         a = word.upper()
         result = ""
@@ -314,16 +379,36 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
         
         return result
 
-    def retrieve_word_starting_with_last_syllable(self, input_word):
-        
+    def _check_word_in_dictionary(self, input_word):
+        return input_word in self.words
+
+    def _check_word_not_used_yet(self, input_word):
+        return not input_word in self.used_words
+
+    def _compare_word_syllable(self, input_word, word_found):
+        return self._get_first_syllable(word_found) == self._get_last_syllable(input_word)  
+
+    def _get_last_syllable(self, input_word):
         input_word_split = self._divide(input_word)
         rospy.loginfo("Input word in syllables: "+ input_word_split)
         input_word_syllables = (input_word_split.split('-'))
         rospy.loginfo("Last syllable : "+ input_word_syllables[-1] )
+        return input_word_syllables[-1].strip()        
+
+    def _get_first_syllable(self, word_found):
+        word_found_split = self._divide(word_found)
+        rospy.loginfo("Word divided in syllables: "+ word_found_split)
+        syllables = (word_found_split.split('-'))
+        rospy.loginfo("Syllable : "+ syllables[0] )
+        return syllables[0].strip()     
+
+
+
+    def _retrieve_word_starting_with_last_syllable(self, input_word):
+        """ Retrieves a word from the dictionary that starts with the same syllable as the final syllable of the input word """
 
         found = False
-        count = 0
-        list = [x for x in self.words.difference(self.used_words) if x.startswith(input_word_syllables[-1])]
+        list = [x for x in self.words.difference(self.used_words) if x.startswith(self._get_last_syllable())]
         list_iterator = iter(list)
 
         while not found:
@@ -332,13 +417,8 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
                 rospy.loginfo("Word not found")
                 break
             rospy.loginfo("Word with selected prefix: "+ word_found)
-            word_found_split = self._divide(word_found)
-            rospy.loginfo("Word divided in syllables: "+ word_found_split)
-            syllables = (word_found_split.split('-'))
-            rospy.loginfo("Syllable : "+ syllables[0] )
-            found = syllables[0].strip() == input_word_syllables[-1].strip()
+            found = self._compare_word_syllable(input_word, word_found)
             rospy.loginfo("Syllable equal to prefix?: "+ str(found))
-            count = count+1
 
         return word_found
 
@@ -358,6 +438,7 @@ if __name__ == "__main__":
     # pattern_list.append("simple_dialogue")
     pattern_list.append("simple_dialogue")
     pattern_list.append("hass")
+    pattern_list.append("catena_di_parole")
 
     rospack = rospkg.RosPack()
     pck_path = rospack.get_path("harmoni_decision")
