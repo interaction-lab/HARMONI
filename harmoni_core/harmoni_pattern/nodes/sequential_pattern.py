@@ -218,12 +218,12 @@ class SequentialPattern(HarmoniServiceManager):
         prepared = [dict(zip(cl, self.client_results[cl])) for cl in self.client_results]
 
 
-        rospy.loginfo("____SHOW_ALL_THE_SEQUENCE_PATTERN_MESSAGES___")
-        for cl in self.client_results:
-            rospy.loginfo("_________________")
-            rospy.loginfo(cl)
-            rospy.loginfo(self.client_results[cl])
-        rospy.loginfo("_____________________________________________")            
+        # rospy.loginfo("____SHOW_ALL_THE_SEQUENCE_PATTERN_MESSAGES___")
+        # for cl in self.client_results:
+        #     rospy.loginfo("_________________")
+        #     rospy.loginfo(cl)
+        #     rospy.loginfo(self.client_results[cl])
+        # rospy.loginfo("_____________________________________________")            
         
         # if data is not None and len(data) < 500:
             # rospy.loginfo("Data received from bot_default -> "+ data)   

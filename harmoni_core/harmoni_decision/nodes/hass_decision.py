@@ -40,7 +40,7 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
     This class is a singleton ROS node and should only be instantiated once.
     """
 
-    def __init__(self, name, pattern_list, instance_id ,test_input):
+    def __init__(self, name, pattern_list, instance_id , words_file_path, test_input):
         super().__init__(name)
         self.name = name
         self.service_id = instance_id
@@ -51,10 +51,43 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
             "/harmoni/detecting/stt/default", String, queue_size=10
         )
 
+        self.activity_is_on = False
         self.class_clients={}
         self._setup_classes()
+
+        self.words = set()
+        self.used_words = set()
+        self._setup_activities(words_file_path)
         self.state = State.INIT
 
+
+    def _setup_activities(self, words_file_path):
+        # try:
+        self.words = set(line.strip() for line in open(words_file_path))
+        rospy.loginfo(f"Found {len(self.words)} words")
+
+        # Split all words in syllables
+        for word in self.words:
+            rospy.loginfo(self._divide(word))
+
+
+        # Find a word with the first syllable equal to the last syllable of the input word
+        input_word = "rata"
+
+        output_word = self.retrieve_word_starting_with_last_syllable(input_word)
+        if output_word != "":
+            rospy.loginfo("The next word is: "+ output_word)
+            self.used_words.add(output_word)
+        else:
+            rospy.loginfo("I could not find any word")
+
+        rospy.loginfo(f"Found {len(self.used_words)} used words")
+
+
+
+        # except:
+        #     rospy.loginfo("Couldn't load txt file")
+        return
 
     def _setup_classes(self):
         """
@@ -82,7 +115,8 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
         self.index = 0
         self.state = State.START
 
-        self.check_log_request()
+        # CHECK HOME ASSISTANT
+        # self.check_log_request()
 
         self.do_request(self.index, service, 'Ciao')
 
@@ -97,14 +131,11 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
 
     def check_log_request(self):
         
-        # in thread
-        # in loop
-
         def daemon():
-            for i in range(1, 3):
-                rospy.loginfo("Starting home assistant check thread")
+            while self.activity_is_on:
+                rospy.loginfo("Starting home assistant check log thread")
 
-                sleep(15)
+                sleep(25)
 
                 service = "hass"
                 self.class_clients[service].reset_init()
@@ -179,8 +210,8 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
                 if "b" in item.keys():
                     msg = item["b"]["data"]
                     break
-            else:
-                msg = ""
+                else:
+                    msg = ""
             
             if "{" in msg:
                 rospy.loginfo("{ in msg")
@@ -205,8 +236,8 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
                 if "h" in item.keys():
                     msg = item["h"]["data"]
                     break
-            else:
-                msg = ""
+                else:
+                    msg = ""
             
             self.do_request(self.index, service, msg)
             self.state = State.SUCCESS
@@ -219,6 +250,101 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
         return
 
 
+    # -------------------- SYLLABLES ACTIVITY
+
+    # ORIGINAL CODE IN CBM BASIC 2.0 by Franco Musso, March 1983:
+	# http://ready64.it/ccc/pagina.php?ccc=09&pag=036.jpg
+	# Adapted from its JAVASCRIPT translation by Francesco Sblendorio, May 2013:
+	# http://www.sblendorio.eu/Misc/Sillabe
+
+    def _is_vowel(self, c):
+	    return "AEIOUÁÉÍÓÚÀÈÌÒÙ".find(c.upper()) != -1
+
+    def _divide(self, word):
+        rospy.loginfo("Dividing word: " + word)
+        a = word.upper()
+        result = ""
+        s = 0
+        while (s < len(a)):
+            # rospy.loginfo("s : " + str(s) + " len a: " + str(len(a)))
+            if not self._is_vowel(a[s]):
+                result += word[s]
+                s = s + 1
+
+            elif len(a)-1 != s and not self._is_vowel(a[s+1]):
+                if s+2 >= len(a):
+                    result += word[s:s+2]+"-"
+                    s= s + 2
+                elif self._is_vowel(a[s+2]):
+                    result += word[s]+"-"
+                    s = s + 1
+                elif a[s+1] == a[s+2]:
+                    result += word[s:s+2]+"-"
+                    s= s + 2
+                elif "SG".find(a[s+1]) != -1:
+                    result += word[s]+"-";
+                    s = s + 1
+                elif "RLH".find(a[s+2]) != -1:
+                    result += word[s]+"-"
+                    s = s + 1
+                else :
+                    result += word[s:s+2]+"-"
+                    s= s + 2
+                
+            elif len(a)-1 != s and ("IÍÌ".find(a[s+1]) != -1) :
+                if s>1 and a[s-1:s+1]=="QU" and self._is_vowel(a[s+2]):
+                    result += word[s:s+2]
+                    s= s + 2
+                elif self._is_vowel(a[s+2]) :
+                    result += word[s]+"-"
+                    s = s + 1
+                else :
+                    result += word[s]
+                    s = s + 1
+                
+            elif "IÍÌUÚÙ".find(a[s])!=-1 :
+                result += word[s]
+                s = s + 1
+            else :
+                result += word[s]+"-"
+                s = s + 1
+            
+        if result[len(result)-1] == "-":
+            result = result[0:len(result)-1]
+        
+        return result
+
+    def retrieve_word_starting_with_last_syllable(self, input_word):
+        
+        input_word_split = self._divide(input_word)
+        rospy.loginfo("Input word in syllables: "+ input_word_split)
+        input_word_syllables = (input_word_split.split('-'))
+        rospy.loginfo("Last syllable : "+ input_word_syllables[-1] )
+
+        found = False
+        count = 0
+        list = [x for x in self.words.difference(self.used_words) if x.startswith(input_word_syllables[-1])]
+        list_iterator = iter(list)
+
+        while not found:
+            word_found = next(list_iterator,"")
+            if word_found == "":
+                rospy.loginfo("Word not found")
+                break
+            rospy.loginfo("Word with selected prefix: "+ word_found)
+            word_found_split = self._divide(word_found)
+            rospy.loginfo("Word divided in syllables: "+ word_found_split)
+            syllables = (word_found_split.split('-'))
+            rospy.loginfo("Syllable : "+ syllables[0] )
+            found = syllables[0].strip() == input_word_syllables[-1].strip()
+            rospy.loginfo("Syllable equal to prefix?: "+ str(found))
+            count = count+1
+
+        return word_found
+
+    # --------------------
+
+
 if __name__ == "__main__":
     name = rospy.get_param("/pattern_name/")
     # test = rospy.get_param("/test_" + name + "/")
@@ -226,16 +352,20 @@ if __name__ == "__main__":
     test_input = "Input"
     instance_id = rospy.get_param("/instance_id_" + name + "/")
     
+    
     pattern_list = []
 
     # pattern_list.append("simple_dialogue")
     pattern_list.append("simple_dialogue")
     pattern_list.append("hass")
 
+    rospack = rospkg.RosPack()
+    pck_path = rospack.get_path("harmoni_decision")
+    words_file_path = pck_path + f"/dict/words.txt"
 
     try:
         rospy.init_node(name + "_decision")
-        bc = HomeAssistantDecisionManager(name, pattern_list, instance_id, test_input)
+        bc = HomeAssistantDecisionManager(name, pattern_list, instance_id, words_file_path, test_input)
         rospy.loginfo(f"START from the first step of {name} decision.")
 
         bc.start(service="simple_dialogue")
