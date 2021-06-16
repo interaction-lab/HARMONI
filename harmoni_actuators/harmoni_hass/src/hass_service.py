@@ -40,7 +40,7 @@ class HassService(HarmoniServiceManager):
             self.token = d["token"]
         
         # POST ACTIONS
-        self.post_actions = { "turn_on", "turn_off" }
+        self.post_actions = { "turn_on", "turn_off", "play_media" }
 
         # Pretend that an appliance has been on for a few hours
         self.simulation = param["simulation"]
@@ -96,13 +96,14 @@ class HassService(HarmoniServiceManager):
                 else:            
                     rospy.loginfo("Action: %s " % json_data["action"])
 
-                    # Check log
+                    
                     if(json_data["action"] == "check_log"):
                         hass_response = self.check_log(json_data)
 
                     elif(json_data["action"] in self.post_actions):    
                         hass_response = self.post(json_data)
                         self.result_msg = message_to_forward + self.result_msg
+
 
                     rospy.loginfo(f"The status code for Home Assistant's response is {hass_response.status_code}")
                     # rospy.loginfo(f"Home assistant request text: {hass_response.text}") 
@@ -227,6 +228,7 @@ class HassService(HarmoniServiceManager):
         Returns:
             hass_response (str): It containes the response to the API request api/services
         """
+
 
         rospy.loginfo("Entity type: %s " % json_data["type"])
         rospy.loginfo("Entity: %s " % json_data["entity"])

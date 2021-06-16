@@ -68,22 +68,8 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
         rospy.loginfo(f"Found {len(self.words)} words")
 
         # Split all words in syllables
-        for word in self.words:
-            rospy.loginfo(self._divide(word))
-
-
-        # # Find a word with the first syllable equal to the last syllable of the input word
-        # input_word = "rata"
-
-        # output_word = self._retrieve_word_starting_with_last_syllable(input_word)
-        # if output_word != "":
-        #     rospy.loginfo("The next word is: "+ output_word)
-        #     self.used_words.add(output_word)
-        # else:
-        #     rospy.loginfo("I could not find any word")
-
-        # rospy.loginfo(f"Found {len(self.used_words)} used words")
-
+        # for word in self.words:
+        #     rospy.loginfo(self._divide(word))
 
 
         # except:
@@ -220,7 +206,7 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
             else:
                 if msg == "ACTIVITY-1":
                     service = "catena_di_parole"
-                    msg = "casa"
+                    msg = "Giochiamo alla catena di parole. La prima parola è: casa."
                 else:
                     service = "simple_dialogue"
 
@@ -241,44 +227,44 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
             # Remove whitespace and keep the first word
             word = word.lstrip()
             sep = ' '
-            word = word.split(sep, 1)[0]            
+            word = word.split(sep, 1)[0]   
+            word = word.lower()         
 
             rospy.loginfo("Word by user: " + word)
 
             if word != "stop":
                 service = "catena_di_parole"
+                
+                if word == "passo":
+                    rospy.loginfo("User passed")
+                    msg = "Cambiamo parola: " + self._retrieve_word_starting_with_last_syllable(word)
 
-                if self._check_word_in_dictionary(word):
-                    rospy.loginfo("Word is in dictionary")
+                elif word !="":
+                    if self._check_word_in_dictionary(word):
+                        rospy.loginfo("Word is in dictionary")
 
-                    if self._check_word_not_used_yet(word):
-                        rospy.loginfo("Syllables are the same")
+                        if self._check_word_not_used_yet(word):
+                            rospy.loginfo("Word is new")
 
-                        if self._compare_word_syllable(self.last_word, word):
-                            rospy.loginfo("Syllables are the same")
+                            if self._compare_word_syllable(self.last_word, word):
+                                rospy.loginfo("Syllables are the same")
 
-                            self.used_words.add(word)
-                            msg = self._retrieve_word_starting_with_last_syllable(word)
-                            self.used_words.add(msg)
-                            self.last_word = msg
+                                self.used_words.add(word)
+                                msg = self._retrieve_word_starting_with_last_syllable(word)
+                                self.used_words.add(msg)
+                                self.last_word = msg
 
+                            else:
+                                rospy.loginfo("wrong word syllable")
+                                msg = "La parola " + word + " inizia per la sillaba sbagliata. Io ho detto: "+ self.last_word
                         else:
-                            rospy.loginfo("wrong word syllable")
-                            msg = "Hai detto una parola che inizia per la sillaba sbagliata. Ho detto: "+ self.last_word
+                            rospy.loginfo("word already used")
+                            msg = "La parola " + word + " è già stata detta. Riprova."
                     else:
-                        rospy.loginfo("word already used")
-                    msg = "Questa parola è già stata detta. Riprova."
+                        rospy.loginfo("wrong word not in dict")
+                        msg = "La parola " + word + " non è presente nel mio dizionario. Riprova."
                 else:
-                    rospy.loginfo("wrong word not in dict")
-                    msg = "Questa parola non è presente nel mio dizionario. Riprova."
-
-                # rospy.loginfo("Word in dictionary: "+)
-                # controlla che sia una parola valida, nel dizionario e con l'inizio uguale alla fine di quella vecchia
-                # se è valida fornisci una nuova parola
-                # se non è valida richiedi una parola che inizia con la stessa fine
-                # se non è ancora valida allora ??
-
-                # se il messaggio è "stop" allora chiudi l'attività e torna simple_dialogue  
+                    msg = self.last_word
 
                 self.do_request(self.index, service, optional_data = msg) 
 
@@ -357,10 +343,10 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
                     s= s + 2
                 
             elif len(a)-1 != s and ("IÍÌ".find(a[s+1]) != -1) :
-                if s>1 and a[s-1:s+1]=="QU" and self._is_vowel(a[s+2]):
+                if s>1 and a[s-1:s+1]=="QU" and (len(a) != s+2 and self._is_vowel(a[s+2])):
                     result += word[s:s+2]
                     s= s + 2
-                elif self._is_vowel(a[s+2]) :
+                elif len(a) != s+2 and self._is_vowel(a[s+2]) :
                     result += word[s]+"-"
                     s = s + 1
                 else :
@@ -408,7 +394,8 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
         """ Retrieves a word from the dictionary that starts with the same syllable as the final syllable of the input word """
 
         found = False
-        list = [x for x in self.words.difference(self.used_words) if x.startswith(self._get_last_syllable())]
+        last_syllable = self._get_last_syllable(input_word)
+        list = [x for x in self.words.difference(self.used_words) if x.startswith(last_syllable)]
         list_iterator = iter(list)
 
         while not found:
