@@ -24,9 +24,23 @@ class TestFace(unittest.TestCase):
         Set up the client for requesting to harmoni_face
         """
         rospy.init_node("test_face", log_level=rospy.INFO)
-        self.data = rospy.get_param(
-            "test_face_input"
-        ) 
+        # self.data = rospy.get_param(
+        #     "test_face_input"
+        # ) 
+        self.face_data = str([
+            {'start': 0, 'time': 2,  'type': 'au', 'id': 'au13', 'pose': 1},
+            {'start': 1, 'time': 2,  'type': 'action', 'id': 'breath_face'},
+            {'start': 2, 'time': 2,  'type': 'action', 'id': 'saucy_face'},
+            {'start': 0.075,'time': 2, 'type': 'viseme', 'id': 'POSTALVEOLAR'}
+        ])
+
+        self.eye_data = str([
+            {'start': 0, 'time': 2,  'type': 'gaze', 'id':'target', 'point': [1, 5, 10]},
+            {'start': 2, 'time': 2,  'type': 'gaze', 'id':'target', 'point': [10, 5, 1]},
+            {'start': 4, 'time': 2,  'type': 'gaze', 'id':'target', 'point': [5, 10, 1]},
+        ])
+
+
         self.instance_id = rospy.get_param("instance_id")
         self.result_eyes = False
         self.result_mouth = False
@@ -81,22 +95,27 @@ class TestFace(unittest.TestCase):
         self.result_eyes = True
     
     def test_request_response_mouth(self):
-        rospy.loginfo(f"The input data is {self.data}")
+        print("################******************* MOUTH TEST STARTING")
+        rospy.loginfo(f"The input data is {self.face_data}")
         self.service_client_mouth.send_goal(
             action_goal=ActionType.DO.value,
-            optional_data=self.data,
+            optional_data=self.face_data,
             wait=True,
         )
+        print("################******************* MOUTH TEST Ending")
         assert self.result_mouth == True
     
     def test_request_response_eyes(self):
-        rospy.loginfo(f"The input data is {self.data}")
+        print("*******************@@@@@@@@@@@@@@@@ Eye test starting")
+        rospy.loginfo(f"The input data is {self.eye_data}")
         self.service_client_eyes.send_goal(
             action_goal=ActionType.DO.value,
-            optional_data=self.data,
+            optional_data=self.eye_data,
             wait=True,
         )
+        print("*******************@@@@@@@@@@@@@@@@ Eye test ending")
         assert self.result_eyes == True
+        input("Continue?")
 
 def main():
     import rostest
