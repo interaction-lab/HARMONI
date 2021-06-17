@@ -88,7 +88,7 @@ class HassService(HarmoniServiceManager):
                 json_data= json.loads(data_list[1])
 
                 # Responses from bot may have json commands in them but they can also be ignored using this parameter
-                if(json_data["answer"] == "No"):  
+                if("answer" in json_data and json_data["answer"] == "No"):  
                     self.state = State.SUCCESS
                     self.response_received = True
                     self.result_msg = message_to_forward # No action done
@@ -106,10 +106,10 @@ class HassService(HarmoniServiceManager):
 
 
                     rospy.loginfo(f"The status code for Home Assistant's response is {hass_response.status_code}")
-                    # rospy.loginfo(f"Home assistant request text: {hass_response.text}") 
-                    # rospy.loginfo(f"Home assistant request url: {hass_response.request.url}")
-                    # rospy.loginfo(f"Home assistant request headers: {hass_response.request.headers}")
-                    # rospy.loginfo(f"Home assistant request body: {hass_response.request.body}")           
+                    rospy.loginfo(f"Home assistant request text: {hass_response.text}") 
+                    rospy.loginfo(f"Home assistant request url: {hass_response.request.url}")
+                    rospy.loginfo(f"Home assistant request headers: {hass_response.request.headers}")
+                    rospy.loginfo(f"Home assistant request body: {hass_response.request.body}")           
             
                     if hass_response is not None and hass_response.status_code == 200:
                         self.state = State.SUCCESS
@@ -220,27 +220,34 @@ class HassService(HarmoniServiceManager):
         """ Do an API POST call
 
         Args:
-            data (str): string of json which contains 3 items: {"action": str, "entity": str, "type": str} ....
+            data (str): string of json which contains 2 or 3 items: {"action": str, "entity_id": str} ....
                 action: "turn_on" or "turn_off" or other "post" actions
-                type: the entity type of the device (e.g., media_player, switch, light)
-                entity: the device on which to do the action (e.g. googlehome8554)
+                entity_id: the entity type of the device (e.g., media_player, switch, light)
+                           with, separated by a dot, the name of the device on which to do the action (e.g. googlehome8554)
+                EXAMPLE "entity_id" : "mediaplayer.googlehome8554"
 
         Returns:
             hass_response (str): It containes the response to the API request api/services
         """
 
+        if "entity_id" in json_data:
+            rospy.loginfo("Entity: %s " % json_data["entity_id"])
 
-        rospy.loginfo("Entity type: %s " % json_data["type"])
-        rospy.loginfo("Entity: %s " % json_data["entity"])
+        parameters = {}
+        for x in json_data:
+            if x != "answer" and x != "action": 
+                    parameters[x] = json_data[x]
+        rospy.loginfo("json " + str(parameters))
 
-        myJson= {"entity_id": json_data["type"] + "." + json_data["entity"]}
         myHeaders = {"Authorization": "Bearer "+ self.token}
 
-        url = self.hass_uri + 'api/services/' + json_data["type"] +'/' + json_data["action"]
+        type = json_data["entity_id"].split(".")[0]
+
+        url = self.hass_uri + 'api/services/' + type +'/' + json_data["action"]
         
         hass_response = requests.post(
             url,
-            json=myJson,
+            json=parameters,
             headers=myHeaders
             )
 

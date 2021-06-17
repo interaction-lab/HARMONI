@@ -3,6 +3,6 @@
     <rosparam file="$(find harmoni_hass)/config/configuration.yaml" subst_value="True"/>
     <param name="instance_id" value="default"/>
     <node pkg="harmoni_hass" type="hass_service.py" name="harmoni_hass" output="screen"/>
-	<param name="test_hass_input" value="{&quot;action&quot;:&quot;turn_on&quot;, &quot;entity&quot;:&quot;googlehome8554&quot;, &quot;type&quot;:&quot;media_player&quot;}"/>
+	<param name="test_hass_input" value="{&quot;answer&quot;:&quot;yes&quot;, &quot;action&quot;:&quot;play_media&quot;, &quot;media_content_type&quot;:&quot;audio/wav&quot;, &quot;entity_id&quot;:&quot;media_player.googlehome8554&quot;, &quot;media_content_id&quot;:&quot;media-source://media_source/local/relax.wav&quot;}"/>
     <test test-name="test_hass" pkg="harmoni_hass" type="rostest_hass.py" />
 </launch>

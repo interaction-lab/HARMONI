@@ -103,15 +103,9 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
         self.state = State.START
 
         # CHECK HOME ASSISTANT
-        # self.check_log_request()
+        self.check_log_request()
 
         self.do_request(self.index, service, 'Ciao')
-
-        # rospy.loginfo("sleep")
-        # sleep(8)
-
-        # rospy.loginfo("published")
-        # self.text_pub.publish("LOG: oven still on")
 
         return
 
@@ -119,30 +113,33 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
     def check_log_request(self):
         
         def daemon():
-            while self.activity_is_on:
-                rospy.loginfo("Starting home assistant check log thread")
+            while True:
+                sleep(120)
+                
+                if not self.activity_is_on:
+                    rospy.loginfo("Starting home assistant check log thread")
+                    service = "hass"
+                    self.class_clients[service].reset_init()
 
-                sleep(25)
+                    optional_data = "{ \"action\":\"check_log\", \"entity\":\"oven_power\", \"type\":\"switch\", \"answer\":\"yes\"}"
 
-                service = "hass"
-                self.class_clients[service].reset_init()
+                    result_msg = self.class_clients[service].request(optional_data)
 
-                optional_data = "{ \"action\":\"check_log\", \"entity\":\"oven_power\", \"type\":\"switch\", \"answer\":\"yes\"}"
+                    result_msg = ast.literal_eval(result_msg)
 
-                result_msg = self.class_clients[service].request(optional_data)
+                    for item in result_msg:
+                        if "h" in item.keys():
+                            msg = item["h"]["data"]
+                            break
+                    else:
+                        msg = ""
 
-                result_msg = ast.literal_eval(result_msg)
+                    rospy.loginfo("Received result from home assistant "+ msg)
 
-                for item in result_msg:
-                    if "h" in item.keys():
-                        msg = item["h"]["data"]
-                        break
-                else:
-                    msg = ""
-
-                rospy.loginfo("Received result from home assistant "+ msg)
-
-                self.text_pub.publish(msg)
+                    self.text_pub.publish(msg)
+                    
+                    #wait some more time
+                    sleep(35)
 
         d = threading.Thread(target=daemon)
         d.setDaemon(True)
@@ -205,6 +202,7 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
                 service = "hass"
             else:
                 if msg == "ACTIVITY-1":
+                    self.activity_is_on = True
                     service = "catena_di_parole"
                     msg = "Giochiamo alla catena di parole. A turno bisogna dire una parola che comincia con la sillaba finale di quella precedente. La prima parola è: casa."
                 else:
@@ -232,7 +230,7 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
 
             rospy.loginfo("Word by user: " + word)
 
-            if word != "stop":
+            if word != "stop" or word != "basta" or word != "fine":
                 service = "catena_di_parole"
                 
                 if word == "passo":
@@ -271,7 +269,8 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
                 self.do_request(self.index, service, optional_data = msg) 
 
             else:
-                self.do_request(self.index, "simple_dialogue", optional_data = "Fine dell'attività") 
+                self.activity_is_on = False
+                self.do_request(self.index, "simple_dialogue", optional_data = "Fine dell'attività.") 
 
             self.state = State.SUCCESS
 
