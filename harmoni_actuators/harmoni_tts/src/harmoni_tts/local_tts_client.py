@@ -38,6 +38,14 @@ class TtsClient:
         self._tts_config = load_config(tts_config)
         self._vocoder_config = load_config(vocoder_config)
 
+        # Make sure scale_stats.npy path is correct when using with roslaunch
+        scale_stats_path = os.path.join(
+            "/root", "harmoni_catkin_ws", "src", "HARMONI", "harmoni_actuators",
+            "harmoni_tts", "scale_stats.npy"
+        )
+        self._tts_config.audio["stats_path"] = scale_stats_path
+        self._vocoder_config.audio["stats_path"] = scale_stats_path
+
         # Load audio processor
         self._ap = AudioProcessor(**self._tts_config.audio)
 
@@ -73,7 +81,7 @@ class TtsClient:
             if not os.path.exists(file):
                 raise FileNotFoundError(f"Invalid file path: {file}")
 
-    def tts(self, text, use_gl=False):
+    def get_audio(self, text, use_gl=False):
         t_1 = time.time()
         waveform, alignment, mel_spec, mel_postnet_spec, stop_tokens, inputs = synthesis(
             self._tts_model,
@@ -99,10 +107,6 @@ class TtsClient:
             print(" > Time per step: {}".format(tps))
         return alignment, mel_postnet_spec, stop_tokens, waveform
 
-    def speak(self, text, use_gl=False):
-        align, spec, stop_tokens, wav = self.tts(text, use_gl)
-        sd.play(wav, 22050 * self._speedup, blocking=True)
-
 
 if __name__ == "__main__":
     import argparse
@@ -120,7 +124,17 @@ if __name__ == "__main__":
     # vocoder_config = args.vocoder_config
     # vocoder_model = args.vocoder_model
 
-    content_dir = os.path.join("/root", "harmoni_catkin_ws", "src", "speechbot", "content")
+    print(os.path.abspath("."))
+    print(os.path.exists(
+        os.path.join(
+            os.path.abspath("."),
+            "scale_stats.npy"
+        )
+    ))
+
+    content_dir = os.path.join(
+        "/root", "harmoni_catkin_ws", "src", "HARMONI", "harmoni_actuators", "harmoni_tts", "content"
+    )
     tts_config = os.path.join(content_dir, "config.json")
     tts_model = os.path.join(content_dir, "tts_model.pth.tar")
     vocoder_config = os.path.join(content_dir, "config_vocoder.json")
@@ -134,4 +148,5 @@ if __name__ == "__main__":
     )
 
     sentence = "Hello world. Great to finally find my voice."
-    tts_client.speak(sentence)
+    align, spec, stop_tokens, wav = tts_client.get_audio(sentence, use_gl=False)
+    sd.play(wav, 22050 * 1.1, blocking=True)
