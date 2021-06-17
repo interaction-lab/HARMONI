@@ -1,6 +1,11 @@
 # HARMONI STT
 
 ## Usage
+Using the DeepSpeech service
+Note: Run get_deepspeech_models.sh before launching this service.
+
+The local DeepSpeech speech-to-text service can be launched with `roslaunch harmoni_detectors stt_deepspeech_service.launch` or `roslaunch harmoni_detectors stt_service.launch service_to_launch:=deepspeech`.
+
 ## Parameters
 ## Testing
 ### Testing W2L 
