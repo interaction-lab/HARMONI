@@ -2,7 +2,6 @@
 
 # Common Imports
 import rospy
-import roslib
 
 from harmoni_common_lib.constants import State
 from harmoni_common_lib.service_server import HarmoniServiceServer
@@ -38,6 +37,7 @@ class LocalTtsService(HarmoniServiceManager):
         self.use_cuda = param["use_cuda"]
         self.verbose = param["use_cuda"]
         self.speedup = param["use_cuda"]
+        self.outdir = param["outdir"]
 
         """Initialize the local TTS client"""
         self.tts_client = TtsClient(
@@ -58,12 +58,44 @@ class LocalTtsService(HarmoniServiceManager):
         """[summary]
         Args:
             input_text (str): Input string to synthesize
+        Returns:
+            object: It contains information about the response received (bool) and response message (str)
+                response: bool
+                message: str
         """
         rospy.loginfo("Start the %s request" % self.name)
         self.state = State.REQUEST
 
-        self.tts_client.speak(input_text)
-        return
+        try:
+            alignment, mel_postnet_spec, stop_tokens, waveform = self.tts_client.get_audio(input_text)
+            audio_data = self._get_audio(waveform)
+        except Exception as e:
+            rospy.logerr("The error is " + str(e))
+            self.state = State.FAILED
+
+        return {"response": self.state, "message": ""}
+
+    def _get_audio(self, response):
+        """[summary]
+        This function writes the audio file getting data from TTS
+        Args:
+            response (obj): response from TTS for getting audio data
+
+        Returns:
+            data: audio data
+        """
+        data = {"file": self.outdir + "/tts.wav"}
+        if "AudioStream" in response:
+            with closing(response["AudioStream"]) as stream:
+                output = data["file"]
+                try:
+                    with open(output, "wb") as file:
+                        file.write(stream.read())
+                except IOError as error:
+                    print(error)
+        else:
+            print("Could not stream audio")
+        return data
 
 
 def main():
