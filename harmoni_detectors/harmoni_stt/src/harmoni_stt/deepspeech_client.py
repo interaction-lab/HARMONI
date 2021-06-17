@@ -56,8 +56,8 @@ class DeepSpeechClient:
 
 			elif text != '' and (time.time() - self._t_start > self._t_wait):
 				if text not in ["i ", "he ", "the "]:
-					self._text = text
-					logging.info(f"Final text = {self._text}\n")
+					self._text = ""
+					logging.info(f"Final text = {text}\n")
 					self._is_final = True
 
 		except Exception as e:
@@ -65,7 +65,7 @@ class DeepSpeechClient:
 			logging.info(self._t_start)
 			raise e
 
-		return self._text
+		return text
 
 	def start_stream(self):
 		"""Starts DeepSpeech streaming inference state if it is not already open."""

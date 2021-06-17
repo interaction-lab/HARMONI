@@ -56,7 +56,7 @@ class SpeechToTextService(HarmoniServiceManager):
         self.state = State.INIT
         return
 
-    def start(self, rate=""):
+    def start(self):
         """Start the DeepSpeech stream"""
         rospy.loginfo("Start the %s service" % self.name)
         if self.state == State.INIT or self.state == State.FAILED:
@@ -89,11 +89,12 @@ class SpeechToTextService(HarmoniServiceManager):
         """
         data = np.fromstring(data.data, np.uint8)
         if self.state == State.START:
-            self.transcribe_stream_request(data)
+            self.transcribe_stream(data)
 
-    def transcribe_stream_request(self, data):
+    def transcribe_stream(self, data):
         text = self._transcribe_once(data)
-        self.text_pub.publish(text)
+        if text:
+            self.text_pub.publish(text)
         return
 
     def request(self, data):
@@ -109,12 +110,16 @@ class SpeechToTextService(HarmoniServiceManager):
     def _transcribe_once(self, data):
         text = self.ds_client.process_audio(data)
         rospy.loginfo(f"I heard: {text}")
-
+        
+        # Once the DeepSpeech client determines the text as final,
+        # the text will be published.
         if self.ds_client.is_final:
-            # Once the DeepSpeech client determines the text as final,
-            # the text will be published.
             rospy.loginfo(f"Final text: {text}")
             return text
+        # If the text is not final, None is returned so that we aren't 
+        # constantly publishing  intermediate text
+        else:
+            return None
 
     def playing_sound_pause_callback(self, data):
         """Sleeps when data is being published to the speaker"""
