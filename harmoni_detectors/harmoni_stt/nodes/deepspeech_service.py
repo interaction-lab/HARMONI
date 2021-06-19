@@ -53,28 +53,37 @@ class SpeechToTextService(HarmoniServiceManager):
             DetectorNameSpace.stt.value + self.service_id, String, queue_size=10
         )
 
+        self.is_transcribe_once = False
         self.state = State.INIT
         return
 
     def start(self):
         """Start the DeepSpeech stream"""
         rospy.loginfo("Start the %s service" % self.name)
-        if self.state == State.INIT or self.state == State.FAILED:
+        if (
+            self.state == State.INIT
+            or self.state == State.FAILED
+            or self.state == State.SUCCESS
+            or self.state == State.PAUSE
+        ):
             self.state = State.START
-            # Start the DeepSpeech client streaming inference state
             self.ds_client.start_stream()
         else:
+            rospy.loginfo("Stream already started")
             self.state = State.START
         return
 
     def stop(self):
         rospy.loginfo("Stop the %s service" % self.name)
         try:
-            # Close the DeepSpeech streaming inference state
-            text = self.ds_client.finish_stream()
-            rospy.loginfo(f"Final text: {text}")
+            # Close the DeepSpeech streaming inference state if still open
+            if self.ds_client.is_streaming:
+                text = self.ds_client.finish_stream()
+                rospy.loginfo(f"Stopping STT; final text: {text}")
+                self.text_pub.publish(text)
             self.state = State.SUCCESS
         except Exception:
+            rospy.logerr("Exception occurred when stopping DeepSpeech service")
             self.state = State.FAILED
         return
 
@@ -88,26 +97,29 @@ class SpeechToTextService(HarmoniServiceManager):
         Passes audio data to DeepSpeech client.
         """
         data = np.fromstring(data.data, np.uint8)
-        if self.state == State.START:
-            self.transcribe_stream(data)
+        if self.state == State.START and self.ds_client.is_streaming:
+            self.transcribe_stream(data, self.is_transcribe_once)
 
-    def transcribe_stream(self, data):
-        text = self._transcribe_once(data)
+    def transcribe_stream(self, data, is_transcribe_once=False):
+        text = self._transcribe_chunk(data)
         if text:
+            text = self.ds_client.finish_stream()
             self.text_pub.publish(text)
+            if is_transcribe_once:
+                self.stop()
+            else:
+                self.ds_client.start_stream()
         return
 
     def request(self, data):
         rospy.loginfo("Start the %s request" % self.name)
         self.state = State.START
-
-        text = self._transcribe_once(data)
-        self.text_pub.publish(text)
-        self.stop()
-
+        if not self.ds_client.is_streaming:
+            self.ds_client.start_stream()
+        self.is_transcribe_once = True
         return
 
-    def _transcribe_once(self, data):
+    def _transcribe_chunk(self, data):
         text = self.ds_client.process_audio(data)
         rospy.loginfo(f"I heard: {text}")
         
@@ -115,9 +127,10 @@ class SpeechToTextService(HarmoniServiceManager):
         # the text will be published.
         if self.ds_client.is_final:
             rospy.loginfo(f"Final text: {text}")
+            self.ds_client.is_final = False
             return text
         # If the text is not final, None is returned so that we aren't 
-        # constantly publishing  intermediate text
+        # constantly publishing intermediate text
         else:
             return None
 

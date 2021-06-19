@@ -1,8 +1,11 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.8
 import deepspeech
 import logging
+import numpy as np
 import os
+import pyaudio
 import time
+import wave
 
 logging.basicConfig(level=logging.INFO)
 
@@ -38,9 +41,9 @@ class DeepSpeechClient:
         self._t_wait = t_wait
         self._is_final = False
 
-    def process_audio(self, data16):
+    def process_audio(self, in_data):
         self._is_final = False
-
+        data16 = np.frombuffer(in_data, dtype=np.int16)
         self._ds_stream.feedAudioContent(data16)
         text = self._ds_stream.intermediateDecode()
 
@@ -80,18 +83,33 @@ class DeepSpeechClient:
         if self._is_streaming:
             text = self._ds_stream.finishStream()
             self._is_streaming = False
+            self._is_final = False
         else:
             logging.info("Tried to end stream when DeepSpeech client currently not streaming")
             text = ""
         return text
 
+    def restart_stream(self):
+        text = self.finish_stream()
+        logging.info(f"Restarting stream; last transcript: {text}")
+        self.start_stream()
+
     def transcribe_from_file(self, audio_file):
-        # TODO: Return transcription of an audio file.
-        pass
+        chunk = 1024
+        wf = wave.open(audio_file, 'rb')
+        data = wf.readframes(chunk)
+        while data != '':
+            self.process_audio(data)
+            data = wf.readframes(chunk)
+        return
 
     @property
     def is_final(self):
         return self._is_final
+
+    @is_final.setter
+    def is_final(self, is_final):
+        self._is_final = is_final
 
     @property
     def is_streaming(self):
