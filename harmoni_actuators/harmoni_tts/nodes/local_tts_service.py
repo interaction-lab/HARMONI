@@ -75,6 +75,8 @@ class LocalTtsService(HarmoniServiceManager):
             file_path = ""
             self.state = State.FAILED
 
+        self.response_received = True
+
         return {"response": self.state, "message": file_path}
 
     def _save_audio_to_file(self, audio_data):
