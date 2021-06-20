@@ -3,22 +3,17 @@
 # Common Imports
 import rospy
 
-from harmoni_common_lib.constants import State
+from harmoni_common_lib.constants import State, ActionType
 from harmoni_common_lib.service_server import HarmoniServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
-import harmoni_common_lib.helper_functions as hf
 
 # Specific Imports
+from harmoni_common_lib.action_client import HarmoniActionClient
 from harmoni_common_lib.constants import ActuatorNameSpace
 from harmoni_tts.local_tts_client import TtsClient
-from botocore.exceptions import BotoCoreError, ClientError
-from contextlib import closing
+from harmoni_common_msgs.msg import harmoniAction, harmoniGoal
+import sounddevice as sd
 import soundfile as sf
-import numpy as np
-import boto3
-import re
-import json
-import sys
 
 
 class LocalTtsService(HarmoniServiceManager):
@@ -38,6 +33,7 @@ class LocalTtsService(HarmoniServiceManager):
         self.verbose = param["use_cuda"]
         self.speedup = param["use_cuda"]
         self.outdir = param["outdir"]
+        self.sample_rate = param["sample_rate"]
 
         """Initialize the local TTS client"""
         self.tts_client = TtsClient(
@@ -49,6 +45,10 @@ class LocalTtsService(HarmoniServiceManager):
             self.verbose,
             self.speedup
         )
+        # TODO: make sure correct name is used
+        instance_id = rospy.get_param("instance_id")
+        name = ActuatorNameSpace.tts.name + "_" + instance_id
+        self.speaker_action_client = HarmoniActionClient(name)
 
         """Setup the TTS service as server"""
         self.state = State.INIT
@@ -68,34 +68,39 @@ class LocalTtsService(HarmoniServiceManager):
 
         try:
             alignment, mel_postnet_spec, stop_tokens, waveform = self.tts_client.get_audio(input_text)
-            audio_data = self._get_audio(waveform)
+            file_path = self._save_audio_to_file(waveform)
+            self.state = State.SUCCESS
         except Exception as e:
             rospy.logerr("The error is " + str(e))
+            file_path = ""
             self.state = State.FAILED
 
-        return {"response": self.state, "message": ""}
+        return {"response": self.state, "message": file_path}
 
-    def _get_audio(self, response):
+    def _save_audio_to_file(self, audio_data):
         """[summary]
-        This function writes the audio file getting data from TTS
+        This function writes the audio data from TTS into a .wav file
         Args:
-            response (obj): response from TTS for getting audio data
+            audio_data (obj): response from TTS for getting audio data
 
         Returns:
-            data: audio data
+            file_path: saved audio file
         """
-        data = {"file": self.outdir + "/tts.wav"}
-        if "AudioStream" in response:
-            with closing(response["AudioStream"]) as stream:
-                output = data["file"]
-                try:
-                    with open(output, "wb") as file:
-                        file.write(stream.read())
-                except IOError as error:
-                    print(error)
-        else:
-            print("Could not stream audio")
-        return data
+        file_path = self.outdir + "/tts.wav"
+        sf.write(
+            file_path,
+            audio_data,
+            self.sample_rate
+        )
+
+        return file_path
+
+    def publish_file_path(self, file_path):
+        self.speaker_action_client.send_goal(
+            action_goal=ActionType.DO.value,
+            optional_data=file_path,
+            wait=False
+        )
 
 
 def main():

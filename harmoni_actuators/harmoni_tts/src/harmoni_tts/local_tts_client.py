@@ -124,14 +124,6 @@ if __name__ == "__main__":
     # vocoder_config = args.vocoder_config
     # vocoder_model = args.vocoder_model
 
-    print(os.path.abspath("."))
-    print(os.path.exists(
-        os.path.join(
-            os.path.abspath("."),
-            "scale_stats.npy"
-        )
-    ))
-
     content_dir = os.path.join(
         "/root", "harmoni_catkin_ws", "src", "HARMONI", "harmoni_actuators", "harmoni_tts", "content"
     )
@@ -147,6 +139,6 @@ if __name__ == "__main__":
         vocoder_model
     )
 
-    sentence = "Hello world. Great to finally find my voice."
+    sentence = "How are you doing today?"
     align, spec, stop_tokens, wav = tts_client.get_audio(sentence, use_gl=False)
     sd.play(wav, 22050 * 1.1, blocking=True)
