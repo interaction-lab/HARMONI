@@ -15,9 +15,11 @@ INFO: We often refer to Home Assistant as "hass"
 
 Follow this guide to make your [Home Assistant setup](https://www.home-assistant.io/installation/)
 
-Only Home Assistant Container has been tested (using Docker).
-
-Make sure that Home Assistant is running before makeing requests to the harmoni_hass service.
+Only Home Assistant Container has been tested (using Docker). To run Home Assistant using Docker:
+```
+docker start homeassistant
+```
+Make sure that Home Assistant is running before making requests to harmoni_hass. To check if Home Assistant is running or not try to access it using the URL.
  
 ### Set up credentials
 The parameter *credential_path* refers to the file where the home assistant authentication token is stored.
@@ -77,10 +79,9 @@ To set the media source for Home Assistant see [here](https://www.home-assistant
 |seconds (optional)            |     \<integer>        |
 |days (optional)            |     \<integer>        |
 
-Example: "{ "action":"check_log", "entity":"switch.oven_power", "type":"switch", "hours" : "4", "answer":"yes"}"
+Example: "{ "action":"check_log", "entity":"switch.oven_power", "hours" : "4", "answer":"yes"}"
 
-This command uses a POST API call to: /api/logbook/\<timestamp>
-timestamp is formatted like: 2021-05-24T10:00:00+00:00
+This command uses a POST API call to: /api/logbook/\<timestamp>     (formatted as "2021-05-24T10:00:00+00:00")
 
 
 

@@ -5,6 +5,13 @@ Below you can find some info about how to create a package that follows the HARM
 ## *CMakeLists.txt* and *setup.py* and *package.xml*
 [MANDATORY]
 
+These files store all the information needed to correctly build a package with its dependencies.
+These files are very similar among packages, so it is suggested to copy them from another package and modify the package name/path.
+To build a package use
+> catkin build [your_package]
+
+For more info see: [CMakeLists.txt documentation](http://wiki.ros.org/catkin/CMakeLists.txt)
+
 ## *launch* folder
 [MANDATORY]
 
@@ -14,19 +21,41 @@ The structure of a *[your_package].launch* file is very similar to the *[your_pa
 ## *src* folder and *nodes* folder
 [MANDATORY]
 
-Here is the actual implementation of the service. Some have the *src* folder while some have the *nodes* folder
-
+Here is the actual implementation of the service. Some packages store the code related to service class in a *src* folder while some have a *nodes* folder.
 It is suggested to use the template provided (*harmoni_core/harmoni_common_lib/src/harmoni_common_lib/service.py.template*).
 
-The structure is like this
+*[your_package]_service.py* contains the service implementation.
 
-In your package you may want to publish data so that other packages may use it or you may want to subscribe to some data published by other packages. For example you may want the audio stream coming from the *harmoni_microphone* package.
+Some services act on a per request basis, meaning that they receive some optional data, they do something with it and they return a response.
+For example, the TTS service may receive some text in input and its job is to produce an audio file from the written text.
+Services that act on a per request basis must implement the *request* method.
+
+The *request* method return this type of message : {"response": self.state, "message": self.result_msg} , where self.state describes the state of the service (see *harmoni_core/harmoni_common_lib/src/harmoni_common_lib/constants.py* ) while self.result_msg stores the output result.
+
+There are other services that, once started, keep on running.
+For example, the microphone service, once started, keeps sending audio data.
+These kind of services implement the *start* and *stop* methods.
+
+
+
+
+[DEPRECATED]
+In your package you may want to publish data to a topic so that other packages may use it or you may want to subscribe to some data published by other packages. For example you may want the audio stream coming from the *harmoni_microphone* package.
+This approach is deprecated because HARMONI wants to standardize the exchange of messages between services so that it is managed at an higher level.
 
 ## README file
 [HIGHLY SUGGESTED]
-
-Here you should write what type of messages your package uses. If it uses standard messages this paragraph should be empty. 
 There should be a brief description of what the package does.
+There should be an entry for each parameter set in configuration.yaml with a brief description and value. 
+You should write what type of messages your package uses, if your package uses non-standard messages. 
+
+```
+| Parameters           | Definition | Values |
+|----------------------|------------|--------|
+|parameter_1           |            |        |
+|parameter_2           |            |        |
+|parameter_3           |            |        |
+```
 
 
 ## Tests
@@ -35,8 +64,7 @@ There should be a brief description of what the package does.
 The *test* folder stores the tests created for the service.
 There are three types of files in this folder: a *[your_package].test* file, a *rostest-[your_package].py* file and a *unittest-[your_package].py* file.
 
-Let's start with the *.test* file.
-This file is very similar to the *.launch* file that is stored in the *launch* folder.
+The *.test* file is very similar to the *.launch* file that is stored in the *launch* folder.
 *[your_package].test* is a file that connects the configuration parameters with the actual implementation of the service, which is stored in the *src* or *nodes* folders.
 The file *[your_package].test* contains also the link to the actual test file, which is usually called *rostest_[your_package].py*.
 The file *[your_package].test* tries to complete the task written in the *rostest_[your_package].py* file, which can succed or fail.
@@ -58,10 +86,10 @@ Parameters can be specified in the *configuration.yaml* file or directly in the 
     <param name="test_[your_package]_input" value="Hello"/>
 ```
 
-The structure of the *rostest-[your_package].py* file is usually like:
+<!-- The structure of the *rostest-[your_package].py* file is usually like:
 ```
 
-```
+``` -->
 
 
 ## *config* folder and configuration.yaml file
@@ -71,14 +99,13 @@ The *configuration.yaml* file is a file where the user stores information useful
 
 The *configuration.yaml* file stores the default_param, that is the default configuration to run the service. If you want you can create multiple parameters that have the same structure as the default_param.
 
-The parameters in configuration.yaml are used in the _init_ method of in the service class.
-This method is found in src/X_service.py or in....
+The parameters' values are then retrieved in service class implementation.
 
 
 ## *msg* folder
 [OPTIONAL]
 
-This folder should be inside the package if the package doesn't use the standard messages. The description of the newly created message should be written in the readme.
+This folder should be inside the package if the package doesn't use the standard messages. The description of the newly created message should be written in the README.
 
 
 ## Other folders (e.g. the *web* folder in harmoni_web or the *temp_data* folder in harmoni_camera)
