@@ -88,7 +88,7 @@ class HassService(HarmoniServiceManager):
                 json_data= json.loads(data_list[1])
 
                 # Responses from bot may have json commands in them but they can also be ignored using this parameter
-                if("answer" in json_data and json_data["answer"] == "No"):  
+                if("answer" in json_data and json_data["answer"] == "no"):  
                     self.state = State.SUCCESS
                     self.response_received = True
                     self.result_msg = message_to_forward # No action done
@@ -137,27 +137,37 @@ class HassService(HarmoniServiceManager):
         Args:
             data (str): string of json which contains 3 items: {"action": str, "entity": str, "type": str} ....
                 action: "check_log"
-                type: the entity type of the device (e.g., media_player, switch, light)
-                entity: the device on which to do the action (e.g. googlehome8554)
+                entity_id: the entity type of the device (e.g., media_player, switch, light) and the device name (e.g. googlehome8554)
 
         Returns:
             hass_response (str): It containes the response to the API request api/logbook
         """
 
-        rospy.loginfo("Entity type: %s " % json_data["type"])
-        rospy.loginfo("Entity: %s " % json_data["entity"])
+        rospy.loginfo("Entity id: %s " + json_data["entity_id"])
         myHeaders = {"Authorization": "Bearer "+ self.token}
 
         # Home Assistant returns all info in UTC
         dateTimeObj = datetime.now(pytz.utc)
         rospy.loginfo("Current time: %s " % str(dateTimeObj))
 
-        # How much time before the current time I want to check for events
+        # How much time before the current time I want to check for events (default is 3 hours)
+        m = s = d = 0
+        h = 3
+
+        if("hours" in json_data):
+            h = int(json_data["hours"])
+        if("days" in json_data):
+            d = int(json_data["days"])
+        if("minutes" in json_data):
+            m = int(json_data["minutes"])
+        if("seconds" in json_data):
+            s = int(json_data["seconds"])
+
         delta = timedelta(
-            # days = 1,
-            hours = 3,
-            # minutes = 15,
-            # seconds = 30
+            days = d,
+            hours = h,
+            minutes = m,
+            seconds = s
             )
 
         rospy.loginfo("Timespan to check: %s " % str(delta))
@@ -167,7 +177,7 @@ class HassService(HarmoniServiceManager):
         timeToCheckFormatted = str(timeToCheck.year) + "-" + str(timeToCheck.month)  + "-" + str(timeToCheck.day) + "T" + str(timeToCheck.hour) +":"+ str(timeToCheck.minute) + ":" + str(timeToCheck.second) + "+00:00"
         rospy.loginfo("Time to check: %s " % timeToCheckFormatted)
 
-        url = self.hass_uri + 'api/logbook/' + timeToCheckFormatted +'?' + "entity:"+ json_data["type"] + "." + json_data["entity"]
+        url = self.hass_uri + 'api/logbook/' + timeToCheckFormatted +'?' + "entity:"+ json_data["entity_id"]
         
         hass_response = requests.get(
             url,

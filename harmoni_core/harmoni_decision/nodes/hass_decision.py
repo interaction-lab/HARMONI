@@ -114,14 +114,15 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
         
         def daemon():
             while True:
-                sleep(120)
+                # Time between home assistant log checks
+                sleep(400)
                 
                 if not self.activity_is_on:
                     rospy.loginfo("Starting home assistant check log thread")
                     service = "hass"
                     self.class_clients[service].reset_init()
 
-                    optional_data = "{ \"action\":\"check_log\", \"entity\":\"oven_power\", \"type\":\"switch\", \"answer\":\"yes\"}"
+                    optional_data = "{ \"action\":\"check_log\", \"entity_id\":\"switch.oven_power\", \"answer\":\"yes\"}"
 
                     result_msg = self.class_clients[service].request(optional_data)
 
@@ -230,7 +231,7 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
 
             rospy.loginfo("Word by user: " + word)
 
-            if word != "stop" or word != "basta" or word != "fine":
+            if word != "stop" and word != "basta" and word != "fine":
                 service = "catena_di_parole"
                 
                 if word == "passo":
