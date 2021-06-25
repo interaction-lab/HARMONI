@@ -22,3 +22,9 @@ google:
     language: "en"
     session_id: "testing"
     credential_path: "$(find harmoni_bot)/config/private-keys_en.json"
+
+rasa:
+  default_param:
+    rasa_assistant_path: "$(find harmoni_bot)/src/rasa_example/"
+    host: "localhost"
+    port: 5005

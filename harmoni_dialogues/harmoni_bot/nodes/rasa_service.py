@@ -9,6 +9,9 @@ from harmoni_common_lib.service_server import HarmoniServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 
 # Specific Imports
+import argparse
+import os
+import rasa
 from harmoni_common_lib.constants import DialogueNameSpace
 from harmoni_bot.rasa_client import RasaClient
 
@@ -29,13 +32,28 @@ class RasaService(HarmoniServiceManager):
         """Constructor method: Initialization of variables and lex parameters + setting up"""
         super().__init__(name)
         """ Initialization of variables and parameters """
-        self.user_id = param["user_id"]
-        self.bot_name = param["bot_name"]
+        self.rasa_assistant_path = param["rasa_assistant_path"]
+        host = param["host"]
+        port = param["port"]
 
-        self.rasa_client = RasaClient()
+        self.rasa_client = RasaClient(
+            host,
+            port
+        )
 
         self.state = State.INIT
         return
+
+    def _start_rasa_server(self):
+        config = os.path.join(self.rasa_assistant_path, "config.yml")
+        training_files = os.path.join(self.rasa_assistant_path, "data")
+        domain = os.path.join(self.rasa_assistant_path, "domain.yml")
+        output = os.path.join(self.rasa_assistant_path, "models")
+        rasa.train(domain, config, [training_files], output)
+
+        endpoints = os.path.join(self.rasa_assistant_path, "endpoints.yml")
+
+        rasa.run(output, endpoints)
 
     def request(self, input_text):
         """[summary]
@@ -73,7 +91,7 @@ def main():
     service_id = f"{service_name}_{instance_id}"
     try:
         rospy.init_node(service_name, log_level=rospy.DEBUG)
-        params = rospy.get_param(service_name + "/" + instance_id + "_param/")
+        params = rospy.get_param("rasa" + "/" + instance_id + "_param/")
         s = RasaService(service_id, params)
         service_server = HarmoniServiceServer(service_id, s)
         service_server.start_sending_feedback()

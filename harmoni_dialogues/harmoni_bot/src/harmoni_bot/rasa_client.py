@@ -23,7 +23,7 @@ class RasaClient:
         response = requests.post(f"http://{self._host}:{self._port}/webhooks/myio/webhook", headers=headers, data=data)
         logging.info(f"Bot response: \n{response.text}\n")
         try:
-            text = response.json()[0]["text"] + "."  # '.' needed because stt sometimes freezes on 'bye' without it
+            text = response.json()[0]["text"]
         except IndexError:
             logging.error("Warning: Bad index")
             text = "I didn't catch that"
