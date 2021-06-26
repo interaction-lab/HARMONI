@@ -4,6 +4,7 @@ tts:
     tts_model: "/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/content/tts_model.pth.tar"
     vocoder_config: "/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/content/config_vocoder.json"
     vocoder_model: "/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/content/vocoder_model.pth.tar"
+    scale_stats_path: "/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/scale_stats.npy"
     use_cuda: False
     verbose: False
     speedup: 1.1

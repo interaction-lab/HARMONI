@@ -22,6 +22,7 @@ class TtsClient:
         tts_model,
         vocoder_config,
         vocoder_model,
+        scale_stats_path,
         use_cuda=False,
         verbose=False,
         speedup=1.1
@@ -39,10 +40,6 @@ class TtsClient:
         self._vocoder_config = load_config(vocoder_config)
 
         # Make sure scale_stats.npy path is correct when using with roslaunch
-        scale_stats_path = os.path.join(
-            "/root", "harmoni_catkin_ws", "src", "HARMONI", "harmoni_actuators",
-            "harmoni_tts", "scale_stats.npy"
-        )
         self._tts_config.audio["stats_path"] = scale_stats_path
         self._vocoder_config.audio["stats_path"] = scale_stats_path
 

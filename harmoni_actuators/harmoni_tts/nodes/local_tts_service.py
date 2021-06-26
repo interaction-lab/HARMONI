@@ -29,6 +29,7 @@ class LocalTtsService(HarmoniServiceManager):
         self.tts_model = param["tts_model"]
         self.vocoder_config = param["vocoder_config"]
         self.vocoder_model = param["vocoder_model"]
+        self.scale_stats_path = param["scale_stats_path"]
         self.use_cuda = param["use_cuda"]
         self.verbose = param["use_cuda"]
         self.speedup = param["use_cuda"]
@@ -41,11 +42,11 @@ class LocalTtsService(HarmoniServiceManager):
             self.tts_model,
             self.vocoder_config,
             self.vocoder_model,
+            self.scale_stats_path,
             self.use_cuda,
             self.verbose,
             self.speedup
         )
-        # TODO: make sure correct name is used
         instance_id = rospy.get_param("instance_id")
         name = ActuatorNameSpace.tts.name + "_" + instance_id
         self.speaker_action_client = HarmoniActionClient(name)
