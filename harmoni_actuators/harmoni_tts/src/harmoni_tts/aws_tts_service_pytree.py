@@ -129,7 +129,6 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
             if(self.result_data["response"] == State.SUCCESS):
                 self.blackboard_tts.result_message = "SUCCESS"
                 self.blackboard_tts.result_data = self.result_data['message']
-                self.result_data = self.result_data['message']
                 new_status = py_trees.common.Status.SUCCESS
             else:
                 self.blackboard_tts.result_message = "FAILURE"
@@ -209,7 +208,7 @@ def main():
     blackboardProva.register_key("result_message", access=py_trees.common.Access.READ)
     print(blackboardProva)
 
-    ttsPyTree = AWSTtsServicePytree("AwsPyTreeTest")
+    ttsPyTree = AWSTtsServicePytree("AwsTtsPyTreeTest")
 
     additional_parameters = dict([
         ("mode",False)])
