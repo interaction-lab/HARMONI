@@ -121,19 +121,20 @@ if __name__ == "__main__":
     # vocoder_config = args.vocoder_config
     # vocoder_model = args.vocoder_model
 
-    content_dir = os.path.join(
-        "/root", "harmoni_catkin_ws", "src", "HARMONI", "harmoni_actuators", "harmoni_tts", "content"
-    )
+    tts_dir = os.path.abspath(os.path.join(os.getcwd(), "../.."))
+    content_dir = os.path.abspath(os.path.join(tts_dir, "../../../../model/tts"))
     tts_config = os.path.join(content_dir, "config.json")
     tts_model = os.path.join(content_dir, "tts_model.pth.tar")
     vocoder_config = os.path.join(content_dir, "config_vocoder.json")
     vocoder_model = os.path.join(content_dir, "vocoder_model.pth.tar")
+    scale_stats_path = os.path.join(tts_dir, "scale_stats.npy")
 
     tts_client = TtsClient(
         tts_config,
         tts_model,
         vocoder_config,
-        vocoder_model
+        vocoder_model,
+        scale_stats_path
     )
 
     sentence = "How are you doing today?"
