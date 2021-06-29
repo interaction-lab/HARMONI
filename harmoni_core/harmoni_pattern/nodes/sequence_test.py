@@ -4,6 +4,7 @@
 ##############################################################################
 import rospy
 from harmoni_tts.aws_tts_service_pytree import AWSTtsServicePytree
+from harmoni_bot.aws_lex_service_pytree import AWSLexServicePytree
 from harmoni_speaker.speaker_service_pytree import SpeakerServicePytree
 from harmoni_face.face_service_pytree import FaceServicePytree
 import argparse
@@ -56,10 +57,12 @@ def command_line_argument_parser():
 
 def create_root():
     root = py_trees.composites.Sequence("Sequence")
-    tts = AWSTtsServicePytree("AwsPyTreeTest")
+    tts = AWSTtsServicePytree("AwsTtsPyTreeTest")
+    chatbot = AWSLexServicePytree("AwsLexPyTreeTest")
     speaker = SpeakerServicePytree("SpeakerPyTreeTest")
     face = FaceServicePytree("FacePyTreeTest")
     parall_speaker_face = py_trees.composites.Parallel("Parallel")
+    root.add_child(chatbot)
     root.add_child(tts)
     root.add_child(parall_speaker_face)
     parall_speaker_face.add_child(speaker)
@@ -93,7 +96,8 @@ def main():
     additional_parameters = dict([
         ("AWSTtsServicePytree_mode",False),
         ("SpeakerServicePytree_mode",False),
-        ("FaceServicePytree_mode",True)])
+        ("FaceServicePytree_mode",True),
+        ("AWSLexServicePytree_mode",True)])
     behaviour_tree.setup(timeout=15,**additional_parameters)
 
     print(py_trees.display.unicode_tree(root=root))
@@ -102,8 +106,15 @@ def main():
     # Execute
     ####################
     
+    blackboardProvaIn = py_trees.blackboard.Client(name="blackboardProva", namespace="harmoni_input_bot")
+    blackboardProvaIn.register_key("result_data", access=py_trees.common.Access.WRITE)
+    blackboardProvaIn.register_key("result_message", access=py_trees.common.Access.WRITE)
+    blackboardProvaIn.result_message = "SUCCESS"
+    blackboardProvaIn.result_data = "Vorrei ordinare dei fiori"
+
     def print_tree(tree):
         print(py_trees.display.unicode_tree(root=tree.root, show_status=True))
+        
     try:
         for i in range(1, 12):
             print("\n--------- Tick {0} ---------\n".format(i))

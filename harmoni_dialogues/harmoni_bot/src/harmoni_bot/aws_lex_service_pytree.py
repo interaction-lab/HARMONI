@@ -8,7 +8,7 @@ from harmoni_common_lib.constants import State
 from actionlib_msgs.msg import GoalStatus
 from harmoni_common_lib.action_client import HarmoniActionClient
 import harmoni_common_lib.helper_functions as hf
-from aws_lex_service import AWSLexService
+from harmoni_bot.aws_lex_service import AWSLexService
 
 # Specific Imports
 from harmoni_common_lib.constants import ActuatorNameSpace, ActionType, DialogueNameSpace

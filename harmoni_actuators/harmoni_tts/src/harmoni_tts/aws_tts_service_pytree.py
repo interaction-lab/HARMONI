@@ -5,6 +5,7 @@ import rospy
 import roslib
 
 from harmoni_common_lib.constants import State
+from actionlib_msgs.msg import GoalStatus
 from harmoni_common_lib.service_server import HarmoniServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 from harmoni_common_lib.action_client import HarmoniActionClient
@@ -118,14 +119,15 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         else:
             if self.blackboard_output_bot.result_message == "SUCCESS":
                 if self.service_client_tts.get_state() == GoalStatus.LOST:
-                    self.logger.debug(f"Sending goal to {self.aws_service} optional_data len {len(input_text)}")
+                    self.logger.debug(f"Sending goal to {self.aws_service}")
                     # Dove posso prendere details["action_goal"]?
                     self.service_client_tts.send_goal(
                         action_goal = ActionType["REQUEST"].value,
-                        optional_data = self.blackboard_output_bot.result_data,
+                        optional_data = self.blackboard_output_bot.result_data["message"],
                         wait=False,
                     )
                     self.logger.debug(f"Goal sent to {self.aws_service}")
+                    new_status = py_trees.common.Status.RUNNING
                 else:
                     if len(self.client_result) > 0:
                         #se siamo qui vuol dire che il risultato c'è e quindi 
@@ -197,12 +199,20 @@ def main():
     blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace="harmoni_tts")
     blackboardProva.register_key("result_data", access=py_trees.common.Access.READ)
     blackboardProva.register_key("result_message", access=py_trees.common.Access.READ)
+    blackboard_output_bot = py_trees.blackboard.Client(name="blackboardProva", namespace="harmoni_output_bot")
+    blackboard_output_bot.register_key("result_data", access=py_trees.common.Access.WRITE)
+    blackboard_output_bot.register_key("result_message", access=py_trees.common.Access.WRITE)
+
+    blackboard_output_bot.result_message = "SUCCESS"
+    blackboard_output_bot.result_data = "Vorrei ordinare dei fiori"
+
     print(blackboardProva)
+    print(blackboard_output_bot)
 
     ttsPyTree = AWSTtsServicePytree("AwsTtsPyTreeTest")
 
     additional_parameters = dict([
-        ("mode",False)])
+        ("AWSTtsServicePytree_mode",False)])
 
     ttsPyTree.setup(**additional_parameters)
     try:
