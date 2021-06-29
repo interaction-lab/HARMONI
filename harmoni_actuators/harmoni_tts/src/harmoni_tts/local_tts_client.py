@@ -106,20 +106,6 @@ class TtsClient:
 
 
 if __name__ == "__main__":
-    import argparse
-
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument("tts_config")
-    # parser.add_argument("tts_model")
-    # parser.add_argument("vocoder_config")
-    # parser.add_argument("vocoder_model")
-    #
-    # args = parser.parse_args()
-    #
-    # tts_config = args.tts_config
-    # tts_model = args.tts_model
-    # vocoder_config = args.vocoder_config
-    # vocoder_model = args.vocoder_model
 
     tts_dir = os.path.abspath(os.path.join(os.getcwd(), "../.."))
     content_dir = os.path.abspath(os.path.join(tts_dir, "../../../../model/tts"))
