@@ -3,9 +3,7 @@ import deepspeech
 import logging
 import numpy as np
 import os
-import pyaudio
 import time
-import wave
 
 logging.basicConfig(level=logging.INFO)
 
@@ -78,7 +76,7 @@ class DeepSpeechClient:
 
     def finish_stream(self):
         """Ends DeepSpeech streaming inference state if it is still open.
-        Returns the transcrbed text,
+        Returns the transcribed text.
         """
         if self._is_streaming:
             text = self._ds_stream.finishStream()
@@ -93,15 +91,6 @@ class DeepSpeechClient:
         text = self.finish_stream()
         logging.info(f"Restarting stream; last transcript: {text}")
         self.start_stream()
-
-    def transcribe_from_file(self, audio_file):
-        chunk = 1024
-        wf = wave.open(audio_file, 'rb')
-        data = wf.readframes(chunk)
-        while data != '':
-            self.process_audio(data)
-            data = wf.readframes(chunk)
-        return
 
     @property
     def is_final(self):

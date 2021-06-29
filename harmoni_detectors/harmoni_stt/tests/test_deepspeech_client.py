@@ -9,8 +9,10 @@ import unittest
 from scipy.io import wavfile
 from harmoni_stt.deepspeech_client import DeepSpeechClient
 
+dir_name = os.path.dirname(__file__)
+
 MODEL_DIR = os.path.join(
-    "/root", "harmoni_catkin_ws", "model", "deepspeech", "models"
+    dir_name, "../../..", "model", "deepspeech", "models"
 )
 MODEL_FILE_PATH = os.path.join(MODEL_DIR, "deepspeech-0.9.3-models.pbmm")
 SCORER_PATH = os.path.join(MODEL_DIR, "deepspeech-0.9.3-models.scorer")
@@ -55,11 +57,6 @@ class TestDeepSpeechClient(unittest.TestCase):
         result = self.ds_client.finish_stream()
         assert result == ""
         assert not self.ds_client.is_streaming
-
-    def test_process_audio(self):
-        samplerate, data = wavfile.read(TEST_AUDIO_FILE_PATH)
-        data = (data * 32767).astype(np.int16)
-        # TODO: test process_audio() with the sample wav file
 
 
 if __name__ == "__main__":
