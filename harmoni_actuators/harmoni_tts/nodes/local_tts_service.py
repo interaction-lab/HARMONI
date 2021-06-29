@@ -11,8 +11,6 @@ from harmoni_common_lib.service_manager import HarmoniServiceManager
 from harmoni_common_lib.action_client import HarmoniActionClient
 from harmoni_common_lib.constants import ActuatorNameSpace
 from harmoni_tts.local_tts_client import TtsClient
-from harmoni_common_msgs.msg import harmoniAction, harmoniGoal
-import sounddevice as sd
 import soundfile as sf
 
 
