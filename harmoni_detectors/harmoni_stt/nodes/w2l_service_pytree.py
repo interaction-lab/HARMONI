@@ -57,6 +57,9 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
         self.blackboard_stt=self.attach_blackboard_client(name=self.name,namespace="harmoni_stt")
         self.blackboard_stt.register_key("result_data",access=py_trees.common.Access.READ)
         self.blackboard_stt.register_key("result_message", access=py_trees.common.Access.READ)
+        self.blackboard_input_bot=self.attach_blackboard_client(name=self.name,namespace="harmoni_input_bot")
+        self.blackboard_input_bot.register_key("result_data",access=py_trees.common.Access.WRITE)
+        self.blackboard_input_bot.register_key("result_message", access=py_trees.common.Access.WRITE)
 
         #aggiungere blackboard per il bot
 
@@ -77,7 +80,7 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
         """
         for parameter in additional_parameters:
             print(parameter, additional_parameters[parameter])  
-            if(parameter =="SpeechToTextServicePytree"):
+            if(parameter =="SpeechToTextServicePytree_mode"):
                 self.mode = additional_parameters[parameter]        
 
         service_name = DetectorNameSpace.stt.name
