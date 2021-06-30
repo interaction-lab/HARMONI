@@ -55,18 +55,12 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
 
         self.blackboards = []
         self.blackboard_stt=self.attach_blackboard_client(name=self.name,namespace="harmoni_stt")
-        self.blackboard_stt.register_key("result_data",access=py_trees.common.Access.READ)
-        self.blackboard_stt.register_key("result_message", access=py_trees.common.Access.READ)
+        self.blackboard_stt.register_key("result_data",access=py_trees.common.Access.WRITE)
+        self.blackboard_stt.register_key("result_message", access=py_trees.common.Access.WRITE)
         self.blackboard_input_bot=self.attach_blackboard_client(name=self.name,namespace="harmoni_input_bot")
-        self.blackboard_input_bot.register_key("result_data",access=py_trees.common.Access.WRITE)
-        self.blackboard_input_bot.register_key("result_message", access=py_trees.common.Access.WRITE)
+        self.blackboard_input_bot.register_key("result_data",access=py_trees.common.Access.READ)
+        self.blackboard_input_bot.register_key("result_message", access=py_trees.common.Access.READ)
 
-        #aggiungere blackboard per il bot
-
-        
-        #self.blackboard_tts = self.attach_blackboard_client(name=self.name, namespace="harmoni_tts")
-        #self.blackboard_tts.register_key("result_data", access=py_trees.common.Access.WRITE)
-        #self.blackboard_tts.register_key("result_message", access=py_trees.common.Access.WRITE)
 
         super(SpeechToTextServicePytree, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
