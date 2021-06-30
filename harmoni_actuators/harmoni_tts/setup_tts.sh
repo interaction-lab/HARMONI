@@ -11,7 +11,7 @@ mkdir -p model/tts && cd model/tts \
 
 cd ../../src/HARMONI/harmoni_actuators/harmoni_tts
 gdown --id 11oY3Tv0kQtxK_JPgxrfesa99maVXHNxU -O scale_stats.npy
-sudo apt-get install espeak
+sudo apt-get install espeak -y
 git clone https://github.com/coqui-ai/TTS
 cd TTS
 git checkout b1935c97
