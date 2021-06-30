@@ -8,8 +8,13 @@ from harmoni_common_lib.constants import State
 from actionlib_msgs.msg import GoalStatus
 from harmoni_common_lib.action_client import HarmoniActionClient
 import harmoni_common_lib.helper_functions as hf
-from harmoni_bot.aws_lex_service import AWSLexService
-
+from microphone_service import MicrophoneService
+# Other Imports
+from harmoni_common_lib.constants import SensorNameSpace
+from audio_common_msgs.msg import AudioData
+import pyaudio
+import wave
+import numpy as np
 # Specific Imports
 from harmoni_common_lib.constants import ActuatorNameSpace, ActionType, DialogueNameSpace
 from botocore.exceptions import BotoCoreError, ClientError
@@ -29,7 +34,7 @@ import time
 
 import py_trees.console
 
-class AWSLexServicePytree(py_trees.behaviour.Behaviour):
+class MicrophoneServicePytree(py_trees.behaviour.Behaviour):
 
     #TODO tutte le print devono diventare console py_tree
     """
@@ -39,28 +44,24 @@ class AWSLexServicePytree(py_trees.behaviour.Behaviour):
     """
     #TTS è un actuators
 
-    def __init__(self, name = "AWSLexServicePytree"):
+    def __init__(self, name = "MicrophoneServicePytree"):
         """
         Qui abbiamo pensato di chiamare soltanto 
         il costruttore del behaviour tree 
         """
         self.name = name
         self.mode = False
-        self.aws_service = None
-        self.input_message_lex = None
+        self.microphone_service = None
         self.result_data = None
-        self.service_client_lex = None
+        self.service_client_microphone = None
         self.client_result = None
 
         self.blackboards = []
-        self.blackboard_output_bot = self.attach_blackboard_client(name=self.name, namespace="harmoni_output_bot")
-        self.blackboard_output_bot.register_key("result_data", access=py_trees.common.Access.WRITE)
-        self.blackboard_output_bot.register_key("result_message", access=py_trees.common.Access.WRITE)
-        self.blackboard_input_bot = self.attach_blackboard_client(name=self.name, namespace="harmoni_input_bot")
-        self.blackboard_input_bot.register_key("result_data", access=py_trees.common.Access.READ)
-        self.blackboard_input_bot.register_key("result_message", access=py_trees.common.Access.READ)
+        self.blackboard_microphone = self.attach_blackboard_client(name=self.name, namespace="harmoni_microphone")
+        self.blackboard_microphone.register_key("result_data", access=py_trees.common.Access.WRITE)
+        self.blackboard_microphone.register_key("result_message", access=py_trees.common.Access.WRITE)
 
-        super(AWSLexServicePytree, self).__init__(name)
+        super(MicrophoneServicePytree, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self,**additional_parameters):
@@ -72,25 +73,25 @@ class AWSLexServicePytree(py_trees.behaviour.Behaviour):
         """
         for parameter in additional_parameters:
             print(parameter, additional_parameters[parameter])  
-            if(parameter =="AWSLexServicePytree_mode"):
+            if(parameter =="MicrophoneServicePytree_mode"):
                 self.mode = additional_parameters[parameter]        
 
-        service_name = DialogueNameSpace.bot.name
+        service_name = SensorNameSpace.microphone.name  # "microphone"
         instance_id = rospy.get_param("instance_id")  # "default"
         service_id = f"{service_name}_{instance_id}"
 
         params = rospy.get_param(service_name + "/" + instance_id + "_param/")
 
-        self.aws_service = AWSLexService(service_id, params)
-        
+        self.microphone_service = MicrophoneService(service_id, params) 
+
         #TODO questo dobbiamo farlo nell'if 
         #rospy init node mi fa diventare un nodo ros
-        #rospy.init_node("lex_default", log_level=rospy.INFO)
+        rospy.init_node("lex_default", log_level=rospy.INFO)
 
         if(not self.mode):
-            self.service_client_lex = HarmoniActionClient(self.name)
+            self.service_client_microphone = HarmoniActionClient(self.name)
             self.client_result = deque()
-            self.service_client_lex.setup_client("aws_lex_default", 
+            self.service_client_microphone.setup_client("microphone_default", 
                                                 self._result_callback,
                                                 self._feedback_callback)
             self.logger.debug("Behavior interface action clients have been set up!")
@@ -108,54 +109,38 @@ class AWSLexServicePytree(py_trees.behaviour.Behaviour):
         
         """    
         if(self.mode):
-            if self.blackboard_input_bot.result_message == "SUCCESS":
-                self.input_message_lex = self.blackboard_input_bot.result_data
-                #la risposta di aws_service.request è composta da due campi
-                self.result_data = self.aws_service.request(self.input_message_lex)
-                self.blackboard_output_bot.result_data = self.result_data["message"]
-                self.blackboard_output_bot.result_message = "SUCCESS"
-                #anche se vorresti scrivere self.blackboard_output_bot.result_message = self.result_data["response"]
-                new_status = py_trees.common.Status.SUCCESS
-            else:
-                #lo stato o è "RUNNING" o è "FAILURE" e quindi in ogni caso sarà:
-                self.blackboard_output_bot.result_message = self.blackboard_input_bot.result_message
-                new_status = self.blackboard_input_bot.result_message
+            pass
         else:
-            if self.blackboard_input_bot.result_message == "SUCCESS":
-                #TODO non funziona il self.mode = false
-                #ho già fatto la richiesta? se si non la faccio se no la faccio
-                if self.service_client_lex.get_state() == GoalStatus.LOST:
-                    self.input_message_lex = self.blackboard_input_bot.result_data
-                    self.logger.debug(f"Sending goal to {self.aws_service}")
-                    self.service_client_lex.send_goal(
-                        action_goal = ActionType["REQUEST"].value,
-                        optional_data = self.input_message_lex,
-                        wait=False,
-                    )
-                    self.logger.debug(f"Goal sent to {self.aws_service}")
-                    self.blackboard_output_bot.result_message = "RUNNING"
-                    new_status = py_trees.common.Status.RUNNING
-                else:
+            if self.service_client_microphone.get_state() == GoalStatus.LOST:
+                self.logger.debug(f"Sending goal to {self.microphone_service}")
+                # Send request for each sensor service to set themselves up
+                self.service_client_microphone.send_goal(
+                    action_goal=ActionType["ON"].value,
+                    optional_data="Setup",
+                    wait="",
+                )
+                self.logger.debug(f"Goal sent to {self.microphone_service}")
+                self.blackboard_microphone.result_message = "RUNNING"
+                new_status = py_trees.common.Status.RUNNING
+            else:
+                if self.service_client_microphone.get_state() != GoalStatus.LOST:
+                    #TODO qui succede che appena ci arriva un audio nuovo noi sovrascriviamo, cosa non del tutto giusta
                     if len(self.client_result) > 0:
-                        #se siamo qui vuol dire che il risultato c'è e quindi 
-                        #possiamo terminare la foglia
                         self.result_data = self.client_result.popleft()["data"]
-                        self.blackboard_output_bot.result_message = "SUCCESS"
-                        self.blackboard_output_bot.result_data = self.result_data["message"]
-                        #se vuoi sapere cosa c'è scritto nel risultato usa self.result_data["response"]
-                        new_status = py_trees.common.Status.SUCCESS
+                        self.blackboard_microphone.result_message = "RUNNING"
+                        self.blackboard_microphone.result_data = self.result_data
+                        new_status = py_trees.common.Status.RUNNING
                     else:
                         #se siamo qui vuol dire che il risultato ancora non c'è, dunque
                         #si è rotto tutto o dobbiamo solo aspettare?
                         #incerti di questa riga, vedi 408 sequential_pattern.py
-                        if(self.aws_service.state == State.FAILED):
-                            self.blackboard_output_bot.result_message = "FAILURE"
+                        if(self.microphone_service.state == State.FAILED):
+                            self.blackboard_microphone.result_message = "FAILURE"
                             new_status = py_trees.common.Status.FAILURE
                         else:
                             new_status = py_trees.common.Status.RUNNING
-            else:
-                #lo stato o è "RUNNING" o è "FAILURE" e quindi in ogni caso sarà:
-                new_status = self.blackboard_input_bot.result_message
+                else:
+                    new_status = py_trees.common.Status.FAILURE
 
         self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status
@@ -208,33 +193,24 @@ def main():
 
     py_trees.logging.level = py_trees.logging.Level.DEBUG
     
-    blackboardProvaIn = py_trees.blackboard.Client(name="blackboardProva", namespace="harmoni_input_bot")
-    blackboardProvaIn.register_key("result_data", access=py_trees.common.Access.WRITE)
-    blackboardProvaIn.register_key("result_message", access=py_trees.common.Access.WRITE)
-    blackboardProvaOut = py_trees.blackboard.Client(name="blackboardProva", namespace="harmoni_output_bot")
-    blackboardProvaOut.register_key("result_data", access=py_trees.common.Access.READ)
-    blackboardProvaOut.register_key("result_message", access=py_trees.common.Access.READ)
-
-    blackboardProvaIn.result_message = "SUCCESS"
-    blackboardProvaIn.result_data = "Vorrei ordinare dei fiori"
-
-    print(blackboardProvaIn)
-    print(blackboardProvaOut)
+    blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace="harmoni_microphone")
+    blackboardProva.register_key("result_data", access=py_trees.common.Access.READ)
+    blackboardProva.register_key("result_message", access=py_trees.common.Access.READ)
 
 
+    print(blackboardProva)
 
-    lexPyTree = AWSLexServicePytree("AwsLesPyTreeTest")
+    microphonePyTree = MicrophoneServicePytree("MicrophoneServicePytreeTest")
 
     additional_parameters = dict([
-        ("AWSLexServicePytree_mode",True)])
+        ("MicrophoneServicePytree_mode",False)])
 
-    lexPyTree.setup(**additional_parameters)
+    microphonePyTree.setup(**additional_parameters)
     try:
         for unused_i in range(0, 3):
-            lexPyTree.tick_once()
+            microphonePyTree.tick_once()
             time.sleep(0.5)
-            print(blackboardProvaIn)
-            print(blackboardProvaOut)
+            print(blackboardProva)
         print("\n")
     except KeyboardInterrupt:
         print("Exception occurred")
