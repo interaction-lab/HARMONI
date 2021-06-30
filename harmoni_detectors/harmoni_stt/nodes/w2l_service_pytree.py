@@ -50,7 +50,7 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
         self.mode = False
         self.w2l_service = None
         self.result_data = None
-        self.service_client_stt = None
+        self.service_client_w2l = None
         self.client_result = None
 
         self.blackboards = []
