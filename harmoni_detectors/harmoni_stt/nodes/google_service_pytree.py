@@ -48,7 +48,7 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
         """
         self.name = name
         self.mode = False
-        self.w2l_service = None
+        self.google_service = None
         self.result_data = None
         self.service_client_w2l = None
         self.client_result = None
