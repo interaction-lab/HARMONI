@@ -86,7 +86,7 @@ class MicrophoneServicePytree(py_trees.behaviour.Behaviour):
 
         #TODO questo dobbiamo farlo nell'if 
         #rospy init node mi fa diventare un nodo ros
-        rospy.init_node("lex_default", log_level=rospy.INFO)
+        rospy.init_node("microphone_default", log_level=rospy.INFO)
 
         if(not self.mode):
             self.service_client_microphone = HarmoniActionClient(self.name)

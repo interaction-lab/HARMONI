@@ -132,7 +132,6 @@ class SpeakerServicePytree(py_trees.behaviour.Behaviour):
                         #se siamo qui vuol dire che il risultato c'è e quindi 
                         #possiamo terminare la foglia
                         self.result_data = self.client_result.popleft()["data"]
-                        #se vuoi sapere cosa c'è scritto nel risultato usa self.result_data["response"]
                         new_status = py_trees.common.Status.SUCCESS
                     else:
                         #se siamo qui vuol dire che il risultato ancora non c'è, dunque
