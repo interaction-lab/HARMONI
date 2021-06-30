@@ -106,16 +106,9 @@ class DeepSpeechClient:
 
 
 if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("model_file_path")
-    parser.add_argument("scorer_path")
-
-    args = parser.parse_args()
-
-    model_file_path = args.model_file_path
-    scorer_path = args.scorer_path
+    model_dir = os.path.abspath(os.path.join(os.getcwd(), "../../../../../../model/deepspeech/models"))
+    model_file_path = os.path.join(model_dir, "deepspeech-0.9.3-models.pbmm")
+    scorer_path = os.path.join(model_dir, "deepspeech-0.9.3-models.scorer")
 
     lm_alpha = 0.75
     lm_beta = 1.85
