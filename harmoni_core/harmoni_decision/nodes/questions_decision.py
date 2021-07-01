@@ -57,7 +57,6 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
         self.max_index = 18
         self.choice_index = 16
         self.sequence_scenes = []
-        # self.setup_scene()
         self.state = State.INIT
 
 
@@ -67,129 +66,21 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
         dp = SequentialPattern(self.name, self.script)
         dp.start()
 
-
-# get task data from config_activity file
-
-    # def setup_scene(self):
-    #     for i in range(1, 16):
-    #         self.sequence_scenes.append(
-    #             {
-    #                 "background_choice": ["container_1", ""],
-    #                 "background_cont": ["questions_container", ""],
-    #                 "background": [
-    #                     "img_t1",
-    #                     "../assets/imgs/Cordial.png",
-    #                 ],
-    #                 "text": "Domanda",
-    #                 "choice_1": [
-    #                     "img_1",
-    #                     "../assets/imgs/Cordial.png",
-    #                 ],
-    #                 "choice_2": [
-    #                     "img_2",
-    #                     "../assets/imgs/test_1.jpg",
-    #                 ],
-    #                 "choice_3": [
-    #                     "img_3",
-    #                     "../assets/imgs/test_1.jpg",
-    #                 ],
-    #             }
-    #         )
-    #     self.sequence_scenes.append(
-    #         {
-    #             "background_cont": ["container_2", ""],
-    #             "background": [
-    #                 "img_bkg",
-    #                 "../assets/imgs/test_1.jpg",
-    #             ],
-    #             "text": "Background image",
-    #         }
-    #     )
-    #     self.sequence_scenes.append(
-    #         {
-    #             "background_cont": ["container_2", ""],
-    #             "background": [
-    #                 "img_bkg",
-    #                 "../assets/imgs/test_1.jpg",
-    #             ],
-    #             "text": "Background image",
-    #         }
-    #     )
-    #     return
-
     def populate_scene(self, index_scene):
-
-        rospy.loginfo(self.config_activity_script)
-        rospy.loginfo(self.config_activity_script[0])
-        rospy.loginfo(self.config_activity_script[0]["Q&A"])
-        rospy.loginfo(self.config_activity_script[0]["Q&A"][0])
-        rospy.loginfo(self.config_activity_script[0]["Q&A"][0]["General"])
-        rospy.loginfo(self.config_activity_script[0]["Q&A"][0]["General"][0])        
-        rospy.loginfo(self.config_activity_script[0]["Q&A"][0]["General"][0]["Linguaggio"])
-        rospy.loginfo(self.config_activity_script[0]["Q&A"][0]["General"][0]["Linguaggio"]["tasks"])
-        rospy.loginfo(self.config_activity_script[0]["Q&A"][0]["General"][0]["Linguaggio"]["tasks"][0])
-        rospy.loginfo(self.config_activity_script[0]["Q&A"][0]["General"][0]["Linguaggio"]["tasks"][0]["img_1"])
 
         self.script[1]["steps"][0]["web_default"]["trigger"] = (
             "[{'component_id':'img_1', 'set_content':'"
-            + self.config_activity_script[0]["Q&A"][0]["General"][0]["Linguaggio"]["tasks"][0]["img_1"]
+            + self.config_activity_script[0]["Q&A"][0]["General"][0]["Linguaggio"]["tasks"][index_scene]["img_1"]
             + "'}, {'component_id':'img_2', 'set_content':'"
-            + self.config_activity_script[0]["Q&A"][0]["General"][0]["Linguaggio"]["tasks"][0]["img_2"]
+            + self.config_activity_script[0]["Q&A"][0]["General"][0]["Linguaggio"]["tasks"][index_scene]["img_2"]
+            + "'}, {'component_id':'title', 'set_content':'"
+            + self.config_activity_script[0]["Q&A"][0]["General"][0]["Linguaggio"]["tasks"][index_scene]["text"]
             + "'}, {'component_id':'questions_container', 'set_content':''}]"
         )
-        self.script[1]["steps"][1]["tts_default"]["trigger"] = self.config_activity_script[0]["Q&A"][0]["General"][0]["Linguaggio"]["tasks"][0]["text"]
-        # if index_scene < self.choice_index:
-        #     self.script[1]["steps"][3]["web_default"]["trigger"] = (
-        #         "[{'component_id':'"
-        #         + self.sequence_scenes[index_scene]["choice_1"][0]
-        #         + "', 'set_content':'"
-        #         + self.sequence_scenes[index_scene]["choice_1"][1]
-        #         + "'},{'component_id':'"
-        #         + self.sequence_scenes[index_scene]["choice_2"][0]
-        #         + "', 'set_content':'"
-        #         + self.sequence_scenes[index_scene]["choice_2"][1]
-        #         + "'},{'component_id':'"
-        #         + self.sequence_scenes[index_scene]["choice_3"][0]
-        #         + "', 'set_content':'"
-        #         + self.sequence_scenes[index_scene]["choice_3"][1]
-        #         + "'}, {'component_id':'"
-        #         + self.sequence_scenes[index_scene]["background_choice"][0]
-        #         + "', 'set_content':'"
-        #         + self.sequence_scenes[index_scene]["background_choice"][1]
-        #         + "'}]"
-        #     )
+        self.script[1]["steps"][1]["tts_default"]["trigger"] = self.config_activity_script[0]["Q&A"][0]["General"][0]["Linguaggio"]["tasks"][index_scene]["text"]
+
         with open(self.pattern_script_path, "w") as json_file:
             json.dump(self.script, json_file)
-
-        # optional_data = "[{'component_id':'img_test1', 'set_content':'../assets/imgs/test_1.jpg'},{'component_id':'img_test2', 'set_content':'../assets/imgs/test_2.jpg'},{'component_id':'img_test3', 'set_content':'../assets/imgs/test_3.jpg'}, {'component_id':'questions_container', 'set_content':''}]"
-        # optional_data = {"tts_default": self.sequence_scenes["tasks"][self.index]["text"], "web_default":"[{'component_id':'img_test1', 'set_content':'../assets/imgs/test_1.jpg'},{'component_id':'img_test2', 'set_content':'../assets/imgs/test_2.jpg'},{'component_id':'img_test3', 'set_content':'../assets/imgs/test_3.jpg'}, {'component_id':'questions_container', 'set_content':''}]"}
-
-
-        # self.do_request(self.index, service, optional_data)
-
-    def setup_scene____(self, config_activity_file):
-        """Setup the scene """
-        # activity_episode = ""
-        # base_dir = os.path.dirname(__file__)
-
-        activity_type = "Q&A" #training
-        activity_structure = "General" #retelling cp
-        activity_name = "Linguaggio" #il compleanno
-        # if "episode" in self.activity_selected:
-            # activity_episode = self.activity_selected["episode"]
-        
-        with open(config_activity_file, "r") as json_file:
-            data = json.load(json_file)
-        
-        for typ in data: # e.g. Q&A storytelling or feeling_activity
-            rospy.loginfo(typ)
-            if activity_type in typ:
-                for struct in typ[activity_type]:
-                    if activity_structure in struct:
-                        for nam in struct[activity_structure]:
-                            if activity_name in nam:
-                                self.sequence_scenes=nam[activity_name]
-        return True
 
 
 
