@@ -5,15 +5,10 @@ bot:
     bot_name: "QTRobot"
     bot_alias: "qt_robot_test"
     region_name: "eu-west-2"
-  chris_param:
+  default_param:
     user_id: "chris_testing"
     bot_name: "GreeterPrototype"
     bot_alias: "test_bot"
-    region_name: "us-west-2"
-  default_param:
-    user_id: "leo_testing"
-    bot_name: "DomusBot"
-    bot_alias: "domus_bot"
     region_name: "us-west-2"
 
 google:

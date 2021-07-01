@@ -151,24 +151,13 @@ class MicrophoneService(HarmoniServiceManager):
         Find the input audio devices configured in ~/.asoundrc.
         If the device is not found, pyaudio will use your machine default device
         """
-        device_found = False
-        default_index = 0
         for i in range(self.p.get_device_count()):
             device = self.p.get_device_info_by_index(i)
-            rospy.loginfo(device)
-            rospy.loginfo(f"Found device with name " +  device["name"] + " at index "+ str(i))
+            # rospy.loginfo(device)
+            # rospy.loginfo(f"Found device with name {self.device_name} at index {i}")
             if device["name"] == self.device_name:
                 rospy.loginfo(device)
                 self.input_device_index = i
-                device_found = True
-            
-            if device["name"] == "default":
-                default_index = i
-
-        if not device_found:
-            self.input_device_index = default_index
-        
-        rospy.loginfo(self.input_device_index)
         return
 
     def start_recording_data(self):
