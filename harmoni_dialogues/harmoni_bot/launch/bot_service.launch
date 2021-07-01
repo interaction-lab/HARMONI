@@ -1,9 +1,9 @@
 <!-- This is an example launch file for how a ROS application could use a node -->
 <launch>
    
-	<arg name="use_aws_lex" default="true"/>
+	<arg name="use_aws_lex" default="false"/>
 	<arg name="use_google" default="false"/>
-	<arg name="use_rasa" default="false"/>
+	<arg name="use_rasa" default="true"/>
 	<arg name="instance_id" default="default"/>
   	<group if="$(arg use_aws_lex)">
 			<rosparam file="$(find harmoni_bot)/config/configuration.yaml" subst_value="True"/>
@@ -16,9 +16,10 @@
 			<node pkg="harmoni_bot" type="google_service.py" name="harmoni_bot_google_$(arg instance_id)" output="screen"  args="$(arg instance_id)"/>
   	</group>
   	<group if="$(arg use_rasa)">
-			<rosparam file="$(find harmoni_bot)/config/configuration.yaml" subst_value="True"/>
-			<param name="instance_id" value="$(arg instance_id)"/>
-			<node pkg="harmoni_bot" type="start_rasa_server.py" name="start_rasa" output="screen"  args="$(arg instance_id)"/>
-			<node pkg="harmoni_bot" type="rasa_service.py" name="harmoni_bot_rasa_$(arg instance_id)" output="screen"  args="$(arg instance_id)"/>
+            <rosparam file="$(find harmoni_bot)/config/configuration.yaml" subst_value="True"/>
+            <param name="instance_id" value="$(arg instance_id)"/>
+            <param name="harmoni_bot_dir" value="$(find harmoni_bot)"/>
+            <node pkg="harmoni_bot" type="start_rasa_server.sh" name="start_rasa_server" />
+            <node pkg="harmoni_bot" type="rasa_service.py" name="harmoni_bot_rasa_$(arg instance_id)" output="screen"  args="$(arg instance_id)"/>
   	</group>
 </launch>
