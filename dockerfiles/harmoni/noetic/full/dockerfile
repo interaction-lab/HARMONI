@@ -12,6 +12,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     ros-noetic-robot-state-publisher \
     ros-noetic-joint-state-publisher-gui \
     ros-noetic-audio-common \
+    ros-noetic-urdf-tutorial \
     # CLEANUP
     && rm -rf -- /var/lib/apt/lists/* 
 # && PIP_INSTALL="python3.8 -m pip --no-cache-dir install --upgrade" && \

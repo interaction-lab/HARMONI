@@ -292,7 +292,7 @@ class AWSTtsService(HarmoniServiceManager):
             self.result_msg = tts_response
             rospy.loginfo("Request successfully completed")
         except (BotoCoreError, ClientError) as error:
-            rospy.logerr("The erros is " + str(error))
+            rospy.logerr("The Boto error is " + str(error))
             self.state = State.FAILED
             self.response_received = True
             self.result_msg = ""

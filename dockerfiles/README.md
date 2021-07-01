@@ -62,7 +62,7 @@ docker build -f dockerfiles/harmoni/noetic/full/dockerfile --tag harmoniteam/har
 # W2L is not currently supported on Ubuntu 20.04
 # docker build -f dockerfiles/harmoni/noetic/w2l/dockerfile --tag harmoniteam/harmoni:noetic-w2l .
 
-docker build -f dockerfiles/harmoni/noetic/facedetect/dockerfile --tag harmoniteam/harmoni:noetic-facedetect .
+docker build -f dockerfiles/harmoni/noetic/face_detect/dockerfile --tag harmoniteam/harmoni:noetic-face_detect .
 ```
 
 ## Kinetic
@@ -71,7 +71,7 @@ docker build -f dockerfiles/harmoni/kinetic/base/dockerfile --tag harmoniteam/ha
 
 docker build -f dockerfiles/harmoni/kinetic/full/dockerfile --tag harmoniteam/harmoni:kinetic-full .
 
-docker build -f dockerfiles/harmoni/kinetic/w2l/dockerfile --tag harmoniteam/harmoni:kinetic-w2l .
+# docker build -f dockerfiles/harmoni/kinetic/w2l/dockerfile --tag harmoniteam/harmoni:kinetic-w2l .
 
 docker build -f dockerfiles/harmoni/kinetic/face_detect/dockerfile --tag harmoniteam/harmoni:kinetic-face_detect .
 ```

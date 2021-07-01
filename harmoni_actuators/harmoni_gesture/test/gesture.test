@@ -8,7 +8,7 @@
     <node pkg="harmoni_gesture" type="qt_gesture_interface.py" name="harmoni_gesture_qt_interface" output="screen"/>
     <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
     <node pkg="harmoni_gesture" type="qt_joint_state_publisher.py" name="robot_joint_state_publisher_qt" output="screen"/>
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher">
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
         <remap from="joint_states" to="$(arg simulated_joints)"/>
     </node>
     <arg name="rvizconfig" default="$(find urdf_tutorial)/rviz/urdf.rviz" />
