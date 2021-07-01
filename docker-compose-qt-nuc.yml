@@ -16,7 +16,7 @@ services:
       ROS_MASTER_URI: http://192.168.100.1:11311
       IS_DOCKER_ENV: "true"
       CATKIN_WS: harmoni_catkin_ws
-    network_mode: "host"
+    # network_mode: "host"
     ports:
       - "11312:11312"
       - "33691:33691"
