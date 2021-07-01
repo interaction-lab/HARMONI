@@ -1,0 +1,63 @@
+[
+    {
+        "set": "setup",
+        "steps": [
+            {
+                "microphone_default": {
+                    "action_goal": "ON",
+                    "resource_type": "sensor",
+                    "wait_for": ""
+                }
+            },
+            {
+                "stt_default": {
+                    "action_goal": "ON",
+                    "resource_type": "detector",
+                    "wait_for": ""
+                }
+            }
+        ]
+    },
+    {
+        "set": "sequence",
+        "steps": [
+            {
+                "tts_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": "new"
+                }
+            },
+            [
+                {
+                    "speaker_default": {
+                        "action_goal": "DO",
+                        "resource_type": "actuator",
+                        "wait_for": "new"
+                    }
+                },
+                {
+                    "face_mouth_default": {
+                        "action_goal": "DO",
+                        "resource_type": "actuator",
+                        "wait_for": "new"
+                    }
+                }
+            ],
+            {
+                "stt_default": {
+                    "resource_type": "detector",
+                    "wait_for": "new"
+                }
+            },
+            {
+                "bot_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": "new"
+                }
+            }
+            
+        ]
+    }
+]

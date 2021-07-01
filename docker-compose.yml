@@ -35,6 +35,7 @@ services:
       # Configuration
       - ~/.aws:/root/.aws/
       - ~/.gcp/private-keys.json:/root/.gcp/private-keys.json
+      - ~/.hass:/root/.hass/
       # Other
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /etc/timezone:/etc/timezone:ro
