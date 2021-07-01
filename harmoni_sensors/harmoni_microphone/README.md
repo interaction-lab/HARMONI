@@ -1,4 +1,7 @@
-# Microphone Service Parameters:
+# HARMONI Microphone
+
+## Usage
+## Parameters
 Parameters input for the microphone service: 
 
 | Parameters           | Definition | Values |
@@ -7,10 +10,9 @@ Parameters input for the microphone service:
 |chunk_size            |            |        |
 |total_channels        |            |        |
 |audio_rate            |            |        |
-|silence_limit_seconds |            |        |
-|previous_audio_seconds|            |        |
-|total_silence_samples |            |        |
-|silence_threshold     |            |        |
 |device_name           |            |        |
-|loudest_sound_value   |            |        |
-|set_threshold         |            |        |
+
+
+## Testing
+## References
+[Documentation](https://harmoni.readthedocs.io/en/latest/packages/harmoni_microphone.html)

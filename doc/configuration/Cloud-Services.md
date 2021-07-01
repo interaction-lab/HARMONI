@@ -1,4 +1,6 @@
-# Connecting to Cloud Services
+# Cloud Services
+
+_What is needed to connect to cloud services._
 
 ## Setup Amazon Accounts
 (If you are planning to use Lex or Polly) Set up AWS account following these steps: 

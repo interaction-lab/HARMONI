@@ -22,6 +22,10 @@ Below you will find an overview of the HARMONI platform, walkthroughs and tutori
    :glob:
 
    Overview
-   Sample-Tutorials
+   Quickstart
+   Configuration
+   Tutorials
    Testing
    Contributions
+   Packages
+   ROS_API
