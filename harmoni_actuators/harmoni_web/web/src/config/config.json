@@ -7,13 +7,22 @@
                 {
                     "component": "title",
                     "children": "Domanda",
-                    "id": "title_1"
+                    "id": "title"
                 },
                 {
                     "component": "row",
-                    "id": "row_1",
+                    "id": "row",
                     "children": [
-
+                        {
+                            "component": "img",
+                            "children": "../assets/imgs/test.jpg",
+                            "id": "img_1"
+                        },
+                        {
+                            "component": "img",
+                            "children": "../assets/imgs/test.jpg",
+                            "id": "img_2"
+                        }
                     ]
                 }
             ]

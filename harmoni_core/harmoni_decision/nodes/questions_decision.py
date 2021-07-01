@@ -40,12 +40,13 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
     This class is a singleton ROS node and should only be instantiated once.
     """
 
-    def __init__(self, name, script, instance_id , path):
+    def __init__(self, name, script, instance_id , path, activity_script):
         super().__init__(name)
         self.name = name
         self.script = script
         self.service_id = instance_id
         self.pattern_script_path = path
+        self.config_activity_script = activity_script
         self.index = 0
         
         self.text_pub = rospy.Publisher(
@@ -56,7 +57,7 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
         self.max_index = 18
         self.choice_index = 16
         self.sequence_scenes = []
-        self.setup_scene()
+        # self.setup_scene()
         self.state = State.INIT
 
 
@@ -66,68 +67,77 @@ class MultipleChoiceDecisionManager(HarmoniServiceManager):
         dp = SequentialPattern(self.name, self.script)
         dp.start()
 
-    def setup_scene(self):
-        for i in range(1, 16):
-            self.sequence_scenes.append(
-                {
-                    "background_choice": ["container_1", ""],
-                    "background_cont": ["container_2", ""],
-                    "background": [
-                        "img_bkg",
-                        "../assets/imgs/test_1.jpg",
-                    ],
-                    "text": "Domanda",
-                    "choice_1": [
-                        "img_1",
-                        "../assets/imgs/test_1.jpg",
-                    ],
-                    "choice_2": [
-                        "img_2",
-                        "../assets/imgs/test_1.jpg",
-                    ],
-                    "choice_3": [
-                        "img_3",
-                        "../assets/imgs/test_1.jpg",
-                    ],
-                }
-            )
-        self.sequence_scenes.append(
-            {
-                "background_cont": ["container_2", ""],
-                "background": [
-                    "img_bkg",
-                    "../assets/imgs/test_1.jpg",
-                ],
-                "text": "Background image",
-            }
-        )
-        self.sequence_scenes.append(
-            {
-                "background_cont": ["container_2", ""],
-                "background": [
-                    "img_bkg",
-                    "../assets/imgs/test_1.jpg",
-                ],
-                "text": "Background image",
-            }
-        )
-        return
+
+# get task data from config_activity file
+
+    # def setup_scene(self):
+    #     for i in range(1, 16):
+    #         self.sequence_scenes.append(
+    #             {
+    #                 "background_choice": ["container_1", ""],
+    #                 "background_cont": ["questions_container", ""],
+    #                 "background": [
+    #                     "img_t1",
+    #                     "../assets/imgs/Cordial.png",
+    #                 ],
+    #                 "text": "Domanda",
+    #                 "choice_1": [
+    #                     "img_1",
+    #                     "../assets/imgs/Cordial.png",
+    #                 ],
+    #                 "choice_2": [
+    #                     "img_2",
+    #                     "../assets/imgs/test_1.jpg",
+    #                 ],
+    #                 "choice_3": [
+    #                     "img_3",
+    #                     "../assets/imgs/test_1.jpg",
+    #                 ],
+    #             }
+    #         )
+    #     self.sequence_scenes.append(
+    #         {
+    #             "background_cont": ["container_2", ""],
+    #             "background": [
+    #                 "img_bkg",
+    #                 "../assets/imgs/test_1.jpg",
+    #             ],
+    #             "text": "Background image",
+    #         }
+    #     )
+    #     self.sequence_scenes.append(
+    #         {
+    #             "background_cont": ["container_2", ""],
+    #             "background": [
+    #                 "img_bkg",
+    #                 "../assets/imgs/test_1.jpg",
+    #             ],
+    #             "text": "Background image",
+    #         }
+    #     )
+    #     return
 
     def populate_scene(self, index_scene):
+
+        rospy.loginfo(self.config_activity_script)
+        rospy.loginfo(self.config_activity_script[0])
+        rospy.loginfo(self.config_activity_script[0]["Q&A"])
+        rospy.loginfo(self.config_activity_script[0]["Q&A"][0])
+        rospy.loginfo(self.config_activity_script[0]["Q&A"][0]["General"])
+        rospy.loginfo(self.config_activity_script[0]["Q&A"][0]["General"][0])        
+        rospy.loginfo(self.config_activity_script[0]["Q&A"][0]["General"][0]["Linguaggio"])
+        rospy.loginfo(self.config_activity_script[0]["Q&A"][0]["General"][0]["Linguaggio"]["tasks"])
+        rospy.loginfo(self.config_activity_script[0]["Q&A"][0]["General"][0]["Linguaggio"]["tasks"][0])
+        rospy.loginfo(self.config_activity_script[0]["Q&A"][0]["General"][0]["Linguaggio"]["tasks"][0]["img_1"])
+
         self.script[1]["steps"][0]["web_default"]["trigger"] = (
-            "[{'component_id':'"
-            + self.sequence_scenes[index_scene]["background"][0]
-            + "', 'set_content':'"
-            + self.sequence_scenes[index_scene]["background"][1]
-            + "'}, {'component_id':'"
-            + self.sequence_scenes[index_scene]["background_cont"][0]
-            + "', 'set_content':'"
-            + self.sequence_scenes[index_scene]["background_cont"][1]
-            + "'}]"
+            "[{'component_id':'img_1', 'set_content':'"
+            + self.config_activity_script[0]["Q&A"][0]["General"][0]["Linguaggio"]["tasks"][0]["img_1"]
+            + "'}, {'component_id':'img_2', 'set_content':'"
+            + self.config_activity_script[0]["Q&A"][0]["General"][0]["Linguaggio"]["tasks"][0]["img_2"]
+            + "'}, {'component_id':'questions_container', 'set_content':''}]"
         )
-        self.script[1]["steps"][1]["tts_default"]["trigger"] = self.sequence_scenes[
-            index_scene
-        ]["text"]
+        self.script[1]["steps"][1]["tts_default"]["trigger"] = self.config_activity_script[0]["Q&A"][0]["General"][0]["Linguaggio"]["tasks"][0]["text"]
         # if index_scene < self.choice_index:
         #     self.script[1]["steps"][3]["web_default"]["trigger"] = (
         #         "[{'component_id':'"
@@ -193,7 +203,10 @@ if __name__ == "__main__":
     rospack = rospkg.RosPack()
     pck_path = rospack.get_path("harmoni_decision")
     words_file_path = pck_path + f"/dict/words.txt"
-    config_activity_file = pck_path + f"/resources/config_activity.json"
+    config_activity_path = pck_path + f"/resources/config_activity.json"
+    with open(config_activity_path, "r") as read_file:
+        activity_script = json.load(read_file)
+
 
     # url = rospy.get_param("/url_" + name + "/")
     rospack = rospkg.RosPack()
@@ -204,7 +217,7 @@ if __name__ == "__main__":
 
     try:
         rospy.init_node(name + "_decision")
-        bc = MultipleChoiceDecisionManager(name, script, instance_id, pattern_script_path)
+        bc = MultipleChoiceDecisionManager(name, script, instance_id, pattern_script_path, activity_script)
         rospy.loginfo(f"START from the first step of {name} decision.")
 
         bc.start()

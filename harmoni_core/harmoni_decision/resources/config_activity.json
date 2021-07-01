@@ -12,8 +12,8 @@
                     {
                         "text":"Scegli la risposta corretta. Oggetto che serve a divertire i bambini",
                         "img_bkg":"",
-                        "img_1": "test.jpg",
-                        "img_2": "qa_1_1_comp.jpg",
+                        "img_1": "../assets/imgs/test.jpg",
+                        "img_2": "../assets/imgs/Cordial.png",
                         "text_1": "Giocattolo",
                         "text_2": "Gettone"
                     },
