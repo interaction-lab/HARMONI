@@ -12,7 +12,7 @@ services:
     environment:
       DISPLAY: $DISPLAY
       ROS_DISTRO: kinetic
-      ROS_IP: "192.168.100.1"
+      #ROS_IP: "192.168.100.1"
       ROS_MASTER_URI: http://192.168.100.1:11311
       IS_DOCKER_ENV: "true"
       CATKIN_WS: harmoni_catkin_ws
