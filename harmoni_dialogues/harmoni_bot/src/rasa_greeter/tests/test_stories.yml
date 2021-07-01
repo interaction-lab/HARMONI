@@ -1,0 +1,34 @@
+version: "2.0"
+stories:
+  - story: greet + goodbye
+    steps:
+      - intent: "greet: Hi!"
+      - action: utter_greet
+      - intent: "bye: Bye"
+      - action: utter_bye
+  - story: greet + thanks
+    steps:
+      - intent: "greet: Hello there"
+      - action: utter_greet
+      - intent: "thank: thanks a bunch"
+      - action: utter_noworries
+  - story: greet + thanks + goodbye
+    steps:
+      - intent: "greet: Hey"
+      - action: utter_greet
+      - intent: "thank: thank you"
+      - action: utter_noworries
+      - intent: "bye: bye bye"
+      - action: utter_bye
+  - story: ask channels
+    steps:
+      - intent: "faq: What messaging channels does Rasa support?"
+      - action: respond_faq
+  - story: ask languages
+    steps:
+      - intent: "faq: Which languages can I build assistants in?"
+      - action: respond_faq
+  - story: ask rasa x
+    steps:
+      - intent: "faq: What’s Rasa X?"
+      - action: respond_faq

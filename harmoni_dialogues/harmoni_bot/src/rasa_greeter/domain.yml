@@ -1,0 +1,78 @@
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
+intents:
+  - welcome:
+      use_entities: []
+  - findWorker:
+      use_entities: []
+  - handSanitizer:
+      use_entities: []
+  - checkIn:
+      use_entities: []
+  - checkOut:
+      use_entities: []
+  - labName:
+      use_entities: []
+  - labProfessor:
+      use_entities: []
+  - labPurpose:
+      use_entities: []
+  - covidPolicies:
+      use_entities: []
+  - projects:
+      use_entities: []
+  - bye:
+      use_entities: []
+  - giveName:
+      use_entities:
+        - name
+  - countNumber:
+      use_entities:
+        - number
+  - goodbye
+  - countIntent
+entities:
+  - name
+  - findWorkerName
+  - lab_name
+  - number
+responses:
+  utter_welcome:
+    - text: Welcome to the Interaction Lab!
+  utter_handSanitizer:
+    - text: I'll show you to the hand sanitizer
+  utter_checkIn:
+    - text: Ok! Welcome back
+  utter_checkOut:
+    - text: Have a good day! See you soon
+  utter_labName:
+    - text: This is the Interaction Lab
+  utter_labProfessor:
+    - text: This is Professor Mataric's lab
+  utter_labPurpose:
+    - text: This lab focuses on human-robot interaction
+  utter_covidPolicies:
+    - text: The lab is restricting the number of people working at a time
+  utter_projects:
+    - text: I will list the current projects in the lab
+  utter_bye:
+    - text: Bye! [name]
+  utter_default:
+    - text: I'm sorry I didn't understand that
+  utter_goodbye:
+    - text: Bye now!
+  utter_nothing:
+    - text: " "
+  utter_scared:
+    - text: Oh dear
+  utter_agree:
+    - text: Sounds good!
+  utter_thanks:
+    - text: Thanks {number}
+actions:
+  - check_in
+  - check_out
+  - find_worker
+  - utter_scared
+  - utter_agree

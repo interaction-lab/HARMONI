@@ -1,0 +1,32 @@
+# Configuration for Rasa NLU.
+# https://rasa.com/docs/rasa/nlu/components/
+language: en
+
+pipeline:
+  # This key can be left empty. The pipeline will then be provided from a default configuration during training.
+  - name: WhitespaceTokenizer
+  - name: RegexFeaturizer
+  - name: LexicalSyntacticFeaturizer
+  - name: CountVectorsFeaturizer
+  - name: CountVectorsFeaturizer
+    analyzer: "char_wb"
+    min_ngram: 1
+    max_ngram: 4
+  - name: DIETClassifier
+    epochs: 100
+  - name: EntitySynonymMapper
+  - name: ResponseSelector
+    epochs: 100
+  - name: FallbackClassifier
+    threshold: 0.4
+    ambiguity_theshold: 0.1
+
+# Configuration for Rasa Core.
+# https://rasa.com/docs/rasa/core/policies/
+policies:
+  # This key can be left empty. Policies will then be provided from a default configuration during training.
+  - name: MemoizationPolicy
+  - name: TEDPolicy
+  - name: RulePolicy
+    core_fallback_threshold: 0.1
+    core_fallback_action_name: "action_default_fallback"

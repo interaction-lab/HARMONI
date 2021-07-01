@@ -1,0 +1,101 @@
+version: "2.0"
+nlu:
+  - intent: welcome
+    examples: |
+      - Hi
+      - Hey
+      - Hi bot
+      - Hey bot
+      - Hello
+      - Good morning
+      - hi again
+      - hi folks
+      - Thanks
+  - intent: checkIn
+    examples: |
+      - i'm [erica](name) checking in to the [Interaction](lab_name) lab
+      - check in to the [Interaction](lab_name) lab
+      - checking in
+      - i'm here
+      - checking in for [chris](name)
+  - intent: checkOut
+    examples: |
+      - i'm [erica](name) checking out
+      - check out
+      - checking out
+      - i'm leaving for the day
+      - checking out for [chris](name)
+  - intent: findWorker
+    examples: |
+      - is [erica](findWorkerName) here
+      - i'm looking for [chris](findWorkerName)
+      - do you know if [erica](findWorkerName) is here
+  - intent: handSanitizer
+    examples: |
+      - where is the hand sanitizer
+      - where can I find the hand sanitizer
+      - do you have hand sanitizer
+      - i'm looking for hand sanitizer
+  - intent: labName
+    examples: |
+      - what lab is this
+      - which lab is this
+      - what is this lab called
+      - what is the name of this lab
+  - intent: labProfessor
+    examples: |
+      - whose lab is this
+      - which professor's lab is this
+      - who is in charge of this lab
+      - who runs the lab
+  - intent: labPurpose
+    examples: |
+      - what does this lab do
+      - what is the purpose of this lab
+      - what does the lab study
+      - what do people study here
+  - intent: covidPolicies
+    examples: |
+      - what are the lab's coronavirus policies
+      - how are you handling the coronavirus
+      - what are the covid policies here
+  - intent: projects
+    examples: |
+      - which projects are going on here
+      - what studies are happening
+      - what projects are in progress
+      - what's going on in the lab
+  - intent: tellAJoke
+    examples: |
+      - do you know any jokes
+      - tell me a joke
+      - can you be funny
+      - that sounds funny
+  - intent: bye
+    examples: |
+      - goodbye
+      - goodnight
+      - good bye
+      - good night
+      - see ya
+      - toodle-oo
+      - bye bye
+      - gotta go
+      - farewell
+      - see you
+  - intent: giveName
+    examples: |
+      - my name is Name1
+      - my name is [Chris](name)
+      - My name is [Chris](name)
+  - intent: countIntent
+    examples: |
+      - I'd like to count with you
+  - intent: countNumber
+    examples: |
+      - one
+      - two
+      - three
+  - intent: goodbye
+    examples: |
+      - So long

@@ -1,0 +1,60 @@
+version: "2.0"
+stories:
+- story: welcome
+  steps:
+  - intent: welcome
+  - action: utter_welcome
+- story: handSanitizer
+  steps:
+  - intent: handSanitizer
+  - action: utter_handSanitizer
+- story: checkIn
+  steps:
+  - intent: checkIn
+  - action: check_in
+  - action: utter_checkIn
+  - action: action_restart
+- story: checkOut
+  steps:
+  - intent: checkOut
+  - action: check_out
+  - action: utter_checkOut
+  - action: action_restart
+- story: labName
+  steps:
+  - intent: labName
+  - action: utter_labName
+- story: labProfessor
+  steps:
+  - intent: labProfessor
+  - action: utter_labProfessor
+- story: labPurpose
+  steps:
+  - intent: labPurpose
+  - action: utter_labPurpose
+- story: covidPolicies
+  steps:
+  - intent: covidPolicies
+  - action: utter_covidPolicies
+- story: projects
+  steps:
+  - intent: projects
+  - action: utter_projects
+- story: bye
+  steps:
+  - intent: bye
+  - action: utter_bye
+- story: findWorker
+  steps:
+  - intent: findWorker
+  - action: find_worker
+  - action: action_restart
+- story: princessBride
+  steps:
+  - intent: giveName
+  - action: utter_nothing
+  - intent: declareMurder
+  - action: utter_nothing
+  - intent: threaten
+  - action: utter_scared
+  - action: utter_goodbye
