@@ -23,6 +23,8 @@ $ aws configure
 # Enter the IAM user access and secret keys here.
 ```
 
+Note: The docker compose scripts expect your aws keys to be in ~/.aws
+
 ## Setup Google Accounts
 If you are planning on using dialogflow or other google services:
 
