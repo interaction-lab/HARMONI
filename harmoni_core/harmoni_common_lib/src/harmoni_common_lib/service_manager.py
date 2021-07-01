@@ -49,6 +49,7 @@ class HarmoniServiceManager(object):
         Raises:
             NotImplementedError: To be used, this function should be overwritten by the child class.
         """
+        rospy.logerr(f"HarmoniServiceManager {self.name} request() not implemented.")
         raise NotImplementedError()
         return
 
@@ -61,6 +62,7 @@ class HarmoniServiceManager(object):
         Raises:
             NotImplementedError: To be used, this function should be overwritten by the child class.
         """
+        rospy.logerr(f"HarmoniServiceManager {self.name} do() not implemented.")
         raise NotImplementedError()
         return
 
@@ -73,25 +75,27 @@ class HarmoniServiceManager(object):
         Raises:
             NotImplementedError: To be used, this function should be overwritten by the child class.
         """
+        rospy.logerr(f"HarmoniServiceManager {self.name} start() not implemented.")
         raise NotImplementedError()
         return
 
     def pause(self):
-        """Will interupt the long running action, preventing it from continuing until start
+        """Will interrupt the long running action, preventing it from continuing until start
         is called again.
 
         Raises:
             NotImplementedError: To be used, this function should be overwritten by the child class.
         """
-        rospy.logwarn("service pause() not implemented. NOTE: This is currently required for goal preemption to work on longrunning processes.")
+        rospy.logerr(f"HarmoniServiceManager {self.name} pause() not implemented.")
         return
 
     def stop(self):
-        """Will interupt the long running action
+        """Will interrupt the long running action
 
         Raises:
             NotImplementedError: To be used, this function should be overwritten by the child class.
         """
+        rospy.logerr(f"HarmoniServiceManager {self.name} stop() not implemented.")
         raise NotImplementedError()
         return
 
