@@ -25,6 +25,6 @@ google:
 
 rasa:
   default_param:
-    rasa_assistant_path: "$(find harmoni_bot)/src/rasa_example/"
+    rasa_assistant: "rasa_example"
     host: "localhost"
     port: 5005

@@ -1,53 +1,53 @@
 #!/usr/bin/env python3
 
-import argparse
 import os
+import rasa
+import rospy
 
-from rasa.run import run
-from rasa.train import train
 
+def _start_rasa_server(rasa_assistant_path, host, port):
+    config = os.path.join(rasa_assistant_path, "config.yml")
+    connector = "addons.custom_channel.MyIO"
+    credentials = os.path.abspath(os.path.join(rasa_assistant_path, "credentials.yml"))
+    data = os.path.abspath(os.path.join(rasa_assistant_path, "data"))
+    domain = os.path.join(rasa_assistant_path, "domain.yml")
+    endpoints = os.path.join(rasa_assistant_path, "endpoints.yml")
+    model = os.path.join(rasa_assistant_path, "models")
 
-if __name__ == "__main__":
-    config = "/root/harmoni_catkin_ws/src/HARMONI/harmoni_dialogues/harmoni_bot/src/rasa_example/config.yml"
-    data = "/root/harmoni_catkin_ws/src/HARMONI/harmoni_dialogues/harmoni_bot/src/rasa_example/data"
-    domain = "/root/harmoni_catkin_ws/src/HARMONI/harmoni_dialogues/harmoni_bot/src/rasa_example/domain.yml"
-    endpoints = "/root/harmoni_catkin_ws/src/HARMONI/harmoni_dialogues/harmoni_bot/src/rasa_example/endpoints.yml"
-    model = "/root/harmoni_catkin_ws/src/HARMONI/harmoni_dialogues/harmoni_bot/src/rasa_example/models"
-
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument("--config")
-    # parser.add_argument("--data")
-    # parser.add_argument("--domain")
-    # parser.add_argument("--model")
-    # args = parser.parse_args()
-
-    # train(
-    #     domain=args.domain,
-    #     config=args.config,
-    #     training_files=args.data,
-    #     output=args.model
-    # )
-    train(
+    rasa.train(
         domain=domain,
         config=config,
         training_files=data,
         output=model
     )
 
-    connector = "addons.custom_channel.MyIO"
-    credentials = "/root/harmoni_catkin_ws/src/HARMONI/harmoni_dialogues/harmoni_bot/src/rasa_example/credentials.yml"
-
-    # run(
-    #     model=args.model,
-    #     endpoints=args.endpoints,
-    #     connector=args.connector,
-    #     credentials=args.credentials,
-    #     **{"host": "localhost", "port": 5005}
-    # )
-    run(
+    rasa.run(
         model=model,
         endpoints=endpoints,
         connector=connector,
         credentials=credentials,
-        **{"host": "localhost", "port": 5005}
+        **{"host": host, "port": port}
     )
+
+def main():
+    instance_id = rospy.get_param("instance_id")  # "default"
+    params = rospy.get_param("rasa" + "/" + instance_id + "_param/")
+
+    host = params["host"]
+    port = params["port"]
+    rasa_assistant = params["rasa_assistant"]
+    harmoni_bot_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    if rasa_assistant == "rasa_example" or rasa_assistant == "rasa_greeter":
+        bot_path = f"src/{rasa_assistant}"
+    else:
+        rospy.logerr("Not a valid Rasa bot, defaulting to rasa_example")
+        bot_path = "src/rasa_example"
+    rasa_assistant_path = os.path.abspath(os.path.join(
+        harmoni_bot_dir, bot_path
+    ))
+
+    _start_rasa_server(rasa_assistant_path, host, port)
+
+
+if __name__ == "__main__":
+    main()

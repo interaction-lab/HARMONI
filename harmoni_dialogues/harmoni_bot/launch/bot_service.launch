@@ -18,6 +18,7 @@
   	<group if="$(arg use_rasa)">
 			<rosparam file="$(find harmoni_bot)/config/configuration.yaml" subst_value="True"/>
 			<param name="instance_id" value="$(arg instance_id)"/>
+			<node pkg="harmoni_bot" type="start_rasa_server.py" name="start_rasa" output="screen"  args="$(arg instance_id)"/>
 			<node pkg="harmoni_bot" type="rasa_service.py" name="harmoni_bot_rasa_$(arg instance_id)" output="screen"  args="$(arg instance_id)"/>
   	</group>
 </launch>
