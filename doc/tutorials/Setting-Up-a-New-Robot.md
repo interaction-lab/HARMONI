@@ -40,8 +40,6 @@ You will also need to install docker-compose. Instructions can be found here: [h
 
 ## HARMONI Install (to do on both NUC and PI) 
 
- 
-
 1. Clone the repository: 
 
    ```bash 
@@ -123,33 +121,6 @@ You will also need to install docker-compose. Instructions can be found here: [h
 
 Follow the instructions you find [here](../Configuration/Cloud-Services) for configuring the cloud services.  
 
-While for setting up the Audio Hardware follow these steps: 
-
-#### Speaker 
-
-Check the `.asoundrc` file (located in `HARMONI/dockerfiles/config`) to ensure it refers to the appropriate sound device on your system. Determine which audio device you want to use by running `aplay -l` or `arecord -l` and update aforementioned `.asoundrc` file. *Note: make sure you can see hidden files*. If you are not using Docker, you will need to find or create the `.asoundrc` file in your home directory to configure sound in the same way. 
-
-```bash 
-cd dockerfiles/config 
-nano .asoundrc 
-# Update the hardware and soundcard id. 
-```
-The contents are shown below for working with the QT speaker: 
-
-``` 
-pcm.!default { 
-  type plug 
-  slave { 
-    pcm "hw:0,0" 
-  } 
-} 
-ctl.!default { 
-  type hw 
-    card 0 
-} 
-``` 
-
-For testing the audio you cannot follow the testing command because the NUC is not connected to the speaker. For testing the speaker service please continue with the configuration on the PI. 
 
  
 ## Run HARMONI on the PI 
@@ -207,6 +178,31 @@ On the NUC (qtpc), run the command:
 ``` 
 roslaunch harmoni_speaker speaker_service.launch play:=false 
 ``` 
+
+On the PI, check the `.asoundrc` file (located in `HARMONI/dockerfiles/config`) to ensure it refers to the appropriate sound device on your system. Determine which audio device you want to use by running `aplay -l` or `arecord -l` and update aforementioned `.asoundrc` file. *Note: make sure you can see hidden files*. If you are not using Docker, you will need to find or create the `.asoundrc` file in your home directory to configure sound in the same way. 
+
+```bash 
+cd dockerfiles/config 
+nano .asoundrc 
+# Update the hardware and soundcard id. 
+```
+The contents are shown below for working with the QT speaker: 
+
+``` 
+pcm.!default { 
+  type plug 
+  slave { 
+    pcm "hw:0,0" 
+  } 
+} 
+ctl.!default { 
+  type hw 
+    card 0 
+} 
+``` 
+
+For testing the audio you cannot follow the testing command because the NUC is not connected to the speaker. For testing the speaker service please continue with the configuration on the PI. 
+
 On the PI (qtrp), run the command: 
 
 ``` 
@@ -259,7 +255,7 @@ To automatically start the face run the following.
 On the NUC (qtpc), run the command: 
 
 ``` 
-roslaunch harmoni_face face.launch 
+roslaunch harmoni_face face_service.launch 
 rosrun harmoni_web client_to_start_face.py 
 ``` 
 
