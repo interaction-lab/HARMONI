@@ -1,10 +1,12 @@
-# Gesture Service Parameters:
-Parameters input for the gesture service: 
+# HARMONI Gesture
 
-| Parameters           | Definition | Values |
-|----------------------|------------|--------|
+## Usage
 
+## Parameters
 
-# Setting up your gesture
+## Testing
 
-To test that the gesture has been configured properly, use the command ```roslaunch harmoni_gesture gesture_service.launch test:=true``` which will play a short phrase through the configured device. You may need to experiement with different values to ensure the proper gesture is set up.
+To test that the gesture has been configured properly, use the command ```rostest harmoni_gesture gesture.test``` which will play a short phrase through the configured device.
+
+## References
+[Documentation](https://harmoni.readthedocs.io/en/latest/packages/harmoni_gesture.html)
