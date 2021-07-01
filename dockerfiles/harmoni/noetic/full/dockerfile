@@ -2,6 +2,8 @@ FROM harmoniteam/harmoni:noetic-base
 
 RUN ROS_DISTRO="noetic"
 
+RUN apt-key adv --refresh-keys --keyserver keyserver.ubuntu.com
+
 RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \

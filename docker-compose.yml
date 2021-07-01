@@ -19,7 +19,7 @@ services:
       CATKIN_WS: harmoni_catkin_ws
     privileged: true
     networks:
-      ros_net:
+      ros_net: 
         ipv4_address: 172.18.3.4
     hostname: harmoni_full
     ports:

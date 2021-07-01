@@ -82,8 +82,3 @@ To set the media source for Home Assistant see [here](https://www.home-assistant
 Example: "{ "action":"check_log", "entity":"switch.oven_power", "hours" : "4", "answer":"yes"}"
 
 This command uses a POST API call to: /api/logbook/\<timestamp>     (formatted as "2021-05-24T10:00:00+00:00")
-
-
-
-## Info on how to create a HARMONI package
-[How to create a HARMONI package](How_to_create_a_HARMONI_package.md)
