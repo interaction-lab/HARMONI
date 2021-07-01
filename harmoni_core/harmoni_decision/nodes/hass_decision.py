@@ -102,8 +102,8 @@ class HomeAssistantDecisionManager(HarmoniServiceManager):
         self.index = 0
         self.state = State.START
 
-        # CHECK HOME ASSISTANT
-        self.check_log_request()
+        # CHECK HOME ASSISTANT every x seconds
+        # self.check_log_request()
 
         self.do_request(self.index, service, 'Ciao')
 

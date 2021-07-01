@@ -5,6 +5,6 @@
     <node pkg="harmoni_web" type="http_server_runner.py" name="web_http_server" output="screen" args="$(arg web_directory_path) $(arg port)" />
 	<include ns="bridge_web" file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
     <node pkg="harmoni_web" type="web_service.py" name="harmoni_web_default" output="screen"/>
-	<param name="test_web_input" value="{'component_id':'test_container', 'set_content': ''}"/>
+	<param name="test_web_input" value="{'component_id':'questions_container', 'set_content': ''}"/>
     <test test-name="test_web" pkg="harmoni_web" type="rostest_web.py" />
 </launch>

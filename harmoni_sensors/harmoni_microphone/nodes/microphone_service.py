@@ -168,6 +168,7 @@ class MicrophoneService(HarmoniServiceManager):
         if not device_found:
             self.input_device_index = default_index
         
+        rospy.loginfo(self.input_device_index)
         return
 
     def start_recording_data(self):

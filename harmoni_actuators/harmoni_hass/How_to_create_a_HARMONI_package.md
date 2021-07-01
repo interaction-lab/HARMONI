@@ -2,6 +2,9 @@
 Harmoni follows the standard ROS conventions for package structure.
 Below you can find some info about how to create a package that follows the HARMONI Unit conventions.
 
+[General info on how to create a ROS package](http://wiki.ros.org/ROS/Tutorials/CreatingPackage).
+Notice that HARMONI uses *harmoni_catkin_ws* as workspace instead of *catkin_ws* described in the tutorial.
+
 ## *CMakeLists.txt* and *setup.py* and *package.xml*
 [MANDATORY]
 

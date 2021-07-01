@@ -2,7 +2,7 @@
 harmoni:
   bot: ["default"]
   tts: ["default"]
-  #web: ["default"]
+  web: ["default"]
   stt: ["default"]
   #face_detect: ["default"]
   hass: ["default"]
@@ -21,7 +21,17 @@ hass:
   tts: ["default"]
   speaker: ["default"]
   hass: ["default"]
-# pattern:
+  # web: ["default"]
+questions:
+  face: ["default"]
+  microphone: ["default"]
+  stt: ["default"]
+  bot: ["default"]
+  tts: ["default"]
+  speaker: ["default"]
+  hass: ["default"]
+  web: ["default"]
+  # pattern:
 #   setup: ["default"]
 #   reverse_dialogue: ["default"]
 #   hass: ["default"]

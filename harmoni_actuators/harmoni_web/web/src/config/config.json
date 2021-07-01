@@ -2,6 +2,24 @@
     "pageContent": [
         {
             "component": "container",
+            "id": "questions_container",
+            "children": [
+                {
+                    "component": "title",
+                    "children": "Domanda",
+                    "id": "title_1"
+                },
+                {
+                    "component": "row",
+                    "id": "row_1",
+                    "children": [
+
+                    ]
+                }
+            ]
+        },
+        {
+            "component": "container",
             "id": "test_container",
             "children": [
                 {
