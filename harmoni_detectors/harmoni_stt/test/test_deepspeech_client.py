@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
 import mock
+import numpy as np
 import os
 import unittest
+import wave
 
 from harmoni_stt.deepspeech_client import DeepSpeechClient
 
@@ -47,6 +49,16 @@ class TestDeepSpeechClient(unittest.TestCase):
         result = self.ds_client.finish_stream()
         assert result == ""
         assert not self.ds_client.is_streaming
+
+    def test_process_audio(self):
+        wf = wave.open(TEST_AUDIO_FILE_PATH, 'rb')
+        chunk = 1024
+        data = wf.readframes(chunk)
+        while data:
+            text = self.ds_client.process_audio(data)
+            data = wf.readframes(chunk)
+        assert text is not None
+        wf.close()
 
 
 if __name__ == "__main__":
