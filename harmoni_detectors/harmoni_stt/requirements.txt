@@ -1,0 +1,3 @@
+deepspeech==0.9.3
+mock
+numpy>=1.16.0
