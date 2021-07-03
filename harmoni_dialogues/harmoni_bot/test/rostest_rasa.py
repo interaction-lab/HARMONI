@@ -7,6 +7,8 @@ import unittest
 from collections import deque
 
 # Specific Imports
+import mock
+import requests
 from actionlib_msgs.msg import GoalStatus
 from harmoni_common_lib.action_client import HarmoniActionClient
 from harmoni_common_lib.constants import DialogueNameSpace, ActionType
@@ -24,6 +26,8 @@ class TestRasa(unittest.TestCase):
         rospy.init_node("test_rasa", log_level=rospy.INFO)
         self.text = rospy.get_param("test_rasa_input")
         self.instance_id = rospy.get_param("instance_id")
+        self.host = rospy.get_param("rasa/default_param/host")
+        self.port = rospy.get_param("rasa/default_param/port")
         self.result = False
         self.name = DialogueNameSpace.bot.name + "_" + self.instance_id
         self.service_client = HarmoniActionClient(self.name)
@@ -35,7 +39,24 @@ class TestRasa(unittest.TestCase):
         )
         rospy.Subscriber("/harmoni_bot_default/status", GoalStatus, self.status_cb)
         rospy.Subscriber("/harmoni_bot_default/result", harmoniResult, self.result_cb)
-        rospy.loginfo("TestRasa: Started up. waiting for lex startup")
+        rospy.loginfo("TestRasa: Started up; waiting for Rasa startup")
+
+        # Wait until Rasa server is running before running any test methods
+        connected = False
+        while not connected:
+            try:
+                headers = {
+                    'Content-Type': 'application/json',
+                }
+                data = '{ "sender": "test_user", "message": "", "metadata": {} }'
+                response = requests.post(
+                    f"http://{self.host}:{self.port}/webhooks/myio/webhook", headers=headers, data=data
+                )
+                connected = response.ok
+            except Exception:
+                rospy.loginfo("Retrying server connection...")
+                rospy.sleep(1)
+
         rospy.loginfo("TestRasa: Started")
 
     def feedback_cb(self, data):
@@ -50,14 +71,22 @@ class TestRasa(unittest.TestCase):
         rospy.loginfo(f"Result: {data}")
         self.result = True
 
-    def test_request_response(self):
+    @mock.patch("harmoni_bot.rasa_client.requests.post")
+    def test_request_response(self, mock_post):
         rospy.loginfo(f"The input text is {self.text}")
+        # Mock requests.post from the Rasa client 
+        recipient_id = "test_user"
+        text = "Welcome to the Interaction Lab!"
+        mock_post.return_value.json.return_value = [
+            {"recipient_id": recipient_id, "text": text}
+        ]
+
         self.service_client.send_goal(
             action_goal=ActionType.REQUEST.value,
             optional_data=self.text,
             wait=True,
         )
-        assert self.result
+        assert self.result == text
 
 
 def main():
