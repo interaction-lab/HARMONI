@@ -40,6 +40,7 @@ class DeepSpeechClient:
         self._is_final = False
 
     def process_audio(self, in_data):
+        """Passes a chunk of audio for the DeepSpeech stream to process"""
         self._is_final = False
         data16 = np.frombuffer(in_data, dtype=np.int16)
         self._ds_stream.feedAudioContent(data16)
@@ -66,8 +67,8 @@ class DeepSpeechClient:
         return text
 
     def start_stream(self):
-        self._is_final = False
         """Starts DeepSpeech streaming inference state if it is not already open."""
+        self._is_final = False
         if not self._is_streaming:
             self._ds_stream = self._model.createStream()
             self._is_streaming = True
@@ -75,7 +76,7 @@ class DeepSpeechClient:
             logging.info("Tried to start stream when DeepSpeech client already streaming.")
 
     def finish_stream(self):
-        """Ends DeepSpeech streaming inference state if it is still open.
+        """Ends DeepSpeech streaming inference state if still open.
         Returns the transcribed text.
         """
         if self._is_streaming:
