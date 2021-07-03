@@ -54,13 +54,15 @@ class LocalTtsService(HarmoniServiceManager):
         return
 
     def request(self, input_text):
-        """[summary]
+        """
+        Request to local TTS client: requests a synthesized audio of an input string from TTS and
+        writes it to an audio file
         Args:
             input_text (str): Input string to synthesize
         Returns:
-            object: It contains information about the response received (bool) and response message (str)
+            object: Object containing information about the response received (bool) and response message (str):
                 response: bool
-                message: str
+                message: str (path to audio file)
         """
         rospy.loginfo("Start the %s request" % self.name)
         self.state = State.REQUEST
@@ -79,7 +81,7 @@ class LocalTtsService(HarmoniServiceManager):
         return {"response": self.state, "message": file_path}
 
     def _save_audio_to_file(self, audio_data):
-        """[summary]
+        """
         This function writes the audio data from TTS into a .wav file
         Args:
             audio_data (obj): response from TTS for getting audio data
@@ -105,9 +107,7 @@ class LocalTtsService(HarmoniServiceManager):
 
 
 def main():
-    """[summary]
-    Main function for starting local TTS service
-    """
+    """Main function for starting local TTS service"""
     service_name = ActuatorNameSpace.tts.name
     instance_id = rospy.get_param("instance_id")
     service_id = f"{service_name}_{instance_id}"
