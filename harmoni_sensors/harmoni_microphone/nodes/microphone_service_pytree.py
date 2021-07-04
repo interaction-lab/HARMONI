@@ -58,7 +58,6 @@ class MicrophoneServicePytree(py_trees.behaviour.Behaviour):
 
         self.blackboards = []
         self.blackboard_microphone = self.attach_blackboard_client(name=self.name, namespace="harmoni_microphone")
-        self.blackboard_microphone.register_key("result_data", access=py_trees.common.Access.WRITE)
         self.blackboard_microphone.register_key("result_message", access=py_trees.common.Access.WRITE)
 
         super(MicrophoneServicePytree, self).__init__(name)
@@ -128,7 +127,6 @@ class MicrophoneServicePytree(py_trees.behaviour.Behaviour):
                     if len(self.client_result) > 0:
                         self.result_data = self.client_result.popleft()["data"]
                         self.blackboard_microphone.result_message = "RUNNING"
-                        self.blackboard_microphone.result_data = self.result_data
                         new_status = py_trees.common.Status.RUNNING
                     else:
                         #se siamo qui vuol dire che il risultato ancora non c'è, dunque
@@ -194,7 +192,6 @@ def main():
     py_trees.logging.level = py_trees.logging.Level.DEBUG
     
     blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace="harmoni_microphone")
-    blackboardProva.register_key("result_data", access=py_trees.common.Access.READ)
     blackboardProva.register_key("result_message", access=py_trees.common.Access.READ)
 
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # Common Imports
+from numpy.lib.function_base import _quantile_is_valid
 import rospy
 import roslib
 
@@ -19,6 +20,7 @@ from audio_common_msgs.msg import AudioData
 from google.cloud import speech
 from std_msgs.msg import String
 import numpy as np
+import time
 import os
 import io
 from six.moves import queue
@@ -107,7 +109,9 @@ class STTGoogleService(HarmoniServiceManager):
 
     def callback(self, data):
         """ Callback function subscribing to the microphone topic"""
-
+        #in fase di testing l'if risulta falso
+        self._buff.put(data.data)
+        
         if self.state == State.START:
             # rospy.loginfo("Add data to buffer")
             self._buff.put(data.data)
@@ -119,7 +123,6 @@ class STTGoogleService(HarmoniServiceManager):
     def listen_print_loop(self,responses):
         """ Prints responses coming from Google STT """ 
         self.stt_response = ""
-
         for response in responses:
             if not response.results:
                 continue
@@ -190,16 +193,17 @@ class STTGoogleService(HarmoniServiceManager):
 
 
 #TODO 
-    def request(self, data):
+    def request(self):
 
         rospy.loginfo("Start the %s request" % self.name)
         self.state = State.REQUEST
         self.response_received = False
-
+        
         try:
-
             # Transcribes data coming from microphone 
+
             audio_generator = self.generator()
+
             """
             requests = (
                 speech.StreamingRecognizeRequest(audio_content=content)
@@ -210,7 +214,9 @@ class STTGoogleService(HarmoniServiceManager):
                 types.StreamingRecognizeRequest(audio_content=content)
                 for content in audio_generator
             )
+
             responses = self.client.streaming_recognize(self.streaming_config, requests)
+
             self.listen_print_loop(responses)
         
             r = rospy.Rate(1)
@@ -226,6 +232,7 @@ class STTGoogleService(HarmoniServiceManager):
             self.response_received = True
             self.result_msg = ""
 
+        print("vai bello-----------------" + self.result_msg)
         return {"response": self.state, "message": self.result_msg}
 
     def wav_to_data(self, path):
@@ -235,6 +242,7 @@ class STTGoogleService(HarmoniServiceManager):
 
     def generator(self):
         """ Generator of data for Google STT """
+        print("tharu")
         # From https://cloud.google.com/speech-to-text/docs/streaming-recognize
         while not self.closed:
             # Use a blocking get() to ensure there's at least one chunk of
@@ -254,7 +262,6 @@ class STTGoogleService(HarmoniServiceManager):
                     data.append(chunk)
                 except queue.Empty:
                     break
-
             yield b"".join(data)
 
 
@@ -272,7 +279,6 @@ class STTGoogleService(HarmoniServiceManager):
                 )
                 responses = self.client.streaming_recognize(self.streaming_config, requests)
                 self.listen_print_loop(responses)
-
 
             else:
                 self.state = State.START
@@ -315,10 +321,9 @@ def main():
 
         s = STTGoogleService(service_id, params)
 
-        param = rospy.get_param(service_name + "/" + instance_id + "_param/")
-
-        s = STTGoogleService(service_id, param)
         service_server = HarmoniServiceServer(name=service_id, service_manager=s)
+
+        #s.request()
 
         # Streaming audio from mic
         service_server.start_sending_feedback()
