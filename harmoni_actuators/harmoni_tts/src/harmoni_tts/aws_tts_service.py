@@ -61,6 +61,7 @@ class AWSTtsService(HarmoniServiceManager):
             "E": "OPEN_FRONT_VOWEL",
             "o": "OPEN_BACK_VOWEL",
             "O": "OPEN_BACK_VOWEL",
+            "J": "OPEN_FRONT_VOWEL", #APPROXIMATION FOR ITALIAN J : dIeci, sceglI   
             "sil": "IDLE",
         }
         return
@@ -180,6 +181,7 @@ class AWSTtsService(HarmoniServiceManager):
                         "id": a[1],
                     }
                 )  # End edits
+        print(xSheet)
         visemes = list(
             map(
                 lambda l: [l["time"], self.vis_transl[l["value"]]],
@@ -232,8 +234,8 @@ class AWSTtsService(HarmoniServiceManager):
                 behavior_data (str): string of behaviors
         """
         behaviours = list(sorted(behavior_data, key=lambda i: i["start"]))
-        data, samplerate = sf.read(self.outdir + "/tts.ogg")
-        sf.write(self.outdir + "/tts.wav", data, samplerate)
+        data_ogg, samplerate = sf.read(self.outdir + "/tts.ogg")
+        sf.write(self.outdir + "/tts.wav", data_ogg, samplerate)
         file_handle = self.outdir + "/tts.wav"
         data = np.fromfile(file_handle, np.uint8)[
             self.wav_header_length :
@@ -241,11 +243,15 @@ class AWSTtsService(HarmoniServiceManager):
         data = data.astype(np.uint8).tostring()
         data_array = data
         audio_frame = samplerate
+        #print(type(data_ogg))
+        #print(type(data_ogg[0]))
         response = {
             "audio_frame": audio_frame,
             "audio_data": data_array,
             "behavior_data": str(behaviours),
+            "audio_ogg": data_ogg.tostring(),
         }
+        print(str(response["behavior_data"]))
         return str(response)
 
     def request(self, input_text):

@@ -158,6 +158,7 @@ class SequentialPattern(HarmoniServiceManager):
 
             elif self.script[self.script_set_index]["set"] == "sequence":
                 # self.count = -1
+                print("good")
                 self.do_steps(self.script[self.script_set_index]["steps"])
 
             elif self.script[self.script_set_index]["set"] == "loop":
@@ -169,7 +170,7 @@ class SequentialPattern(HarmoniServiceManager):
                 break
             self.script_set_index += 1
             r.sleep()
-        return
+        return self.result
 
     def stop(self):
         """Stop the Pattern Player """
@@ -226,7 +227,6 @@ class SequentialPattern(HarmoniServiceManager):
                         callback_args=service,
                         queue_size=1,
                     )
-
         return
 
     def do_steps(self, sequence, looping=False):
@@ -252,7 +252,8 @@ class SequentialPattern(HarmoniServiceManager):
             passthrough_result = self.handle_step(step, passthrough_result)
 
             rospy.loginfo(f"************* End of sequence step: {cnt} *************")
-
+            #print(f"passthrough result:{passthrough_result}")
+        self.result = passthrough_result
         if looping:
             rospy.loginfo("Done with a loop!")
             if not rospy.is_shutdown():
@@ -407,7 +408,6 @@ class SequentialPattern(HarmoniServiceManager):
         r = rospy.Rate(1)
         while result["time"] < call_time and not rospy.is_shutdown():
             rospy.loginfo(f"got old message length ({len(result['data'])})")
-
             if len(self.client_results[service]) > 0:
                 result = self.client_results[service].popleft()
 
@@ -418,7 +418,51 @@ class SequentialPattern(HarmoniServiceManager):
         rospy.loginfo(
             f"Recieved result message length ({len(result['data'])}) from service {service}"
         )
+        #print(f"result : {result}" )
         return result["data"]
+
+    def reset_init(self):
+        self.script_set_index = 0
+        self.end_pattern = False
+        for client in self.scripted_services:
+            self.client_results[client] = deque()
+        self.state = State.INIT
+
+    def request(self, data):
+        """Send goal request to appropriate child"""
+        rospy.loginfo("Start the %s request" % self.name)
+        rospy.loginfo(data)
+        if isinstance(data,str):
+           data = ast.literal_eval(data)
+        self.script = data
+        self.state = State.REQUEST
+        r = rospy.Rate(10)
+        while self.script_set_index < len(self.script) and not rospy.is_shutdown():
+            if self.script[self.script_set_index]["set"] == "setup":
+                self.setup(self.script[self.script_set_index]["steps"])
+            elif self.script[self.script_set_index]["set"] == "sequence":
+                self.count = -1
+                self.do_steps(self.script[self.script_set_index]["steps"])
+            elif self.script[self.script_set_index]["set"] == "loop":
+                self.count = -1
+                self.do_sequence(
+                    self.script[self.script_set_index]["steps"], looping=True, data=data
+                )
+            #elif self.end_pattern:
+                ##TODO
+            #    break
+            self.script_set_index += 1
+            r.sleep()
+        rospy.loginfo("_________SEQUENCE PATTERN END__________")
+        prepared = [dict(zip(cl, self.client_results[cl])) for cl in self.client_results]
+        j = json.dumps(prepared)
+        self.result_msg = str(j)
+        self.response_received = True
+        self.actuation_completed = True
+        self.state = State.SUCCESS
+        return self.result
+
+
 
 
 def main():

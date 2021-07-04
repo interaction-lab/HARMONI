@@ -21,6 +21,6 @@
 			<param name="activity_type" value="$(arg activity_type)"/>
 			<param name="area" value="$(arg area)"/>
 			<param name="activity_number" value="$(arg activity_number)"/>
-			<node pkg="harmoni_decision" type="$(arg pattern_name)_decision.py" name="harmoni_decision" output="screen"  args="$(arg test) $(arg test_input) $(arg instance_id)"/>
+			<node pkg="harmoni_pattern" type="$(arg pattern_name)_decision.py" name="harmoni_decision" output="screen"  args="$(arg test) $(arg test_input) $(arg instance_id)"/>
   	</group>
 </launch>

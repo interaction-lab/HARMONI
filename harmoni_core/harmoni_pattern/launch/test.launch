@@ -1,0 +1,17 @@
+<launch>
+       <!-- This is an integrative test that requires the microphone -->
+    <include file="$(find harmoni_web)/launch/web_service.launch"></include>
+    <include file="$(find harmoni_tts)/launch/tts_service.launch"></include>
+    
+    <include file="$(find harmoni_speaker)/launch/speaker_service_misty.launch"></include>
+    <include file="$(find harmoni_face)/launch/face_service_misty.launch"></include>
+    <include file="$(find harmoni_gesture)/launch/gesture_service_misty.launch">
+        <arg name="instance_id" default="misty"/>
+    </include>
+    <include file="$(find harmoni_bot)/launch/bot_service.launch"></include>
+
+    <include file="$(find harmoni_pattern)/launch/sequence_pattern.launch">
+        <arg name="pattern_name" default="misty_interaction"/>
+    </include>
+
+</launch>

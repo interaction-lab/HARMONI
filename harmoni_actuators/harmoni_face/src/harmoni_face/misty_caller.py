@@ -29,7 +29,7 @@ if __name__ == "__main__":
         port = args[PORT_IDX]
 
     payload = {'URL': 'http://' + local_ip + ':' + port ,
-                'layer': 'DefaultWebViewLayer'}
+                'layer': 'DefaultWebViewLayer1'}
     print(payload['URL'])
 
     try:

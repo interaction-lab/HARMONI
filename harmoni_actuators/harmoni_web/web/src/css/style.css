@@ -3,28 +3,33 @@ body {
     height: 100%;
     min-height: 100%;
     margin: 0;
-    padding: 5%;
-    overflow: hidden;
+    padding: 1%;
+    overflow: auto;
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
     text-align: center;
     font-size: 2vmin;
-    background-color: green;
+    background-color: white;
 }
 
 .container{
     height: 100%;
     width: 100%;
-    margin: auto;
+    margin: 0;
     text-align: center;
+    max-width: 100vw;
 }
 
-button{
+.button_try{
     margin: auto;
+    margin-top: 5%;
     text-align: center;
+    width: 100%;
+    aspect-ratio: 10/3;
+    font-size: 4vmin;
 }
 
 div{
-    margin: auto;
+    margin: 0;
     text-align: center;
     
 }
@@ -33,24 +38,24 @@ img{
     margin: auto;
     text-align: center;
     vertical-align: auto;
-    width: 50%;
+    width: 30%;
 }
 
+text{
+    display: inline-block;
+    margin: auto;
+    text-align: center;
+    vertical-align: auto;
+    width: 40%;
+}
 
 img:hover {
     opacity: 0.5;
   }
 
-.row, .col{
-    margin: auto;
-    text-align: center;
-    width: 100%;
-    height: 100%;
-    display: contents;
-}
 
 .title{
     margin: auto;
-    font-size: 3vmin;
+    font-size: 4vmin;
     text-align: center;
 }

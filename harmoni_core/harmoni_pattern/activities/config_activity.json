@@ -1,0 +1,774 @@
+[{
+    "QandA":[{
+        "General":
+        [{
+            "Linguaggio":{
+                "intro":{
+                    "text":"Istruzioni",
+                    "img":"logo.svg",
+                    "sound":"intro.wav"
+                },
+                "tasks":[
+                    {
+                        "text":"Scegli la risposta corretta. Oggetto che serve a divertire i bambini",
+                        "img_bkg":"",
+                        "img_1": "qa_1_1_target.jpg",
+                        "img_2": "qa_1_1_comp.jpg",
+                        "text_1": "Giocattolo",
+                        "text_2": "Gettone"
+                    },
+                    {
+                        "text":"Scegli la risposta corretta. Si indossano ai piedi",
+                        "img_bkg":"",
+                        "img_1": "qa_1_2_target.jpg",
+                        "img_2": "qa_1_2_comp.jpg",
+                        "img_3": "qa_1_2_comp.jpg",
+                        "text_1": "Scarpe",
+                        "text_2": "Guanti",
+                        "text_3": "Guanti"
+                    },
+                    {
+                        "text":"Scegli la risposta corretta. Li usa chi non vede bene",
+                        "img_bkg":"",
+                        "img_1": "qa_1_3_comp.jpg",
+                        "img_2": "qa_1_3_target.jpg",
+                        "img_3": "qa_1_3_comp.jpg",
+                        "img_4": "qa_1_3_target.jpg",
+                        "text_1": "Cappello",
+                        "text_2": "Occhiali",
+                        "text_3": "Cappello",
+                        "text_4": "Occhiali"
+                    },
+                    {
+                        "text":"Scegli la risposta corretta. Si da' all'autista per poter viaggiare ",
+                        "img_bkg":"",
+                        "img_1": "qa_1_4_comp.jpg",
+                        "img_2": "qa_1_4_target.jpg",
+                        "text_1": "Ombrello",
+                        "text_2": "Biglietto"
+                    },
+                    {
+                        "text":"Scegli la risposta corretta. Si indossa per andare al mare",
+                        "img_bkg":"",
+                        "img_1": "qa_1_5_target.jpg",
+                        "img_2": "qa_1_5_comp.jpg",
+                        "text_1": "Costume da bagno",
+                        "text_2": "Stivali"
+                    },
+                    {
+                        "text":"Scegli la risposta corretta. E' un animale da compagnia",
+                        "img_bkg":"",
+                        "img_1": "qa_1_6_comp.jpg",
+                        "img_2": "qa_1_6_target.jpg",
+                        "text_1": "Toro",
+                        "text_2": "Gatto"
+                    }
+                ],
+                "reward":{
+                    "text":"Bravissimo!",
+                    "img":"test.jpg",
+                    "sound":"reward.wav"
+                }
+            }
+        },
+        {
+            "Contesto ecologico":{
+                "intro":{
+                    "text":"Istruzioni",
+                    "img":"logo.svg",
+                    "sound":"intro.wav"
+                },
+                "tasks":[
+                    {
+                        "text":"Scegli la risposta corretta.  Oggetto che trovi in cucina",
+                        "img_bkg":"",
+                        "img_1": "qa_2_1_target.jpg",
+                        "img_2": "qa_2_1_comp.jpg",
+                        "text_1": "Pentola",
+                        "text_2": "Sciarpa"
+                    },
+                    {
+                        "text":"Scegli la risposta corretta. Oggetto che trovi in bagno",
+                        "img_bkg":"",
+                        "img_1": "qa_2_2_target.jpg",
+                        "img_2": "qa_2_2_comp.jpg",
+                        "text_1": "Spugna",
+                        "text_2": "Biscotti"
+                    },
+                    {
+                        "text":"Scegli la risposta corretta. Oggetto che trovi in giardino",
+                        "img_bkg":"",
+                        "img_1": "qa_2_3_comp.jpg",
+                        "img_2": "qa_2_3_target.jpg",
+                        "text_1": "Tazza",
+                        "text_2": "Vaso"
+                    },
+                    {
+                        "text":"Scegli la risposta corretta. Oggetto che trovi in salotto.",
+                        "img_bkg":"",
+                        "img_1": "qa_2_4_comp.jpg",
+                        "img_2": "qa_2_4_target.jpg",
+                        "text_1": "Rastrello",
+                        "text_2": "Divano"
+                    },
+                    {
+                        "text":"Scegli la risposta corretta. Oggetto che trovi in camera da letto",
+                        "img_bkg":"",
+                        "img_1": "qa_2_5_target.jpg",
+                        "img_2": "qa_2_5_comp.jpg",
+                        "text_1": "Letto",
+                        "text_2": "Sapone"
+                    },
+                    {
+                        "text":"Scegli la risposta corretta. Oggetto che trovi al bar",
+                        "img_bkg":"",
+                        "img_1": "qa_2_6_comp.jpg",
+                        "img_2": "qa_2_6_target.jpg",
+                        "text_1": "Pantaloni",
+                        "text_2": "Caffè"
+                    }
+                ],
+                "reward":{
+                    "text":"Bravissimo!",
+                    "img":"test.jpg",
+                    "sound":"reward.wav"
+                }
+
+            }
+        },
+        {
+            "Geografia":{
+                "intro":{
+                    "text":"Istruzioni",
+                    "img":"intro.png",
+                    "sound":"intro.wav"
+                },
+                "tasks":[
+                    {
+                        "text":"Scegli la risposta corretta. Il primo mese dell'anno",
+                        "img_bkg":"",
+                        "img_1": "qa_3_1_target.jpg",
+                        "img_2": "qa_3_1_comp.jpg",
+                        "text_1": "Gennaio",
+                        "text_2": "Luglio"
+                    },
+                    {
+                        "text":"Scegli la risposta corretta. In quale mese fa freddo?",
+                        "img_bkg":"",
+                        "img_1": "qa_3_2_target.jpg",
+                        "img_2": "qa_3_2_comp.jpg",
+                        "text_1": "Dicembre",
+                        "text_2": "Agosto"
+                    },
+                    {
+                        "text":"Scegli la risposta corretta. Si va per sciare",
+                        "img_bkg":"",
+                        "img_1": "qa_3_3_comp.jpg",
+                        "img_2": "qa_3_3_target.jpg",
+                        "text_1": "Lago",
+                        "text_2": "Montagna"
+                    },
+                    {
+                        "text":"Scegli la risposta corretta. Dove vive il papa?",
+                        "img_bkg":"",
+                        "img_1": "qa_3_4_comp.jpg",
+                        "img_2": "qa_3_4_target.jpg",
+                        "text_1": "Milano",
+                        "text_2": "Roma"
+                    },
+                    {
+                        "text":"Scegli la risposta corretta. Cosa indossi quando nevica?",
+                        "img_bkg":"",
+                        "img_1": "qa_3_5_target.jpg",
+                        "img_2": "qa_3_5_comp.jpg",
+                        "text_1": "Giubotto",
+                        "text_2": "Canottiera"
+                    },
+                    {
+                        "text":"Scegli la risposta corretta. Nuota nel fiume",
+                        "img_bkg":"",
+                        "img_1": "qa_3_6_comp.jpg",
+                        "img_2": "qa_3_6_target.jpg",
+                        "text_1": "Trota",
+                        "text_2": "Balena"
+                    }
+                ],
+                "reward":{
+                    "text":"Bravissimo!",
+                    "img":"reward.png",
+                    "sound":"reward.wav"
+                }
+
+            }
+        },
+        {
+            "Proverbi":{
+                "intro":{
+                    "text":"Istruzioni",
+                    "img":"intro.png",
+                    "sound":"intro.wav"
+                },
+                "tasks":[
+                    {
+                        "text":"Completa il proverbio. A carnevale ogni scherzo",
+                        "img_bkg":"",
+                        "img_1": "qa_4_1_target.jpg",
+                        "img_2": "qa_4_1_comp.jpg",
+                        "text_1": "Vale",
+                        "text_2": "Tira"
+                    },
+                    {
+                        "text":"Completa il proverbio. Can che abbaia non",
+                        "img_bkg":"",
+                        "img_1": "qa_4_2_target.jpg",
+                        "img_2": "qa_4_2_comp.jpg",
+                        "text_1": "Morde",
+                        "text_2": "Piange"
+                    },
+                    {
+                        "text":"Completa il proverbio. Chi dorme non piglia",
+                        "img_bkg":"",
+                        "img_1": "qa_4_3_comp.jpg",
+                        "img_2": "qa_4_3_target.jpg",
+                        "text_1": "Chiodo",
+                        "text_2": "Pesci"
+                    },
+                    {
+                        "text":"Completa il proverbio. Chi la fa ",
+                        "img_bkg":"",
+                        "img_1": "qa_4_4_comp.jpg",
+                        "img_2": "qa_4_4_target.jpg",
+                        "text_1": "La mandi",
+                        "text_2": "L'aspetti"
+                    },
+                    {
+                        "text":"Completa il proverbio. Il lupo perde il pelo ma non",
+                        "img_bkg":"",
+                        "img_1": "qa_4_5_target.jpg",
+                        "img_2": "qa_4_5_comp.jpg",
+                        "text_1": "Il vizio",
+                        "text_2": "La fame"
+                    },
+                    {
+                        "text":"Completa il proverbio. Sbagliando",
+                        "img_bkg":"",
+                        "img_1": "qa_4_6_comp.jpg",
+                        "img_2": "qa_4_6_target.jpg",
+                        "text_1": "S'inciampa",
+                        "text_2": "S'impara"
+                    }
+                ],
+                "reward":{
+                    "text":"Bravissimo!",
+                    "img":"reward.png",
+                    "sound":"reward.wav"
+                }
+            }
+        }
+        ]
+    },
+    {
+        "Su_di_me":
+        [{
+            "Parlo di me":{
+                "intro":{
+                    "text":"Istruzioni",
+                    "img":"intro.png",
+                    "sound":"intro.wav"
+                },
+                "tasks":[
+                    {
+                        "text":"In quale di questi aggettivi ti riconosci. Sono una persona",
+                        "img_bkg":"",
+                        "img_1": "",
+                        "img_2": "",
+                        "img_3": "",
+                        "img_4": "",
+                        "img_5": "",
+                        "img_6": "",
+                        "text_1": "Positiva",
+                        "text_2": "Sorridente",
+                        "text_3":"Pensierosa",
+                        "text_4":"Chiacchierona",
+                        "text_5":"Generosa",
+                        "text_6":"Gentile"
+                    },
+                    {
+                        "text":"In quale di questi aggettivi ti riconosci. Sono una persona",
+                        "img_bkg":"",
+                        "img_1": "",
+                        "img_2": "",
+                        "img_3": "",
+                        "img_4": "",
+                        "img_5": "",
+                        "img_6": "",
+                        "text_1": "Poco positiva",
+                        "text_2": "Scontrosa",
+                        "text_3":"Spensierata",
+                        "text_4":"Silenziosa",
+                        "text_5":"Egoista",
+                        "text_6":"Poco gentile"
+                    },
+                    {
+                        "text":"Quali sono le cose che ti mettono di buon umore?",
+                        "img_bkg":"",
+                        "img_1": "qa_5_3_a.jpg",
+                        "img_2": "qa_5_3_b.jpg",
+                        "img_3": "qa_5_3_c.jpg",
+                        "text_1": "Cantare insieme agli altri",
+                        "text_2": "Pranzare insieme agli altri",
+                        "text_3":"Pregare insieme agli altri"
+                    },
+                    {
+                        "text":"Cosa ti piace fare durante la giornata?",
+                        "img_bkg":"",
+                        "img_1": "qa_5_4_a.jpg",
+                        "img_2": "qa_5_4_b.jpg",
+                        "img_3": "qa_5_4_c.jpg",
+                        "text_1": "Guardare la tv insieme",
+                        "text_2": "Riposare",
+                        "text_3": "Sentire i miei cari"
+                    }
+                ],
+                "reward":{
+                    "text":"Bravissimo!",
+                    "img":"reward.png",
+                    "sound":"reward.wav"
+                }
+            }
+        },
+        {
+            "Io e il cibo":{
+                "intro":{
+                    "text":"Istruzioni",
+                    "img":"intro.png",
+                    "sound":"intro.wav"
+                },
+                "tasks":[
+                    {
+                        "text":"Qual è il piatto che preferisci?",
+                        "img_bkg":"",
+                        "img_1": "qa_6_1_a.jpg",
+                        "img_2": "qa_6_1_b.jpg",
+                        "img_3": "qa_6_1_c.jpg",
+                        "text_1": "Pasta al pomodoro",
+                        "text_2": "Carne",
+                        "text_3":"Pesce"
+                    },
+                    {
+                        "text":"Qual è il piatto che preferisci?",
+                        "img_bkg":"",
+                        "img_1": "qa_6_2_a.jpg",
+                        "img_2": "qa_6_2_b.jpg",
+                        "img_3": "qa_6_2_c.jpg",
+                        "text_1": "Gelato",
+                        "text_2": "Pizza",
+                        "text_3":"Torta al cioccolato"
+                    },
+                    {
+                        "text":"Qual è la verdura che preferisci?",
+                        "img_bkg":"",
+                        "img_1": "qa_6_3_a.jpg",
+                        "img_2": "qa_6_3_b.jpg",
+                        "img_3": "qa_6_3_c.jpg",
+                        "img_4": "qa_6_3_d.jpg",
+                        "img_5": "qa_6_3_e.jpg",
+                        "img_6": "qa_6_3_f.jpg",
+                        "text_1": "Finocchi",
+                        "text_2": "Zucchine",
+                        "text_3":"Spinaci",
+                        "text_4":"Carciofi",
+                        "text_5":"Broccoli",
+                        "text_6":"Peperoni"
+                    },
+                    {
+                        "text":"Qual è il frutto che preferisci?",
+                        "img_bkg":"",
+                        "img_1": "qa_6_4_a.jpg",
+                        "img_2": "qa_6_4_b.jpg",
+                        "img_3": "qa_6_4_c.jpg",
+                        "img_4": "qa_6_4_d.jpg",
+                        "img_5": "qa_6_4_e.jpg",
+                        "img_6": "qa_6_4_f.jpg",
+                        "text_1": "Mela",
+                        "text_2": "Pera",
+                        "text_3":"Banana",
+                        "text_4":"Arancia",
+                        "text_5":"Mandarino",
+                        "text_6":"Uva"
+                    },
+                    {
+                        "text":"Qual è il piatto che non preferisci?",
+                        "img_bkg":"",
+                        "img_1": "qa_6_1_a.jpg",
+                        "img_2": "qa_6_1_b.jpg",
+                        "img_3": "qa_6_1_c.jpg",
+                        "text_1": "Pasta al pomodoro",
+                        "text_2": "Carne",
+                        "text_3":"Pesce"
+                    },
+                    {
+                        "text":"Qual è il piatto che non preferisci?",
+                        "img_bkg":"",
+                        "img_1": "qa_6_2_a.jpg",
+                        "img_2": "qa_6_2_b.jpg",
+                        "img_3": "qa_6_2_c.jpg",
+                        "text_1": "Gelato",
+                        "text_2": "Pizza",
+                        "text_3":"Torta al cioccolato"
+                    },
+                    {
+                        "text":"Quale verdura non ti piace?",
+                        "img_bkg":"",
+                        "img_1": "qa_6_3_a.jpg",
+                        "img_2": "qa_6_3_b.jpg",
+                        "img_3": "qa_6_3_c.jpg",
+                        "img_4": "qa_6_3_d.jpg",
+                        "img_5": "qa_6_3_e.jpg",
+                        "img_6": "qa_6_3_f.jpg",
+                        "text_1": "Finocchi",
+                        "text_2": "Zucchine",
+                        "text_3":"Spinaci",
+                        "text_4":"Carciofi",
+                        "text_5":"Broccoli",
+                        "text_6":"Peperoni"
+                    },
+                    {
+                        "text":"Quale frutto non ti piace?",
+                        "img_bkg":"",
+                        "img_1": "qa_6_4_a.jpg",
+                        "img_2": "qa_6_4_b.jpg",
+                        "img_3": "qa_6_4_c.jpg",
+                        "img_4": "qa_6_4_d.jpg",
+                        "img_5": "qa_6_4_e.jpg",
+                        "img_6": "qa_6_4_f.jpg",
+                        "text_1": "Mela",
+                        "text_2": "Pera",
+                        "text_3":"Banana",
+                        "text_4":"Arancia",
+                        "text_5":"Mandarino",
+                        "text_6":"Uva"
+                    }
+                ],
+                "reward":{
+                    "text":"Bravissimo!",
+                    "img":"reward.png",
+                    "sound":"reward.wav"
+                }
+
+            }
+        },
+        {
+            "Io e la famiglia":{
+                "intro":{
+                    "text":"Istruzioni",
+                    "img":"intro.png",
+                    "sound":"intro.wav"
+                },
+                "tasks":[
+                    {
+                        "text":"Quanti figli hai?",
+                        "img_bkg":"",
+                        "img_1": "",
+                        "img_2": "",
+                        "img_3": "",
+                        "img_4": "",
+                        "img_5": "",
+                        "img_6": "",
+                        "text_1": "0",
+                        "text_2": "1",
+                        "text_3": "2",
+                        "text_4": "3",
+                        "text_5": "4",
+                        "text_6": "più di 4"
+                    },
+                    {
+                        "text":"Quanti nipoti hai?",
+                        "img_bkg":"",
+                        "img_1": "",
+                        "img_2": "",
+                        "img_3": "",
+                        "img_4": "",
+                        "img_5": "",
+                        "img_6": "",
+                        "text_1": "0",
+                        "text_2": "1",
+                        "text_3": "2",
+                        "text_4": "3",
+                        "text_5": "4",
+                        "text_6": "più di 4"
+                    },
+                    {
+                        "text":"Per me la famiglia è",
+                        "img_bkg":"",
+                        "img_1": "",
+                        "img_2": "",
+                        "img_3": "",
+                        "img_4": "",
+                        "text_1": "Trascorrere dei bei momenti",
+                        "text_2": "Aiutarsi uno con l'altro",
+                        "text_3": "Sentirsi protetto",
+                        "text_4": "Volersi bene"
+                    }
+                ],
+                "reward":{
+                    "text":"Bravissimo!",
+                    "img":"reward.png",
+                    "sound":"reward.wav"
+                }
+
+            }
+        },
+        {
+            "Io e gli amici":{
+                "intro":{
+                    "text":"Istruzioni",
+                    "img":"intro.png",
+                    "sound":"intro.wav"
+                },
+                "tasks":[
+                    {
+                        "text":"Hai avuto tanti amici?",
+                        "img_bkg":"",
+                        "img_1": "",
+                        "img_2": "",
+                        "text_1": "Si",
+                        "text_2": "No"
+                    },
+                    {
+                        "text":"Quale è stato il piu bel gesto che un amico ha fatto per lei?",
+                        "img_bkg":"",
+                        "img_1": "",
+                        "img_2": "",
+                        "img_3": "",
+                        "text_1": "Un bel regalo",
+                        "text_2": "Un abbraccio",
+                        "text_3": "Un consiglio"
+                    },
+                    {
+                        "text":"Che cos'è per te un amico?",
+                        "img_bkg":"",
+                        "img_1": "",
+                        "img_2": "",
+                        "img_3": "",
+                        "img_4": "",
+                        "text_1": "Trascorrere dei bei momenti",
+                        "text_2": "Aiutarsi uno con l'altro",
+                        "text_3": "Sentirsi protetto",
+                        "text_4": "Volersi bene"
+                    }
+                ],
+                "reward":{
+                    "text":"Bravissimo!",
+                    "img":"reward.png",
+                    "sound":"reward.wav"
+                }
+            }
+        }
+        ]
+    },
+    {
+        "Storie":
+        [
+            {
+                "Il Calzolaio":{
+                    "intro":{
+                        "text":"Istruzioni",
+                        "img":"intro.png",
+                        "sound":"intro.wav"
+                    },
+                    "tasks":[
+                            {
+                                "text":"Scegli la risposta corretta. Oggetto che serve a divertire i bambini",
+                                "img_bkg":"",
+                                "img_1": "qa_1_1_target.jpg",
+                                "img_2": "qa_1_1_comp.jpg",
+                                "text_1": "Giocattolo",
+                                "text_2": "Gettone"
+                            },
+                            {
+                                "text":"Scegli la risposta corretta. Si indossano ai piedi",
+                                "img_bkg":"",
+                                "img_1": "qa_1_1_target.jpg",
+                                "img_2": "qa_1_1_comp.jpg",
+                                "text_1": "Scarpe",
+                                "text_2": "Guanti"
+                            },
+                            {
+                                "text":"Scegli la risposta corretta. Li usa chi non vede bene",
+                                "img_bkg":"",
+                                "img_1": "qa_1_3_comp.jpg",
+                                "img_2": "qa_1_3_target.jpg",
+                                "text_1": "Cappello",
+                                "text_2": "Occhiali"
+                            },
+                            {
+                                "text":"Scegli la risposta corretta. Si da' all'autista per poter viaggiare ",
+                                "img_bkg":"",
+                                "img_1": "qa_1_4_comp.jpg",
+                                "img_2": "qa_1_4_target.jpg",
+                                "text_1": "Ombrello",
+                                "text_2": "Biglietto"
+                            },
+                            {
+                                "text":"Scegli la risposta corretta. Si indossa per andare al mare",
+                                "img_bkg":"",
+                                "img_1": "qa_1_5_target.jpg",
+                                "img_2": "qa_1_5_comp.jpg",
+                                "text_1": "Costume da bagno",
+                                "text_2": "Stivali"
+                            },
+                            {
+                                "text":"Scegli la risposta corretta. E' un animale da compagnia",
+                                "img_bkg":"",
+                                "img_1": "qa_1_6_comp.jpg",
+                                "img_2": "qa_1_6_target.jpg",
+                                "text_1": "Toro",
+                                "text_2": "Gatto"
+                            }
+                    ],
+                    "reward":{
+                        "text":"Bravissimo!",
+                        "img":"reward.png",
+                        "sound":"reward.wav"
+                    }
+                }
+            },
+            {
+                "Lo spazzacamino":{
+                    "intro":{
+                        "text":"Istruzioni",
+                        "img":"intro.png",
+                        "sound":"intro.wav"
+                    },
+                    "tasks":[
+                        {
+                            "text":"Scegli la risposta corretta. Oggetto che serve a divertire i bambini",
+                            "img_bkg":"",
+                            "img_1": "qa_1_1_target.jpg",
+                            "img_2": "qa_1_1_comp.jpg",
+                            "text_1": "Giocattolo",
+                            "text_2": "Gettone"
+                        },
+                        {
+                            "text":"Scegli la risposta corretta. Si indossano ai piedi",
+                            "img_bkg":"",
+                            "img_1": "qa_1_1_target.jpg",
+                            "img_2": "qa_1_1_comp.jpg",
+                            "text_1": "Scarpe",
+                            "text_2": "Guanti"
+                        },
+                        {
+                            "text":"Scegli la risposta corretta. Li usa chi non vede bene",
+                            "img_bkg":"",
+                            "img_1": "qa_1_3_comp.jpg",
+                            "img_2": "qa_1_3_target.jpg",
+                            "text_1": "Cappello",
+                            "text_2": "Occhiali"
+                        },
+                        {
+                            "text":"Scegli la risposta corretta. Si da' all'autista per poter viaggiare ",
+                            "img_bkg":"",
+                            "img_1": "qa_1_4_comp.jpg",
+                            "img_2": "qa_1_4_target.jpg",
+                            "text_1": "Ombrello",
+                            "text_2": "Biglietto"
+                        },
+                        {
+                            "text":"Scegli la risposta corretta. Si indossa per andare al mare",
+                            "img_bkg":"",
+                            "img_1": "qa_1_5_target.jpg",
+                            "img_2": "qa_1_5_comp.jpg",
+                            "text_1": "Costume da bagno",
+                            "text_2": "Stivali"
+                        },
+                        {
+                            "text":"Scegli la risposta corretta. E' un animale da compagnia",
+                            "img_bkg":"",
+                            "img_1": "qa_1_6_comp.jpg",
+                            "img_2": "qa_1_6_target.jpg",
+                            "text_1": "Toro",
+                            "text_2": "Gatto"
+                        }
+                    ],
+                    "reward":{
+                        "text":"Bravissimo!",
+                        "img":"reward.png",
+                        "sound":"reward.wav"
+                    }
+                }
+            },
+            {
+                "Il venditore di dolciumi":{
+                    "intro":{
+                        "text":"Istruzioni",
+                        "img":"intro.png",
+                        "sound":"intro.wav"
+                    },
+                    "tasks":[
+                        {
+                            "text":"Scegli la risposta corretta. Oggetto che serve a divertire i bambini",
+                            "img_bkg":"",
+                            "img_1": "qa_1_1_target.jpg",
+                            "img_2": "qa_1_1_comp.jpg",
+                            "text_1": "Giocattolo",
+                            "text_2": "Gettone"
+                        },
+                        {
+                            "text":"Scegli la risposta corretta. Si indossano ai piedi",
+                            "img_bkg":"",
+                            "img_1": "qa_1_1_target.jpg",
+                            "img_2": "qa_1_1_comp.jpg",
+                            "text_1": "Scarpe",
+                            "text_2": "Guanti"
+                        },
+                        {
+                            "text":"Scegli la risposta corretta. Li usa chi non vede bene",
+                            "img_bkg":"",
+                            "img_1": "qa_1_3_comp.jpg",
+                            "img_2": "qa_1_3_target.jpg",
+                            "text_1": "Cappello",
+                            "text_2": "Occhiali"
+                        },
+                        {
+                            "text":"Scegli la risposta corretta. Si da' all'autista per poter viaggiare ",
+                            "img_bkg":"",
+                            "img_1": "qa_1_4_comp.jpg",
+                            "img_2": "qa_1_4_target.jpg",
+                            "text_1": "Ombrello",
+                            "text_2": "Biglietto"
+                        },
+                        {
+                            "text":"Scegli la risposta corretta. Si indossa per andare al mare",
+                            "img_bkg":"",
+                            "img_1": "qa_1_5_target.jpg",
+                            "img_2": "qa_1_5_comp.jpg",
+                            "text_1": "Costume da bagno",
+                            "text_2": "Stivali"
+                        },
+                        {
+                            "text":"Scegli la risposta corretta. E' un animale da compagnia",
+                            "img_bkg":"",
+                            "img_1": "qa_1_6_comp.jpg",
+                            "img_2": "qa_1_6_target.jpg",
+                            "text_1": "Toro",
+                            "text_2": "Gatto"
+                        }
+                    ],
+                    "reward":{
+                        "text":"Bravissimo!",
+                        "img":"reward.png",
+                        "sound":"reward.wav"
+                    }
+                }
+            }
+        ]
+    }]
+},
+{
+    "Storytelling":[]
+},
+{
+    "Feeling activity":[]
+}
+]

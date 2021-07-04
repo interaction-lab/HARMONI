@@ -1,6 +1,6 @@
 <launch>
    
-	<arg name="pattern_name" default="misty_demo"/>
+	<arg name="pattern_name" default="misty_interaction"/>
 	<arg name="instance_id" default="default"/>
     <!-- To start on launch of pattern use the flag start:=true -->
 	<arg name="start" default="true"/>

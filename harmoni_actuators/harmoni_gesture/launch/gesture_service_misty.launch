@@ -1,6 +1,6 @@
 <!-- This is an example launch file for how a ROS application could use a node --> <launch>
 	<arg name="use_gesture" default="true"/>
-	<arg name="instance_id" default="misty"/>
+	<arg name="instance_id" default="default"/>
 	<group if="$(arg use_gesture)">
 			<rosparam file="$(find harmoni_gesture)/config/configuration.yaml" subst_value="True"/>
 			<param name="/misty/default_param/path" value ="$(find harmoni_gesture)/data"/>

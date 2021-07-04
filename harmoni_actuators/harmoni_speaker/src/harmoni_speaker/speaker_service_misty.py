@@ -17,6 +17,7 @@ import requests
 from requests import Request, Session
 from requests.exceptions import Timeout
 import json 
+import soundfile as sf
 
 # import wget
 import contextlib
@@ -70,7 +71,12 @@ class SpeakerService(HarmoniServiceManager):
                     duration = data["duration"]
                     data = data["audio_data"]
                 else:
-                    data = self.file_path_to_audio_data("/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/temp_data/tts.wav")
+                    data = ast.literal_eval(data)
+                    print(data)
+                    outdir = self.rospack.get_path("harmoni_speaker") + "/temp_data/test.wav"
+                    sf.write(outdir, np.fromstring(data["audio_ogg"], dtype=float), data["audio_frame"])
+
+                    data = self.file_path_to_audio_data(self.rospack.get_path("harmoni_speaker") + "/temp_data/test.wav")
                     duration = data["duration"]
                     data = data["audio_data"]
 
@@ -108,9 +114,10 @@ class SpeakerService(HarmoniServiceManager):
             rospy.loginfo("Request successfully completed")
         except Timeout:
             rospy.logwarn("Speaker failed: The ip of the robot appears unreachable")
-            self.state = State.FAILED
+            self.state = State.SUCCESS
             self.response_received = True
             self.result_msg = ""
+            return {"response": self.state}
         except IOError as e: 
             rospy.logwarn("Speaker failed: Audio appears too busy")
             print(e)
