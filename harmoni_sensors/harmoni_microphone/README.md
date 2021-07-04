@@ -1,6 +1,7 @@
-# harmoni_microphone
+# HARMONI Microphone
 
-## Microphone Service Parameters:
+## Usage
+## Parameters
 Parameters input for the microphone service: 
 
 | Parameters           | Definition | Values |
@@ -10,3 +11,8 @@ Parameters input for the microphone service:
 |total_channels        |            |        |
 |audio_rate            |            |        |
 |device_name           |            |        |
+
+
+## Testing
+## References
+[Documentation](https://harmoni.readthedocs.io/en/latest/packages/harmoni_microphone.html)
