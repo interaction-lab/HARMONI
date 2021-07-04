@@ -1,4 +1,11 @@
-# Face Service
+# HARMONI Face
+
+Harmoni provides a wrapper on the cordial face, which is capable of expressing speech and emotion.
+
+We provide a fork of the face of [CoRDial](https://github.com/ndennler/cordial-public) which was created by the Interaction Lab. Although it started as one face, we have implemented separate services for the eyes and mouth, allowing them to be controlled independently.
+![packages](../images/screen_demo.png)
+
+
 The face service is split into thress services: the mouth, the nose, and the eyes.
 All the services can handle:
 - Action Units (AUs, facial action units corresponding to the facial muscle movements and which coding system is found [here](https://imotions.com/blog/facial-action-coding-system))
@@ -11,42 +18,7 @@ The mouth service handles also:
 The eyes service handles also:
 - Gaze direction (where the face is looking at)
 
-## Parameters of face service
-Parameters input for the face service is:
-
-| Parameters           | Definition | Values |
-|----------------------|------------|--------|
-|timer_interval            | Time interval for facial expression and AUs (in seconds)         | 0.01       |
-
-### Mouth service
-The AUs for the mouth are: AU10, AU12, AU13, AU14, AU15, AU16, AU17, AU18, AU20, AU23, AU24, AU25, AU26, AU27
-
-Parameters input for the mouth service are:
-
-| Parameters           | Definition | Values |
-|----------------------|------------|--------|
-|min_duration_viseme   | Minimum duration of visemes (in seconds)           |0.05        |
-|speed_viseme          | Speed of the visemes (in milliseconds)             |10          |
-|timer_interval            | Time interval for visemes (in seconds)         | 0.01       |
-
-### Eyes service
-The AUs for the eyes are:
-- Browns: AU1, AU2, AU4
-- Eyelid: AU5, AU6, AU43
-
-
-Parameters input for the eyes service are:
-
-| Parameters           | Definition | Values |
-|----------------------|------------|--------|
-|gaze_speed  | Speed of the gaze (in milliseconds)           |10     |
-
-### Nose service
-The AUs for the nose are
-- Nose wrinkle: AU9
-- Nose width: AU38, AU39
-
-## APIs for Face Service
+## Usage
 
 The following documentation refers to the facial expression and action units requests (the ones that are managed by all the services). These requests can be called from every face service: mouth, eyes, and nose.
 
@@ -142,3 +114,66 @@ This is an example for gaze direction request:
 - Gaze direction
 
     data: str([{'start': 0,  'type': 'gaze', 'id':'target', 'point': [1,5 ,10]}])
+
+
+## Parameters 
+Parameters input for the face service is:
+
+| Parameters           | Definition | Values |
+|----------------------|------------|--------|
+|timer_interval            | Time interval for facial expression and AUs (in seconds)         | 1      |
+
+### Mouth service
+The AUs for the mouth are: AU10, AU12, AU13, AU14, AU15, AU16, AU17, AU18, AU20, AU23, AU24, AU25, AU26, AU27
+
+Parameters input for the mouth service are:
+
+| Parameters           | Definition | Values |
+|----------------------|------------|--------|
+|min_duration_viseme   | Minimum duration of visemes (in seconds)           |0.05        |
+|speed_viseme          | Speed of the visemes (in milliseconds)             |10          |
+|timer_interval            | Time interval for visemes (in seconds)         | 0.01       |
+
+### Eyes service
+The AUs for the eyes are:
+- Browns: AU1, AU2, AU4
+- Eyelid: AU5, AU6, AU43
+
+
+Parameters input for the eyes service are:
+
+| Parameters           | Definition | Values |
+|----------------------|------------|--------|
+|gaze_speed  | Speed of the gaze (in milliseconds)           |10     |
+|timer_interval            | Time interval for visemes (in seconds)         | 0.01       |
+
+### Nose service
+The AUs for the nose are
+- Nose wrinkle: AU9
+- Nose width: AU38, AU39
+
+Parameters input for the nose service are:
+
+| Parameters           | Definition | Values |
+|----------------------|------------|--------|
+|gaze_speed  | Speed of the gaze (in milliseconds)           |10     |
+|timer_interval            | Time interval for visemes (in seconds)         | 0.01       |
+
+
+## Testing
+
+For testing the service you have to run:
+
+"""
+rostest harmoni_face face.test
+"""
+
+Then, open the browser at the link: http://172.18.3.4:8081/ , and wait for the face to appear.
+The face will act a sequential set of expressions for three times:
+1. Eyes service, where it will act action units, facial expression and gaze
+2. Mouth service, where it will act action units, facial expression and viseme
+3. Nose service, where it will act action units and facial expression 
+
+## References
+[Documentation](https://harmoni.readthedocs.io/en/latest/packages/harmoni_face.html)
+
