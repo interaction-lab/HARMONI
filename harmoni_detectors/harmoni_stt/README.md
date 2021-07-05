@@ -2,8 +2,8 @@
 
 ## Usage
 Using the DeepSpeech service:
-
-Note: Run get_deepspeech_models.sh before launching or testing this service.
+To set up the local STT service, first run `sh harmoni_detectors/harmoni_stt/get_deepspeech_models.sh` 
+from the HARMONI directory in order to place the models in a parallel directory.
 
 The local DeepSpeech speech-to-text service can be launched with `roslaunch harmoni_detectors stt_deepspeech_service.launch` or `roslaunch harmoni_detectors stt_service.launch service_to_launch:=deepspeech`.
 Transcriptions are only published by the DeepSpeech service when the client determines the text as final based on the `t_wait` parameter (the default is 0.5s).
