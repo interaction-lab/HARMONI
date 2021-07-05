@@ -23,12 +23,8 @@ mic_test:
     trigger_intent: "Hey"
     pattern_scripting: $(find harmoni_pattern)/pattern_scripting/mic_test.json
 
-misty_demo:
-  default_param:
-    trigger_intent: "Hey"
-    pattern_scripting: $(find harmoni_pattern)/pattern_scripting/misty_demo.json
 
-misty_interaction:
+speak_test:
   default_param:
     trigger_intent: "Hey"
-    pattern_scripting: $(find harmoni_pattern)/pattern_scripting/misty_interaction.json
+    pattern_scripting: $(find harmoni_pattern)/pattern_scripting/speak_test.json
