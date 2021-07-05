@@ -21,6 +21,7 @@ import json
 import ast
 import sys
 
+
 class AWSTtsService(HarmoniServiceManager):
     """
     Amazon tts service
@@ -61,7 +62,6 @@ class AWSTtsService(HarmoniServiceManager):
             "E": "OPEN_FRONT_VOWEL",
             "o": "OPEN_BACK_VOWEL",
             "O": "OPEN_BACK_VOWEL",
-            "J": "OPEN_FRONT_VOWEL", #APPROXIMATION FOR ITALIAN J : dIeci, sceglI   
             "sil": "IDLE",
         }
         return
@@ -234,7 +234,6 @@ class AWSTtsService(HarmoniServiceManager):
         """
         behaviours = list(sorted(behavior_data, key=lambda i: i["start"]))
         data, samplerate = sf.read(self.outdir + "/tts.ogg")
-        data_ogg = data
         sf.write(self.outdir + "/tts.wav", data, samplerate)
         file_handle = self.outdir + "/tts.wav"
         data = np.fromfile(file_handle, np.uint8)[
@@ -247,7 +246,6 @@ class AWSTtsService(HarmoniServiceManager):
             "audio_frame": audio_frame,
             "audio_data": data_array,
             "behavior_data": str(behaviours),
-            "audio_ogg": data_ogg.tostring(),
         }
         return str(response)
 
@@ -308,7 +306,6 @@ def main():
     service_name = ActuatorNameSpace.tts.name
     instance_id = rospy.get_param("instance_id")
     service_id = f"{service_name}_{instance_id}"
-    # name = rospy.get_param("/name_" + service_name + "/")
     try:
         rospy.init_node(service_name)
 
