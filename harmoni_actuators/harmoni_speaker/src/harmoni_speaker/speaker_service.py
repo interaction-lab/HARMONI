@@ -22,6 +22,7 @@ import os
 
 class SpeakerService(HarmoniServiceManager):
     """Takes sound and publishes it to the default audio topic for the audio_play package
+
     Args:
         HarmoniServiceManager ([type]): [description]
     """
@@ -40,7 +41,9 @@ class SpeakerService(HarmoniServiceManager):
 
     def do(self, data):
         """Publishes audio to the "/audio/audio" topic for the audio_play module
+
         Converts input audio from bytes or a local/network path to an audio msg.
+
         Args:
             data (str): This could be a string of:
                             - audio data
@@ -73,10 +76,12 @@ class SpeakerService(HarmoniServiceManager):
     def file_path_to_audio_data(self, path):
         """Returns audio data from a local path or internet link
         TODO: Add wget to docker image
+
         Args:
             path (string): string of:
                             - local folder path
                             - link of audio file you want to listen to
+
         Returns:
             json: return an object with two fields:
                         - audio_data: string
