@@ -1,15 +1,8 @@
 # Configuration file for the microphone
 tts:
-  ita_param:
-    region_name: "us-west-2"
-    language: "it-IT"
-    outdir: "$(find harmoni_tts)/temp_data"
-    wav_header_length: 24
-    voice: "Bianca"
   default_param:
     region_name: "us-west-2"
     language: "en-US"
     outdir: "$(find harmoni_tts)/temp_data"
     wav_header_length: 24
     voice: "Ivy"
-  
