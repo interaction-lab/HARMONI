@@ -33,14 +33,12 @@ $(document).ready(function () {
             }
             // ADD HERE the event click event
             $("button").on("click", function () {
-                var value = document.getElementById("input_1")
-                //var value_item = $(this).closest("div.button").find("input[name='inputext']").val();
+                var value = ""
                 if(view.includes("code")){
                     var value_item = $(this).closest('container').find('div.button');
                     console.log(value_item)
                     var value = value_item.prevObject.prevObject[0].previousSibling
                 } 
-                
                 setValueButton(this, value);
                 clickListener(this);
             });
@@ -60,34 +58,17 @@ function viewListener(view) {
     var content = json_data.set_content
     if (content != "") {
         if (component.includes("img")) {
-            if ($("#" + component)[0].style.display == 'none'){
-                $("#" + component)[0].style.display = 'inline-block'; //Can be searched better
-            }
             $("#" + component).attr("src", content);
             $("#" + component).attr("value", content);
             $('img', "#"+component).attr('src', content);
             $("#"+ component).children().unbind('click');
-        }
-        else if (component.includes("text")) {
-            if ($("#" + component).parent().parent().parent().parent()[0].style.display == 'none'){
-                $("#" + component).parent().parent().parent().parent()[0].style.display = 'inline-block'; //Can be searched better
-            }
-            //$("#" + component).parent().parent()[0].style.display = 'inline-block';
-            $("#" + component)[0].style.display = 'inline-block';
-            $("#" + component).html(content)
         }
         else {
             $("#" + component).html(content)
         }
     } else if (component.includes("container")) {
         $(".container").hide()
-    } else if (component.includes("img")){
-        console.log($("#" + component).parent().parent()[0])
-        $("#" + component)[0].style.display = 'none';
-    } else if (component.includes("text")){
-        $("#" + component).parent().parent().parent().parent()[0].style.display = 'none';
     }
-
     disableOptions()
     $("#" + component).show();
     //setTimeout(function(){ $("#"+ component).children().bind('click'); }, 3000);
@@ -102,7 +83,6 @@ function requestListener(view) {
     var json_data = JSON.parse(data)
     var component = json_data.component_id
     var content = json_data.set_content
-    console.log(content)
     if (content != "") {
         if (component.includes("img")) {
             $("#" + component).attr("src", content);
@@ -115,9 +95,6 @@ function requestListener(view) {
         }
     } else if (component.includes("container")) {
         $(".container").hide()
-    } else if (component.includes("img")){
-        console.log($("#" + component).parentElement.parentElement)
-        $("#" + component).parentElement.parentElement.parentElement.style.display = 'none';
     }
     $("#"+ component).children().bind('click'); 
     enableOptions()
@@ -147,7 +124,6 @@ function clickListener(clicked_component) {
         var selected_item_id = clicked_component.id;
     }
     console.log("Clicked")
-    console.log(clicked_component)
     //$("#"+selected_item).css("opacity", "1");
     if(clicked_component.getAttribute("value")!="" && clicked_component.getAttribute("value")!=null){
         var body =  {component_id:selected_item_id , set_view:clicked_component.getAttribute("value")}
@@ -204,14 +180,9 @@ function createComponent(component, content, id, comp_class) {
         case "container":
             var html = "<div class ='container "+comp_class+"' id=" + id + "></div>";
             break;
-        case "card":
-            var html = "<div class=\"col\" style=\"display: none;\"><div class=\"card box-shadow\"><a id= " + id + "><img data-src=\"holder.js/100px225?theme=thumb&bg=55595c&fg=eceeef&text=Thumbnail\" alt=\"Thumbnail [100%x225]\" style=\"height: 275px; width: 100%; display: block; object-fit: cover;\" data-holder-rendered=\"true\" class=\"card-img-top option_choice disabled\" src=\"" + content + "\"><div class=\"card-body\"><button id= text_" +id.charAt(4)+ " class=\"card-text button_try\"></p></div></a></div></div>"
-            break;
-        case "card_text":
-            var html = "<div class=\"col\" style=\"display: none;\"><div class=\"card box-shadow\"><a id= " + id + "><div class=\"card-body\"><button id= QA_text_" +id.charAt(4)+ " class=\"card-text button_try\"></p></div></a></div></div>"
-            break;
         case "click_img":
             var html = "<a id=" + id +"><img class="+comp_class+"  src=" + content + "></a>";
+            break;
         case "img":
             var html = "<img class="+comp_class+"  src='" + content + "' id=" + id + ">";
             break;

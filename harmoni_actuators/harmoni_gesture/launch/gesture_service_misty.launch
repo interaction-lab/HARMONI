@@ -3,6 +3,7 @@
 	<arg name="instance_id" default="default"/>
 	<group if="$(arg use_gesture)">
 			<rosparam file="$(find harmoni_gesture)/config/configuration.yaml" subst_value="True"/>
+			<rosparam file="$(find harmoni_decision)/config/misty_configuration.yaml"/>
 			<param name="/misty/default_param/path" value ="$(find harmoni_gesture)/data"/>
 			<param name="instance_id" value="$(arg instance_id)"/>
 			<node pkg="harmoni_gesture" type="gesture_service_misty.py" name="harmoni_gesture_$(arg instance_id)" output="screen"/>

@@ -2,25 +2,18 @@
 <launch>
    
 	<arg name="use_decision" default="true"/>
-	<arg name="pattern_name" default="misty"/>
+	<arg name="pattern_name" default="multiple_choice"/>
 	<arg name="test" default="false"/>
 	<arg name="test_input" default=""/>
 	<arg name="instance_id" default="default"/>
-	<arg name="url" default="http://i3lab.elet.polimi.it/letssayresources/img/1_1_"/>
-	<arg name="activity_type" default="QandA"/>
-	<arg name="area" default="Su_di_me"/>
-	<arg name="activity_number" default="0"/>
+	<arg name="url" default="http://"/>
   	<group if="$(arg use_decision)">
 			<rosparam file="$(find harmoni_pattern)/config/configuration.yaml" subst_value="True"/>
 			<param name="test_$(arg pattern_name)" value="$(arg test)"/>
 			<param name="test_input_$(arg pattern_name)" value="$(arg test_input)"/>
 			<param name="instance_id_$(arg pattern_name)" value="$(arg instance_id)"/>
-			<param name="instance_id" value="default"/>
 			<param name="url_$(arg pattern_name)" value="$(arg url)"/>
 			<param name="pattern_name" value="$(arg pattern_name)"/>
-			<param name="activity_type" value="$(arg activity_type)"/>
-			<param name="area" value="$(arg area)"/>
-			<param name="activity_number" value="$(arg activity_number)"/>
 			<node pkg="harmoni_decision" type="$(arg pattern_name)_decision.py" name="harmoni_decision" output="screen"  args="$(arg test) $(arg test_input) $(arg instance_id)"/>
   	</group>
 </launch>

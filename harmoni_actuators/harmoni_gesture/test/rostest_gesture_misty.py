@@ -64,7 +64,7 @@ class TestGesture(unittest.TestCase):
     def test_request_response(self):
         rospy.loginfo(f"The input data is {self.data}")
         self.service_client.send_goal(
-            action_goal=ActionType.DO.value,
+            action_goal=ActionType.REQUEST.value,
             optional_data=self.data,
             wait=True,
         )
