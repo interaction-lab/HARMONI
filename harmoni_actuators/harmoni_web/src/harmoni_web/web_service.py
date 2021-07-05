@@ -77,9 +77,6 @@ class WebService(HarmoniServiceManager):
         data_array = self._get_web_data(data)
 
         try:
-            for data in data_array:
-                self.send_request(data)
-                rospy.sleep(0.2)
             while not rospy.is_shutdown() and not self.end_listening:
                 rospy.loginfo(f"Waiting for user, the results is: {self.result_msg}")
                 if self.end_listening:
@@ -193,12 +190,9 @@ class WebService(HarmoniServiceManager):
         """Callback for subscription to the web page"""
         rospy.loginfo("Received an event from the webpage")
         print(type(event.data))
-        
-        # self.result_msg = str(event)[2:-2]
-        result_msg = ast.literal_eval(event.data)
-        print(result_msg)
-        self.result_msg = result_msg["component_id"] #TODO RESET THIS TO "set_view"
         self.end_listening = True
+        # self.result_msg = str(event)[2:-2]
+        self.result_msg = event.data
         return
 
 
