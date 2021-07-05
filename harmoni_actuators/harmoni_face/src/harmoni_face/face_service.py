@@ -335,8 +335,7 @@ class MouthService(HarmoniServiceManager):
 
     def get_face_data(self, data):
         """ Get the validated data of the face"""
-        # rospy.loginfo("The face expressions available are %s" % self.face_expression)
-
+        # rospy.loginfo("The face expressions available are %s" % self.face_expression) 
         data = ast.literal_eval(data)
         if "behavior_data" in data:
             behavior_data = ast.literal_eval(data["behavior_data"])

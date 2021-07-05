@@ -2,6 +2,7 @@
 <launch>
 	<arg name="instance_id" default="default"/>
 	<param name="instance_id" value="$(arg instance_id)"/>
-    <node pkg="harmoni_speaker" type="speaker_service.py" name="harmoni_speaker_$(arg instance_id)" output="screen"/>
+	<rosparam file="$(find harmoni_decision)/config/misty_configuration.yaml"/>
+    <node pkg="harmoni_speaker" type="speaker_service_misty.py" name="harmoni_speaker_$(arg instance_id)" output="screen"/>
     
 </launch>

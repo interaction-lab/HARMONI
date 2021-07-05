@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<gesture>
+    <name>no</name>
+    <duration>2.0</duration>
+    <waypoints count="1">
+        <point time="1537967193275253450">
+            <gesture_type>move_head</gesture_type> 
+            <Pitch> 0 </Pitch>
+            <Roll> -30 </Roll>
+            <Yaw> 0 </Yaw> 
+            <Time> 0 </Time> 
+        </point>
+        <point time="1537967193275253450">
+            <gesture_type>move_head</gesture_type> 
+            <Pitch> 0 </Pitch>
+            <Roll> 30 </Roll>
+            <Yaw> 0 </Yaw> 
+            <Time> 0.5 </Time> 
+        </point>
+        <point time="1537967193275253450">
+            <gesture_type>move_head</gesture_type> 
+            <Pitch> 0 </Pitch>
+            <Roll> -30 </Roll>
+            <Yaw> 0 </Yaw> 
+            <Time> 1.0 </Time> 
+        </point>
+        <point time="1537967193275253450">
+            <gesture_type>move_head</gesture_type> 
+            <Pitch> 0 </Pitch>
+            <Roll> 30 </Roll>
+            <Yaw> 0 </Yaw> 
+            <Time> 1.5 </Time> 
+        </point>
+        <point time="1537967193275253450">
+            <gesture_type>move_head</gesture_type> 
+            <Pitch> 0 </Pitch>
+            <Roll> -30 </Roll>
+            <Yaw> 0 </Yaw> 
+            <Time> 2.0 </Time> 
+        </point>
+        <point time="1537967193275253450">
+            <gesture_type>move_head</gesture_type> 
+            <Pitch> 0 </Pitch>
+            <Roll> 0 </Roll>
+            <Yaw> 0 </Yaw> 
+            <Time> 2.5 </Time> 
+        </point>
+    </waypoints>
+</gesture>

@@ -9,3 +9,9 @@ if (!IS_DEBUG_DISPLAY) {
 } else {
     setup_cycle_through_displays(display_idx);
 }
+
+function btnChrome_onclick() {
+    document.documentElement.webkitRequestFullScreen();
+  }
+
+btnChrome_onclick()
