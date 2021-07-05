@@ -12,7 +12,7 @@ from harmoni_common_lib.constants import State
 from std_msgs.msg import String
 import os, io
 import ast
-from harmoni_speaker.speaker_service import SpeakerService
+from src.harmoni_speaker.speaker_service_misty import SpeakerService
 import json
 
 class TestSpeaker(unittest.TestCase):
@@ -27,13 +27,12 @@ class TestSpeaker(unittest.TestCase):
         self.path = rospack.get_path("harmoni_tts") + "/temp_data/tts.wav"
         self.result = False
         rospy.loginfo("TestSpeaker: Started up. waiting for speaker startup")
-        self.speaker_service = SpeakerService("test_speaker")
+        self.speaker_service_misty = SpeakerService("test_speaker")
         rospy.loginfo("TestSpeaker: Started")
-    
     
     def test_play(self):
         # Send a request to the real API server and store the response.
-        response = self.speaker_service.do(self.path)
+        response = self.speaker_service_misty.request(self.path)
         # Confirm that the request-response cycle completed successfully.
         rospy.loginfo(response)
         if response["response"]==State.SUCCESS:

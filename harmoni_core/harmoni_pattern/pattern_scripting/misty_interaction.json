@@ -1,0 +1,98 @@
+[
+    {
+        "set": "sequence",
+        "steps": [
+            {
+                "web_default": {
+                    "action_goal": "DO",
+                    "resource_type": "service",
+                    "wait_for": "new",
+                    "trigger": "[{'component_id':'type_dialogue_container', 'set_content':''}]"
+                }
+            },
+            {
+                "bot_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": "new",
+                    "trigger": "hey"
+                }
+            },
+            
+            {
+                "tts_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": "new"
+                }
+            },
+            [
+                {
+                    "gesture_default": {
+                        "action_goal": "REQUEST",
+                        "resource_type": "actuator",
+                        "wait_for": "new",
+                        "trigger":"{'gesture':'Misty/bye', 'timing': 0.5}"
+                    }
+                },      
+                {
+                    "speaker_default": {
+                        "action_goal": "REQUEST",
+                        "resource_type": "actuator",
+                        "wait_for": ""
+                    }
+                },
+                {
+                    "face_mouth_default": {
+                        "action_goal": "DO",
+                        "resource_type": "actuator",
+                        "wait_for": "new"
+                    }
+                }
+            ]
+        ]
+    },
+    {
+        "set": "loop",
+        "steps": [
+            {
+                "web_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": "new",
+                    "trigger": "[{'component_id':'type_dialogue_container', 'set_content':''}]"
+                }
+            },
+            {
+                "bot_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": "new"
+                }
+            },
+            {
+                "tts_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": "new"
+                }
+            },
+            [
+                {
+                    "speaker_default": {
+                        "action_goal": "REQUEST",
+                        "resource_type": "actuator",
+                        "wait_for": "new"
+                    }
+                },
+                {
+                    "face_mouth_default": {
+                        "action_goal": "DO",
+                        "resource_type": "actuator",
+                        "wait_for": "new"
+                    }
+                }
+            ]
+        ]
+    }
+]
