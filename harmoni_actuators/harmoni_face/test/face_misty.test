@@ -3,6 +3,7 @@
     <arg name="web_directory_path" value="$(find harmoni_face)/web"/>
     <arg name="port" default="8081"/>
     <rosparam file="$(find harmoni_face)/config/configuration.yaml"/>
+    <rosparam file="$(find harmoni_decision)/config/misty_configuration.yaml"/>
     <node pkg="harmoni_face" type="http_server_runner.py" name="face_http_server" output="screen" args="$(arg web_directory_path) $(arg port)" />
 	<include ns="bridge_face" file="$(find rosbridge_server)/launch/rosbridge_websocket.launch">
 		<arg name="port" value="9000"/>
