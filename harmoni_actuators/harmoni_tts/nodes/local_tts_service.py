@@ -24,14 +24,11 @@ class LocalTtsService(HarmoniServiceManager):
         """Constructor method: Initialization of variables and model & config paths + setting up"""
         super().__init__(name)
         """Initialization of variables and TTS parameters"""
-        ros_ws = os.environ.get("ROS_WS")
-        if not ros_ws:
-            raise ValueError("ROS_WS environment variable was not set")
-        self.tts_config = ros_ws + param["tts_config"]
-        self.tts_model = ros_ws + param["tts_model"]
-        self.vocoder_config = ros_ws + param["vocoder_config"]
-        self.vocoder_model = ros_ws + param["vocoder_model"]
-        self.scale_stats_path = ros_ws + param["scale_stats_path"]
+        self.tts_config = param["tts_config"]
+        self.tts_model = param["tts_model"]
+        self.vocoder_config = param["vocoder_config"]
+        self.vocoder_model = param["vocoder_model"]
+        self.scale_stats_path = param["scale_stats_path"]
         self.use_cuda = param["use_cuda"]
         self.verbose = param["verbose"]
         self.speedup = param["speedup"]
