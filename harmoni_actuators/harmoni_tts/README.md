@@ -4,7 +4,7 @@ The Text To Speech package takes text as action arguments and produces audio and
 
 ## Usage
 ### Local TTS service
-To set up the local TTS service, first run `sh harmoni_actuators/harmoni_tts/setup_tts.sh` from the HARMONI directory to install the local TTS models, configuration files, and dependencies.
+To set up the local TTS service, first run `sh harmoni_actuators/harmoni_tts/setup_tts.sh` from the HARMONI directory to install the local TTS models, configuration files, and dependencies. The local TTS models and config files will be placed in the `harmoni_models/tts` directory.
 
 
 ## Parameters
