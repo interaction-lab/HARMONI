@@ -1,10 +1,12 @@
 tts:
   default_param:
-    tts_config: "/root/harmoni_catkin_ws/model/tts/config.json"
-    tts_model: "/root/harmoni_catkin_ws/model/tts/tts_model.pth.tar"
-    vocoder_config: "/root/harmoni_catkin_ws/model/tts/config_vocoder.json"
-    vocoder_model: "/root/harmoni_catkin_ws/model/tts/vocoder_model.pth.tar"
-    scale_stats_path: "/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/scale_stats.npy"
+    # Model and configuration paths are relative to the ROS workspace 
+    # The full path is set in the Python script
+    tts_config: "/model/tts/config.json"
+    tts_model: "/model/tts/tts_model.pth.tar"
+    vocoder_config: "/model/tts/config_vocoder.json"
+    vocoder_model: "/model/tts/vocoder_model.pth.tar"
+    scale_stats_path: "/src/HARMONI/harmoni_actuators/harmoni_tts/scale_stats.npy"
     use_cuda: False
     verbose: False
     speedup: 1.1
