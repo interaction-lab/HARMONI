@@ -6,17 +6,13 @@ import roslib
 
 from harmoni_common_lib.constants import State
 from actionlib_msgs.msg import GoalStatus
+from harmoni_common_lib.service_server import HarmoniServiceServer
+from harmoni_common_lib.service_manager import HarmoniServiceManager
 from harmoni_common_lib.action_client import HarmoniActionClient
 import harmoni_common_lib.helper_functions as hf
-from microphone_service import MicrophoneService
-# Other Imports
-from harmoni_common_lib.constants import SensorNameSpace
-from audio_common_msgs.msg import AudioData
-import pyaudio
-import wave
-import numpy as np
+from gesture_service import GestureService
 # Specific Imports
-from harmoni_common_lib.constants import ActuatorNameSpace, ActionType, DialogueNameSpace
+from harmoni_common_lib.constants import ActuatorNameSpace, ActionType
 from botocore.exceptions import BotoCoreError, ClientError
 from contextlib import closing
 from collections import deque 
@@ -34,33 +30,33 @@ import time
 
 import py_trees.console
 
-class MicrophoneServicePytree(py_trees.behaviour.Behaviour):
+class GestureServicePytree(py_trees.behaviour.Behaviour):
 
-    #TODO tutte le print devono diventare console py_tree
     """
     mode è il boolean che controlla la modalità di funzionamento:
     true: opzione 1 (utilizzo come una classe python)
     false: opzione 2 (utilizzo mediate action_goal)
     """
 
-
-    def __init__(self, name = "MicrophoneServicePytree"):
+    def __init__(self, name = "AWSTtsServicePytree"):
+        
         """
         Qui abbiamo pensato di chiamare soltanto 
         il costruttore del behaviour tree 
         """
         self.name = name
         self.mode = False
-        self.microphone_service = None
+        self.gesture_service = None
         self.result_data = None
-        self.service_client_microphone = None
+        self.service_client_gesture = None
         self.client_result = None
 
         self.blackboards = []
-        self.blackboard_microphone = self.attach_blackboard_client(name=self.name, namespace="harmoni_microphone")
-        self.blackboard_microphone.register_key("result_message", access=py_trees.common.Access.WRITE)
+        self.blackboard_gesture = self.attach_blackboard_client(name=self.name, namespace="harmoni_gesture")
+        self.blackboard_gesture.register_key("result_data", access=py_trees.common.Access.READ)
+        self.blackboard_gesture.register_key("result_message", access=py_trees.common.Access.READ)
 
-        super(MicrophoneServicePytree, self).__init__(name)
+        super(GestureServicePytree, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self,**additional_parameters):
@@ -72,25 +68,22 @@ class MicrophoneServicePytree(py_trees.behaviour.Behaviour):
         """
         for parameter in additional_parameters:
             print(parameter, additional_parameters[parameter])  
-            if(parameter =="MicrophoneServicePytree_mode"):
+            if(parameter =="GestureServicePytree_mode"):
                 self.mode = additional_parameters[parameter]        
 
-        service_name = SensorNameSpace.microphone.name  # "microphone"
-        instance_id = rospy.get_param("instance_id")  # "default"
-        service_id = f"{service_name}_{instance_id}"
+        service_name = ActuatorNameSpace.gesture.name   
+        instance_id = rospy.get_param("/instance_id")
 
         params = rospy.get_param(service_name + "/" + instance_id + "_param/")
 
-        self.microphone_service = MicrophoneService(service_id, params) 
-
-        #TODO questo dobbiamo farlo nell'if 
-        #rospy init node mi fa diventare un nodo ros
-        rospy.init_node("microphone_default", log_level=rospy.INFO)
-
+        self.gesture_service = GestureService(self.name,params)
+        #comment the following line if you are not doing main()
+        rospy.init_node(service_name, log_level=rospy.INFO)
+        
         if(not self.mode):
-            self.service_client_microphone = HarmoniActionClient(self.name)
+            self.service_client_gesture = HarmoniActionClient(self.name)
             self.client_result = deque()
-            self.service_client_microphone.setup_client("microphone_default", 
+            self.service_client_gesture.setup_client("gesture_default", 
                                                 self._result_callback,
                                                 self._feedback_callback)
             self.logger.debug("Behavior interface action clients have been set up!")
@@ -100,48 +93,47 @@ class MicrophoneServicePytree(py_trees.behaviour.Behaviour):
     def initialise(self):
         """
         
-        """
-            
+        """    
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
+
     def update(self):
         """
         
-        """    
+        """
         if(self.mode):
-            pass
-        else:
-            if self.service_client_microphone.get_state() == GoalStatus.LOST:
-                self.logger.debug(f"Sending goal to {self.microphone_service}")
-                # Send request for each sensor service to set themselves up
-                self.service_client_microphone.send_goal(
-                    action_goal=ActionType["ON"].value,
-                    optional_data="Setup",
-                    wait="",
-                )
-                self.logger.debug(f"Goal sent to {self.microphone_service}")
-                self.blackboard_microphone.result_message = "RUNNING"
-                new_status = py_trees.common.Status.RUNNING
+            if self.blackboard_gesture.result_message == "SUCCESS":
+                self.result_data = self.gesture_service.do(self.blackboard_gesture.result_data)
+                new_status = py_trees.common.Status.SUCCESS
             else:
-                if self.service_client_microphone.get_state() != GoalStatus.LOST:
-                    #TODO qui succede che appena ci arriva un audio nuovo noi sovrascriviamo, cosa non del tutto giusta
+                new_status = self.blackboard_gesture.result_message
+        else:
+            if self.blackboard_gesture.result_message == "SUCCESS":
+                if self.service_client_gesture.get_state() == GoalStatus.LOST:
+                    self.logger.debug(f"Sending goal to {self.gesture_service}")
+                    # Dove posso prendere details["action_goal"]?
+                    self.service_client_gesture.send_goal(
+                        action_goal = ActionType["DO"].value,
+                        optional_data = self.blackboard_gesture.result_data["message"],
+                        wait=False,
+                    )
+                    self.logger.debug(f"Goal sent to {self.gesture_service}")
+                    new_status = py_trees.common.Status.RUNNING
+                else:
                     if len(self.client_result) > 0:
+                        #se siamo qui vuol dire che il risultato c'è e quindi 
+                        #possiamo terminare la foglia
                         self.result_data = self.client_result.popleft()["data"]
-                        self.blackboard_microphone.result_message = "RUNNING"
-                        new_status = py_trees.common.Status.RUNNING
+                        self.logger.debug(f"Results of gesture module: {self.result_data}")
+                        new_status = py_trees.common.Status.SUCCESS
                     else:
-                        #se siamo qui vuol dire che il risultato ancora non c'è, dunque
-                        #si è rotto tutto o dobbiamo solo aspettare?
-                        #incerti di questa riga, vedi 408 sequential_pattern.py
-                        if(self.microphone_service.state == State.FAILED):
-                            self.blackboard_microphone.result_message = "FAILURE"
+                        #incerti di questa riga
+                        if(self.gesture_service.state == State.FAILED):
                             new_status = py_trees.common.Status.FAILURE
                         else:
-                            self.blackboard_microphone.result_message = "RUNNING"
                             new_status = py_trees.common.Status.RUNNING
-                else:
-                    new_status = py_trees.common.Status.FAILURE
-
-        self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
+            else:
+                new_status = self.blackboard_gesture.result_message
+            self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status
 
         
@@ -192,20 +184,24 @@ def main():
 
     py_trees.logging.level = py_trees.logging.Level.DEBUG
     
-    blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace="harmoni_microphone")
-    blackboardProva.register_key("result_message", access=py_trees.common.Access.READ)
+    blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace="harmoni_gesture")
+    blackboardProva.register_key("result_data", access=py_trees.common.Access.WRITE)
+    blackboardProva.register_key("result_message", access=py_trees.common.Access.WRITE)
+
+    blackboardProva.result_message = "SUCCESS"
+    blackboardProva.result_data = "{'gesture':'QT/sad', 'timing': 2}"
 
     print(blackboardProva)
 
-    microphonePyTree = MicrophoneServicePytree("MicrophoneServicePytreeTest")
+    gesturePyTree = GestureServicePytree("GestureServiceTest")
 
     additional_parameters = dict([
-        ("MicrophoneServicePytree_mode",False)])
+        ("GestureServicePytree_mode",False)])
 
-    microphonePyTree.setup(**additional_parameters)
+    gesturePyTree.setup(**additional_parameters)
     try:
-        for unused_i in range(0, 3):
-            microphonePyTree.tick_once()
+        for unused_i in range(0, 7):
+            gesturePyTree.tick_once()
             time.sleep(0.5)
             print(blackboardProva)
         print("\n")
