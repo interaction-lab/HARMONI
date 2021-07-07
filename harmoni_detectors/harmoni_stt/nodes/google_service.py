@@ -13,6 +13,8 @@ import harmoni_common_lib.helper_functions as hf
 from harmoni_common_lib.constants import State, DetectorNameSpace, SensorNameSpace
 from audio_common_msgs.msg import AudioData
 from google.cloud import speech
+from google.cloud.speech import enums
+from google.cloud.speech import types
 from std_msgs.msg import String
 import numpy as np
 import os
@@ -75,33 +77,35 @@ class SpeechToTextService(HarmoniServiceManager):
         return
 
     def pause(self):
-        rospy.loginfo("Pause the %s service" % self.name)
-        self.state = State.SUCCESS
+        # rospy.loginfo("Pause the %s service" % self.name)
+        # self.state = State.SUCCESS
         return
 
     def setup_google(self):
         """Setup google client for speech recognition"""
         os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = self.credential_path
+
         self.client = speech.SpeechClient()
-        encoding = speech.RecognitionConfig.AudioEncoding.LINEAR16
-        self.config = speech.RecognitionConfig(
-            encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
+
+        self.config = types.RecognitionConfig(
+            encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
             sample_rate_hertz=self.sample_rate,
             language_code=self.language,
             audio_channel_count=self.audio_channel,
         )
-        config = speech.RecognitionConfig(
-            encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
-            sample_rate_hertz=self.sample_rate,
-            language_code=self.language,
-        )
-        self.streaming_config = speech.StreamingRecognitionConfig(
-            config=config, interim_results=True
+        # config = speech.RecognitionConfig(
+        #     encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
+        #     sample_rate_hertz=self.sample_rate,
+        #     language_code=self.language,
+        # )
+        self.streaming_config = types.StreamingRecognitionConfig(
+            config=self.config, interim_results=True
         )
         return
 
     def sound_data_callback(self, data):
         """ Callback function subscribing to the microphone topic"""
+        rospy.loginfo("Got some sound!!!")
         data = np.fromstring(data.data, np.uint8)
         # self.data = self.data.join(data)
         # self.data = data.data
@@ -120,7 +124,7 @@ class SpeechToTextService(HarmoniServiceManager):
         responses = self.client.streaming_recognize(
             config=self.streaming_config, requests=requests
         )
-        rospy.loginfo(f"Responses: {responses}")
+        rospy.loginfo(f"Responses: {responses.__dict__.keys()}")
         for response in responses:
             rospy.loginfo(f"Response items: {response}")
             # Once the transcription has settled, the first result will contain the
