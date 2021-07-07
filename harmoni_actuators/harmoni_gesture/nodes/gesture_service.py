@@ -23,6 +23,7 @@ class GestureService(HarmoniServiceManager):
     def __init__(self, name, param):
         """ Initialization of variables and gesture parameters """
         super().__init__(name)
+        rospy.loginfo("In the gesture service.")
         self.gestures_name = []
         self.gestures_duration = []
         self.gesture_list_received = False
@@ -44,8 +45,10 @@ class GestureService(HarmoniServiceManager):
             self._gesture_done_callback,
             queue_size=1,
         )
+        rospy.loginfo("Publishers and subscribers set up")
         self.state = State.INIT
-        self.setup_gesture()
+        #self.setup_gesture()
+        rospy.loginfo("Service init completed")
         return
 
     def _gesture_done_callback(self, data):
@@ -104,7 +107,7 @@ class GestureService(HarmoniServiceManager):
             else:
                 gesture_data = data
                 self.gesture_pub.publish(str(data))
-            print(gesture_data)
+            rospy.loginfo(f"Publishing to gesture pub: {gesture_data}")
             if gesture_data:
                 while not self.gesture_done:
                     self.state = State.REQUEST
@@ -115,6 +118,7 @@ class GestureService(HarmoniServiceManager):
             rospy.logwarn("Gesture failed")
             self.state = State.FAILED
             self.actuation_completed = True
+        rospy.loginfo("Returning response to 'do'")
         return {"response": self.state}
 
     def _get_gesture_data(self, data):
@@ -141,7 +145,7 @@ class GestureService(HarmoniServiceManager):
         ordered_gesture_data = list(
             sorted(behavior_set, key=lambda face: face["start"])
         )
-        print(ordered_gesture_data)
+        print("ordered gesture data:", ordered_gesture_data)
         validated_gesture = []
         for gest in ordered_gesture_data:
             validated_gesture.append(gest["id"])

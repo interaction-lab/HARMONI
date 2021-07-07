@@ -93,6 +93,7 @@ class SequentialPattern(HarmoniServiceManager):
         )
 
         for name, client in self.service_clients.items():
+            rospy.loginfo(f"Waiting on: {name}")
             client.setup_client(name, self._result_callback, self._feedback_callback)
         rospy.loginfo("Behavior interface action clients have been set up!")
         return
