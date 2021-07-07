@@ -15,4 +15,5 @@ demo:
   tts: ["default"]
   face: ["default"]
   speaker: ["default"]
+demo2:
   gesture: ["qt"]

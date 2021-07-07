@@ -3,11 +3,19 @@
         "set": "sequence",
         "steps": [
             {
+                "gesture_qt": {
+                    "action_goal": "DO",
+                    "resource_type": "actuator",
+                    "wait_for": "",
+                    "trigger": "{'gesture':'QT/bye', 'timing': 0.5}"
+                }
+            },
+            {
                 "tts_default": {
                     "action_goal": "REQUEST",
                     "resource_type": "service",
                     "wait_for": "new",
-                    "trigger": "Hi Ashley, how are you doing today? I know it has been a tough time lately."
+                    "trigger": "Hey Ashley, it is good to see you! How are you doing today?"
                 }
             },
             [
@@ -16,14 +24,6 @@
                         "action_goal": "DO",
                         "resource_type": "actuator",
                         "wait_for": ""
-                    }
-                },
-                {
-                    "gesture_qt": {
-                        "action_goal": "DO",
-                        "resource_type": "actuator",
-                        "wait_for": "",
-                        "trigger": "{'gesture':'QT/bye', 'timing': 0.5}"
                     }
                 },
                 {
@@ -40,11 +40,19 @@
         "set": "sequence",
         "steps": [
             {
+                "gesture_qt": {
+                    "action_goal": "DO",
+                    "resource_type": "actuator",
+                    "wait_for": "",
+                    "trigger": "{'gesture':'QT/sad', 'timing': 0.5}"
+                }
+            },
+            {
                 "tts_default": {
                     "action_goal": "REQUEST",
                     "resource_type": "service",
                     "wait_for": "new",
-                    "trigger": "That is good to hear, thank you for sharing."
+                    "trigger": "Thank you for sharing. It sounds as though you are having a hard time with frustration right now. Would you like to expand on that? We can talk more about why you are feeling frustrated."
                 }
             },
             [
@@ -56,21 +64,21 @@
                     }
                 },
                 {
-                    "gesture_qt": {
-                        "action_goal": "DO",
-                        "resource_type": "actuator",
-                        "wait_for": "",
-                        "trigger": "{'gesture':'QT/bye', 'timing': 0.5}"
-                    }
-                },
-                {
                     "face_mouth_default": {
                         "action_goal": "DO",
                         "resource_type": "actuator",
                         "wait_for": "new"
                     }
                 }
-            ]
+            ],
+            {
+                "gesture_qt": {
+                    "action_goal": "DO",
+                    "resource_type": "actuator",
+                    "wait_for": "new",
+                    "trigger": "{'gesture':'QT/bye', 'timing': 0.5}"
+                }
+            }
         ]
     }
 ]
