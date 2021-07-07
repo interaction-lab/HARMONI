@@ -28,3 +28,8 @@ speak_test:
   default_param:
     trigger_intent: "Hey"
     pattern_scripting: $(find harmoni_pattern)/pattern_scripting/speak_test.json
+
+speak_for_demo:
+  default_param:
+    trigger_intent: "Hey"
+    pattern_scripting: $(find harmoni_pattern)/pattern_scripting/speak_test.json

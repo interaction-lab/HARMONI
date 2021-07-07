@@ -11,3 +11,8 @@ hardware:
   face: ["default"]
   speaker: ["default"]
   # gesture: ["default"]
+demo:
+  tts: ["default"]
+  face: ["default"]
+  speaker: ["default"]
+  gesture: ["qt"]

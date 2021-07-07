@@ -1,0 +1,76 @@
+[
+    {
+        "set": "sequence",
+        "steps": [
+            {
+                "tts_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": "new",
+                    "trigger": "Hi Ashley, how are you doing today? I know it has been a tough time lately."
+                }
+            },
+            [
+                {
+                    "speaker_default": {
+                        "action_goal": "DO",
+                        "resource_type": "actuator",
+                        "wait_for": ""
+                    }
+                },
+                {
+                    "gesture_qt": {
+                        "action_goal": "DO",
+                        "resource_type": "actuator",
+                        "wait_for": "",
+                        "trigger": "{'gesture':'QT/bye', 'timing': 0.5}"
+                    }
+                },
+                {
+                    "face_mouth_default": {
+                        "action_goal": "DO",
+                        "resource_type": "actuator",
+                        "wait_for": "new"
+                    }
+                }
+            ]
+        ]
+    },
+    {
+        "set": "sequence",
+        "steps": [
+            {
+                "tts_default": {
+                    "action_goal": "REQUEST",
+                    "resource_type": "service",
+                    "wait_for": "new",
+                    "trigger": "That is good to hear, thank you for sharing."
+                }
+            },
+            [
+                {
+                    "speaker_default": {
+                        "action_goal": "DO",
+                        "resource_type": "actuator",
+                        "wait_for": ""
+                    }
+                },
+                {
+                    "gesture_qt": {
+                        "action_goal": "DO",
+                        "resource_type": "actuator",
+                        "wait_for": "",
+                        "trigger": "{'gesture':'QT/bye', 'timing': 0.5}"
+                    }
+                },
+                {
+                    "face_mouth_default": {
+                        "action_goal": "DO",
+                        "resource_type": "actuator",
+                        "wait_for": "new"
+                    }
+                }
+            ]
+        ]
+    }
+]
