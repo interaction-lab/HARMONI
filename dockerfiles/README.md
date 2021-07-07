@@ -15,7 +15,7 @@ To launch the complete harmoni dev setup in docker:
         - ```roscore```
 
     - From harmoni_hardware:
-        - ``` roslaunch harmoni_microphone microphone_service.launch test:=true```
+        - ``` roslaunch harmoni_microphone microphone_service.launch```
         - _Note: you can also use the alias ```rlhardwareservices``` we have provided, which will launch the hardware you have set in the configuration_
 
     - From harmoni_w2l:
