@@ -110,7 +110,7 @@ class Launcher:
                 )
         tree = ET.ElementTree(root)
         abs_path = os.path.abspath(__file__)
-        path = abs_path.split("scripts/")
+        path = abs_path.split("nodes/")
         file_name = repo + "_" + name + ".launch"
         tree.write(path[0] + "launch/" + file_name)
         rospy.loginfo(f"Created the launch file {file_name}")
