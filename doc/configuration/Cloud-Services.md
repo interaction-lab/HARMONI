@@ -23,6 +23,8 @@ $ aws configure
 # Enter the IAM user access and secret keys here.
 ```
 
+Note: The docker compose scripts expect your aws keys to be in ~/.aws
+
 ## Setup Google Accounts
 If you are planning on using dialogflow or other google services:
 
@@ -47,9 +49,11 @@ To get an API key:
 Set credentials on HARMONI:
 
 ```bash
-$ cd ~/catkin_ws/src/HARMONI/dockerfiles/config/
+$ cd ~
+$ mkdir .gcp
+$ cd .gcp
 $ nano private-keys.json
 # Copy and paste the json content generated in the previous steps.
 ```
 
-Note: Secret keys and configurations are done locally and mounted to images through the Docker-Compose.yml files
+Note: Secret keys and configurations are done locally and mounted to images through the Docker-Compose.yml files. If you run the compose files before generating the keys you may need to delete and recreate the .aws and .gcp folders, as they will have been created with root only permission. Otherwise you should be able to edit them directly.
