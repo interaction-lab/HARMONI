@@ -93,8 +93,11 @@ RUN \
     deepspeech \
     # Testing
     mock \
+    # TTS
+    gdown \
+    inflect \
+    sounddevice \
     && rm -rf -- /var/lib/apt/lists/*
-
 
 # ==================================================================
 # Install Ros Kinetic

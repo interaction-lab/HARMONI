@@ -2,6 +2,8 @@ FROM harmoniteam/harmoni:noetic-base
 
 RUN ROS_DISTRO="noetic"
 
+RUN curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
+
 RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \

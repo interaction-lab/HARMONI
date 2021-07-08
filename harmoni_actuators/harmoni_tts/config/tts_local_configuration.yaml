@@ -1,0 +1,12 @@
+tts:
+  default_param:
+    tts_config: "$(find harmoni_models)/tts/config.json"
+    tts_model: "$(find harmoni_models)/tts/tts_model.pth.tar"
+    vocoder_config: "$(find harmoni_models)/tts/config_vocoder.json"
+    vocoder_model: "$(find harmoni_models)/tts/vocoder_model.pth.tar"
+    scale_stats_path: "$(find harmoni_models)/tts/scale_stats.npy"
+    use_cuda: False
+    verbose: False
+    speedup: 1.1
+    outdir: "$(find harmoni_tts)/temp_data"
+    sample_rate: 16000
