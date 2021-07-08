@@ -1,4 +1,4 @@
-version: "3.7"
+version: "2.0"
 
 services:
   harmoni_hardware:
@@ -6,16 +6,15 @@ services:
     build:
       context: .
       dockerfile: dockerfiles/harmoni/kinetic/full/dockerfile #substitute $ROS_DISTRO with kinetic for now.
-      network: host
     image: harmoniteam/harmoni:kinetic-full
-    init: true
     environment:
       DISPLAY: $DISPLAY
       ROS_DISTRO: kinetic
-      #ROS_IP: "192.168.100.1"
+      ROS_IP: "192.168.100.1"
       ROS_MASTER_URI: http://192.168.100.1:11311
       IS_DOCKER_ENV: "true"
       CATKIN_WS: harmoni_catkin_ws
+      #QT_GRAPHICSSYSTEM: native
     network_mode: "host"
     ports:
       - "11312:11312"
