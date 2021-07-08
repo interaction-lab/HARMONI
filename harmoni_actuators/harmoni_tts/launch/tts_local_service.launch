@@ -1,0 +1,8 @@
+<launch>
+	<arg name="instance_id" default="default"/>
+	<param name="instance_id" value="$(arg instance_id)"/>
+
+    <rosparam file="$(find harmoni_tts)/config/tts_local_configuration.yaml" subst_value="True"/>
+
+    <node pkg="harmoni_tts" type="local_tts_service.py" name="harmoni_tts_local_$(arg instance_id)" output="screen"/>
+</launch>
