@@ -256,14 +256,14 @@ On the NUC (qtpc), run the command:
 
 ``` 
 roslaunch harmoni_face face_service.launch 
-rosrun harmoni_web client_to_start_face.py 
+rosrun harmoni_face client_to_start_face.py 
 ``` 
 
 On the PI (qtrp), run the command: 
 
  
 ``` 
-rosrun harmoni_web server_to_start_face.py 
+rosrun harmoni_face server_to_start_face.py 
 ``` 
 On the screen, the web page with the face will be displayed, and it continues refreshing until the face service has been started.
 
