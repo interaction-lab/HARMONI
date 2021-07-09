@@ -107,7 +107,7 @@ class DeepSpeechClient:
 
 
 if __name__ == "__main__":
-    model_dir = os.path.abspath(os.path.join(os.getcwd(), "../../../../../../model/deepspeech/models"))
+    model_dir = os.path.abspath(os.path.join(os.getcwd(), "../../../../harmoni_models/stt/"))
     model_file_path = os.path.join(model_dir, "deepspeech-0.9.3-models.pbmm")
     scorer_path = os.path.join(model_dir, "deepspeech-0.9.3-models.scorer")
 
