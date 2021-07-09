@@ -47,7 +47,7 @@ In your package you may want to publish data to a topic so that other packages m
 This approach is deprecated because HARMONI wants to standardize the exchange of messages between services so that it is managed at an higher level.
 
 ## README file
-[HIGHLY SUGGESTED]
+[STRONGLY SUGGESTED]
 There should be a brief description of what the package does.
 There should be an entry for each parameter set in configuration.yaml with a brief description and value. 
 You should write what type of messages your package uses, if your package uses non-standard messages. 
@@ -152,5 +152,4 @@ class SensorNameSpace(Enum):
 - Check that your package has built or do:
 > catkin build [your_package]
 - Check that the *.py* files (in *src* or *nodes*) in your package are executable
-
 
