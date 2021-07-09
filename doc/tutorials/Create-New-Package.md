@@ -62,7 +62,7 @@ You should write what type of messages your package uses, if your package uses n
 
 
 ## Tests
-[HIGHLY SUGGESTED]
+[STRONGLY SUGGESTED]
 
 The *test* folder stores the tests created for the service.
 There are three types of files in this folder: a *[your_package].test* file, a *rostest-[your_package].py* file and a *unittest-[your_package].py* file.
@@ -152,4 +152,3 @@ class SensorNameSpace(Enum):
 - Check that your package has built or do:
 > catkin build [your_package]
 - Check that the *.py* files (in *src* or *nodes*) in your package are executable
-
