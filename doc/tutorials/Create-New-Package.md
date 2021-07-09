@@ -76,7 +76,7 @@ The structure of the *[your_package].test* file is usually like:
 
 ```
 <launch>
-	<rosparam file="$(find harmoni_[your_package])/config/configuration.yaml" subst_value="True"/>
+    <rosparam file="$(find harmoni_[your_package])/config/configuration.yaml" subst_value="True"/>
     <param name="instance_id" value="default"/>
     
     <node pkg="harmoni_[your_package]" type="[your_package]_service.py" name="harmoni_[your_package]" output="screen"/>
