@@ -1,7 +1,7 @@
 <launch>
-    <rosparam file="$(find harmoni_stt)/config/deepspeech_configuration.yaml"/>
+    <rosparam file="$(find harmoni_stt)/config/deepspeech_configuration.yaml" subst_value="True"/>
 	<param name="instance_id" value="default"/>
 	<node pkg="harmoni_stt" type="deepspeech_service.py" name="harmoni_stt_deepspeech_default" output="screen"/>
-	<param name="test_deepspeech_input" value="$(find harmoni_stt)/test_data/hello.wav"/>
+	<param name="test_deepspeech_input" value="$(find harmoni_stt)/test_data/hello_16k.wav"/>
     <test test-name="test_deepspeech" pkg="harmoni_stt" type="test_deepspeech.py"/>
 </launch>

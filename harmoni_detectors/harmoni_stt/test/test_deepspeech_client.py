@@ -4,6 +4,7 @@ import mock
 import numpy as np
 import os
 import pyaudio
+import time
 import unittest
 import wave
 
@@ -11,7 +12,7 @@ from harmoni_stt.deepspeech_client import DeepSpeechClient
 from scipy.io import wavfile
 
 
-MODEL_DIR = os.path.abspath(os.path.join(os.getcwd(), "../../../../../model/deepspeech/models"))
+MODEL_DIR = os.path.abspath(os.path.join(os.getcwd(), "../../../harmoni_models/stt"))
 MODEL_FILE_PATH = os.path.join(MODEL_DIR, "deepspeech-0.9.3-models.pbmm")
 SCORER_PATH = os.path.join(MODEL_DIR, "deepspeech-0.9.3-models.scorer")
 LM_ALPHA = 0.75
@@ -53,30 +54,16 @@ class TestDeepSpeechClient(unittest.TestCase):
         assert not self.ds_client.is_streaming
 
     def test_process_audio(self):
-        # TODO: fix method of streaming from wav file; currently the output is "to" instead of "hello"
         chunk_size = 1024
         wf = wave.open(TEST_AUDIO_FILE_PATH)
-        # create an audio object
-        p = pyaudio.PyAudio()
-        # open stream based on the wave object which has been input.
-        stream = p.open(
-            format=p.get_format_from_width(wf.getsampwidth()),
-            channels=wf.getnchannels(),
-            rate=wf.getframerate(),
-            output=True
-        )
         # read data (based on the chunk size)
         self.ds_client.start_stream()
-        # play stream
         while not self.ds_client.is_final:
             data = wf.readframes(chunk_size)
             text = self.ds_client.process_audio(data)
-        # close stream
-        stream.stop_stream()
-        stream.close()
-        p.terminate()
+            time.sleep(0.2)
         # expected transcription from the test audio file is "hello"
-        # assert text == "hello"
+        assert text == "hello"
 
 
 if __name__ == "__main__":

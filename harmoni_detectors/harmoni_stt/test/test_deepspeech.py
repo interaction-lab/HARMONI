@@ -63,8 +63,11 @@ class TestDeepSpeech_Common(unittest.TestCase):
 
         rospy.loginfo("TestDeepSpeech: publishing audio")
 
-        self.audio_pub.publish(self.audio)
-        self.audio_pub.publish(self.audio[:14000])
+        chunk_size = 1024
+        index = 0
+        while index < len(self.audio) - chunk_size:
+            self.audio_pub.publish(self.audio[index:index+chunk_size])
+            index = index + chunk_size
 
         rospy.loginfo(
             f"TestDeepSpeech: audio subscribed to by #{self.output_sub.get_num_connections()} connections."
