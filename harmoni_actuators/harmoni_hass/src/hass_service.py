@@ -122,11 +122,11 @@ class HassService(HarmoniServiceManager):
                         rospy.loginfo("Did you put the correct uri and token in the configuration file?")
                         self.response_received = True
 
-        except rospy.ServiceException:
+        except rospy.ServiceException as e:
             self.start = State.FAILED
-            rospy.loginfo("Service call failed")
+            rospy.logerr("Service call failed")
             self.response_received = True
-            self.result_msg = ""
+            self.result_msg = e
 
         return {"response": self.state, "message": self.result_msg}
 
@@ -258,7 +258,10 @@ class HassService(HarmoniServiceManager):
         hass_response = requests.post(
             url,
             json=parameters,
-            headers=myHeaders
+            headers=myHeaders,
+
+            # SELF-SIGNED CERTIFICATE FOR A LOCAL CONNECTION
+            verify=False
             )
 
         # self.result_msg = hass_response.text

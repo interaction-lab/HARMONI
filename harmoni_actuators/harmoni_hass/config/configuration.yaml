@@ -1,6 +1,6 @@
 # Configuration file for home assistant
 hass:
   default_param:
-    hass_uri: "http://10.254.254.50:8123/"
+    hass_uri: "https://10.254.254.50:8123/"
     credential_path: "$(env HOME)/.hass/token.json" #path where the home assistant token is mounted
     simulation: True

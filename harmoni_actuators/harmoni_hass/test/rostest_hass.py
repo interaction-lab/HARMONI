@@ -32,11 +32,6 @@ class TestHass(unittest.TestCase):
         self.client_result = deque()
         self.service_client.setup_client(self.name, self.result_cb, self.feedback_cb)
         # NOTE currently no feedback, status, or result is received.
-        rospy.Subscriber(
-            "/harmoni_hass_default/feedback", harmoniFeedback, self.feedback_cb
-        )
-        rospy.Subscriber("/harmoni_hass_default/status", GoalStatus, self.status_cb)
-        rospy.Subscriber("/harmoni_hass_default/result", harmoniResult, self.result_cb)
         rospy.loginfo("TestHass: Started up. waiting for home assistant startup")
         rospy.loginfo("TestHass: Started")
 

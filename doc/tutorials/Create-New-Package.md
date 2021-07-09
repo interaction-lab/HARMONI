@@ -39,12 +39,12 @@ There are other services that, once started, keep on running.
 For example, the microphone service, once started, keeps sending audio data.
 These kind of services implement the *start* and *stop* methods.
 
+## Data
+The general policy is that you use the HARMONI service system to send small commands and info messages among services.
 
+However, if you have high density data (e.g. images and audio), do [publishing and subscription as normal ROS nodes](http://wiki.ros.org/ROS/Tutorials/WritingPublisherSubscriber%28python%29)
+In this case, be sure to follow the HARMONI namespace guidelines so that multiple packages can publish/subscribe to known interfaces (see [Namespaces and the *constants.py* file section](#constants)). This approach is especially useful when there are multiple packages that provide the same data, as is the case with different types of STT services.
 
-
-[DEPRECATED]
-In your package you may want to publish data to a topic so that other packages may use it or you may want to subscribe to some data published by other packages. For example you may want the audio stream coming from the *harmoni_microphone* package.
-This approach is deprecated because HARMONI wants to standardize the exchange of messages between services so that it is managed at an higher level.
 
 ## README file
 [HIGHLY SUGGESTED]
@@ -89,6 +89,9 @@ Parameters can be specified in the *configuration.yaml* file or directly in the 
     <param name="test_[your_package]_input" value="Hello"/>
 ```
 
+Test files and launch files make use of namespaces when including config files. For this reason, it is important to follow the HARMONI namespace guidelines (see [Namespaces and the *constants.py* file section](#constants)).
+If these are not added, it is possible for concurrently running services to overwrite eachother's params (e.g. in *harmoni_detectors/harmoni_face_detect/launch/face_detect_service.launch*).
+
 <!-- The structure of the *rostest-[your_package].py* file is usually like:
 ```
 
@@ -132,8 +135,8 @@ Your package should be put in the folder corresponding to the type of service yo
 
 - Dialogues -> *harmoni_dialogues* 
 
-### *constants.py* file
-You must add the name of the service in the *constants.py* file that is in *harmoni_core/harmoni_common_lib/src/harmoni_common_lib/*.
+### <a name="constants"></a>Namespaces and the *constants.py* file  
+The HARMONI namespace guidelines require you to add the name of the service in the *constants.py* file that is in *harmoni_core/harmoni_common_lib/src/harmoni_common_lib/*.
 
 A new line should be put in the Enum corresponding to the type of service you have decided for your package.
 
