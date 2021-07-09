@@ -47,7 +47,7 @@ In this case, be sure to follow the HARMONI namespace guidelines so that multipl
 
 
 ## README file
-[HIGHLY SUGGESTED]
+[STRONGLY SUGGESTED]
 There should be a brief description of what the package does.
 There should be an entry for each parameter set in configuration.yaml with a brief description and value. 
 You should write what type of messages your package uses, if your package uses non-standard messages. 
@@ -62,7 +62,7 @@ You should write what type of messages your package uses, if your package uses n
 
 
 ## Tests
-[HIGHLY SUGGESTED]
+[STRONGLY SUGGESTED]
 
 The *test* folder stores the tests created for the service.
 There are three types of files in this folder: a *[your_package].test* file, a *rostest-[your_package].py* file and a *unittest-[your_package].py* file.
@@ -76,7 +76,7 @@ The structure of the *[your_package].test* file is usually like:
 
 ```
 <launch>
-	<rosparam file="$(find harmoni_[your_package])/config/configuration.yaml" subst_value="True"/>
+    <rosparam file="$(find harmoni_[your_package])/config/configuration.yaml" subst_value="True"/>
     <param name="instance_id" value="default"/>
     
     <node pkg="harmoni_[your_package]" type="[your_package]_service.py" name="harmoni_[your_package]" output="screen"/>
@@ -155,5 +155,3 @@ class SensorNameSpace(Enum):
 - Check that your package has built or do:
 > catkin build [your_package]
 - Check that the *.py* files (in *src* or *nodes*) in your package are executable
-
-
