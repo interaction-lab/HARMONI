@@ -6,7 +6,7 @@
 	<arg name="test" default="false"/>
 	<arg name="test_input" default=""/>
 	<arg name="instance_id" default="default"/>
-	<arg name="url" default="http://i3lab.elet.polimi.it/letssayresources/img/1_1_"/>
+	<arg name="url" default="http://"/>
   	<group if="$(arg use_decision)">
 			<rosparam file="$(find harmoni_pattern)/config/configuration.yaml" subst_value="True"/>
 			<param name="test_$(arg pattern_name)" value="$(arg test)"/>

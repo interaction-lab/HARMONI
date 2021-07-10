@@ -22,11 +22,6 @@
                             "component": "img",
                             "children": "../assets/imgs/test.jpg",
                             "id": "img_test2"
-                        },
-                        {
-                            "component": "img",
-                            "children": "../assets/imgs/test.jpg",
-                            "id": "img_test3"
                         }
                     ]
                 },
@@ -48,6 +43,118 @@
                             "component": "button",
                             "children": "Click here!",
                             "id": "button_4"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "component": "container",
+            "id": "QA_container",
+            "children": [
+            {   
+                "component": "title",
+                "children": "",
+                "id": "title_QA"
+            },
+                {
+                    "component": "row",
+                    "id": "row_4",
+                    "children": [
+                        {
+                            "component": "card",
+                            "comp_class":"option_choice",
+                            "children": "",
+                            "id": "img_1"
+                        },
+                        {
+                            "component": "card",
+                            "comp_class":"option_choice",
+                            "children": "",
+                            "id": "img_2"
+                        },
+                        {
+                            "component": "card",
+                            "comp_class":"option_choice",
+                            "children": "",
+                            "id": "img_3"
+                        },
+                        {
+                            "component": "card",
+                            "comp_class":"option_choice",
+                            "children": "",
+                            "id": "img_4"
+                        },
+                        {
+                            "component": "card",
+                            "comp_class":"option_choice",
+                            "children": "",
+                            "id": "img_5"
+                        },
+                        {
+                            "component": "card",
+                            "comp_class":"option_choice",
+                            "children": "",
+                            "id": "img_6"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "component": "container",
+            "id": "QA_container_text",
+            "children": [
+            {   
+                "component": "title",
+                "children": "",
+                "id": "title_QA_txt"
+            },
+                {
+                    "component": "row",
+                    "id": "row_5",
+                    "children": [
+                        {
+                            "component": "card_text",
+                            "comp_class":"option_choice",
+                            "children": "",
+                            "id": "txt_1"
+                        },
+                        {
+                            "component": "card_text",
+                            "comp_class":"option_choice",
+                            "children": "",
+                            "id": "txt_2"
+                        },
+                        {
+                            "component": "card_text",
+                            "comp_class":"option_choice",
+                            "children": "",
+                            "id": "txt_3"
+                        }
+                    ]
+                },
+                {
+                    "component": "row",
+                    "id": "row_6",
+                    "children": [
+                        {
+                            "component": "card_text",
+                            "comp_class":"option_choice",
+                            "children": "",
+                            "id": "txt_4"
+                        },
+                        {
+                            "component": "card_text",
+                            "comp_class":"option_choice",
+                            "children": "",
+                            "id": "txt_5"
+                        },
+                        {
+                            "component": "card_text",
+                            "comp_class":"option_choice",
+                            "children": "",
+                            "id": "txt_6"
                         }
                     ]
                 }
@@ -223,7 +330,7 @@
                         {
                             "component": "button",
                             "children": "Send",
-                            "id": "button_1"
+                            "id": "button_10"
                         }
                     ]
                 }
@@ -299,7 +406,7 @@
             "children": [ 
                 {
                     "component": "img",
-                    "children": "../assets/imgs/logo.svg",
+                    "children": "../assets/imgs/birthday.jpeg",
                     "id": "main_img_alt"
                 }
             ]

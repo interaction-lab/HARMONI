@@ -1,0 +1,8 @@
+<launch>
+    <param name="instance_id" value="default"/>
+    <!-- <param name="name_speaker" value="speaker"/> -->
+    <rosparam file="$(find harmoni_decision)/config/misty_configuration.yaml"/>
+    <node pkg="harmoni_speaker" type="speaker_service_misty.py" name="harmoni_speaker_default" output="screen"/>
+	<param name="test_speaker_input" value="$(find harmoni_tts)/temp_data/tts.wav"/>
+    <test test-name="test_speaker" pkg="harmoni_speaker" type="rostest_speaker_misty.py" />
+</launch>

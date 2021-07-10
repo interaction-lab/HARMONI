@@ -6,3 +6,8 @@ gesture:
     robot_joint_radians_topic: "qt_robot/joints/state_rad"
     robot_gesture_topic: "qt_robot/gesture/play"
     time_interval: 0.01
+  default_param:
+    path: "$(find harmoni_gesture)/data"
+    robot_gesture_topic: "misty_robot/gesture/play"
+    robot_joint_radians_topic: "misty_robot/joints/state_rad"
+    robot_joint_topic: "misty_robot/joints/state"

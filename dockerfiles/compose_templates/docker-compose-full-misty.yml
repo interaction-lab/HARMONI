@@ -1,0 +1,62 @@
+version: "3.7"
+
+services:
+  harmoni_full:
+    container_name: harmoni_full
+    build:
+      context: .
+      dockerfile: dockerfiles/harmoni/kinetic/full/dockerfile #substitute $ROS_DISTRO with kinetic for now.
+      network: host
+    image: harmoniteam/harmoni:kinetic-full
+    init: true
+    environment:
+#      DISPLAY: $DISPLAY
+#      QT_GRAPHICSSYSTEM: native
+      ROS_DISTRO: kinetic
+#      ROS_MASTER_URI: http://172.18.3.4:11311
+      IS_DOCKER_ENV: "true"
+#      ROS_HOSTNAME: harmoni_full
+      CATKIN_WS: harmoni_catkin_ws
+#    privileged: true
+    network_mode: "host"
+#    networks:
+#      ros_net:
+#        ipv4_address: 172.18.3.4
+#    hostname: harmoni_full
+    ports:
+      - "11312:11312"
+      - "33691:33691"
+      - "8081:8081" #harmoni_face
+      - "8082:8082" #harmoni_web
+    devices:
+#      - /dev/dri:/dev/dri
+      - /dev/snd:/dev/snd
+#      - /dev/video0:/dev/video0
+    volumes:
+      # - harmoni_catkin_ws:/root/harmoni_catkin_ws
+      - ../HARMONI/:/root/local_mount/HARMONI/
+      # Configuration
+      - ~/.aws:/root/.aws/
+      - ./dockerfiles/config/.asoundrc:/root/.asoundrc
+      - ~/.gcp/private-keys.json:/root/.gcp/private-keys.json
+      # Other
+      - /home/.ssh/:/root/.ssh:ro 
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    working_dir: /root/harmoni_catkin_ws/src/HARMONI
+  
+    command:
+      tail  -f /dev/null
+      #  bash -c "terminator -ue \"echo 'Entering harmoni_full Container... \\n start with roscore and rlharmoniservices' && bash\""
+
+#networks:
+#  ros_net:
+#    driver: bridge
+#    ipam:
+#      driver: default
+#      config:
+#        - subnet: 172.18.3.0/24
+# volumes:
+# harmoni_catkin_ws:
+# wav2letter:
