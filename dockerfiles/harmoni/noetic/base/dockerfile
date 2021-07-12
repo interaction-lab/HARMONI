@@ -68,6 +68,10 @@ RUN \
     google-api-python-client \
     # Rasa
     rasa==2.4.2 \
+    # TTS
+    gdown \
+    inflect \
+    sounddevice \
     && rm -rf /var/lib/apt/lists/* 
 
 # ==================================================================

@@ -1,0 +1,8 @@
+<launch>
+	<rosparam file="$(find harmoni_tts)/config/tts_local_configuration.yaml" subst_value="True"/>
+    <param name="instance_id" value="default"/>
+    <node pkg="harmoni_tts" type="local_tts_service.py" name="harmoni_tts_local_default" output="screen"/>
+
+	<param name="test_tts_input" value="Hello"/>
+    <test test-name="test_tts" pkg="harmoni_tts" type="rostest_tts.py" />
+</launch>
