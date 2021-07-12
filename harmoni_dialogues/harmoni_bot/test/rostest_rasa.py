@@ -71,22 +71,18 @@ class TestRasa(unittest.TestCase):
         rospy.loginfo(f"Result: {data}")
         self.result = True
 
-    @mock.patch("harmoni_bot.rasa_client.requests.post")
-    def test_request_response(self, mock_post):
+    def test_request_response(self):
         rospy.loginfo(f"The input text is {self.text}")
-        # Mock requests.post from the Rasa client 
-        recipient_id = "test_user"
-        text = "Welcome to the Interaction Lab!"
-        mock_post.return_value.json.return_value = [
-            {"recipient_id": recipient_id, "text": text}
-        ]
-
+        # expected response from the rasa_example bot when the input text is "Hello"
+        text = "Hey! How are you?"
         self.service_client.send_goal(
             action_goal=ActionType.REQUEST.value,
             optional_data=self.text,
             wait=True,
         )
-        assert self.result == text
+        rasa_response = self.service_client.get_result()
+        rospy.loginfo("HarmoniResult:" + rasa_response.message)
+        assert rasa_response.message == text
 
 
 def main():

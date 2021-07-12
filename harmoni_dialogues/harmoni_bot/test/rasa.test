@@ -8,5 +8,6 @@
     <node pkg="harmoni_bot" type="rasa_service.py" name="harmoni_bot_rasa_default" output="screen"/>
 
 	<param name="test_rasa_input" value="Hello"/>
+	<param name="rasa/default_param/rasa_assistant" value="rasa_example"/>
     <test test-name="test_rasa" pkg="harmoni_bot" type="rostest_rasa.py" time-limit="1000.0" />
 </launch>
