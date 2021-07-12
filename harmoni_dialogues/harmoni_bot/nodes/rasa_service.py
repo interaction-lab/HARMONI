@@ -66,8 +66,8 @@ class RasaService(HarmoniServiceManager):
             rospy.loginfo(f"Exception occurred: {e}")
             self.state = State.FAILED
             rasa_response = ""
-
         self.response_received = True
+        self.result_msg = rasa_response
         return {"response": self.state, "message": rasa_response}
 
 
@@ -79,7 +79,7 @@ def main():
     instance_id = rospy.get_param("instance_id")  # "default"
     service_id = f"{service_name}_{instance_id}"
     try:
-        rospy.init_node(service_name, log_level=rospy.DEBUG)
+        rospy.init_node(service_name, log_level=rospy.INFO)
         params = rospy.get_param("rasa" + "/" + instance_id + "_param/")
         s = RasaService(service_id, params)
         service_server = HarmoniServiceServer(service_id, s)
