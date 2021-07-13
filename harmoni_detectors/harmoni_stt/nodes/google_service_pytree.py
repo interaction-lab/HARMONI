@@ -124,7 +124,7 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
                     # Dove posso prendere details["action_goal"]?
                     self.service_client_stt.send_goal(
                         action_goal = ActionType["REQUEST"].value,
-                        optional_data = None,
+                        optional_data="",
                         wait=False,
                     )
                     self.logger.debug(f"Goal sent to {self.google_service}")
