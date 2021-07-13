@@ -11,5 +11,8 @@ Parameters input for the web service:
 |                      |            |        |
 
 ## Testing
+This package can be tested by running `rostest harmoni_web web.test`.
+
+The link for the webpage must be opened and elements on the webpage clicked in order for the test to pass.
 ## References
 [Documentation](https://harmoni.readthedocs.io/en/latest/packages/harmoni_web.html)

@@ -29,5 +29,7 @@ Parameters input for the speaker service:
 ## Testing
 
 To test that the speaker has been configured properly, use the command ```roslaunch harmoni_speaker speaker_service.launch``` which will play a short phrase through the configured device. You may need to experiement with different values to ensure the proper speaker is set up.
+
+The speaker can also be tested by running `rostest harmoni_speaker speaker.test`. When being tested on a QT robot, this must be run on the QT's Raspberry Pi in order to hear the audio clip be played.
 ## References
 [Documentation](https://harmoni.readthedocs.io/en/latest/packages/harmoni_speaker.html)

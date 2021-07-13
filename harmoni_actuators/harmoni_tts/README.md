@@ -15,5 +15,6 @@ Parameters input for the aws polly service:
 |wav_heade_length      |            |        |
 
 ## Testing
+This package can be tested by running `rostest harmoni_tts polly.test`. Amazon Polly must be set up in order for this test to pass.
 ## References
 [Documentation](https://harmoni.readthedocs.io/en/latest/packages/harmoni_tts.html)

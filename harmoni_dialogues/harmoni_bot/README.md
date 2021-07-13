@@ -15,5 +15,8 @@ Parameters input for the aws lex service:
 |region_name           |            |        |
 
 ## Testing
+This package can be tested by running `rostest harmoni_bot lex.test`.
+
+Amazon Lex should be set up in order for this test to pass.
 ## References
 [Documentation](https://harmoni.readthedocs.io/en/latest/packages/harmoni_bot.html)

@@ -11,6 +11,9 @@ We provide a fork of the face of [CoRDial](https://github.com/ndennler/cordial-p
 ## Parameters
 
 ## Testing
+The face can be tested by running `rostest harmoni_face face.test`.
+
+The link for the face must be opened in a browser in order to pass the test.
 
 ## References
 [Documentation](https://harmoni.readthedocs.io/en/latest/packages/harmoni_face.html)
