@@ -52,7 +52,7 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
         self.mode = False
         self.google_service = None
         self.result_data = None
-        self.service_client_w2l = None
+        self.service_client_stt = None
         self.client_result = None
 
         self.blackboards = []
@@ -81,18 +81,16 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
 
         param = rospy.get_param(service_name + "/" + instance_id + "_param/")
 
-        self.google_service = SpeechToTextService(self.name,param)
+        self.google_service = STTGoogleService(self.name,param)
 
         #TODO questo dobbiamo farlo nell'if 
         #rospy init node mi fa diventare un nodo ros
         rospy.init_node("stt_default", log_level=rospy.INFO)
 
-        self.blackboard_stt.result_message = "INVALID"
-
         if(not self.mode):
-            self.service_client_w2l = HarmoniActionClient(self.name)
+            self.service_client_stt = HarmoniActionClient(self.name)
             self.client_result = deque()
-            self.service_client_w2l.setup_client("stt_default", 
+            self.service_client_stt.setup_client("stt_default", 
                                                 self._result_callback,
                                                 self._feedback_callback)
             self.logger.debug("Behavior interface action clients have been set up!")
@@ -206,7 +204,7 @@ def main():
     sttPyTree = SpeechToTextServicePytree("SpeechToTextServicePytreeTest")
 
     additional_parameters = dict([
-        ("mode",False)])
+        ("SpeechToTextServicePytree_mode",False)])
 
     sttPyTree.setup(**additional_parameters)
     try:
