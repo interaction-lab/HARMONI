@@ -9,8 +9,9 @@ from actionlib_msgs.msg import GoalStatus
 from harmoni_common_lib.service_server import HarmoniServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 from harmoni_common_lib.action_client import HarmoniActionClient
+from google_service import STTGoogleService
 import harmoni_common_lib.helper_functions as hf
-from harmoni_stt.w2l_service import SpeechToTextService
+
 # Specific Imports
 from harmoni_common_lib.constants import DetectorNameSpace, ActionType
 from audio_common_msgs.msg import AudioData
@@ -81,6 +82,7 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
         param = rospy.get_param(service_name + "/" + instance_id + "_param/")
 
         self.google_service = SpeechToTextService(self.name,param)
+
         #TODO questo dobbiamo farlo nell'if 
         #rospy init node mi fa diventare un nodo ros
         rospy.init_node("stt_default", log_level=rospy.INFO)
@@ -88,9 +90,9 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
         self.blackboard_stt.result_message = "INVALID"
 
         if(not self.mode):
-            self.service_client_stt = HarmoniActionClient(self.name)
+            self.service_client_w2l = HarmoniActionClient(self.name)
             self.client_result = deque()
-            self.service_client_stt.setup_client("stt_default", 
+            self.service_client_w2l.setup_client("stt_default", 
                                                 self._result_callback,
                                                 self._feedback_callback)
             self.logger.debug("Behavior interface action clients have been set up!")
@@ -151,7 +153,6 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
         return new_status
 
         
-
     def terminate(self, new_status):
         """
         When is this called?
