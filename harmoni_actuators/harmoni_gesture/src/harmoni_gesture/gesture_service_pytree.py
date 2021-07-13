@@ -13,6 +13,7 @@ import harmoni_common_lib.helper_functions as hf
 from gesture_service import GestureService
 # Specific Imports
 from harmoni_common_lib.constants import ActuatorNameSpace, ActionType
+from qt_gesture_interface import GestureInterface
 from botocore.exceptions import BotoCoreError, ClientError
 from contextlib import closing
 from collections import deque 
@@ -38,7 +39,7 @@ class GestureServicePytree(py_trees.behaviour.Behaviour):
     false: opzione 2 (utilizzo mediate action_goal)
     """
 
-    def __init__(self, name = "AWSTtsServicePytree"):
+    def __init__(self, name = "GestureServicePytree"):
         
         """
         Qui abbiamo pensato di chiamare soltanto 
@@ -66,6 +67,7 @@ class GestureServicePytree(py_trees.behaviour.Behaviour):
         pensiamo debbano essere passati dal chiamante e non possono essere
         creati all'interno del metodo stesso.  
         """
+
         for parameter in additional_parameters:
             print(parameter, additional_parameters[parameter])  
             if(parameter =="GestureServicePytree_mode"):
@@ -76,18 +78,20 @@ class GestureServicePytree(py_trees.behaviour.Behaviour):
 
         params = rospy.get_param(service_name + "/" + instance_id + "_param/")
 
-        self.gesture_service = GestureService(self.name,params)
         #comment the following line if you are not doing main()
         rospy.init_node(service_name, log_level=rospy.INFO)
-        
+
+        #self.qt_gesture_service = GestureInterface(service_name, params)
+
+        self.gesture_service = GestureService(service_name,params)
+        #TODO il primo parametro di setup_client deve essere "uguale" in tutte le foglie
         if(not self.mode):
             self.service_client_gesture = HarmoniActionClient(self.name)
             self.client_result = deque()
-            self.service_client_gesture.setup_client("gesture_default", 
+            self.service_client_gesture.setup_client(service_name + "_" + instance_id, 
                                                 self._result_callback,
                                                 self._feedback_callback)
             self.logger.debug("Behavior interface action clients have been set up!")
-        
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 
     def initialise(self):
@@ -113,7 +117,7 @@ class GestureServicePytree(py_trees.behaviour.Behaviour):
                     # Dove posso prendere details["action_goal"]?
                     self.service_client_gesture.send_goal(
                         action_goal = ActionType["DO"].value,
-                        optional_data = self.blackboard_gesture.result_data["message"],
+                        optional_data = self.blackboard_gesture.result_data,
                         wait=False,
                     )
                     self.logger.debug(f"Goal sent to {self.gesture_service}")

@@ -5,13 +5,14 @@ import rospy
 import roslib
 
 from harmoni_common_lib.constants import State
+from actionlib_msgs.msg import GoalStatus
 from harmoni_common_lib.service_server import HarmoniServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 from harmoni_common_lib.action_client import HarmoniActionClient
 import harmoni_common_lib.helper_functions as hf
 from harmoni_stt.w2l_service import SpeechToTextService
 # Specific Imports
-from harmoni_common_lib.constants import DetectorNameSpace, SensorNameSpace
+from harmoni_common_lib.constants import DetectorNameSpace, ActionType
 from audio_common_msgs.msg import AudioData
 from botocore.exceptions import BotoCoreError, ClientError
 from contextlib import closing
@@ -54,12 +55,9 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
         self.client_result = None
 
         self.blackboards = []
-        self.blackboard_stt=self.attach_blackboard_client(name=self.name,namespace="harmoni_stt")
-        self.blackboard_stt.register_key("result_data",access=py_trees.common.Access.WRITE)
-        self.blackboard_stt.register_key("result_message", access=py_trees.common.Access.WRITE)
         self.blackboard_input_bot=self.attach_blackboard_client(name=self.name,namespace="harmoni_input_bot")
-        self.blackboard_input_bot.register_key("result_data",access=py_trees.common.Access.READ)
-        self.blackboard_input_bot.register_key("result_message", access=py_trees.common.Access.READ)
+        self.blackboard_input_bot.register_key("result_data",access=py_trees.common.Access.WRITE)
+        self.blackboard_input_bot.register_key("result_message", access=py_trees.common.Access.WRITE)
 
 
         super(SpeechToTextServicePytree, self).__init__(name)
@@ -82,10 +80,10 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
 
         param = rospy.get_param(service_name + "/" + instance_id + "_param/")
 
-        self.w2l_service = SpeechToTextService(self.name,param)
+        self.google_service = SpeechToTextService(self.name,param)
         #TODO questo dobbiamo farlo nell'if 
         #rospy init node mi fa diventare un nodo ros
-        #rospy.init_node("tts_default", log_level=rospy.INFO)
+        rospy.init_node("stt_default", log_level=rospy.INFO)
 
         self.blackboard_stt.result_message = "INVALID"
 
@@ -102,60 +100,52 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
     def initialise(self):
         """
         
-        """
-        #il result message dice anche in che stato è la foglia
-        self.blackboard_stt.result_message = "RUNNING"
-        self.blackboard_stt.result_data = ""
-
-        #TODO Queste cose devono andare nell'update, 
-        #dopo aver controllato di avere o meno input_text
-        if(self.mode):
-            pass
-            #self.result_data = self.aws_service.request(input_text)
-        else:
-            self.logger.debug(f"Sending goal to {self.w2l_service} optional_data len {len(input_text)}")
-
-            # Dove posso prendere details["action_goal"]?
-            self.service_client_stt.send_goal(
-                action_goal = ActionType["REQUEST"].value,
-                optional_data = input_text,
-                wait=False,
-            )
-            self.logger.debug(f"Goal sent to {self.w2l_service}")
-            
+        """ 
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
     def update(self):
         """
         
         """
         #Secondo me dovremmo usare transcribe_stream
-        
+
         if(self.mode):
+            #Dobbiamo prima fare la richiesta
             if(self.result_data["response"] == State.SUCCESS):
-                self.blackboard_tts.result_message = "SUCCESS"
-                self.blackboard_tts.result_data = self.result_data['message']
+                self.blackboard_input_bot.result_message = "SUCCESS"
+                self.blackboard_input_bot.result_data = self.result_data['message']
                 self.result_data = self.result_data['message']
                 new_status = py_trees.common.Status.SUCCESS
             else:
-                self.blackboard_tts.result_message = "FAILURE"
+                self.blackboard_input_bot.result_message = "FAILURE"
                 new_status = py_trees.common.Status.FAILURE
         else:
-            if len(self.client_result) > 0:
-                #se siamo qui vuol dire che il risultato c'è e quindi 
-                #possiamo terminare la foglia
-                self.result_data = self.client_result.popleft()["data"]
-                self.blackboard_tts.result_message = "SUCCESS"
-                self.blackboard_tts.result_data = self.result_data
-                new_status = py_trees.common.Status.SUCCESS
+            if self.service_client_stt.get_state() == GoalStatus.LOST:
+                    self.logger.debug(f"Sending goal to {self.google_service}")
+                    # Dove posso prendere details["action_goal"]?
+                    self.service_client_stt.send_goal(
+                        action_goal = ActionType["REQUEST"].value,
+                        optional_data = None,
+                        wait=False,
+                    )
+                    self.logger.debug(f"Goal sent to {self.google_service}")
+                    new_status = py_trees.common.Status.RUNNING
             else:
-                #se siamo qui vuol dire che il risultato ancora non c'è
-                self.blackboard_tts.result_message = "RUNNING"
-                new_status = py_trees.common.Status.RUNNING
+                if len(self.client_result) > 0:
+                    #se siamo qui vuol dire che il risultato c'è e quindi 
+                    #possiamo terminare la foglia
+                    self.result_data = self.client_result.popleft()["data"]
+                    self.blackboard_input_bot.result_message = "SUCCESS"
+                    self.blackboard_input_bot.result_data = self.result_data
+                    new_status = py_trees.common.Status.SUCCESS
+                else:
+                    #se siamo qui vuol dire che il risultato ancora non c'è
+                    self.blackboard_input_bot.result_message = "RUNNING"
+                    new_status = py_trees.common.Status.RUNNING
 
-            #incerti di questa riga
-            if(self.aws_service.state == State.FAILED):
-                self.blackboard_tts.result_message = "FAILURE"
-                new_status = py_trees.common.Status.FAILURE
+                #incerti di questa riga
+                if(self.google_service.state == State.FAILED):
+                    self.blackboard_input_bot.result_message = "FAILURE"
+                    new_status = py_trees.common.Status.FAILURE
             
             self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status
@@ -171,7 +161,6 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
         """
         if(new_status == py_trees.common.Status.INVALID):
             #esegui codice per interrupt 
-            #self.blackboard_tts.result_message = "INVALID"
             #TODO 
             if(self.mode):
                 pass
@@ -208,10 +197,10 @@ def main():
 
     py_trees.logging.level = py_trees.logging.Level.DEBUG
     
-    #blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace="harmoni_tts")
-    #blackboardProva.register_key("result_data", access=py_trees.common.Access.READ)
-    #blackboardProva.register_key("result_message", access=py_trees.common.Access.READ)
-    #print(blackboardProva)
+    blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace="harmoni_input_bot")
+    blackboardProva.register_key("result_data", access=py_trees.common.Access.READ)
+    blackboardProva.register_key("result_message", access=py_trees.common.Access.READ)
+    print(blackboardProva)
 
     sttPyTree = SpeechToTextServicePytree("SpeechToTextServicePytreeTest")
 

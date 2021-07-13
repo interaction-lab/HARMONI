@@ -32,6 +32,7 @@ class GestureService(HarmoniServiceManager):
         self.gesture_pub = rospy.Publisher(
             ActuatorNameSpace.gesture.value + self.service_id, String, queue_size=1
         )
+        print("------------gesture_service_topic: "+ ActuatorNameSpace.gesture.value + self.service_id + "/get_list")
         self.gesture_sub = rospy.Subscriber(
             ActuatorNameSpace.gesture.value + self.service_id + "/get_list",
             String,
@@ -45,7 +46,7 @@ class GestureService(HarmoniServiceManager):
             queue_size=1,
         )
         self.state = State.INIT
-        self.setup_gesture()
+        #self.setup_gesture()
         return
 
     def _gesture_done_callback(self, data):
@@ -76,7 +77,8 @@ class GestureService(HarmoniServiceManager):
         """ Setup the gesture """
         rospy.loginfo("Setting up the %s" % self.name)
         while not self.gesture_list_received:
-            rospy.sleep(0.1)
+            print("--wait--")
+            rospy.sleep(2)
         rospy.loginfo("Received list of gestures")
         # self._get_list_callback("{'name':'QT/point_front', 'duration':'4'}")
         return
@@ -92,6 +94,7 @@ class GestureService(HarmoniServiceManager):
         Returns:
             response (int): state of the DO action
         """
+        self.setup_gesture()
         self.state = State.REQUEST
         self.actuation_completed = False
         if type(data) == str:
@@ -227,6 +230,8 @@ def main():
     try:
         rospy.init_node(service_name)
         params = rospy.get_param(service_name + "/" + instance_id + "_param/")
+        print("---------------istance_id: "+instance_id)
+        print("---------------service_id: "+service_id)
         s = GestureService(service_name, params)
         service_server = HarmoniServiceServer(service_id, s)
         service_server.start_sending_feedback()
