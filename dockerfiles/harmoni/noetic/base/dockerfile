@@ -67,7 +67,7 @@ RUN \
     dialogflow \
     google-api-python-client \
     # Rasa
-    rasa==2.4.2 \
+    rasa==2.7.1 \
     # TTS
     gdown \
     inflect \
