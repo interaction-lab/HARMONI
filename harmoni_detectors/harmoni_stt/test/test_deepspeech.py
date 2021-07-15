@@ -8,6 +8,7 @@ import unittest
 
 # Specific Imports
 import time
+import wave
 from harmoni_common_lib.action_client import HarmoniActionClient
 from harmoni_common_lib.constants import ActionType, DetectorNameSpace, SensorNameSpace, State
 
@@ -19,16 +20,10 @@ PKG = "test_harmoni_stt"
 
 class TestDeepSpeech_Common(unittest.TestCase):
 
-    def wav_to_data(self, path):
-        with io.open(path, "rb") as f:
-            content = f.read()
-        return content
-
     def setUp(self):
         self.feedback = State.INIT
         self.result = False
         self.test_file = rospy.get_param("test_deepspeech_input")
-        self.audio = self.wav_to_data(self.test_file)
         rospy.init_node("test_deepspeech", log_level=rospy.INFO)
         self.rate = rospy.Rate(20)
         self.output_sub = rospy.Subscriber(
@@ -64,10 +59,15 @@ class TestDeepSpeech_Common(unittest.TestCase):
         rospy.loginfo("TestDeepSpeech: publishing audio")
 
         chunk_size = 1024
+        wf = wave.open(self.test_file)
+        # read data (based on the chunk size)
         index = 0
-        while index < len(self.audio) - chunk_size:
-            self.audio_pub.publish(self.audio[index:index+chunk_size])
-            index = index + chunk_size
+        audio_length = wf.getnframes()
+        while index+chunk_size < audio_length:
+            data = wf.readframes(chunk_size)
+            self.audio_pub.publish(data)
+            index = index+chunk_size
+            time.sleep(0.2)
 
         rospy.loginfo(
             f"TestDeepSpeech: audio subscribed to by #{self.output_sub.get_num_connections()} connections."
