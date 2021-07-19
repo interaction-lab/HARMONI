@@ -22,7 +22,7 @@ import ast
 import sys
 
 
-class AWSTtsService(HarmoniServiceManager):
+class AWS_TTS_Service(HarmoniServiceManager):
     """
     Amazon tts service
     """
@@ -312,7 +312,7 @@ def main():
 
         param = rospy.get_param(service_name + "/" + instance_id + "_param/")
 
-        s = AWSTtsService(service_id, param)
+        s = AWS_TTS_Service(service_id, param)
 
         service_server = HarmoniServiceServer(service_id, s)
 
