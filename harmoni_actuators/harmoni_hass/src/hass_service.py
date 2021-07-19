@@ -117,14 +117,15 @@ class HassService(HarmoniServiceManager):
 
                     else:
                         self.start = State.FAILED
-                        rospy.loginfo("Service call failed")
-                        rospy.loginfo(f"Home Assistant's response is {hass_response.text}, with status code {hass_response.status_code}")
-                        rospy.loginfo("Did you put the correct uri and token in the configuration file?")
+                        rospy.logerr("Service call failed")
+                        rospy.logerr(f"Home Assistant's response is {hass_response.text}, with status code {hass_response.status_code}")
+                        rospy.logerr("Did you put the correct uri and token in the configuration file?")
                         self.response_received = True
 
         except rospy.ServiceException as e:
             self.start = State.FAILED
             rospy.logerr("Service call failed")
+            rospy.logerr(e)
             self.response_received = True
             self.result_msg = e
 
