@@ -78,6 +78,8 @@ class LocalTtsService(HarmoniServiceManager):
             self.state = State.FAILED
 
         self.response_received = True
+        self.result_msg = file_path
+        rospy.loginfo("Request successfully completed")
 
         return {"response": self.state, "message": file_path}
 
