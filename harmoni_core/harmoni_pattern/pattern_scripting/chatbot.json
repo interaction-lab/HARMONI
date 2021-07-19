@@ -1,33 +1,5 @@
 [
-    {
-        "set": "sequence",
-        "steps": [
-            {
-                "bot_default": {
-                    "action_goal": "REQUEST",
-                    "resource_type": "service",
-                    "wait_for": "new",
-                    "trigger": "hey"
-                }
-            },
-            {
-                "tts_default": {
-                    "action_goal": "REQUEST",
-                    "resource_type": "service",
-                    "wait_for": "new"
-                }
-            },
-            [
-                {
-                    "speaker_default": {
-                        "action_goal": "DO",
-                        "resource_type": "actuator",
-                        "wait_for": "v"
-                    }
-                }
-            ]
-        ]
-    },
+  
     {
         "set": "loop",
         "steps": [
@@ -35,7 +7,8 @@
                 "bot_default": {
                     "action_goal": "REQUEST",
                     "resource_type": "service",
-                    "wait_for": "new"
+                    "wait_for": "new",
+                    "trigger": "hey"
                 }
             },
             {
