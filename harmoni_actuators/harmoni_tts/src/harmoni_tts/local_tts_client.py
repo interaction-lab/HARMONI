@@ -22,6 +22,7 @@ class TtsClient:
         tts_model,
         vocoder_config,
         vocoder_model,
+        scale_stats_path,
         use_cuda=False,
         verbose=False,
         speedup=1.1
@@ -39,10 +40,6 @@ class TtsClient:
         self._vocoder_config = load_config(vocoder_config)
 
         # Make sure scale_stats.npy path is correct when using with roslaunch
-        scale_stats_path = os.path.join(
-            "/root", "harmoni_catkin_ws", "src", "HARMONI", "harmoni_actuators",
-            "harmoni_tts", "scale_stats.npy"
-        )
         self._tts_config.audio["stats_path"] = scale_stats_path
         self._vocoder_config.audio["stats_path"] = scale_stats_path
 
@@ -111,34 +108,21 @@ class TtsClient:
 
 
 if __name__ == "__main__":
-    import argparse
 
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument("tts_config")
-    # parser.add_argument("tts_model")
-    # parser.add_argument("vocoder_config")
-    # parser.add_argument("vocoder_model")
-    #
-    # args = parser.parse_args()
-    #
-    # tts_config = args.tts_config
-    # tts_model = args.tts_model
-    # vocoder_config = args.vocoder_config
-    # vocoder_model = args.vocoder_model
-
-    content_dir = os.path.join(
-        "/root", "harmoni_catkin_ws", "src", "HARMONI", "harmoni_actuators", "harmoni_tts", "content"
-    )
+    tts_dir = os.path.abspath(os.path.join(os.getcwd(), "../.."))
+    content_dir = os.path.abspath(os.path.join(tts_dir, "../../../../model/tts"))
     tts_config = os.path.join(content_dir, "config.json")
     tts_model = os.path.join(content_dir, "tts_model.pth.tar")
     vocoder_config = os.path.join(content_dir, "config_vocoder.json")
     vocoder_model = os.path.join(content_dir, "vocoder_model.pth.tar")
+    scale_stats_path = os.path.join(tts_dir, "scale_stats.npy")
 
     tts_client = TtsClient(
         tts_config,
         tts_model,
         vocoder_config,
-        vocoder_model
+        vocoder_model,
+        scale_stats_path
     )
 
     sentence = "How are you doing today?"

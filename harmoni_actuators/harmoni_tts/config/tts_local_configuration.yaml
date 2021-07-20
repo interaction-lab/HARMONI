@@ -1,9 +1,10 @@
 tts:
   default_param:
-    tts_config: "/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/content/config.json"
-    tts_model: "/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/content/tts_model.pth.tar"
-    vocoder_config: "/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/content/config_vocoder.json"
-    vocoder_model: "/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/content/vocoder_model.pth.tar"
+    tts_config: "$(find harmoni_models)/tts/config.json"
+    tts_model: "$(find harmoni_models)/tts/tts_model.pth.tar"
+    vocoder_config: "$(find harmoni_models)/tts/config_vocoder.json"
+    vocoder_model: "$(find harmoni_models)/tts/vocoder_model.pth.tar"
+    scale_stats_path: "$(find harmoni_models)/tts/scale_stats.npy"
     use_cuda: False
     verbose: False
     speedup: 1.1
