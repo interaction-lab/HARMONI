@@ -2,23 +2,26 @@
 
 Harmoni provides a wrapper on the cordial face, which is capable of expressing speech and emotion.
 
-We provide a fork of the face of [CoRDial](https://github.com/ndennler/cordial-public) which was created by the Interaction Lab. Although it started as one face, we have implemented separate services for the eyes and mouth, allowing them to be controlled independently.
+We provide a fork of the original [CoRDial face](https://github.com/ndennler/cordial-public) which was created by the Interaction Lab. Although it started as one face, we have implemented separate services for the eyes and mouth, allowing them to be controlled independently.
 ![packages](../images/screen_demo.png)
 
 
-The face service is split into thress services: the mouth, the nose, and the eyes.
+The whole face service consists of three services: the mouth, the nose, and the eyes.
 All the services can handle:
 - Action Units (AUs, facial action units corresponding to the facial muscle movements and which coding system is found [here](https://imotions.com/blog/facial-action-coding-system))
 - Facial expressions (combination of action units)
 
-The mouth service handles also:
+Additionally, the mouth and the eyes support the following parameters.  
+The mouth service also handles:
 - Visemes (sound of words)
 
 
-The eyes service handles also:
+The eyes service also handles:
 - Gaze direction (where the face is looking at)
 
 ## Usage
+
+### General Usage
 
 The following documentation refers to the facial expression and action units requests (the ones that are managed by all the services). These requests can be called from every face service: mouth, eyes, and nose.
 
@@ -54,7 +57,7 @@ Here two examples for requiring facial expressions and action units:
     data:str([{'start': 0,  'type': 'au', 'id': 'au13', 'pose': 1}])
 
 
-### Mouth service
+### Mouth Specifics
 
 The API for Visemes has:
 - Request Name: ActionType: DO
@@ -71,7 +74,7 @@ The body string is a list of object with the following items:
 |type  | type of request for the face (e.g., action, viseme, gaze)  | str, "viseme"     |
 |id  | name of the viseme (e.g., "POSTALVEOLAR") | str, "$viseme"     |
 
-Here the list of visemes ids ($viseme):
+Here the list of supported viseme ids ($viseme):
 - "BILABIAL"
 - "LABIODENTAL",
 - "INTERDENTAL",
@@ -91,7 +94,7 @@ This is an example for viseme request:
     data: str([{'start': 0.075,'type': 'viseme', 'id': 'POSTALVEOLAR'}])
 
 
-### Eyes service
+### Eyes Specifics
 The API for the Gaze Direction has:
 - Request Name: ActionType: DO
 - Body: data(str)
@@ -117,7 +120,7 @@ This is an example for gaze direction request:
 
 
 ## Parameters 
-Parameters input for the face service is:
+The following parameter is used for the whole face service:
 
 | Parameters           | Definition | Values |
 |----------------------|------------|--------|
@@ -126,7 +129,7 @@ Parameters input for the face service is:
 ### Mouth service
 The AUs for the mouth are: AU10, AU12, AU13, AU14, AU15, AU16, AU17, AU18, AU20, AU23, AU24, AU25, AU26, AU27
 
-Parameters input for the mouth service are:
+Parameters for the mouth service are:
 
 | Parameters           | Definition | Values |
 |----------------------|------------|--------|
@@ -140,7 +143,7 @@ The AUs for the eyes are:
 - Eyelid: AU5, AU6, AU43
 
 
-Parameters input for the eyes service are:
+Parameters for the eyes service are:
 
 | Parameters           | Definition | Values |
 |----------------------|------------|--------|
@@ -152,7 +155,7 @@ The AUs for the nose are
 - Nose wrinkle: AU9
 - Nose width: AU38, AU39
 
-Parameters input for the nose service are:
+Parameters for the nose service are:
 
 | Parameters           | Definition | Values |
 |----------------------|------------|--------|
