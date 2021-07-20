@@ -30,8 +30,8 @@ class LocalTtsService(HarmoniServiceManager):
         self.vocoder_config = param["vocoder_config"]
         self.vocoder_model = param["vocoder_model"]
         self.use_cuda = param["use_cuda"]
-        self.verbose = param["use_cuda"]
-        self.speedup = param["use_cuda"]
+        self.verbose = param["verbose"]
+        self.speedup = param["speedup"]
         self.outdir = param["outdir"]
         self.sample_rate = param["sample_rate"]
 
@@ -92,7 +92,7 @@ class LocalTtsService(HarmoniServiceManager):
         sf.write(
             file_path,
             audio_data,
-            self.sample_rate
+            int(self.sample_rate *self.speedup)
         )
 
         return file_path
