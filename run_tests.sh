@@ -1,8 +1,8 @@
 # This is a script of example tests you can run in the command line
 
-rostest harmoni_tts polly.test # tts
+rostest harmoni_tts tts.test
 
-rostest harmoni_bot lex.test # bot
+rostest harmoni_bot bot.test
 
 rostest harmoni_face face.test
 

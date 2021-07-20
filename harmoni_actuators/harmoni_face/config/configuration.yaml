@@ -1,13 +1,12 @@
 # Configuration file for the microphone
 face:
   default_param:
-    timer_interval: 1 #s
     mouth:
       min_duration_viseme: 0.05 #s
       speed_viseme: 10 #ms
+      timer_interval_expression: 0.6 #s
       timer_interval: 0.01 #s
     eyes:
       gaze_speed: 10 #ms
-      timer_interval: 0.01 #s
-    nose:
-      timer_interval: 0.01 #s
+
+    #shell_command: "firefox http://127.0.0.1:8080/index.html"

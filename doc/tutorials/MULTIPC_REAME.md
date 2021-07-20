@@ -1,10 +1,8 @@
-# Multiple PCs
+# How to Run with Multiple Computers
 
-This walks through an approach of connecting multiple computers each running their own docker containers using host networks. There are a few other options with their own pro/cons found under [Discussion](#discussion).
+This walks through an approach of connecting multiple computers each running their own docker containers using host networks. There are a few other options with their own upsides/downsides that will be discussed in the Wiki.
 
-## Host Network Approach
-
-_This provided example covers the two PC setup that exists on QTrobot, which was an early deployment platform._
+## Running (QTRobot)
 
 Run the following commands. A heading indicating #QTRP or #QTPC will be included each time context changes. Any host or container can be ROS Master as long as the ROS_MASTER_URI is set correctly.
 
@@ -75,9 +73,51 @@ rostopic pub /test std_msgs/String "Hello"
 rostopic echo /test
 ```
 
-## Swarm Network Approach 
 
-_Swarm with manual startup: note that it didn't work for container<->pc communication_
+## Troubleshooting
+```bash
+#get rid of old stuff if you have trouble starting again
+docker container prune
+docker network prune
+docker swarm leave --force #only needed if there's some swarm issue (rare)
+
+#get a terminal in the container when it's running in the background or doing something else.
+docker exec -it <container_id> /bin/bash
+
+docker logs -f <container_id>
+
+# create swarm's overlay network from scratch (if using swarm)
+#Be sure to only do this once on the manager. If it seems you have to do it twice, there is some other issue at play preventing network communication.
+docker network create --driver=overlay --attachable --subnet 172.18.3.0/24 ros_net
+```
+
+If networking is still having trouble try running through [this tutorial](https://docs.docker.com/network/network-tutorial-overlay/#use-an-overlay-network-for-standalone-containers) and ensure that the example alpine containers are able to communicate.
+
+# Discussion
+
+TODO: update this and move to Wiki -- points below are old and missing some info/understanding
+
+There are few different approaches for multi-host container networking we know about right now. They are as follows:
+
+1. Attach to an external network (the approach chosen above). Good: flexible; Bad: docker-compose is finicky when it comes to swarm networking. I was unable to figure out how to get docker-compose to function on a second PC with an external network, while using the docker CLI worked just fine.
+2. Create a docker stack/compose swarm (e.g. `docker stack deploy -c TEST-docker-compose-harmoni-swarm.yml <stack_name>`). Good: Can start all machines with a hands-off approach. Bad: Cannot specify static ips since this approach assumes you intend to make replicas of containers. This can worked around usually if you go by service name, which will generally provide IPs internally to containers in the same swarm.
+3. Bridge containers to host network and make use of ROS communication methods. This theoretically would work, but it's unclear how you would establish a local IP in the container that could be contacted from another PC on the local network. The macvlan docker network option might work here as it creates a virtual network device. That said, this might not be very portable. Needs research/testing.
+4. Use some other container management solution (Kubernetes, Overnode, etc.). These options might be great, but they require more research/testing.
+
+*Important note:* Volumes are not shared across the network/swarms by default. Mount points are local to the machine they are run from, even when run from the swarm. There are alternate volume drivers from AWS that can do some more distributed data storage type things, but many people opt for a network drive if they want some shared file space.
+
+Some sources:
+https://docs.docker.com/network/network-tutorial-overlay/#use-an-overlay-network-for-standalone-containers
+https://blog.alexellis.io/docker-stacks-attachable-networks/
+https://docs.docker.com/compose/networking/#use-a-pre-existing-network
+https://stackoverflow.com/questions/38088279/communication-between-multiple-docker-compose-projects
+https://stackoverflow.com/questions/45180892/static-ip-address-doesnt-work-in-docker-compose-v3
+https://stackoverflow.com/questions/47756029/how-does-docker-swarm-implement-volume-sharing
+
+
+
+# Old approach (swarm with manual startup--didn't work for container<->pc communication)
+
 
 Run the following commands. A heading indicating #manager or #worker will be included each time context changes. Either manager or worker can be the ROS Master/roscore. The current setup assumes the worker is the roscore/ROS master; if they are switched, then the set IPs in the docker compose and the docker run command below will need to change. 
 
@@ -98,6 +138,9 @@ docker swarm init
 docker swarm join --token <bunch of token info>
 ```
 
+_Skip to option 1 or 2 depending on what you have chosen and then you should be done!_
+
+### docker run only (Option 1)
 ```bash
 #--manager--
 docker network create --driver=overlay --attachable --subnet 172.18.3.0/24 ros_net
@@ -171,64 +214,3 @@ rostopic pub /test std_msgs/String "Hello"
 #--worker-container context--
 rostopic echo /test
 ```
-
-### Troubleshooting
-```bash
-#get rid of old stuff if you have trouble starting again
-docker container prune
-docker network prune
-docker swarm leave --force #only needed if there's some swarm issue (rare)
-
-#get a terminal in the container when it's running in the background or doing something else.
-docker exec -it <container_id> /bin/bash
-
-docker logs -f <container_id>
-
-# create swarm's overlay network from scratch (if using swarm)
-#Be sure to only do this once on the manager. If it seems you have to do it twice, there is some other issue at play preventing network communication.
-docker network create --driver=overlay --attachable --subnet 172.18.3.0/24 ros_net
-```
-
-If networking is still having trouble try running through [this tutorial](https://docs.docker.com/network/network-tutorial-overlay/#use-an-overlay-network-for-standalone-containers) and ensure that the example alpine containers are able to communicate.
-
-
-## Discussion
-
-There are few different approaches for multi-host container networking we know about right now. These approaches may change depending on where ROS Master/roscore is running from. They are as follows:
-
-### **Bridge Networks (Nope!)**
-
-If containers are being run on multiple hosts, they won't be on the same bridge network and thus will not be able to communicate directly. This could maybe be worked around with clever port forwarding and ROS_IPs in each container matching the local IP of their host to enable ROS communication, but it's not worth it.
-
-### **Host Networks (Works!)**
-
-This works as shown in the example above. The main thing needed to make it work in containers is to inherit the following environment variables from the host: ROS_MASTER_URI, ROS_HOSTNAME, ROS_IP. As long as hosts are able to talk to each other on the LAN, the containers should also be able to.
-
-### Overlay Networks / Swarm / Services (Works, but...)
-
-Usage of swarm networking requires that ROS Master be located inside of one of the swarm containers (cannot be located on the host PC unless you want to do quite a bit of setup). An example for this approach is shown under [Swarm approach](#swarm-approach).
-
-The primary issue with using this solution with a ROS Master which is running outside of the swarm is that [ROS allocates random ports](https://answers.ros.org/question/198150/which-ports-are-needed-for-ros/?answer=198154#post-id-198154) provided by the OS, so port mapping will not easily work. There [are ways to port forward everything](http://wiki.ros.org/ROS/Tutorials/MultipleRemoteMachines#PortForwarding_.28PF.29), but it's probably not worth the effort. If someone does try this, it seems ROS can use any port from 1024-65550 (ports 0-1023 are reserved for specific system stuff). `docker run` can expose port ranges (e.g. `docker run -p 1024-65000:1024-65000 alpine`) but [there might be some bugs if large port ranges are exposed](https://github.com/moby/moby/issues/11185). In addition, Static IPs are not officially supported. In testing we were able to force static IPs by specifying the subnet in the network driver and specifying the IP in docker-compose or docker run, but not sure we should rely on that. If you use more than one replica of a service it could cause issues. 
-
-Another approach which might work is to make [hostnames follow a template](https://docs.docker.com/engine/swarm/services/#create-services-using-templates), so you should be able to set it up so the hostname (and thus the ROS_HOSTNAME) is always known [and then have the container hostname exposed to the host (dns proxy server)](https://stackoverflow.com/questions/37242217/access-docker-container-from-host-using-containers-name/45071126#45071126). The method would work for the local host without port forwarding, but it's unclear if it would work for both hosts (needs testing—not sure if a container is accessible to the entire LAN or just the local host with this dns proxy).
-
-### Macvlan **(Probably Works—Untested)**
-
-This is similar to the host networking option, except instead of sharing the host network/IP, each docker container will get its own IP. This means the ROS IP of each container will just be the container's set IP. This option is good for using static IPs that are visible to the host and other hosts/containers that have access to the same LAN.
-
-### Hybrid (Why?)
-
-It's possible to use multiple networks on the same container. It's unclear how ROS_IP or ROS_HOSTNAME would be set to satisfy all networks though. It's also unclear why you would want this given some other options will work by themselves.
-
-### Something Else (?)
-
-Docker is constantly getting new features and options as time goes on. Some of the newer ones are not well documented but may serve our use case perfectly. I also did not research other network drivers/plugins which have been developed by 3rd parties. Container orchestration systems (Kubernetes, Openshift, etc.) other than docker swarm may also work well.
-
-
-__Some sources:__  
-[Use an overlay network for standalone containers](https://docs.docker.com/network/network-tutorial-overlay/#use-an-overlay-network-for-standalone-containers)  
-[Docker stacks attachable networks](https://blog.alexellis.io/docker-stacks-attachable-networks/)  
-[Use a pre-existing network](https://docs.docker.com/compose/networking/#use-a-pre-existing-network)  
-[Communication between multiple docker compose projects](https://stackoverflow.com/questions/38088279/communication-between-multiple-docker-compose-projects)  
-[Static ip address doesnt work in docker compose v3](https://stackoverflow.com/questions/45180892/static-ip-address-doesnt-work-in-docker-compose-v3)  
-[How does docker swarm implement volume sharing?](https://stackoverflow.com/questions/47756029/how-does-docker-swarm-implement-volume-sharing)  

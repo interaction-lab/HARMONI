@@ -1,4 +1,5 @@
-# HARMONI Face
+# Face Service Parameters:
+Parameters input for the microphone service: 
 
 Harmoni provides a wrapper on the cordial face, which is capable of expressing speech and emotion.
 

@@ -6,10 +6,14 @@ Tutorials
    :caption: Contents:
    :glob:
 
-   tutorials/Compose-an-Interaction
-   tutorials/Launching-Services
+   tutorials/Docker-Quickstart
    tutorials/Multi-Container
-   tutorials/Multi-PC
+   tutorials/Setup
+   tutorials/Launching-Services
    tutorials/Running-Packages
+   tutorials/Cordial
+   tutorials/Compose-an-Interaction
    tutorials/Setting-Up-a-New-Robot
+   tutorials/Configuration
+   tutorials/Cloud-Services
    tutorials/Usage

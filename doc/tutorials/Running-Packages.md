@@ -1,7 +1,7 @@
 # Running Individual Packages
 
 ## Running a Package in HARMONI
-If you want to run a single package, you can directly launch the node from the command line as shown in the [Launching a Service page](Launching-Services).
+If you want to run a single package, you can directly launch the node from the command line as shown in the Launching a Service page.
 
 ### Playing a Pattern
 

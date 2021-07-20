@@ -1,9 +1,7 @@
 
-# Docker
+# Quickstart With Docker
 
-## Setup
-
-To complete these steps you will need to have docker working on your machine. We recommend you follow the steps here: [https://docs.docker.com/engine/install/ubuntu/](https://docs.docker.com/engine/install/ubuntu/) and verify your install with:
+*Note: To complete these steps you will need to have docker working on your machine. We recommend you follow the steps here: https://docs.docker.com/engine/install/ubuntu/ and verify your install with:*
 ```bash
 sudo docker run hello-world
 ```
@@ -14,9 +12,7 @@ sudo usermod -aG docker ${USER}
 su - ${USER}
 ```
 
-You will also need to install docker-compose. Instructions can be found here: [https://docs.docker.com/compose/install/](https://docs.docker.com/compose/install/)
-
-## HARMONI Install
+## Steps
 
 1. Clone the repository:
    ```bash
@@ -37,12 +33,10 @@ You will also need to install docker-compose. Instructions can be found here: [h
 
     For additional information on building or running harmoni containers, see dockerfiles/README.md.
 
-3. **(optional)** Some Harmoni interactions require accounts with cloud services (Such as Amazon Polly). If you do not already have them set up, set up cloud services/keys. Instructions are in the [Cloud Services section](../configuration/Cloud-Services).
+3. **(optional)** Some Harmoni interactions require accounts with cloud services (Such as Amazon Polly). If you do not already have them set up, set up cloud services/keys. Instructions are in the Cloud Services section.
 
 
-## Run HARMONI
-
-1. **(optional)** In order to run with window forwarding on linux use:
+4. **(optional)** In order to run with window forwarding on linux use:
    ```bash
    xhost +local:
    ```
@@ -50,14 +44,14 @@ You will also need to install docker-compose. Instructions can be found here: [h
    Note: For Windows you will need to set up docker with WSL2
 
 
-2. Use docker compose to launch the complete system (will build if necessary, use --build to force):
+5. Use docker compose to launch the complete system **full** (will build if necessary, use --build to force):
    ```bash
-   docker-compose -f docker-compose.yml up
+   docker-compose -f docker-compose-full.yml up
    ``` 
    If the terminal prints: "Hello, rosmaster", you successfully setup the HARMONI full container.  
    *Note: We provide a bash script for launching multiple containers called run_compose.sh*
 
-3. Open a new terminal. To get into this container, you will need to run the following to mount a terminal into the container:
+6. Open a new terminal. To get into this container, you will need to run the following to mount a terminal into the container:
    ```bash
    docker exec -it harmoni_full bash
    ``` 
@@ -76,4 +70,4 @@ You will also need to install docker-compose. Instructions can be found here: [h
    started core service [/rosout]
    ```
 
-You are now set up for Harmoni with Docker! Check on your [configuration here](../Configuration) and then [start some services here](../tutorials/Launching-Services).
+You are now set up for Harmoni with Docker! Go to Usage to see more about running Harmoni next.

@@ -44,19 +44,14 @@ class TestFace(unittest.TestCase):
         self.instance_id = rospy.get_param("instance_id")
         self.result_eyes = False
         self.result_mouth = False
-        self.result_nose = False
         self.name_mouth = ActuatorNameSpace.face.name + "_mouth_" + self.instance_id
         self.service_client_mouth = HarmoniActionClient(self.name_mouth)
         self.client_result_mouth = deque()
-        self.name_nose = ActuatorNameSpace.face.name + "_nose_" + self.instance_id
-        self.service_client_nose = HarmoniActionClient(self.name_nose)
-        self.client_result_nose = deque()
         self.service_client_mouth.setup_client(self.name_mouth, self.result_mouth_cb, self.feedback_mouth_cb)
         self.name_eyes = ActuatorNameSpace.face.name + "_eyes_" + self.instance_id
         self.service_client_eyes = HarmoniActionClient(self.name_eyes)
         self.client_result_eyes = deque()
         self.service_client_eyes.setup_client(self.name_eyes, self.result_eyes_cb, self.feedback_eyes_cb)
-        self.service_client_nose.setup_client(self.name_nose, self.result_nose_cb, self.feedback_nose_cb)
         # NOTE currently no feedback, status, or result is received.
         rospy.Subscriber(
             "/harmoni_face_mouth_default/feedback", harmoniFeedback, self.feedback_mouth_cb
@@ -64,13 +59,6 @@ class TestFace(unittest.TestCase):
         rospy.Subscriber("/harmoni_face_mouth_default/status", GoalStatus, self.status_mouth_cb)
         rospy.Subscriber(
             "/harmoni_face_mouth_default/result", harmoniResult, self.result_mouth_cb
-        )
-        rospy.Subscriber(
-            "/harmoni_face_nose_default/feedback", harmoniFeedback, self.feedback_mouth_cb
-        )
-        rospy.Subscriber("/harmoni_face_nose_default/status", GoalStatus, self.status_mouth_cb)
-        rospy.Subscriber(
-            "/harmoni_face_nose_default/result", harmoniResult, self.result_mouth_cb
         )
         rospy.Subscriber(
             "/harmoni_face_eyes_default/feedback", harmoniFeedback, self.feedback_eyes_cb
@@ -105,18 +93,6 @@ class TestFace(unittest.TestCase):
     def result_eyes_cb(self, data):
         rospy.loginfo(f"Result: {data}")
         self.result_eyes = True
-
-    def feedback_nose_cb(self, data):
-        rospy.loginfo(f"Feedback: {data}")
-        self.result_nose = False
-
-    def status_nose_cb(self, data):
-        rospy.loginfo(f"Status: {data}")
-        self.result_nose = False
-
-    def result_nose_cb(self, data):
-        rospy.loginfo(f"Result: {data}")
-        self.result_nose = True
     
     def test_request_response_mouth(self):
         print("################******************* MOUTH TEST STARTING")
@@ -129,7 +105,6 @@ class TestFace(unittest.TestCase):
         print("################******************* MOUTH TEST Ending")
         assert self.result_mouth == True
     
-
     def test_request_response_eyes(self):
         print("*******************@@@@@@@@@@@@@@@@ Eye test starting")
         rospy.loginfo(f"The input data is {self.eye_data}")
@@ -141,15 +116,6 @@ class TestFace(unittest.TestCase):
         print("*******************@@@@@@@@@@@@@@@@ Eye test ending")
         assert self.result_eyes == True
         input("Continue?")
-
-    def test_request_response_nose(self):
-        rospy.loginfo(f"The input data is {self.data}")
-        self.service_client_nose.send_goal(
-            action_goal=ActionType.DO.value,
-            optional_data=self.data,
-            wait=True,
-        )
-        assert self.result_nose == True
 
 def main():
     import rostest
