@@ -9,4 +9,4 @@ tts:
     verbose: False
     speedup: 1.1
     outdir: "$(find harmoni_tts)/temp_data"
-    sample_rate: 16000
+    sample_rate: 22050
