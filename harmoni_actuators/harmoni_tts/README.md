@@ -33,5 +33,9 @@ Parameters input for the local TTS service:
 |sample_rate           |            |        |
 
 ## Testing
+
+The local test will save a wav file of the speech specified in the tts.test test_tts_input parameter in the temp_data directory. 
 ## References
 [Documentation](https://harmoni.readthedocs.io/en/latest/packages/harmoni_tts.html)
+
+[Mozilla TTS](https://github.com/mozilla/TTS)

@@ -78,6 +78,8 @@ class LocalTtsService(HarmoniServiceManager):
             self.state = State.FAILED
 
         self.response_received = True
+        self.result_msg = file_path
+        rospy.loginfo("Request successfully completed")
 
         return {"response": self.state, "message": file_path}
 
@@ -94,7 +96,7 @@ class LocalTtsService(HarmoniServiceManager):
         sf.write(
             file_path,
             audio_data,
-            self.sample_rate
+            int(self.sample_rate *self.speedup)
         )
 
         return file_path
