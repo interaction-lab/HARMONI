@@ -79,10 +79,12 @@ class TtsClient:
     def _check_files_exist(self, list_of_files):
         for file in list_of_files:
             if not os.path.exists(file):
-                raise FileNotFoundError(f"Invalid file path: {file}")
+                raise FileNotFoundError(f"Invalid file path: {file} (Make sure you have run setup_tts.sh")
 
     def get_audio(self, text, use_gl=False):
         t_1 = time.time()
+        if text[-1] not in "!.?":
+            text = text+"."
         waveform, alignment, mel_spec, mel_postnet_spec, stop_tokens, inputs = synthesis(
             self._tts_model,
             text,
