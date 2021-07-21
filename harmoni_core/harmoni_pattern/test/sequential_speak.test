@@ -16,6 +16,7 @@
 
     <!-- <rosparam file="$(find harmoni_pattern)/config/configuration.yaml" subst_value="True"/>
     <param name="instance_id" value="default"/>
+    <param name="pattern_name" value="$(arg pattern_name)"/>
 	<node pkg="harmoni_pattern" type="sequential_pattern.py" name="harmoni_pattern_default" output="screen"/> -->
 
 

@@ -4,6 +4,7 @@
 PKG = "test_harmoni_pattern"
 # Common Imports
 import unittest, rospy, roslib, sys
+import json
 
 # Specific Imports
 from actionlib_msgs.msg import GoalStatus
@@ -19,6 +20,7 @@ from audio_common_msgs.msg import AudioData
 from std_msgs.msg import String
 import time
 import os, io
+from collections import deque
 
 
 class TestSequential(unittest.TestCase):
@@ -36,6 +38,29 @@ class TestSequential(unittest.TestCase):
         self.output_sub = rospy.Subscriber(
             self.microphone_topic, AudioData, self._mic_listener
         )
+
+        pattern_to_use = rospy.get_param("pattern_name")
+        rospack = rospkg.RosPack()
+        pck_path = rospack.get_path("harmoni_pattern")
+        pattern_script_path = pck_path + f"/pattern_scripting/{pattern_to_use}.json"
+        with open(pattern_script_path, "r") as read_file:
+            script = json.load(read_file)
+            service_names = set()
+            
+        for s in script:
+            steps = s["steps"]
+            for step in steps:
+
+                if isinstance(step, list):
+                    for parallel_step in step:
+                        service_names.add(next(iter(parallel_step)))
+
+                else:
+                    service_names.add(next(iter(step)))
+        
+        for client in service_names:
+            self.service_clients[client] = HarmoniActionClient(client)
+            self.client_results[client] = deque()
 
         # startup stt node
         self.server = "mic_test_default"
