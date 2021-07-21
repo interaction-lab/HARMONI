@@ -53,9 +53,11 @@
   <build_depend>pyaudio</build_depend>
   <build_depend>rospy</build_depend>
   <build_export_depend>audio_common_msgs</build_export_depend>
+  <build_export_depend>deepspeech</build_export_depend>
   <build_export_depend>pyaudio</build_export_depend>
   <build_export_depend>rospy</build_export_depend>
   <exec_depend>audio_common_msgs</exec_depend>
+  <exec_depend>deepspeech</exec_depend>
   <test_depend>rostest</test_depend>
   <test_depend>rosunit</test_depend>
   <exec_depend>pyaudio</exec_depend>

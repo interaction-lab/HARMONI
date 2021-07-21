@@ -68,6 +68,10 @@ RUN \
     google-api-python-client \
     # Rasa
     rasa==2.7.1 \
+    # Local STT
+    deepspeech \
+    # Testing
+    mock \
     # TTS
     gdown \
     inflect \
