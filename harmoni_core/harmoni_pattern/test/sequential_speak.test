@@ -1,18 +1,10 @@
 <launch>
 
     <!-- This is an integrative test that requires the speaker interaction -->
-    <include file="$(find harmoni_speaker)/launch/speaker_service.launch"></include>
-    <include file="$(find harmoni_tts)/launch/tts_service.launch"></include>
-    <include file="$(find harmoni_bot)/launch/bot_service.launch"></include>
-    <include file="$(find harmoni_face)/launch/face_service.launch"></include>
-    <include file="$(find harmoni_pattern)/launch/sequence_pattern.launch">
-    <include file="$(find harmoni_microphone)/launch/microphone_service.launch"></include>
-    <include file="$(find harmoni_web)/launch/web_service.launch"></include>
-    <include file="$(find harmoni_stt)/launch/stt_service.launch"></include>
     <include file="$(find harmoni_gesture)/launch/gesture_service.launch"></include>
         <arg name="pattern_name" default="speak_test"/>
     </include>
-
+    
 
     <!-- <rosparam file="$(find harmoni_pattern)/config/configuration.yaml" subst_value="True"/>
     <param name="instance_id" value="default"/>
