@@ -37,17 +37,13 @@ import py_trees
 
 class FaceServicePytree(py_trees.behaviour.Behaviour):
     """
-    mode è il boolean che controlla la modalità di funzionamento:
-    true: opzione 1 (utilizzo come una classe python)
-    false: opzione 2 (utilizzo mediate action_goal)
+    the boolean "mode" changes the functioning of the Behaviour:
+    true: we use the leaf as both client and server (inner module)
+    false: we use the leaf as client that makes request to the server
     """
 
     def __init__(self, name = "FaceServicePytree"):
-        
-        """
-        Qui abbiamo pensato di chiamare soltanto 
-        il costruttore del behaviour tree 
-        """
+
         self.name = name
         self.mode = False
         self.eyes_service = None
@@ -56,6 +52,7 @@ class FaceServicePytree(py_trees.behaviour.Behaviour):
         self.service_client_face = None
         self.client_result = None
 
+        # here there is the inizialization of the blackboards
         self.blackboards = []
         #serve una blackboard a speaker?
         self.blackboard_tts = self.attach_blackboard_client(name=self.name, namespace="harmoni_tts")
@@ -67,7 +64,10 @@ class FaceServicePytree(py_trees.behaviour.Behaviour):
 
     def setup(self,**additional_parameters):
         """
-
+        In order to select the mode after that the tree is created 
+        an additional_parameters parameter is used:
+        this parameter is a dictionary that contains couples like   
+        name_of_the_leaf --> boolean mode
         """
         for parameter in additional_parameters:
             print(parameter, additional_parameters[parameter])  
@@ -105,7 +105,7 @@ class FaceServicePytree(py_trees.behaviour.Behaviour):
         """
         
         """
-        #TODO rivedi
+        #TODO check
         
         if(self.mode):
             if self.blackboard_tts.result_message == "SUCCESS":
@@ -114,11 +114,11 @@ class FaceServicePytree(py_trees.behaviour.Behaviour):
                 #TODO eyes
                 new_status = py_trees.common.Status.SUCCESS
             else:
-                #lo stato o è "RUNNING" o è "FAILURE" e quindi in ogni caso sarà:
+                #either the state is "RUNNING" or "FAILURE" so in both cases we will do:
                 new_status = self.blackboard_tts.result_message
         else:
             if self.blackboard_tts.result_message == "SUCCESS":
-                #ho già fatto la richiesta? se si non la faccio se no la faccio
+                #have I already done the request? check for this
                 if self.service_client_face.get_state() == GoalStatus.LOST:
                     self.audio_data = self.blackboard_tts.result_data
                     self.logger.debug(f"Sending goal to {self.mouth_service} and {self.eyes_service}")
@@ -131,22 +131,21 @@ class FaceServicePytree(py_trees.behaviour.Behaviour):
                     new_status = py_trees.common.Status.RUNNING
                 else:
                     if len(self.client_result) > 0:
-                        #se siamo qui vuol dire che il risultato c'è e quindi 
-                        #possiamo terminare la foglia
+                        #if we reach this point we have the result(s) 
+                        #so we can make the leaf terminate
                         self.result_data = self.client_result.popleft()["data"]
-                        #se vuoi sapere cosa c'è scritto nel risultato usa self.result_data["response"]
                         new_status = py_trees.common.Status.SUCCESS
                     else:
-                        #se siamo qui vuol dire che il risultato ancora non c'è, dunque
-                        #si è rotto tutto o dobbiamo solo aspettare?
-                        #incerti di questa riga, vedi 408 sequential_pattern.py
+                        #if we are here it means that we dont have the result yet, so
+                        #do we have to wait or something went wrong?
+                        #not sure about the followings lines, see row 408 of sequential_pattern.py
                         if(self.mouth_service.state == State.FAILED):
                             self.blackboard_tts.result_message = "FAILURE"
                             new_status = py_trees.common.Status.FAILURE
                         else:
                             new_status = py_trees.common.Status.RUNNING
             else:
-                #lo stato o è "RUNNING" o è "FAILURE" e quindi in ogni caso sarà:
+                #the state is either "RUNNING" or "FAILURE" so we have to do in both cases:
                 new_status = self.blackboard_tts.result_message
             
             self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))

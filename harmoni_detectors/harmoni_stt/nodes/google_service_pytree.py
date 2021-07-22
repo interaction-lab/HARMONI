@@ -55,6 +55,7 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
         self.service_client_stt = None
         self.client_result = None
 
+        # here there is the inizialization of the blackboards
         self.blackboards = []
         self.blackboard_input_bot=self.attach_blackboard_client(name=self.name,namespace="harmoni_input_bot")
         self.blackboard_input_bot.register_key("result_data",access=py_trees.common.Access.WRITE)

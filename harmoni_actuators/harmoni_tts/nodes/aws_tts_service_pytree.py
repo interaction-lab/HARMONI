@@ -34,9 +34,9 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
 
     #TODO tutte le print devono diventare console py_tree
     """
-    mode è il boolean che controlla la modalità di funzionamento:
-    true: opzione 1 (utilizzo come una classe python)
-    false: opzione 2 (utilizzo mediate action_goal)
+    the boolean "mode" changes the functioning of the Behaviour:
+    true: we use the leaf as both client and server (inner module)
+    false: we use the leaf as client that makes request to the server
     """
     #TTS è un actuators
 
@@ -53,6 +53,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         self.service_client_tts = None
         self.client_result = None
 
+        # here there is the inizialization of the blackboards
         self.blackboards = []
         self.blackboard_tts = self.attach_blackboard_client(name=self.name, namespace="harmoni_tts")
         self.blackboard_tts.register_key("result_data", access=py_trees.common.Access.WRITE)
@@ -66,10 +67,10 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
 
     def setup(self,**additional_parameters):
         """
-        Qui chiamiamo l'inizializzazione del servizio AWSTtsService, 
-        motivo per cui abbiamo aggiunto param al metodo che 
-        pensiamo debbano essere passati dal chiamante e non possono essere
-        creati all'interno del metodo stesso.  
+        In order to select the mode after that the tree is created 
+        an additional_parameters parameter is used:
+        this parameter is a dictionary that contains couples like   
+        name_of_the_leaf --> boolean mode
         """
         for parameter in additional_parameters:
             print(parameter, additional_parameters[parameter])  
@@ -82,7 +83,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         param = rospy.get_param(service_name + "/" + instance_id + "_param/")
 
         self.aws_service = AWSTtsService(self.name,param)
-        #TODO questo dobbiamo farlo nell'if 
+        #TODO we have to do this in the if
         #rospy init node mi fa diventare un nodo ros
         #rospy.init_node("tts_default", log_level=rospy.INFO)
 
@@ -120,7 +121,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
             if self.blackboard_output_bot.result_message == "SUCCESS":
                 if self.service_client_tts.get_state() == GoalStatus.LOST:
                     self.logger.debug(f"Sending goal to {self.aws_service}")
-                    # Dove posso prendere details["action_goal"]?
+                    #Where can we take details["action_goal"]?
                     self.service_client_tts.send_goal(
                         action_goal = ActionType["REQUEST"].value,
                         optional_data = self.blackboard_output_bot.result_data["message"],
@@ -130,14 +131,14 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
                     new_status = py_trees.common.Status.RUNNING
                 else:
                     if len(self.client_result) > 0:
-                        #se siamo qui vuol dire che il risultato c'è e quindi 
-                        #possiamo terminare la foglia
+                        #if we reach this point we have the result(s) 
+                        #so we can make the leaf terminate
                         self.result_data = self.client_result.popleft()["data"]
                         self.blackboard_tts.result_message = "SUCCESS"
                         self.blackboard_tts.result_data = self.result_data
                         new_status = py_trees.common.Status.SUCCESS
                     else:
-                        #incerti di questa riga
+                        #not sure about the followings lines
                         if(self.aws_service.state == State.FAILED):
                             self.blackboard_tts.result_message = "FAILURE"
                             new_status = py_trees.common.Status.FAILURE
@@ -158,7 +159,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
             - INVALID : a higher priority branch has interrupted, or shutting down
         """
         if(new_status == py_trees.common.Status.INVALID):
-            #esegui codice per interrupt 
+            #do the code for handling interuptions
             #self.blackboard_tts.result_message = "INVALID"
             #TODO 
             if(self.mode):
@@ -166,7 +167,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
             else:
                 pass
         else:
-            #esegui codice per terminare (SUCCESS || FAILURE)
+            #do the code for the termination of the leaf (SUCCESS || FAILURE)
             self.client_result = deque()
 
         self.logger.debug("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))

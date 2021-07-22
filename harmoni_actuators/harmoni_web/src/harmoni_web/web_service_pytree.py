@@ -34,17 +34,13 @@ import py_trees
 
 class WebServicePytree(py_trees.behaviour.Behaviour):
     """
-    mode è il boolean che controlla la modalità di funzionamento:
-    true: opzione 1 (utilizzo come una classe python)
-    false: opzione 2 (utilizzo mediate action_goal)
+    the boolean "mode" changes the functioning of the Behaviour:
+    true: we use the leaf as both client and server (inner module)
+    false: we use the leaf as client that makes request to the server
     """
 
     def __init__(self, name = "WebServicePytree"):
         
-        """
-        Qui abbiamo pensato di chiamare soltanto 
-        il costruttore del behaviour tree 
-        """
         self.name = name
         self.mode = False
         self.web_service = None
@@ -64,7 +60,10 @@ class WebServicePytree(py_trees.behaviour.Behaviour):
 
     def setup(self,**additional_parameters):
         """
-
+        In order to select the mode after that the tree is created 
+        an additional_parameters parameter is used:
+        this parameter is a dictionary that contains couples like   
+        name_of_the_leaf --> boolean mode
         """
         for parameter in additional_parameters:
             print(parameter, additional_parameters[parameter])  
@@ -100,7 +99,7 @@ class WebServicePytree(py_trees.behaviour.Behaviour):
         """
         
         """
-        #TODO rivedi
+        #TODO check
         
         if(self.mode):
             pass
@@ -116,15 +115,15 @@ class WebServicePytree(py_trees.behaviour.Behaviour):
                 new_status = py_trees.common.Status.RUNNING
             else:
                 if len(self.client_result) > 0:
-                    #se siamo qui vuol dire che il risultato c'è e quindi 
-                    #possiamo terminare la foglia
+                    #if we reach this point we have the result(s) 
+                        #so we can make the leaf terminate
                     self.result_data = self.client_result.popleft()["data"]
-                    #se vuoi sapere cosa c'è scritto nel risultato usa self.result_data["response"]
+                    #if you want to see what is written in the result use --> self.result_data["response"]
                     new_status = py_trees.common.Status.SUCCESS
                 else:
-                    #se siamo qui vuol dire che il risultato ancora non c'è, dunque
-                    #si è rotto tutto o dobbiamo solo aspettare?
-                    #incerti di questa riga, vedi 408 sequential_pattern.py
+                    #if we are here it means that we dont have the result yet, so
+                    #do we have to wait or something went wrong?
+                    #not sure about the followings lines, see row 408 of sequential_pattern.py
                     if(self.web_service.state == State.FAILED):
                         self.blackboard_web.result_message = "FAILURE"
                         new_status = py_trees.common.Status.FAILURE
@@ -144,14 +143,14 @@ class WebServicePytree(py_trees.behaviour.Behaviour):
             - INVALID : a higher priority branch has interrupted, or shutting down
         """
         if(new_status == py_trees.common.Status.INVALID):
-            #esegui codice per interrupt 
+            #do the code for handling interuptions
             #TODO 
             if(self.mode):
                 pass
             else:
                 pass
         else:
-            #esegui codice per terminare (SUCCESS || FAILURE)
+            #do the code for the termination of the leaf (SUCCESS || FAILURE)
             self.client_result = deque()
 
         self.logger.debug("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))

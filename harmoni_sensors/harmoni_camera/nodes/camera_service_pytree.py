@@ -31,20 +31,14 @@ import time
 import py_trees.console
 
 class CameraServicePytree(py_trees.behaviour.Behaviour):
-
-    #TODO tutte le print devono diventare console py_tree
     """
-    mode è il boolean che controlla la modalità di funzionamento:
-    true: opzione 1 (utilizzo come una classe python)
-    false: opzione 2 (utilizzo mediate action_goal)
+    the boolean "mode" changes the functioning of the Behaviour:
+    true: we use the leaf as both client and server (inner module)
+    false: we use the leaf as client that makes request to the server
     """
-  
 
     def __init__(self, name = "CameraServicePytree"):
-        """
-        Qui abbiamo pensato di chiamare soltanto 
-        il costruttore del behaviour tree 
-        """
+
         self.name = name
         self.mode = False
         self.camera_service = None
@@ -52,6 +46,7 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
         self.service_client_camera = None
         self.client_result = None
 
+        # here there is the inizialization of the blackboards
         self.blackboards = []
         self.blackboard_camera = self.attach_blackboard_client(name=self.name, namespace="harmoni_camera")
         self.blackboard_camera.register_key("result_message", access=py_trees.common.Access.WRITE)
@@ -61,10 +56,10 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
 
     def setup(self,**additional_parameters):
         """
-        Qui chiamiamo l'inizializzazione del servizio AWSTtsService, 
-        motivo per cui abbiamo aggiunto param al metodo che 
-        pensiamo debbano essere passati dal chiamante e non possono essere
-        creati all'interno del metodo stesso.  
+        In order to select the mode after that the tree is created 
+        an additional_parameters parameter is used:
+        this parameter is a dictionary that contains couples like   
+        name_of_the_leaf --> boolean mode
         """
         for parameter in additional_parameters:
             print(parameter, additional_parameters[parameter])  
@@ -118,15 +113,14 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
                 new_status = py_trees.common.Status.RUNNING
             else:
                 if self.service_client_camera.get_state() != GoalStatus.LOST:
-                    #TODO qui succede che appena ci arriva un audio nuovo noi sovrascriviamo, cosa non del tutto giusta
                     if len(self.client_result) > 0:
                         self.result_data = self.client_result.popleft()["data"]
                         self.blackboard_camera.result_message = "RUNNING"
                         new_status = py_trees.common.Status.RUNNING
                     else:
-                        #se siamo qui vuol dire che il risultato ancora non c'è, dunque
-                        #si è rotto tutto o dobbiamo solo aspettare?
-                        #incerti di questa riga, vedi 408 sequential_pattern.py
+                        #if we are here it means that we dont have the result yet, so
+                        #do we have to wait or something went wrong?
+                        #not sure about the followings lines, see row 408 of sequential_pattern.py
                         if(self.camera_service.state == State.FAILED):
                             self.blackboard_camera.result_message = "FAILURE"
                             new_status = py_trees.common.Status.FAILURE
