@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # Common Imports
+from numpy.lib.function_base import _quantile_is_valid
 import rospy
 import roslib
 
@@ -9,31 +10,40 @@ from harmoni_common_lib.service_server import HarmoniServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 import harmoni_common_lib.helper_functions as hf
 
+from google.cloud import speech
+from google.cloud.speech import enums
+from google.cloud.speech import types
+
 # Specific Imports
 from harmoni_common_lib.constants import State, DetectorNameSpace, SensorNameSpace
 from audio_common_msgs.msg import AudioData
 from google.cloud import speech
 from std_msgs.msg import String
 import numpy as np
+import time
 import os
 import io
+from six.moves import queue
 
-
-class SpeechToTextService(HarmoniServiceManager):
+class STTGoogleService(HarmoniServiceManager):
     """
-    Speech to text service using Google service
+    Google service
     """
 
     def __init__(self, name, param):
-        """ Initialization of variables and google parameters """
         super().__init__(name)
+        """ Initialization of variables and google parameters """
         self.sample_rate = param["sample_rate"]
         self.language = param["language_id"]
         self.audio_channel = param["audio_channel"]
         self.credential_path = param["credential_path"]
         self.subscriber_id = param["subscriber_id"]
-
         self.service_id = hf.get_child_id(self.name)
+        self.result_msg = ""
+        self.stt_response = ""
+
+        self._buff = queue.Queue()
+        self.closed = False
 
         """ Setup the google request """
         self.setup_google()
@@ -43,100 +53,107 @@ class SpeechToTextService(HarmoniServiceManager):
         self.data = b""
 
         """Setup publishers and subscribers"""
-        rospy.Subscriber("/audio/audio", AudioData, self.playing_sound_pause_callback)
         rospy.Subscriber(
             SensorNameSpace.microphone.value + self.subscriber_id,
             AudioData,
-            self.sound_data_callback,
+            self.callback,
         )
+        rospy.Subscriber("/audio/audio", AudioData, None)
+
         self.text_pub = rospy.Publisher(
             DetectorNameSpace.stt.value + self.service_id, String, queue_size=10
         )
 
+        rospy.Subscriber(
+            DetectorNameSpace.stt.value + self.service_id,
+            String,
+            self.stt_callback,
+        )
+
+        """Setup the stt service as server """
         self.state = State.INIT
         return
 
-    def start(self, rate=""):
-        rospy.loginfo("Start the %s service" % self.name)
-        if self.state == State.INIT:
-            self.state = State.START
-            # self.transcribe_stream()  # Start the microphone service at the INIT
-        else:
-            self.state = State.START
-        return
-
-    def stop(self):
-        rospy.loginfo("Stop the %s service" % self.name)
-        try:
-            # self.close_stream()
-            self.state = State.SUCCESS
-        except Exception:
-            self.state = State.FAILED
-        return
-
-    def pause(self):
-        rospy.loginfo("Pause the %s service" % self.name)
-        self.state = State.SUCCESS
+    def pause_back(self, data):
+        rospy.loginfo(f"pausing for data: {len(data.data)}")
+        self.pause()
+        rospy.sleep(int(len(data.data) / 30000))  # TODO calibrate this guess
+        self.state = State.START
         return
 
     def setup_google(self):
-        """Setup google client for speech recognition"""
         os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = self.credential_path
         self.client = speech.SpeechClient()
-        encoding = speech.RecognitionConfig.AudioEncoding.LINEAR16
+        """
         self.config = speech.RecognitionConfig(
             encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
             sample_rate_hertz=self.sample_rate,
             language_code=self.language,
-            audio_channel_count=self.audio_channel,
-        )
-        config = speech.RecognitionConfig(
-            encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
-            sample_rate_hertz=self.sample_rate,
-            language_code=self.language,
+            max_alternatives=1,
         )
         self.streaming_config = speech.StreamingRecognitionConfig(
-            config=config, interim_results=True
+            config=self.config, interim_results=True
         )
+        """
+        self.config = types.RecognitionConfig(
+            encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
+            sample_rate_hertz=self.sample_rate,
+            language_code=self.language,
+            max_alternatives=1,
+        )
+        self.streaming_config = types.StreamingRecognitionConfig(
+            config=self.config, interim_results=True
+        )
+        rospy.loginfo("SETUP FINISHED")
         return
 
-    def sound_data_callback(self, data):
+    def callback(self, data):
         """ Callback function subscribing to the microphone topic"""
-        data = np.fromstring(data.data, np.uint8)
-        # self.data = self.data.join(data)
-        # self.data = data.data
+        #in fase di testing l'if risulta falso
+        self._buff.put(data.data)
+        
         if self.state == State.START:
-            self.transcribe_stream_request(self.data)
-        else:
-            rospy.loginfo(f"Not Transcribing data because state is {self.state}")
+            # rospy.loginfo("Add data to buffer")
+            self._buff.put(data.data)
+            # rospy.loginfo("Items in buffer: "+ str(self._buff.qsize()))
 
-    def transcribe_stream_request(self, data):
-        # TODO: streaming transcription https://github.com/googleapis/python-speech/blob/master/samples/microphone/transcribe_streaming_infinite.py
-        stream = data
-        rospy.loginfo("Transcribing Stream")
-        requests = (
-            speech.StreamingRecognizeRequest(audio_content=chunk) for chunk in stream
-        )
-        responses = self.client.streaming_recognize(
-            config=self.streaming_config, requests=requests
-        )
-        rospy.loginfo(f"Responses: {responses}")
+        # else:
+            # rospy.loginfo("Not Transcribing data")
+
+    def listen_print_loop(self,responses):
+        """ Prints responses coming from Google STT """ 
+        self.stt_response = ""
         for response in responses:
-            rospy.loginfo(f"Response items: {response}")
-            # Once the transcription has settled, the first result will contain the
-            # is_final result. The other results will be for subsequent portions of
-            # the audio.
+            if not response.results:
+                continue
+
+            rospy.loginfo(f"Response: {response}")
+
+            # The `results` list is consecutive. For streaming, we only care about
+            # the first result being considered, since once it's `is_final`, it
+            # moves on to considering the next utterance.
+            result = response.results[0]
+            if not result.alternatives:
+                continue
+
+            # Display the transcription of the top alternative.
+            transcript = result.alternatives[0].transcript
+            # self.text_pub.publish(transcript)
+            # self.response_received = True
+            
             for result in response.results:
-                print("Finished: {}".format(result.is_final))
-                print("Stability: {}".format(result.stability))
-                alternatives = result.alternatives
-                # The alternatives are ordered from most likely to least.
-                for alternative in alternatives:
-                    print("Confidence: {}".format(alternative.confidence))
-                    print("Transcript: {}".format(alternative.transcript))
-        return
+                if result.is_final:
+                    # rospy.loginfo(result.alternatives[0].transcript)
+                    # self.stt_response += result.alternatives[0].transcript
+                    # self.stt_response += "\n"
+                    rospy.loginfo("STT response text: "+ result.alternatives[0].transcript)
+                    self.text_pub.publish(result.alternatives[0].transcript)
+                    self.response_received = True
+
 
     def transcribe_file_request(self, data):
+        """ Transcribes a single audio file """
+
         rate = ""  # TODO: TBD
         audio = {"content": data}
         try:
@@ -168,26 +185,127 @@ class SpeechToTextService(HarmoniServiceManager):
             self.result_msg = ""
         return
 
-    def request(self, input_data):
-        self.data = self.data.join(input_data)
+
+
+    def stt_callback(self, data):
+        """ Callback function subscribing to the microphone topic"""
+        self.response_received = True
+
+
+#TODO 
+    def request(self):
+
+
         rospy.loginfo("Start the %s request" % self.name)
-        self.state = State.START
-        self.transcribe_stream_request(self.data)
+        self.state = State.REQUEST
+        self.response_received = False
+        
+        try:
+            # Transcribes data coming from microphone 
+
+            audio_generator = self.generator()
+
+            """
+            requests = (
+                speech.StreamingRecognizeRequest(audio_content=content)
+                for content in audio_generator
+            )
+            """
+            requests = (
+                types.StreamingRecognizeRequest(audio_content=content)
+                for content in audio_generator
+            )
+
+            responses = self.client.streaming_recognize(self.streaming_config, requests)
+
+            self.listen_print_loop(responses)
+        
+            r = rospy.Rate(1)
+            while not self.response_received:
+                r.sleep()
+
+            self.state = State.SUCCESS
+            self.result_msg = self.stt_response
+
+        except rospy.ServiceException:
+            self.start = State.FAILED
+            rospy.loginfo("Service call failed")
+            self.response_received = True
+            self.result_msg = ""
+
+        print("vai bello-----------------" + self.result_msg)
+        return {"response": self.state, "message": self.result_msg}
+
+    def wav_to_data(self, path):
+        with io.open(path, "rb") as f:
+            content = f.read()
+        return content
+
+    def generator(self):
+        """ Generator of data for Google STT """
+        print("tharu")
+        # From https://cloud.google.com/speech-to-text/docs/streaming-recognize
+        while not self.closed:
+            # Use a blocking get() to ensure there's at least one chunk of
+            # data, and stop iteration if the chunk is None, indicating the
+            # end of the audio stream.
+            chunk = self._buff.get()
+            if chunk is None:
+                return
+            data = [chunk]
+
+            # Now consume whatever other data's still buffered.
+            while True:
+                try:
+                    chunk = self._buff.get(block=False)
+                    if chunk is None:
+                        return
+                    data.append(chunk)
+                except queue.Empty:
+                    break
+            yield b"".join(data)
+
+
+    def start(self, rate=""):
+        try:
+            rospy.loginfo("Start the %s service" % self.name)
+            if self.state == State.INIT:
+                self.state = State.START
+                
+                # Transcribes data coming from microphone 
+                audio_generator = self.generator()
+                requests = (
+                    speech.StreamingRecognizeRequest(audio_content=content)
+                    for content in audio_generator
+                )
+                responses = self.client.streaming_recognize(self.streaming_config, requests)
+                self.listen_print_loop(responses)
+
+            else:
+                self.state = State.START
+
+        except Exception:
+            rospy.loginfo("Killed the %s service" % self.name)
         return
 
-    def playing_sound_pause_callback(self, data):
-        """Sleeps when data is being published to the speaker"""
-        rospy.loginfo(f"pausing for data: {len(data.data)}")
-        self.pause()
-        rospy.sleep(int(len(data.data) / 22040))
-        self.start()
+    def stop(self):
+        rospy.loginfo("Stop the %s service" % self.name)
+        try:            
+            # Signal the STT input data generator to terminate so that the client's
+            # streaming_recognize method will not block the process termination.
+            self.closed = True
+            self._buff.put(None)
+
+            self.state = State.SUCCESS
+        except Exception:
+            self.state = State.FAILED
         return
 
+    def pause(self):
+        rospy.loginfo("Pause the %s service" % self.name)
+        self.state = State.SUCCESS
+        return
 
-def wav_to_data(path):
-    with io.open(path, "rb") as f:
-        content = f.read()
-    return content
 
 
 def main():
@@ -196,19 +314,22 @@ def main():
     service_name = DetectorNameSpace.stt.name  # "stt"
     instance_id = rospy.get_param("instance_id")  # "default"
     service_id = f"{service_name}_{instance_id}"
-
     try:
         rospy.init_node(service_name, log_level=rospy.DEBUG)
 
         # stt/default_param/[all your params]
         params = rospy.get_param(service_name + "/" + instance_id + "_param/")
 
-        s = SpeechToTextService(service_id, params)
+        s = STTGoogleService(service_id, params)
 
-        service_server = HarmoniServiceServer(service_id, s)
+        service_server = HarmoniServiceServer(name=service_id, service_manager=s)
 
+        s.request()
+
+        # Streaming audio from mic
         service_server.start_sending_feedback()
         rospy.spin()
+        
     except rospy.ROSInterruptException:
         pass
 

@@ -29,10 +29,10 @@ RUN mkdir -p $ROS_WS/src
 WORKDIR $ROS_WS
 
 #caching protection for Harmoni, per https://stackoverflow.com/a/39278224/5715374
-ADD https://api.github.com/repos/interaction-lab/HARMONI/git/refs/heads/develop /root/version.json
+#ADD https://api.github.com/repos/micolspitale93/git/refs/heads/develop /root/version.json
 RUN git -C src clone \
     -b develop \
-    https://github.com/interaction-lab/HARMONI.git 
+    https://github.com/micolspitale93/HARMONI.git 
 
 # ==================================================================
 # Build Harmoni from source

@@ -46,6 +46,7 @@ class GestureService(HarmoniServiceManager):
         )
         self.state = State.INIT
         self.setup_gesture()
+
         return
 
     def _gesture_done_callback(self, data):
