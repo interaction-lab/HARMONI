@@ -7,7 +7,6 @@ import unittest
 from collections import deque
 
 # Specific Imports
-import mock
 import requests
 from actionlib_msgs.msg import GoalStatus
 from harmoni_common_lib.action_client import HarmoniActionClient

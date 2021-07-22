@@ -18,16 +18,7 @@ from harmoni_bot.rasa_client import RasaClient
 
 
 class RasaService(HarmoniServiceManager):
-    """This is a class representation of a harmoni_dialogue service
-        (HarmoniServiceManager). It is essentially an extended combination of the
-        :class:`harmoni_common_lib.service_server.HarmoniServiceServer` and
-        :class:`harmoni_common_lib.service_manager.HarmoniServiceManager` classes
-
-        :param name: Name of the current service
-        :type name: str
-        :param param: input parameters of the configuration.yaml file
-        :type param: from yaml
-        """
+    """Rasa chatbot service"""
 
     def __init__(self, name, param):
         """Constructor method: Initialization of variables and lex parameters + setting up"""
