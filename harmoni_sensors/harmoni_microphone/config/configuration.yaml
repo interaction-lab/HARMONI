@@ -5,11 +5,5 @@ microphone:
     chunk_size: 1024
     total_channels: 1
     audio_rate: 16000
-    # silence_limit_seconds: 1
-    # previous_audio_seconds: 2
-    # total_silence_samples: 100
-    # silence_threshold: 1000
     device_name: default
-    # loudest_sound_value: 1
-    # set_threshold: "constant" #default if you want to detect the silence, constant if you want to set it to a constant value
     test_outdir: "$(find harmoni_microphone)/temp_data/test_example.wav"

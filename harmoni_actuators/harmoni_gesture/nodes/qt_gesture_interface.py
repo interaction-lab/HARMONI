@@ -53,7 +53,6 @@ class GestureInterface(HarmoniServiceManager):
             Bool,
             queue_size=1,
         )
-        print("------------qt_interface_topic: "+ ActuatorNameSpace.gesture.value + self.service_id + "/get_list")
         self.gesture_list_pub = rospy.Publisher(
             ActuatorNameSpace.gesture.value + self.service_id + "/get_list",
             String,

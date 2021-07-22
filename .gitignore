@@ -118,5 +118,7 @@ dockerfiles/config/private-keys.json
 harmoni_core/harmoni_decision/launch/hardware_service.launch
 harmoni_core/harmoni_decision/launch/harmoni_service.launch
 harmoni_dialogues/harmoni_bot/config/configuration.yaml
-
+harmoni_actuators/harmoni_tts/content/*
 doc/_build
+harmoni_actuators/harmoni_tts/scale_stats.npy
+harmoni_actuators/harmoni_tts/temp_data/tts.wav

@@ -1,77 +1,5 @@
-# Misc. To Be Sorted
-
-# Running HARMONI in Docker
-### Starting up HARMONI with the harmoni_full container
-1. Open the folder:
-    ```bash
-    cd ~/catkin_ws/src/HARMONI
-    ```
-2. **(Optional)** In order to run with window forwarding on linux use:
-    ```bash
-    xhost +local:
-    ```
-3. Use docker compose to launch the complete system (will build if necessary, use --build to force) when developing new containers:
-    ```bash
-    docker-compose -f docker-compose-full.yml up
-    ```
-4. For each new process open another terminal and in each of them run:
-    ```bash
-    docker exec -it harmoni_full bash
-    ```
-    *Note: if you wish to connect to other containers, simply replace harmoni_full with the other containers name, e.g. harmoni_hardware*  
-
-If the terminal prints the following message "Hello! Welcome to Harmoni", you successfully enter the container.
-
-### Running HARMONI within the container
-1. Setup audio:  
-    Check which is your default card sound running: `aplay -l`.  
-    Then use the card information to edit the configuration file in the root.
-    ```bash
-    cd /root
-    nano .asoundrc
-    # Update the hardware and soundcard id.
-    ```
-    The contents are shown below:
-    
-    ```
-    pcm.!default {
-      type plug
-      slave {
-        pcm "hw:0,0"
-      }
-    }
-    ctl.!default {
-      type hw
-       card 0
-    }
-    ```
-     
-    The speaker device is controlled by the hw values, currently listed as 0,0 (the card `x` should be the same number of the first number in `hw:"x,y"`, and `y` refers to the device number).  
-    To choose a speaker you may need to use the command `aplay -l `  to see what devices are available.  
-    For example running `aplay -l`:
-    ```
-    card 1: PCH [HDA Intel PCH], device 0: ALC283 Analog [ALC283 Analog]
-    ```
-    In this case the `.asoundrc` file will be:
-    ```
-    pcm.!default {
-      type plug
-      slave {
-        pcm "hw:1,0"
-      }
-    }
-    ctl.!default {
-      type hw
-       card 1
-    }
-    ```    
-    
-2. Test the audio with the following command:
-   ```bash
-   roslaunch harmoni_speaker speaker_service test:=true
-   ```
-   If it works, exit and following the next steps.
-   If it doesn't re-do step 1, and reiterate step 2 until the audio works.
+# Misc. To Be Sorted/Fixed (Old "Usage")
+## Running HARMONI within the container
 
 3. Run the following bash script:
 
@@ -99,7 +27,7 @@ If the terminal prints the following message "Hello! Welcome to Harmoni", you su
 
 
 
-#### Setting Up the Configuration
+## Setting Up the Configuration
 Before running the whole interaction, you need to setup the configuration.yaml file in the _harmoni_decision_ package.
 It contains the list of the packages that you want to run and the corrispondent _id_. For example:
 ```
@@ -135,13 +63,13 @@ ita_param:
 The default harmoni_decision/config/configuration.yaml file is set to run the "multiple-choice" interaction. You can keep the configuration if you want to run it for testing. However, remember to set the configuration parameters of the services according to your platform hardwares or external service.
 
 
-#### Running an Interaction
+### Running an Interaction
 Now everything is setup for testing.
 Once all the packages have been started up, you can run the interaction by running in the harmoni_core.
 If you want to run the "multiple-choice" interaction, run:
 ```bash
 rlmultiplechoice
-#alias rlmultiplechoice="roslaunch harmoni_decision harmoni_decision.launch test:=true pattern_name:='multiple-choice'"
+#alias rlmultiplechoice="roslaunch harmoni_decision harmoni_decision.launch pattern_name:='multiple-choice'"
 ```
 
 
