@@ -5,9 +5,9 @@
 	<arg name="use_google" default="false"/>
 	<arg name="instance_id" default="default"/>
   	<group if="$(arg use_aws_lex)">
-			<rosparam file="$(find harmoni_bot)/config/configuration.yaml" subst_value="True"/>
-			<param name="instance_id" value="$(arg instance_id)"/>
-			<node pkg="harmoni_bot" type="aws_lex_service.py" name="harmoni_bot_lex_$(arg instance_id)" output="screen"  args="$(arg instance_id)"/>
+		<rosparam file="$(find harmoni_bot)/config/configuration.yaml" subst_value="True"/>
+		<param name="instance_id" value="$(arg instance_id)"/>
+		<node pkg="harmoni_bot" type="aws_lex_service.py" name="harmoni_bot_lex_$(arg instance_id)" output="screen"  args="$(arg instance_id)"/>
   	</group>
 	<group if="$(arg use_google)">
 			<rosparam file="$(find harmoni_bot)/config/configuration.yaml" subst_value="True"/>

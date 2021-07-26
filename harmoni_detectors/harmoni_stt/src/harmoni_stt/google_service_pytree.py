@@ -9,7 +9,7 @@ from actionlib_msgs.msg import GoalStatus
 from harmoni_common_lib.service_server import HarmoniServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 from harmoni_common_lib.action_client import HarmoniActionClient
-from google_service import STTGoogleService
+from harmoni_stt.google_service import STTGoogleService
 import harmoni_common_lib.helper_functions as hf
 
 # Specific Imports
@@ -86,7 +86,7 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
 
         #TODO questo dobbiamo farlo nell'if 
         #rospy init node mi fa diventare un nodo ros
-        rospy.init_node("stt_default", log_level=rospy.INFO)
+        #rospy.init_node("stt_default", log_level=rospy.INFO)
 
         if(not self.mode):
             self.service_client_stt = HarmoniActionClient(self.name)
@@ -124,7 +124,7 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
                     self.logger.debug(f"Sending goal to {self.google_service}")
                     # Dove posso prendere details["action_goal"]?
                     self.service_client_stt.send_goal(
-                        action_goal = ActionType["REQUEST"].value,
+                        action_goal = ActionType["ON"].value,
                         optional_data="",
                         wait=False,
                     )

@@ -9,14 +9,12 @@ from actionlib_msgs.msg import GoalStatus
 import harmoni_common_lib.helper_functions as hf
 
 # Specific Imports
-from web_service import WebService
-from harmoni_common_lib.constants import ActuatorNameSpace, ActionType
-from botocore.exceptions import BotoCoreError, ClientError
+from harmoni_web.web_service import WebService
+from harmoni_common_lib.constants import ActuatorNameSpace, ActionType, State
 from contextlib import closing
 from collections import deque 
 import soundfile as sf
 import numpy as np
-import boto3
 import re
 import json
 import ast
@@ -24,10 +22,7 @@ import sys
 import time
 
 # import wget
-import contextlib
 import ast
-import wave
-import os
 
 #py_tree
 import py_trees
@@ -50,9 +45,12 @@ class WebServicePytree(py_trees.behaviour.Behaviour):
 
         self.blackboards = []
         #serve una blackboard a speaker?
-        self.blackboard_web = self.attach_blackboard_client(name=self.name, namespace="harmoni_web")
+        self.blackboard_web = self.attach_blackboard_client(name=self.name, namespace=ActuatorNameSpace.web.name)
         self.blackboard_web.register_key("result_data", access=py_trees.common.Access.WRITE)
         self.blackboard_web.register_key("result_message", access=py_trees.common.Access.WRITE)
+        self.blackboard_input_web=self.attach_blackboard_client(name=self.name,namespace="input_web")
+        self.blackboard_input_web.register_key("result_data", access=py_trees.common.Access.READ)
+        self.blackboard_input_web.register_key("result_message", access=py_trees.common.Access.READ)
 
 
         super(WebServicePytree, self).__init__(name)
@@ -77,7 +75,6 @@ class WebServicePytree(py_trees.behaviour.Behaviour):
         self.web_service = WebService(service_id)
 
         #comment the following line if you are not running main
-        rospy.init_node("web_default", log_level=rospy.INFO)
 
         if(not self.mode):
             self.service_client_web = HarmoniActionClient(self.name)
@@ -102,33 +99,45 @@ class WebServicePytree(py_trees.behaviour.Behaviour):
         #TODO check
         
         if(self.mode):
-            pass
-        else:
-            if self.service_client_web.get_state() == GoalStatus.LOST:
-                self.logger.debug(f"Sending goal to {self.web_service}")
-                self.service_client_web.send_goal(
-                    action_goal = ActionType["REQUEST"].value,
-                    optional_data = "",
-                    wait=False,
-                )
-                self.logger.debug(f"Goal sent to {self.web_service}")
-                new_status = py_trees.common.Status.RUNNING
+            if self.blackboard_input_web.result_message == State.SUCCESS:
+                self.result_data = self.web_service.do(self.blackboard_input_web.result_data)
+                self.blackboard_web.result_message = State.SUCCESS
+                self.blackboard_web.result_data = self.result_data['message']
+                new_status = py_trees.common.Status.SUCCESS
             else:
-                if len(self.client_result) > 0:
-                    #if we reach this point we have the result(s) 
-                        #so we can make the leaf terminate
-                    self.result_data = self.client_result.popleft()["data"]
-                    #if you want to see what is written in the result use --> self.result_data["response"]
-                    new_status = py_trees.common.Status.SUCCESS
+                #TODO add running state
+                new_status = py_trees.common.Status.FAILURE
+        else:
+            if self.blackboard_input_web.result_message == State.SUCCESS:
+                if self.service_client_web.get_state() == GoalStatus.LOST:
+                    self.logger.debug(f"Sending goal to {self.web_service}")
+                    self.service_client_web.send_goal(
+                        action_goal = ActionType["DO"].value,
+                        optional_data = self.blackboard_input_web.result_data,
+                        wait=False,
+                    )
+                    self.logger.debug(f"Goal sent to {self.web_service}")
+                    new_status = py_trees.common.Status.RUNNING
                 else:
-                    #if we are here it means that we dont have the result yet, so
-                    #do we have to wait or something went wrong?
-                    #not sure about the followings lines, see row 408 of sequential_pattern.py
-                    if(self.web_service.state == State.FAILED):
-                        self.blackboard_web.result_message = "FAILURE"
-                        new_status = py_trees.common.Status.FAILURE
+                    if len(self.client_result) > 0:
+                        #if we reach this point we have the result(s) 
+                            #so we can make the leaf terminate
+                        self.result_data = self.client_result.popleft()["data"]
+                        #if you want to see what is written in the result use --> self.result_data["response"]
+                        self.blackboard_web.result_message = State.SUCCESS
+                        self.blackboard_web.result_data = self.result_data
+                        new_status = py_trees.common.Status.SUCCESS
                     else:
-                        new_status = py_trees.common.Status.RUNNING
+                        #if we are here it means that we dont have the result yet, so
+                        #do we have to wait or something went wrong?
+                        #not sure about the followings lines, see row 408 of sequential_pattern.py
+                        if(self.web_service.state == State.FAILED):
+                            self.blackboard_web.result_message = State.FAILED
+                            new_status = py_trees.common.Status.FAILURE
+                        else:
+                            new_status = py_trees.common.Status.RUNNING
+            else:
+                new_status = self.blackboard_input_web.result_message
             
             self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status
@@ -175,32 +184,3 @@ class WebServicePytree(py_trees.behaviour.Behaviour):
         #    self.end_pattern = True
         return
 
-def main():
-    #command_line_argument_parser().parse_args()
-
-    py_trees.logging.level = py_trees.logging.Level.DEBUG
-    
-    blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace="harmoni_web")
-    blackboardProva.register_key("result_message", access=py_trees.common.Access.READ)
-
-    print(blackboardProva)
-
-    webPyTree = WebServicePytree("WebServicePytreeTest")
-
-    additional_parameters = dict([
-        ("WebServicePytree_mode",False)])
-
-    webPyTree.setup(**additional_parameters)
-    try:
-        for unused_i in range(0, 3):
-            webPyTree.tick_once()
-            time.sleep(0.5)
-            print(blackboardProva)
-        print("\n")
-    except KeyboardInterrupt:
-        print("Exception occurred")
-        pass
-    
-
-if __name__ == "__main__":
-    main()

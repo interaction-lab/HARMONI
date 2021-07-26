@@ -96,7 +96,8 @@ class TestMicrophone(unittest.TestCase):
         # TODO use microphone service recording functionality
         # either through an import ant test or may add optional data
         # which specifies recording
-        pass
+        raise NotImplementedError()
+
 
 
 def main():

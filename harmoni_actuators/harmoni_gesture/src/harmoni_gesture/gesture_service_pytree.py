@@ -10,9 +10,10 @@ from harmoni_common_lib.service_server import HarmoniServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 from harmoni_common_lib.action_client import HarmoniActionClient
 import harmoni_common_lib.helper_functions as hf
-from harmoni_tts.aws_tts_service import AWSTtsService
+from gesture_service import GestureService
 # Specific Imports
-from harmoni_common_lib.constants import ActuatorNameSpace, ActionType
+from harmoni_common_lib.constants import ActuatorNameSpace, ActionType, State
+from qt_gesture_interface import GestureInterface
 from botocore.exceptions import BotoCoreError, ClientError
 from contextlib import closing
 from collections import deque 
@@ -30,39 +31,29 @@ import time
 
 import py_trees.console
 
-class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
+class GestureServicePytree(py_trees.behaviour.Behaviour):
 
-    #TODO tutte le print devono diventare console py_tree
     """
     the boolean "mode" changes the functioning of the Behaviour:
     true: we use the leaf as both client and server (inner module)
     false: we use the leaf as client that makes request to the server
     """
-    #TTS è un actuators
 
-    def __init__(self, name = "AWSTtsServicePytree"):
-        
-        """
-        Qui abbiamo pensato di chiamare soltanto 
-        il costruttore del behaviour tree 
-        """
+    def __init__(self, name):
         self.name = name
         self.mode = False
-        self.aws_service = None
+        self.gesture_service = None
         self.result_data = None
-        self.service_client_tts = None
+        self.service_client_gesture = None
         self.client_result = None
 
         # here there is the inizialization of the blackboards
         self.blackboards = []
-        self.blackboard_tts = self.attach_blackboard_client(name=self.name, namespace="harmoni_tts")
-        self.blackboard_tts.register_key("result_data", access=py_trees.common.Access.WRITE)
-        self.blackboard_tts.register_key("result_message", access=py_trees.common.Access.WRITE)
-        self.blackboard_output_bot=self.attach_blackboard_client(name=self.name,namespace="harmoni_output_bot")
-        self.blackboard_output_bot.register_key("result_data", access=py_trees.common.Access.READ)
-        self.blackboard_output_bot.register_key("result_message", access=py_trees.common.Access.READ)
+        self.blackboard_gesture = self.attach_blackboard_client(name=self.name, namespace= ActuatorNameSpace.gesture.name)
+        self.blackboard_gesture.register_key("result_data", access=py_trees.common.Access.READ)
+        self.blackboard_gesture.register_key("result_message", access=py_trees.common.Access.READ)
 
-        super(AWSTtsServicePytree, self).__init__(name)
+        super(GestureServicePytree, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self,**additional_parameters):
@@ -74,29 +65,28 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         """
         for parameter in additional_parameters:
             print(parameter, additional_parameters[parameter])  
-            if(parameter =="AWSTtsServicePytree_mode"):
+            if(parameter == ActuatorNameSpace.gesture.name):
                 self.mode = additional_parameters[parameter]        
 
-        service_name = ActuatorNameSpace.tts.name
-        instance_id = rospy.get_param("instance_id")
+        service_name = ActuatorNameSpace.gesture.name   
+        instance_id = rospy.get_param("/instance_id")
 
-        param = rospy.get_param(service_name + "/" + instance_id + "_param/")
+        params = rospy.get_param(service_name + "/" + instance_id + "_param/")
 
-        self.aws_service = AWSTtsService(self.name,param)
-        #TODO we have to do this in the if
-        #rospy init node mi fa diventare un nodo ros
-        #rospy.init_node("tts_default", log_level=rospy.INFO)
+        #comment the following line if you are not doing main()
+        rospy.init_node(service_name, log_level=rospy.INFO)
 
-        self.blackboard_tts.result_message = "INVALID"
+        #self.qt_gesture_service = GestureInterface(service_name, params)
 
+        self.gesture_service = GestureService(service_name,params)
+        #TODO the first parameter in setup_client must be "equals" in all the leaves
         if(not self.mode):
-            self.service_client_tts = HarmoniActionClient(self.name)
+            self.service_client_gesture = HarmoniActionClient(self.name)
             self.client_result = deque()
-            self.service_client_tts.setup_client("tts_default", 
+            self.service_client_gesture.setup_client(service_name + "_" + instance_id, 
                                                 self._result_callback,
                                                 self._feedback_callback)
             self.logger.debug("Behavior interface action clients have been set up!")
-        
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 
     def initialise(self):
@@ -110,42 +100,38 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         
         """
         if(self.mode):
-            if self.blackboard_output_bot.result_message == "SUCCESS":
-                self.result_data = self.aws_service.request(self.blackboard_output_bot.result_data)
-                self.blackboard_tts.result_message = "SUCCESS"
-                self.blackboard_tts.result_data = self.result_data['message']
+            if self.blackboard_gesture.result_message == State.SUCCESS:
+                self.result_data = self.gesture_service.do(self.blackboard_gesture.result_data)
                 new_status = py_trees.common.Status.SUCCESS
             else:
-                new_status = self.blackboard_output_bot.result_message
+                new_status = self.blackboard_gesture.result_message
         else:
-            if self.blackboard_output_bot.result_message == "SUCCESS":
-                if self.service_client_tts.get_state() == GoalStatus.LOST:
-                    self.logger.debug(f"Sending goal to {self.aws_service}")
-                    #Where can we take details["action_goal"]?
-                    self.service_client_tts.send_goal(
-                        action_goal = ActionType["REQUEST"].value,
-                        optional_data = self.blackboard_output_bot.result_data["message"],
+            if self.blackboard_gesture.result_message == State.SUCCESS:
+                if self.service_client_gesture.get_state() == GoalStatus.LOST:
+                    self.logger.debug(f"Sending goal to {self.gesture_service}")
+                    # Dove posso prendere details["action_goal"]?
+                    self.service_client_gesture.send_goal(
+                        action_goal = ActionType["DO"].value,
+                        optional_data = self.blackboard_gesture.result_data,
                         wait=False,
                     )
-                    self.logger.debug(f"Goal sent to {self.aws_service}")
+                    self.logger.debug(f"Goal sent to {self.gesture_service}")
                     new_status = py_trees.common.Status.RUNNING
                 else:
                     if len(self.client_result) > 0:
                         #if we reach this point we have the result(s) 
                         #so we can make the leaf terminate
                         self.result_data = self.client_result.popleft()["data"]
-                        self.blackboard_tts.result_message = "SUCCESS"
-                        self.blackboard_tts.result_data = self.result_data
+                        self.logger.debug(f"Results of gesture module: {self.result_data}")
                         new_status = py_trees.common.Status.SUCCESS
                     else:
                         #not sure about the followings lines
-                        if(self.aws_service.state == State.FAILED):
-                            self.blackboard_tts.result_message = "FAILURE"
+                        if(self.gesture_service.state == State.FAILED):
                             new_status = py_trees.common.Status.FAILURE
                         else:
                             new_status = py_trees.common.Status.RUNNING
             else:
-                new_status = self.blackboard_output_bot.result_message
+                new_status = self.blackboard_gesture.result_message
             self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status
 
@@ -197,28 +183,24 @@ def main():
 
     py_trees.logging.level = py_trees.logging.Level.DEBUG
     
-    blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace="harmoni_tts")
-    blackboardProva.register_key("result_data", access=py_trees.common.Access.READ)
-    blackboardProva.register_key("result_message", access=py_trees.common.Access.READ)
-    blackboard_output_bot = py_trees.blackboard.Client(name="blackboardProva", namespace="harmoni_output_bot")
-    blackboard_output_bot.register_key("result_data", access=py_trees.common.Access.WRITE)
-    blackboard_output_bot.register_key("result_message", access=py_trees.common.Access.WRITE)
+    blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace="harmoni_gesture")
+    blackboardProva.register_key("result_data", access=py_trees.common.Access.WRITE)
+    blackboardProva.register_key("result_message", access=py_trees.common.Access.WRITE)
 
-    blackboard_output_bot.result_message = "SUCCESS"
-    blackboard_output_bot.result_data = "Vorrei ordinare dei fiori"
+    blackboardProva.result_message = "SUCCESS"
+    blackboardProva.result_data = "{'gesture':'QT/sad', 'timing': 2}"
 
     print(blackboardProva)
-    print(blackboard_output_bot)
 
-    ttsPyTree = AWSTtsServicePytree("AwsTtsPyTreeTest")
+    gesturePyTree = GestureServicePytree("GestureServiceTest")
 
     additional_parameters = dict([
-        ("AWSTtsServicePytree_mode",False)])
+        ("GestureServicePytree_mode",False)])
 
-    ttsPyTree.setup(**additional_parameters)
+    gesturePyTree.setup(**additional_parameters)
     try:
         for unused_i in range(0, 7):
-            ttsPyTree.tick_once()
+            gesturePyTree.tick_once()
             time.sleep(0.5)
             print(blackboardProva)
         print("\n")

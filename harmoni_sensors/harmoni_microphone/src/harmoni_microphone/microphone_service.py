@@ -72,9 +72,12 @@ class MicrophoneService(HarmoniServiceManager):
             self.state = State.START
             self._open_stream()  # TODO handle possible exception from this
             self._read_stream_and_publish()
+            self.results_msg = ""
+            self.state = State.SUCCESS
         elif self.state == State.PAUSE:
             self.state = State.START
             self._read_stream_and_publish()
+            self.state = State.SUCCESS
         else:
             rospy.loginfo("Trying to start stream when already started")
             self.state = State.START
@@ -155,6 +158,7 @@ class MicrophoneService(HarmoniServiceManager):
         Find the input audio devices configured in ~/.asoundrc.
         If the device is not found, pyaudio will use your machine default device
         """
+        self.input_device_index = 0
         for i in range(self.p.get_device_count()):
             device = self.p.get_device_info_by_index(i)
             # rospy.loginfo(device)
@@ -183,7 +187,9 @@ class MicrophoneService(HarmoniServiceManager):
     def _record_audio_data_callback(self, data):
         """Callback function to write data"""
         data = np.fromstring(data.data, np.uint8)
+        rospy.loginfo("__________________________"+str(self.first_audio_frame))
         if self.first_audio_frame:
+            rospy.loginfo("Start recording")
             self.wf = wave.open(self.file_path, "wb")
             self.wf.setnchannels(self.total_channels)
             self.wf.setsampwidth(self.p.get_sample_size(self.audio_format))
@@ -210,7 +216,7 @@ def main():
         params = rospy.get_param(service_name + "/" + instance_id + "_param/")
 
         s = MicrophoneService(service_id, params)
-
+        s.start()
         service_server = HarmoniServiceServer(service_id, s)
 
         service_server.start_sending_feedback()

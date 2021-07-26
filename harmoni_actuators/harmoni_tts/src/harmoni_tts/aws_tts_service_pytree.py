@@ -1,20 +1,18 @@
 #!/usr/bin/env python3
 
 # Common Imports
-import rospy, rospkg, roslib
+import rospy
+import roslib
 
-from harmoni_common_lib.constants import State, ActuatorNameSpace
+from harmoni_common_lib.constants import State
+from actionlib_msgs.msg import GoalStatus
 from harmoni_common_lib.service_server import HarmoniServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 from harmoni_common_lib.action_client import HarmoniActionClient
-from actionlib_msgs.msg import GoalStatus
 import harmoni_common_lib.helper_functions as hf
-from harmoni_face.face_service import EyesService, MouthService, NoseService
-from harmoni_face.face_client import Face
-
+from harmoni_tts.aws_tts_service import AWSTtsService
 # Specific Imports
-from audio_common_msgs.msg import AudioData
-from harmoni_common_lib.constants import ActuatorNameSpace, ActionType, State
+from harmoni_common_lib.constants import ActuatorNameSpace, ActionType, State, DialogueNameSpace
 from botocore.exceptions import BotoCoreError, ClientError
 from contextlib import closing
 from collections import deque 
@@ -25,40 +23,44 @@ import re
 import json
 import ast
 import sys
-import time
-
-# import wget
-import contextlib
-import ast
-import wave
-import os
 
 #py_tree
 import py_trees
+import time
 
-class FaceServicePytree(py_trees.behaviour.Behaviour):
+import py_trees.console
+
+class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
+
+    #TODO log with pytree
     """
     the boolean "mode" changes the functioning of the Behaviour:
     true: we use the leaf as both client and server (inner module)
     false: we use the leaf as client that makes request to the server
     """
+    #TTS è un actuators
 
     def __init__(self, name):
-
+        
+        """
+        """
         self.name = name
         self.mode = False
-        self.eyes_service = None
-        self.mouth_service = None
+        self.aws_service = None
         self.result_data = None
-        self.service_client_face = None
+        self.service_client_tts = None
         self.client_result = None
+
         # here there is the inizialization of the blackboards
         self.blackboards = []
-        #serve una blackboard a speaker?
         self.blackboard_tts = self.attach_blackboard_client(name=self.name, namespace=ActuatorNameSpace.tts.name)
-        self.blackboard_tts.register_key("result_data", access=py_trees.common.Access.READ)
-        self.blackboard_tts.register_key("result_message", access=py_trees.common.Access.READ)
-        super(FaceServicePytree, self).__init__(name)
+        self.blackboard_tts.register_key("result_data", access=py_trees.common.Access.WRITE)
+        self.blackboard_tts.register_key("result_message", access=py_trees.common.Access.WRITE)
+        self.blackboard_output_bot=self.attach_blackboard_client(name=self.name,namespace=DialogueNameSpace.bot.name+"output")
+        self.blackboard_output_bot.register_key("result_data", access=py_trees.common.Access.READ)
+        self.blackboard_output_bot.register_key("result_message", access=py_trees.common.Access.READ)
+
+        super(AWSTtsServicePytree, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self,**additional_parameters):
@@ -70,24 +72,25 @@ class FaceServicePytree(py_trees.behaviour.Behaviour):
         """
         for parameter in additional_parameters:
             print(parameter, additional_parameters[parameter])  
-            if(parameter == ActuatorNameSpace.face.name):
+            if(parameter ==ActuatorNameSpace.tts.name):
                 self.mode = additional_parameters[parameter]        
 
-        service_name = ActuatorNameSpace.face.name
-        instance_id = rospy.get_param("/instance_id")
-        param = rospy.get_param(service_name + "/" + instance_id + "_param")
-        param_eyes = rospy.get_param(service_name + "/" + instance_id + "_param/eyes/")
-        param_mouth = rospy.get_param(service_name + "/" + instance_id + "_param/mouth/")
-        param_nose = rospy.get_param(service_name + "/" + instance_id + "_param/nose/")
-        face = Face(ActuatorNameSpace.face.value, instance_id, param)
-        self.eyes_service = EyesService(service_name + "_eyes_" + instance_id, param_eyes, face)
-        self.mouth_service = MouthService(service_name + "_mouth_" + instance_id, param_mouth, face)
-        self.nose_service = NoseService(service_name + "_nose_" + instance_id, param_nose, face)
+        service_name = ActuatorNameSpace.tts.name
+        instance_id = rospy.get_param("instance_id")
+
+        param = rospy.get_param(service_name + "/" + instance_id + "_param/")
+
+        self.aws_service = AWSTtsService(self.name,param)
+        #TODO we have to do this in the if
+        #rospy init node mi fa diventare un nodo ros
+        #rospy.init_node("tts_default", log_level=rospy.INFO)
+
+        self.blackboard_tts.result_message = "INVALID"
 
         if(not self.mode):
-            self.service_client_face = HarmoniActionClient(self.name)
+            self.service_client_tts = HarmoniActionClient(self.name)
             self.client_result = deque()
-            self.service_client_face.setup_client("face_mouth_default",
+            self.service_client_tts.setup_client("tts_default", 
                                                 self._result_callback,
                                                 self._feedback_callback)
             self.logger.debug("Behavior interface action clients have been set up!")
@@ -97,57 +100,52 @@ class FaceServicePytree(py_trees.behaviour.Behaviour):
     def initialise(self):
         """
         
-        """
-        
+        """    
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
 
     def update(self):
         """
         
         """
-        #TODO check
-        
         if(self.mode):
-            if self.blackboard_tts.result_message == State.SUCCESS:
-                self.audio_data = self.blackboard_tts.result_data
-                self.result_data = self.mouth_service.do(self.audio_data)
-                #TODO eyes
+            if self.blackboard_output_bot.result_message == State.SUCCESS:
+                # results data contains all the response from the lex service (not only the sentence)
+                self.result_data = self.aws_service.request(self.blackboard_output_bot.result_data["message"])
+                self.blackboard_tts.result_message = State.SUCCESS
+                self.blackboard_tts.result_data = self.result_data['message']
                 new_status = py_trees.common.Status.SUCCESS
             else:
-                #either the state is "RUNNING" or "FAILURE" so in both cases we will do:
-                new_status = self.blackboard_tts.result_message
+                new_status = self.blackboard_output_bot.result_message
         else:
-            if self.blackboard_tts.result_message == State.SUCCESS:
-                #have I already done the request? check for this
-                if self.service_client_face.get_state() == GoalStatus.LOST:
-                    self.audio_data = self.blackboard_tts.result_data
-                    self.logger.debug(f"Sending goal to {self.mouth_service} and {self.eyes_service}")
-                    self.service_client_face.send_goal(
-                        action_goal = ActionType["DO"].value,
-                        optional_data = self.audio_data,
+            if self.blackboard_output_bot.result_message ==  State.SUCCESS:
+                if self.service_client_tts.get_state() == GoalStatus.LOST:
+                    self.logger.debug(f"Sending goal to {self.aws_service}")
+                    #Where can we take details["action_goal"]?
+                    rospy.loginfo(self.blackboard_output_bot.result_data)
+                    self.service_client_tts.send_goal(
+                        action_goal = ActionType["REQUEST"].value,
+                        optional_data = self.blackboard_output_bot.result_data['message'],
                         wait=False,
                     )
-                    self.logger.debug(f"Goal sent to {self.mouth_service} and {self.eyes_service}")
+                    self.logger.debug(f"Goal sent to {self.aws_service}")
                     new_status = py_trees.common.Status.RUNNING
                 else:
                     if len(self.client_result) > 0:
                         #if we reach this point we have the result(s) 
                         #so we can make the leaf terminate
                         self.result_data = self.client_result.popleft()["data"]
+                        self.blackboard_tts.result_message = State.SUCCESS
+                        self.blackboard_tts.result_data = self.result_data
                         new_status = py_trees.common.Status.SUCCESS
                     else:
-                        #if we are here it means that we dont have the result yet, so
-                        #do we have to wait or something went wrong?
-                        #not sure about the followings lines, see row 408 of sequential_pattern.py
-                        if(self.mouth_service.state == State.FAILED):
-                            self.blackboard_tts.result_message = "FAILURE"
+                        #not sure about the followings lines
+                        if(self.aws_service.state == State.FAILED):
+                            self.blackboard_tts.result_message = State.FAILED
                             new_status = py_trees.common.Status.FAILURE
                         else:
                             new_status = py_trees.common.Status.RUNNING
             else:
-                #the state is either "RUNNING" or "FAILURE" so we have to do in both cases:
-                new_status = self.blackboard_tts.result_message
-            
+                new_status = self.blackboard_output_bot.result_message
             self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status
 
@@ -161,7 +159,7 @@ class FaceServicePytree(py_trees.behaviour.Behaviour):
             - INVALID : a higher priority branch has interrupted, or shutting down
         """
         if(new_status == py_trees.common.Status.INVALID):
-            #esegui codice per interrupt 
+            #do the code for handling interuptions
             #self.blackboard_tts.result_message = "INVALID"
             #TODO 
             if(self.mode):
@@ -169,7 +167,7 @@ class FaceServicePytree(py_trees.behaviour.Behaviour):
             else:
                 pass
         else:
-            #esegui codice per terminare (SUCCESS || FAILURE)
+            #do the code for the termination of the leaf (SUCCESS || FAILURE)
             self.client_result = deque()
 
         self.logger.debug("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))

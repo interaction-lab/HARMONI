@@ -109,13 +109,10 @@ class STTGoogleService(HarmoniServiceManager):
 
     def callback(self, data):
         """ Callback function subscribing to the microphone topic"""
-        #in fase di testing l'if risulta falso
-        self._buff.put(data.data)
-        
         if self.state == State.START:
-            # rospy.loginfo("Add data to buffer")
+            rospy.loginfo("Add data to buffer")
             self._buff.put(data.data)
-            # rospy.loginfo("Items in buffer: "+ str(self._buff.qsize()))
+            rospy.loginfo("Items in buffer: "+ str(self._buff.qsize()))
 
         # else:
             # rospy.loginfo("Not Transcribing data")
@@ -192,8 +189,8 @@ class STTGoogleService(HarmoniServiceManager):
         self.response_received = True
 
 
-#TODO 
-    def request(self):
+    #TODO 
+    def request(self, data):
 
 
         rospy.loginfo("Start the %s request" % self.name)
@@ -232,8 +229,6 @@ class STTGoogleService(HarmoniServiceManager):
             rospy.loginfo("Service call failed")
             self.response_received = True
             self.result_msg = ""
-
-        print("vai bello-----------------" + self.result_msg)
         return {"response": self.state, "message": self.result_msg}
 
     def wav_to_data(self, path):
@@ -243,7 +238,6 @@ class STTGoogleService(HarmoniServiceManager):
 
     def generator(self):
         """ Generator of data for Google STT """
-        print("tharu")
         # From https://cloud.google.com/speech-to-text/docs/streaming-recognize
         while not self.closed:
             # Use a blocking get() to ensure there's at least one chunk of
@@ -267,25 +261,28 @@ class STTGoogleService(HarmoniServiceManager):
 
 
     def start(self, rate=""):
-        try:
-            rospy.loginfo("Start the %s service" % self.name)
-            if self.state == State.INIT:
-                self.state = State.START
-                
-                # Transcribes data coming from microphone 
-                audio_generator = self.generator()
-                requests = (
-                    speech.StreamingRecognizeRequest(audio_content=content)
-                    for content in audio_generator
-                )
-                responses = self.client.streaming_recognize(self.streaming_config, requests)
-                self.listen_print_loop(responses)
+        #try:
+        rospy.loginfo("Start the %s service" % self.name)
+        if self.state == State.INIT:
+            self.state = State.START
+            
+            # Transcribes data coming from microphone 
+            audio_generator = self.generator()
+            requests = (
+                speech.StreamingRecognizeRequest(audio_content=content)
+                for content in audio_generator
+            )
+            responses = self.client.streaming_recognize(self.streaming_config, requests)
+            rospy.loginfo("AFTER RESPONSE")
+            self.listen_print_loop(responses)
+            print(responses)
+            self.state=State.SUCCESS
 
-            else:
-                self.state = State.START
+        else:
+            self.state = State.START
 
-        except Exception:
-            rospy.loginfo("Killed the %s service" % self.name)
+        #except Exception:
+        #    rospy.loginfo("Killed the %s service" % self.name)
         return
 
     def stop(self):
@@ -324,7 +321,7 @@ def main():
 
         service_server = HarmoniServiceServer(name=service_id, service_manager=s)
 
-        s.request()
+        s.start()
 
         # Streaming audio from mic
         service_server.start_sending_feedback()

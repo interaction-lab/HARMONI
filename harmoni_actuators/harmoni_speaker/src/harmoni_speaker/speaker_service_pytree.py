@@ -13,7 +13,7 @@ from harmoni_speaker.speaker_service import SpeakerService
 
 # Specific Imports
 from audio_common_msgs.msg import AudioData
-from harmoni_common_lib.constants import ActuatorNameSpace, ActionType
+from harmoni_common_lib.constants import ActuatorNameSpace, ActionType, State
 from botocore.exceptions import BotoCoreError, ClientError
 from contextlib import closing
 from collections import deque 
@@ -57,7 +57,7 @@ class SpeakerServicePytree(py_trees.behaviour.Behaviour):
         # here there is the inizialization of the blackboards
         self.blackboards = []
         #do we need a blackboard here?
-        self.blackboard_tts = self.attach_blackboard_client(name=self.name, namespace="harmoni_tts")
+        self.blackboard_tts = self.attach_blackboard_client(name=self.name, namespace=ActuatorNameSpace.tts.name)
         self.blackboard_tts.register_key("result_data", access=py_trees.common.Access.READ)
         self.blackboard_tts.register_key("result_message", access=py_trees.common.Access.READ)
 
@@ -73,7 +73,7 @@ class SpeakerServicePytree(py_trees.behaviour.Behaviour):
         """
         for parameter in additional_parameters:
             print(parameter, additional_parameters[parameter])  
-            if(parameter =="SpeakerServicePytree_mode"):
+            if(parameter ==ActuatorNameSpace.speaker.name):
                 self.mode = additional_parameters[parameter]  
 
         service_name = ActuatorNameSpace.speaker.name
@@ -105,7 +105,7 @@ class SpeakerServicePytree(py_trees.behaviour.Behaviour):
         """
         #TODO check INVALID
         if(self.mode):
-            if self.blackboard_tts.result_message == "SUCCESS":
+            if self.blackboard_tts.result_message == State.SUCCESS:
                 self.audio_data = self.blackboard_tts.result_data
                 self.result_data = self.speaker_service.do(self.audio_data)
                 new_status = py_trees.common.Status.SUCCESS
@@ -113,7 +113,7 @@ class SpeakerServicePytree(py_trees.behaviour.Behaviour):
                 #either the state is "RUNNING" or "FAILURE" so in both cases we will do:
                 new_status = self.blackboard_tts.result_message
         else:
-            if self.blackboard_tts.result_message == "SUCCESS":
+            if self.blackboard_tts.result_message == State.SUCCESS:
                 #have I already done the request? check for this
                 if self.service_client_speaker.get_state() == GoalStatus.LOST:
                     self.audio_data = self.blackboard_tts.result_data
@@ -136,7 +136,7 @@ class SpeakerServicePytree(py_trees.behaviour.Behaviour):
                         #do we have to wait or something went wrong?
                         #not sure about the followings lines, see row 408 of sequential_pattern.py
                         if(self.speaker_service.state == State.FAILED):
-                            self.blackboard_tts.result_message = "FAILURE"
+                            self.blackboard_tts.result_message = State.FAILED
                             new_status = py_trees.common.Status.FAILURE
                         else:
                             new_status = py_trees.common.Status.RUNNING
@@ -188,26 +188,3 @@ class SpeakerServicePytree(py_trees.behaviour.Behaviour):
         # if feedback["state"] == State.END:
         #    self.end_pattern = True
         return
-
-def main():
-    #command_line_argument_parser().parse_args()
-    py_trees.logging.level = py_trees.logging.Level.DEBUG
-    
-    speakerPyTree =  SpeakerServicePytree("SpeakerPyTreeTest")
-
-    additional_parameters = dict([
-        ("mode",False)])    
-
-    speakerPyTree.setup(**additional_parameters)
-    try:
-        for unused_i in range(0, 4):
-            speakerPyTree.tick_once()
-            time.sleep(0.5)
-        print("\n")
-    except KeyboardInterrupt:
-        print("Exception occurred")
-        pass
-    
-
-if __name__ == "__main__":
-    main()

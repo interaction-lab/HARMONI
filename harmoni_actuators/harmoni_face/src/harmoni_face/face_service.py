@@ -274,35 +274,3 @@ class MouthService(HarmoniServiceManager):
             rospy.loginfo("The validated visemes are %s" % viseme_set)
         return viseme_bool, viseme_set
 
-
-
-def main():
-    """Set names, collect params, and give service to server"""
-    service_name = ActuatorNameSpace.face.name
-    instance_id = rospy.get_param("/instance_id")
-    service_id_mouth = f"{service_name}_mouth_{instance_id}"
-    service_id_eyes = f"{service_name}_eyes_{instance_id}"
-    service_id_nose = f"{service_name}_nose_{instance_id}"
-    try:
-        rospy.init_node(service_name)
-        param = rospy.get_param(service_name + "/" + instance_id + "_param")
-        param_eyes = rospy.get_param(service_name + "/" + instance_id + "_param/eyes/")
-        param_mouth = rospy.get_param(service_name + "/" + instance_id + "_param/mouth/")
-        param_nose = rospy.get_param(service_name + "/" + instance_id + "_param/nose/")
-        face = Face(ActuatorNameSpace.face.value, instance_id, param)
-        s_eyes = EyesService(service_name + "_eyes_" + instance_id, param_eyes, face)
-        s_mouth = MouthService(service_name + "_mouth_" + instance_id, param_mouth, face)
-        s_nose = NoseService(service_name + "_nose_" + instance_id, param_nose, face)
-        service_server_eyes = HarmoniServiceServer(service_id_eyes, s_eyes)
-        service_server_mouth = HarmoniServiceServer(service_id_mouth, s_mouth)
-        service_server_nose = HarmoniServiceServer(service_id_nose, s_nose)
-        service_server_eyes.start_sending_feedback()
-        service_server_mouth.start_sending_feedback()
-        service_server_nose.start_sending_feedback()
-        rospy.spin()
-    except rospy.ROSInterruptException:
-        pass
-
-
-if __name__ == "__main__":
-    main()
