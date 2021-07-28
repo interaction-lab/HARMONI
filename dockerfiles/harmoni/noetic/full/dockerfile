@@ -2,7 +2,7 @@ FROM harmoniteam/harmoni:noetic-base
 
 RUN ROS_DISTRO="noetic"
 
-RUN apt-key adv --refresh-keys --keyserver keyserver.ubuntu.com
+RUN curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
 
 RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-get update && \
@@ -70,6 +70,33 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
 RUN mkdir -p /root/local_mount/ \
     && ln -vs /root/harmoni_catkin_ws/src/HARMONI /root/local_mount/
 
+# ==================================================================
+# Download default models for local STT, TTS services
+# ------------------------------------------------------------------
+WORKDIR $ROS_WS/src/HARMONI/harmoni_models
+
+# STT
+RUN mkdir stt && cd stt \
+    && wget "https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.pbmm" \
+    && wget "https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.scorer"
+
+# TTS
+RUN cd .. \
+    && mkdir -p tts && cd tts \
+    && gdown --id 1dntzjWFg7ufWaTaFy80nRz-Tu02xWZos -O tts_model.pth.tar \
+    && gdown --id 18CQ6G6tBEOfvCHlPqP8EBI4xWbrr9dBc -O config.json \
+    && gdown --id 1Ty5DZdOc0F7OTGj9oJThYbL5iVu_2G0K -O vocoder_model.pth.tar \
+    && gdown --id 1Rd0R_nRCrbjEdpOwq6XwZAktvugiBvmu -O config_vocoder.json \
+    && gdown --id 11oY3Tv0kQtxK_JPgxrfesa99maVXHNxU -O scale_stats.npy
+
+WORKDIR $ROS_WS/src/HARMONI/harmoni_actuators/harmoni_tts
+
+RUN sudo apt-get update && sudo apt-get install espeak -y \
+    && git clone https://github.com/coqui-ai/TTS \
+    && cd TTS \
+    && git checkout b1935c97 \
+    && pip install -r requirements.txt \
+    && python setup.py install
 
 # ==================================================================
 # For convenience add a source script to bashrc and update without clearing

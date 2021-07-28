@@ -56,5 +56,4 @@ class DetectorNameSpace(Enum):
 
 
 class Resources(Enum):
-    face = ["eyes", "mouth"]
-
+    face = ["eyes", "mouth", "nose"]
