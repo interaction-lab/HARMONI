@@ -19,13 +19,10 @@ import numpy as np
 
 class MicrophoneService(HarmoniServiceManager):
     """Reads from a microphone and publishes audio data.
-
     As a sensor service, the microphone is responsible for reading the audio data
     from a physical microphone and publishing it so that it can be recorded or
     transcribed by a detector.
-
     The microphone has many parameters which are set in the configuration.yaml
-
     The public functions exposed by the microphone include start(), stop(), and pause()
     """
 
@@ -124,7 +121,6 @@ class MicrophoneService(HarmoniServiceManager):
 
     def _read_stream_and_publish(self):
         """Continously publish audio data from the microphone
-
         While state is START publish audio
         """
         r = rospy.Rate(10)
@@ -166,7 +162,6 @@ class MicrophoneService(HarmoniServiceManager):
 
     def start_recording_data(self):
         """Init the subscriber to microphone/default for recording audio.
-
         The callback in the subscriber will save the audio to a file
         specified in the configuration yaml.
         """

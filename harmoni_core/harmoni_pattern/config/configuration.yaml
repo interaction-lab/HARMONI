@@ -28,3 +28,19 @@ speak_test:
   default_param:
     trigger_intent: "Hey"
     pattern_scripting: $(find harmoni_pattern)/pattern_scripting/speak_test.json
+
+
+system_initiative:
+  default_param:
+    trigger_intent: "{ \"action\":\"check_log\", \"entity\":\"googlehome8554\", \"type\":\"media_player\"}"
+    pattern_scripting: $(find harmoni_pattern)/pattern_scripting/system_initiative.json  
+
+simple_dialogue:
+  default_param:
+    trigger_intent: "hey"
+    pattern_scripting: $(find harmoni_pattern)/pattern_scripting/simple_dialogue.json      
+    
+hass:
+  default_param:
+    trigger_intent: "{ \"action\":\"check_log\", \"entity\":\"googlehome8554\", \"type\":\"media_player\"}"
+    pattern_scripting: $(find harmoni_pattern)/pattern_scripting/hass.json          

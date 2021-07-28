@@ -1,0 +1,7 @@
+<!-- This is an example launch file for how a ROS application could use a node -->
+<launch>
+    <rosparam file="$(find harmoni_hass)/config/configuration.yaml" subst_value="True"/>
+    <arg name="instance_id" default="default"/>
+    <param name="instance_id" value="$(arg instance_id)"/>
+    <node pkg="harmoni_hass" type="hass_service.py" name="harmoni_hass_$(arg instance_id)" output="screen"/>
+</launch>

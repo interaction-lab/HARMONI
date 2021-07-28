@@ -1,0 +1,11 @@
+<!-- This is an example launch file for how a ROS application could use a node -->
+<launch>
+    <rosparam file="$(find harmoni_stt)/config/google_configuration.yaml"/>
+	<param name="instance_id" value="default"/>
+	<node pkg="harmoni_stt" type="google_service.py" name="harmoni_stt_google_default" output="screen"/>
+    <param name="test_stt" value="false"/>
+    <arg name="test_input" default="$(find harmoni_stt)/test_data/hello.wav"/>
+    <param name="test_input_stt" value="$(arg test_input)"/>
+	<param name="test_google_stt_input" value="$(find harmoni_stt)/test_data/hello.wav"/>
+    <test test-name="test_google_stt" pkg="harmoni_stt" type="test_google_stt.py"/>
+</launch>

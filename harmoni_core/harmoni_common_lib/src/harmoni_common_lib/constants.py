@@ -44,7 +44,7 @@ class ActuatorNameSpace(Enum):
     tts = "/harmoni/actuating/tts/"
     web = "/harmoni/actuating/web/"
     gesture = "/harmoni/actuating/gesture/"
-
+    hass = "/harmoni/actuating/hass/"
 
 class DialogueNameSpace(Enum):
     bot = "/harmoni/dialoging/bot/"

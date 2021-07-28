@@ -11,5 +11,6 @@ Tutorials
    tutorials/Multi-Container
    tutorials/Multi-PC
    tutorials/Running-Packages
+   tutorials/Create-New-Package
    tutorials/Setting-Up-a-New-Robot
    tutorials/Usage

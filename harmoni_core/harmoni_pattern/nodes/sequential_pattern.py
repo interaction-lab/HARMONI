@@ -19,6 +19,7 @@ from harmoni_common_lib.constants import DetectorNameSpace, ActionType
 from collections import deque
 from time import time
 import threading
+# import ast
 
 
 class SequentialPattern(HarmoniServiceManager):
@@ -142,6 +143,9 @@ class SequentialPattern(HarmoniServiceManager):
     def _detecting_callback(self, data, service_name):
         """Store data from detection to client_results dictionary"""
         data = data.data
+
+        rospy.logdebug("Received data from detector " + data)
+        
         self.client_results[service_name].append({"time": time(), "data": data})
         return
 
@@ -171,6 +175,61 @@ class SequentialPattern(HarmoniServiceManager):
             r.sleep()
         return
 
+    def request(self, data):
+        """Send goal request to appropriate child
+    
+        Returns:
+            list: names of all the services
+        """
+        rospy.loginfo("Start the %s request" % self.name)
+        rospy.loginfo(data)
+        # if isinstance(data, str):
+            # data = ast.literal_eval(data)
+            # data = json.loads(data)
+        self.state = State.REQUEST
+        r = rospy.Rate(10)
+
+        # Resetting the index so that the script can run again
+        self.script_set_index = 0
+        # rospy.loginfo(self.script_set_index)
+
+        while self.script_set_index < len(self.script) and not rospy.is_shutdown():
+            if self.script[self.script_set_index]["set"] == "setup":
+                self.setup_services(self.script[self.script_set_index]["steps"])
+
+            elif self.script[self.script_set_index]["set"] == "sequence":
+                #self.count = -1
+                data = self.do_steps(self.script[self.script_set_index]["steps"], data=data)
+
+            elif self.script[self.script_set_index]["set"] == "loop":
+                #self.count = -1
+                data = self.do_steps(
+                    self.script[self.script_set_index]["steps"], looping=True, data=data
+                )
+            # elif self.end_pattern:
+            ##TODO
+            #    break
+            self.script_set_index += 1
+            r.sleep()
+        rospy.loginfo("_________SEQUENCE PATTERN END__________")
+        prepared = [dict(zip(cl, self.client_results[cl])) for cl in self.client_results]
+
+
+        # rospy.loginfo("____SHOW_ALL_THE_SEQUENCE_PATTERN_MESSAGES___")
+        # for cl in self.client_results:
+        #     rospy.loginfo("_________________")
+        #     rospy.loginfo(cl)
+        #     rospy.loginfo(self.client_results[cl])
+        # rospy.loginfo("_____________________________________________")            
+        
+        # if data is not None and len(data) < 500:
+            # rospy.loginfo("Data received from bot_default -> "+ data)   
+
+        j = json.dumps(prepared)
+        result_msg = str(j)
+        self.state = State.SUCCESS
+        return result_msg
+        
     def stop(self):
         """Stop the Pattern Player """
         try:
@@ -229,7 +288,7 @@ class SequentialPattern(HarmoniServiceManager):
 
         return
 
-    def do_steps(self, sequence, looping=False):
+    def do_steps(self, sequence, looping=False, data=None):
         """Directs the services to do each of the steps scripted in the sequence
 
         Args:
@@ -237,19 +296,29 @@ class SequentialPattern(HarmoniServiceManager):
             looping (bool, optional): If true will loop the sequence indefinitely. Defaults to False.
         """
 
-        passthrough_result = None
         for cnt, step in enumerate(sequence, start=1):
             if rospy.is_shutdown():
                 return
             rospy.loginfo(f"------------- Starting sequence step: {cnt}-------------")
 
-            if passthrough_result:
-                rospy.loginfo(f"with prior result length ({len(passthrough_result)})")
+            if data:
+                rospy.loginfo(f"with prior result length ({len(data)})")
 
             else:
                 rospy.loginfo("no prior result")
 
-            passthrough_result = self.handle_step(step, passthrough_result)
+            data_to_save = ""
+
+            data = self.handle_step(step, data)
+            
+            # Save data and return it, if it comes from a bot or from hass
+            # TODO save for all data from services (maybe if it has a flag)
+            if next(iter(step)) == "bot_default" or next(iter(step)) == "hass_default":
+                data_to_save = data
+                # rospy.loginfo("Data from bot_default "+ data)
+                self.client_results[next(iter(step))].append(
+                    {"time": time(), "data": data}
+                )   
 
             rospy.loginfo(f"************* End of sequence step: {cnt} *************")
 
@@ -258,7 +327,8 @@ class SequentialPattern(HarmoniServiceManager):
             if not rospy.is_shutdown():
                 self.do_steps(sequence, looping=True)
 
-        return
+        ## This function now returns data
+        return data_to_save
 
     def handle_step(self, step, optional_data=None):
         """Handle cases for different types of steps
