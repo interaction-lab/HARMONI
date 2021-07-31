@@ -198,9 +198,8 @@ class MouthService(HarmoniServiceManager):
         """ Initialization of variables and face parameters """
         rospy.loginfo("MouthService initializing")
         self.name = name
-        self.min_duration_viseme = param["min_duration_viseme"]
-        self.speed_viseme = param["speed_viseme"]
-        self.timer_interval = param["timer_interval"]
+        for key in param:
+            setattr(self, key, param[key])
         self.service_id = hf.get_child_id(self.name)
         self.setup_face()
         self.face_pub = rospy.Publisher(
