@@ -43,9 +43,8 @@ class DlibFaceDetector(HarmoniServiceManager):
 
     def __init__(self, name, params, detector_threshold=0):
         super().__init__(name)
-        self._upsampling = params["up_sampling"]
-        self._rate = params["rate_frame"]
-        self.subscriber_id = params["subscriber_id"]
+        for key in params:
+            setattr(self, key, params[key])
         self.state = State.INIT
         self.detector_threshold = detector_threshold
         self.service_id = name
@@ -73,7 +72,7 @@ class DlibFaceDetector(HarmoniServiceManager):
                 Note that this rate should be limited by subscribed camera framerate.
                 TODO: actually use this rate. Rate currently matches camera publish rate regardless of this setting
         """
-        self._rate = rate
+        self.rate_frame = rate
         self._image_sub = rospy.Subscriber(
             self._image_source, Image, self.detect_callback
         )
@@ -108,7 +107,7 @@ class DlibFaceDetector(HarmoniServiceManager):
             h, w, _ = frame.shape
             faces = []
             dets, probs, idx = self._hogFaceDetector.run(
-                frame, self._upsampling, self.detector_threshold
+                frame, self.up_sampling, self.detector_threshold
             )
             for i, d in enumerate(dets):
                 rospy.logdebug(f"Detections: {d}")

@@ -38,10 +38,9 @@ class QTSimulatorJoint(HarmoniServiceManager):
         self.gesture = []
         """ Setup Params """
         self.name = name
+        for key in param:
+            setattr(self, key, param[key])
         self.rate = rospy.Rate(param["rate"])
-        self.path = param["path"]
-        self.time_interval = param["time_interval"]
-        self.gesture_topic = param["robot_gesture_topic"]
         self.service_id = hf.get_child_id(self.name)
         """ Setup the gesture """
         """self.joint_pub = rospy.Publisher(
@@ -56,7 +55,7 @@ class QTSimulatorJoint(HarmoniServiceManager):
             queue_size=1,
         )
         self.command_sub = rospy.Subscriber(
-            self.gesture_topic, String, self.command_cb, queue_size=1
+            self.robot_gesture_topic, String, self.command_cb, queue_size=1
         )
         self.joint_pub = rospy.Publisher(
             "simulated_joints",

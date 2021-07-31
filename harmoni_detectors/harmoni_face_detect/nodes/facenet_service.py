@@ -42,9 +42,8 @@ class FacenetFaceDetector(HarmoniServiceManager):
 
     def __init__(self, name, param, detector_threshold=0):
         super().__init__(name)
-        self._upsampling = param["up_sampling"]
-        self._rate = param["rate_frame"]
-        self.subscriber_id = param["subscriber_id"]
+        for key in param:
+            setattr(self, key, param[key])
         self.detector_threshold = detector_threshold
         self.service_id = name
         self._image_source = SensorNameSpace.camera.value + self.subscriber_id
@@ -73,7 +72,7 @@ class FacenetFaceDetector(HarmoniServiceManager):
                 Note that this rate should be limited by subscribed camera framerate.
                 TODO: actually use this rate. Rate currently matches camera publish rate regardless of this setting
         """
-        self._rate = rate
+        self.rate_frame = rate
         self._image_sub = rospy.Subscriber(
             self._image_source, Image, self.detect_callback
         )

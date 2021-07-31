@@ -27,11 +27,8 @@ class SpeechToTextService(HarmoniServiceManager):
     def __init__(self, name, param):
         """ Initialization of variables and google parameters """
         super().__init__(name)
-        self.sample_rate = param["sample_rate"]
-        self.language = param["language_id"]
-        self.audio_channel = param["audio_channel"]
-        self.credential_path = param["credential_path"]
-        self.subscriber_id = param["subscriber_id"]
+        for key in param:
+            setattr(self, key, param[key])
 
         self.service_id = hf.get_child_id(self.name)
 
@@ -87,13 +84,13 @@ class SpeechToTextService(HarmoniServiceManager):
         self.config = speech.RecognitionConfig(
             encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
             sample_rate_hertz=self.sample_rate,
-            language_code=self.language,
+            language_code=self.language_id,
             audio_channel_count=self.audio_channel,
         )
         config = speech.RecognitionConfig(
             encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
             sample_rate_hertz=self.sample_rate,
-            language_code=self.language,
+            language_code=self.language_id,
         )
         self.streaming_config = speech.StreamingRecognitionConfig(
             config=config, interim_results=True

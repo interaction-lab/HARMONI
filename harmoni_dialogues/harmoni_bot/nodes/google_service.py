@@ -26,10 +26,8 @@ class GoogleService(HarmoniServiceManager):
         super().__init__(name)
         rospy.loginfo("Google initializing")
         self.name = name
-        self.project_id = param["project_id"]
-        self.language = param["language"]
-        self.session_id = param["session_id"]
-        self.credential_path = param["credential_path"]
+        for key in param:
+            setattr(self, key, param[key])
         self.setup_google()
         self.state = State.INIT
         return

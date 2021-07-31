@@ -31,11 +31,8 @@ class AWSTtsService(HarmoniServiceManager):
         """Constructor method: Initialization of variables and polly parameters + setting up"""
         super().__init__(name)
         """ Initialization of variables and tts parameters """
-        self.region_name = param["region_name"]
-        self.voice = param["voice"]
-        self.language = param["language"]
-        self.outdir = param["outdir"]
-        self.wav_header_length = param["wav_header_length"]
+        for key in param:
+            setattr(self, key, param[key])
         """ Setup the tts request """
         self._setup_aws_tts()
         """Setup the tts service as server """

@@ -39,10 +39,8 @@ class CameraService(HarmoniServiceManager):
 
         """ Initialization of variables and camera parameters """
         super().__init__(name)
-        self.input_device_index = param["input_device_index"]
-        self.show = param["show"]
-        self.video_format = param["video_format"]
-        self.file_path = param["test_outdir"]
+        for key in param:
+            setattr(self, key, param[key])
 
         self.service_id = hf.get_child_id(self.name)
 
@@ -125,7 +123,7 @@ class CameraService(HarmoniServiceManager):
             image = self.cv_bridge.cv2_to_imgmsg(frame, self.video_format)
             self._video_pub.publish(image)
             if self.show:
-                cv2.imwrite(self.file_path, frame)
+                cv2.imwrite(self.test_outdir, frame)
                 # TODO: Allow showing images in docker
                 # cv2.imshow("PcCameraVideo", frame)
                 # if cv2.waitKey(1) and (0xFF == ord("x")) and self.show:

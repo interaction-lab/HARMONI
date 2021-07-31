@@ -29,10 +29,8 @@ class AWSLexService(HarmoniServiceManager):
         """Constructor method: Initialization of variables and lex parameters + setting up"""
         super().__init__(name)
         """ Initialization of variables and lex parameters """
-        self.user_id = param["user_id"]
-        self.bot_name = param["bot_name"]
-        self.bot_alias = param["bot_alias"]
-        self.region_name = param["region_name"]
+        for key in param:
+            setattr(self, key, param[key])
         self.setup_aws_lex()
         self.state = State.INIT
         return

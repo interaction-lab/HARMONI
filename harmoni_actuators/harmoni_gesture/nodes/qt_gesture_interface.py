@@ -35,13 +35,11 @@ class GestureInterface(HarmoniServiceManager):
         self.read_gesture_done = False
         """ Setup Params """
         self.name = name
-        self.path = param["path"]
-        self.joint_sub_topic = param["robot_joint_topic"]
-        self.joint_pub_topic = param["robot_joint_radians_topic"]
-        self.gesture_topic = param["robot_gesture_topic"]
+        for key in param:
+            setattr(self, key, param[key])
         self.service_id = hf.get_child_id(self.name)
         """ Setup the gesture """
-        self.gesture_service = rospy.Publisher(self.gesture_topic, String, queue_size=1)
+        self.gesture_service = rospy.Publisher(self.robot_gesture_topic, String, queue_size=1)
         self.gesture_sub = rospy.Subscriber(
             ActuatorNameSpace.gesture.value + self.service_id,
             String,
@@ -59,9 +57,9 @@ class GestureInterface(HarmoniServiceManager):
             queue_size=1,
         )
         self.joint_sub = rospy.Subscriber(
-            self.joint_sub_topic, JointState, self._handle_degree
+            self.robot_joint_topic, JointState, self._handle_degree
         )
-        self.joint_pub = rospy.Publisher(self.joint_pub_topic, JointState, queue_size=1)
+        self.joint_pub = rospy.Publisher(self.robot_joint_radians_topic, JointState, queue_size=1)
         """Setup the gesture service as server """
         self.read_gestures(param["path"])
         self.state = State.INIT

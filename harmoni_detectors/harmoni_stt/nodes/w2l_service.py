@@ -30,9 +30,8 @@ class SpeechToTextService(HarmoniServiceManager):
     def __init__(self, name, param):
         """ Initialization of variables and w2l parameters """
         super().__init__(name)
-        self.subscriber_id = param["subscriber_id"]
-        self.model_path = param["model_path"]
-        self.w2l_bin = param["w2l_bin"]
+        for key in param:
+            setattr(self, key, param[key])
 
         if not os.path.isdir(self.model_path):
             raise Exception(

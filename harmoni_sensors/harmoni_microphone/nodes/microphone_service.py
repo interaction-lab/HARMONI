@@ -33,12 +33,8 @@ class MicrophoneService(HarmoniServiceManager):
 
         """ Initialization of variables and microphone parameters """
         super().__init__(name)
-        self.audio_format_width = param["audio_format_width"]
-        self.chunk_size = param["chunk_size"]
-        self.total_channels = param["total_channels"]
-        self.audio_rate = param["audio_rate"]
-        self.device_name = param["device_name"]
-        self.file_path = param["test_outdir"]
+        for key in param:
+            setattr(self, key, param[key])
 
         self.first_audio_frame = True  # When recording, the first frame is special
 
@@ -170,7 +166,7 @@ class MicrophoneService(HarmoniServiceManager):
         The callback in the subscriber will save the audio to a file
         specified in the configuration yaml.
         """
-        rospy.loginfo(f"Start recording to {self.file_path}")
+        rospy.loginfo(f"Start recording to {self.test_outdir}")
 
         self.mic_sub = rospy.Subscriber(
             self.microphone_topic,
@@ -184,7 +180,7 @@ class MicrophoneService(HarmoniServiceManager):
         """Callback function to write data"""
         data = np.fromstring(data.data, np.uint8)
         if self.first_audio_frame:
-            self.wf = wave.open(self.file_path, "wb")
+            self.wf = wave.open(self.test_outdir, "wb")
             self.wf.setnchannels(self.total_channels)
             self.wf.setsampwidth(self.p.get_sample_size(self.audio_format))
             self.wf.setframerate(self.audio_rate)
