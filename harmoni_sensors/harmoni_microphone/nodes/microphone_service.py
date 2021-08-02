@@ -35,7 +35,7 @@ class MicrophoneService(HarmoniServiceManager):
         super().__init__(name)
         for key in param:
             setattr(self, key, param[key])
-
+        rospy.loginfo("Setting ros params as class attributes")
         self.first_audio_frame = True  # When recording, the first frame is special
 
         self.service_id = hf.get_child_id(self.name)

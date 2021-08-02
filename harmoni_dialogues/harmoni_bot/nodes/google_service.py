@@ -28,6 +28,7 @@ class GoogleService(HarmoniServiceManager):
         self.name = name
         for key in param:
             setattr(self, key, param[key])
+        rospy.loginfo("Setting ros params as class attributes")
         self.setup_google()
         self.state = State.INIT
         return

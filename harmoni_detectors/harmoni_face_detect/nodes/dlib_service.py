@@ -45,6 +45,7 @@ class DlibFaceDetector(HarmoniServiceManager):
         super().__init__(name)
         for key in params:
             setattr(self, key, params[key])
+        rospy.loginfo("Setting ros params as class attributes")
         self.state = State.INIT
         self.detector_threshold = detector_threshold
         self.service_id = name

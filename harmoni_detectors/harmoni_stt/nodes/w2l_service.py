@@ -32,7 +32,7 @@ class SpeechToTextService(HarmoniServiceManager):
         super().__init__(name)
         for key in param:
             setattr(self, key, param[key])
-
+        rospy.loginfo("Setting ros params as class attributes")
         if not os.path.isdir(self.model_path):
             raise Exception(
                 "W2L model has not been dowloaded", "Try running get_w2l_models.sh"

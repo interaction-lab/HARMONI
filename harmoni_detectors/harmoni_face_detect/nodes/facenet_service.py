@@ -44,6 +44,7 @@ class FacenetFaceDetector(HarmoniServiceManager):
         super().__init__(name)
         for key in param:
             setattr(self, key, param[key])
+        rospy.loginfo("Setting ros params as class attributes")
         self.detector_threshold = detector_threshold
         self.service_id = name
         self._image_source = SensorNameSpace.camera.value + self.subscriber_id

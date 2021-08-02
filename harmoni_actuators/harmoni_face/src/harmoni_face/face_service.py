@@ -200,6 +200,7 @@ class MouthService(HarmoniServiceManager):
         self.name = name
         for key in param:
             setattr(self, key, param[key])
+        rospy.loginfo("Setting ros params as class attributes")
         self.service_id = hf.get_child_id(self.name)
         self.setup_face()
         self.face_pub = rospy.Publisher(

@@ -31,6 +31,7 @@ class AWSLexService(HarmoniServiceManager):
         """ Initialization of variables and lex parameters """
         for key in param:
             setattr(self, key, param[key])
+        rospy.loginfo("Setting ros params as class attributes")
         self.setup_aws_lex()
         self.state = State.INIT
         return

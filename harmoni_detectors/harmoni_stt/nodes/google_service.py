@@ -29,7 +29,7 @@ class SpeechToTextService(HarmoniServiceManager):
         super().__init__(name)
         for key in param:
             setattr(self, key, param[key])
-
+        rospy.loginfo("Setting ros params as class attributes")
         self.service_id = hf.get_child_id(self.name)
 
         """ Setup the google request """

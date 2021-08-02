@@ -33,6 +33,7 @@ class AWSTtsService(HarmoniServiceManager):
         """ Initialization of variables and tts parameters """
         for key in param:
             setattr(self, key, param[key])
+        rospy.loginfo("Setting ros params as class attributes")
         """ Setup the tts request """
         self._setup_aws_tts()
         """Setup the tts service as server """
