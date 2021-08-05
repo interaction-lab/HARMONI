@@ -12,6 +12,8 @@ In the future, an easier workaround might be to just install under ROS Noetic or
 
 ## Parameters
 ## Testing
+The face detector can be tested by running `rostest harmoni_face_detect face_detect.test` in the harmoni_face_detector container.
+
 ## References
 [Documentation](https://harmoni.readthedocs.io/en/latest/packages/harmoni_face_detect.html)
 

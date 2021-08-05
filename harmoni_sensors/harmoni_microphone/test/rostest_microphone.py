@@ -14,6 +14,8 @@ from harmoni_common_lib.constants import SensorNameSpace, ActionType
 from collections import deque
 import os, io
 import ast
+import numpy as np
+import wave
 
 
 class TestMicrophone(unittest.TestCase):
@@ -96,8 +98,27 @@ class TestMicrophone(unittest.TestCase):
         # TODO use microphone service recording functionality
         # either through an import ant test or may add optional data
         # which specifies recording
-        pass
+        rospy.loginfo(f"Start recording to {self.file_path}")
 
+        self.mic_sub = rospy.Subscriber(
+            self.microphone_topic,
+            AudioData,
+            self._record_audio_data_callback,
+            queue_size=1,
+        )
+
+    def _record_audio_data_callback(self, data):
+        data = np.fromstring(data.data, np.uint8)
+        if self.first_audio_frame:
+            self.wf = wave.open(self.file_path, "wb")
+            self.wf.setnchannels(self.total_channels)
+            self.wf.setsampwidth(self.p.get_sample_size(self.audio_format))
+            self.wf.setframerate(self.audio_rate)
+            self.wf.setnframes(self.chunk_size)
+            self.wf.writeframes(b"".join(data))
+            self.first_audio_frame = False
+        else:
+            self.wf.writeframes(b"".join(data))
 
 def main():
     import rostest
