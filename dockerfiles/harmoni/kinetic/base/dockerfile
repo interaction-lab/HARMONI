@@ -89,6 +89,8 @@ RUN \
     google-cloud-speech==1.3.2 \
     dialogflow \
     google-api-python-client \
+    # Rasa
+    rasa==2.7.1 \
     # Local STT
     deepspeech \
     # Testing
