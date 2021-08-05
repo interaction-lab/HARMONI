@@ -31,6 +31,7 @@ int32 IDLE_ON=2
 # if retarget_gaze is false, ignore gaze_target
 bool retarget_gaze
 geometry_msgs/Point gaze_target
+## Gaze target range (never zero!): x: {-7,+7}, y:{-5, +5}, z:{-10, +10}
 
 # velocity to move gaze, in rad/s
 float64 gaze_vel
