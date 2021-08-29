@@ -54,6 +54,7 @@ class MicrophoneService(HarmoniServiceManager):
 
         """ Init the publishers """
         self.microphone_topic = SensorNameSpace.microphone.value + self.service_id
+        print("Topic microfono eccoloooooo: ----> "+self.microphone_topic)
         self.raw_mic_pub = rospy.Publisher(
             self.microphone_topic, AudioData, queue_size=1
         )

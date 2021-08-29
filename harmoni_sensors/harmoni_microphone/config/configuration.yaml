@@ -5,5 +5,5 @@ microphone:
     chunk_size: 1024
     total_channels: 1
     audio_rate: 16000
-    device_name: "Jabra SPEAK 510 USB: Audio (hw:2,0)"
+    device_name: Jabra SPEAK 510 USB
     test_outdir: "$(find harmoni_microphone)/temp_data/test_example.wav"

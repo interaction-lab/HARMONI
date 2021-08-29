@@ -104,15 +104,16 @@ class STTGoogleService(HarmoniServiceManager):
         self.streaming_config = types.StreamingRecognitionConfig(
             config=self.config, interim_results=True
         )
+        
         rospy.loginfo("SETUP FINISHED")
         return
 
     def callback(self, data):
         """ Callback function subscribing to the microphone topic"""
         if self.state == State.START:
-            rospy.loginfo("Add data to buffer")
+            #rospy.loginfo("Add data to buffer")
             self._buff.put(data.data)
-            rospy.loginfo("Items in buffer: "+ str(self._buff.qsize()))
+            #rospy.loginfo("Items in buffer: "+ str(self._buff.get()))
 
         # else:
             # rospy.loginfo("Not Transcribing data")
@@ -182,17 +183,12 @@ class STTGoogleService(HarmoniServiceManager):
             self.result_msg = ""
         return
 
-
-
     def stt_callback(self, data):
         """ Callback function subscribing to the microphone topic"""
         self.response_received = True
 
-
     #TODO 
     def request(self, data):
-
-
         rospy.loginfo("Start the %s request" % self.name)
         self.state = State.REQUEST
         self.response_received = False
@@ -238,12 +234,14 @@ class STTGoogleService(HarmoniServiceManager):
 
     def generator(self):
         """ Generator of data for Google STT """
+        print("generator start")
         # From https://cloud.google.com/speech-to-text/docs/streaming-recognize
         while not self.closed:
             # Use a blocking get() to ensure there's at least one chunk of
             # data, and stop iteration if the chunk is None, indicating the
             # end of the audio stream.
             chunk = self._buff.get()
+            print("chunk: "+chunk)
             if chunk is None:
                 return
             data = [chunk]
@@ -265,14 +263,16 @@ class STTGoogleService(HarmoniServiceManager):
         rospy.loginfo("Start the %s service" % self.name)
         if self.state == State.INIT:
             self.state = State.START
-            
+            rospy.loginfo("BEFORE REQUEST")
             # Transcribes data coming from microphone 
             audio_generator = self.generator()
             requests = (
-                speech.StreamingRecognizeRequest(audio_content=content)
+                types.StreamingRecognizeRequest(audio_content=content)
                 for content in audio_generator
             )
+            rospy.loginfo("AFTER REQUEST")
             responses = self.client.streaming_recognize(self.streaming_config, requests)
+
             rospy.loginfo("AFTER RESPONSE")
             self.listen_print_loop(responses)
             print(responses)
