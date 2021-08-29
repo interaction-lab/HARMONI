@@ -11,7 +11,7 @@ catkin_pkg
 catkin_tools
 boto3
 awscli
-google-cloud-speech==1.3.2
+google-cloud-speech
 dialogflow
 google-api-python-client
 pandas

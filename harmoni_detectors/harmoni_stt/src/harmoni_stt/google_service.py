@@ -11,8 +11,8 @@ from harmoni_common_lib.service_manager import HarmoniServiceManager
 import harmoni_common_lib.helper_functions as hf
 
 from google.cloud import speech
-from google.cloud.speech import enums
-from google.cloud.speech import types
+#from google.cloud.speech import enums
+#from google.cloud.speech import types
 
 # Specific Imports
 from harmoni_common_lib.constants import State, DetectorNameSpace, SensorNameSpace
@@ -84,7 +84,7 @@ class STTGoogleService(HarmoniServiceManager):
     def setup_google(self):
         os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = self.credential_path
         self.client = speech.SpeechClient()
-        """
+        
         self.config = speech.RecognitionConfig(
             encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
             sample_rate_hertz=self.sample_rate,
@@ -104,7 +104,7 @@ class STTGoogleService(HarmoniServiceManager):
         self.streaming_config = types.StreamingRecognitionConfig(
             config=self.config, interim_results=True
         )
-        
+        """
         rospy.loginfo("SETUP FINISHED")
         return
 
@@ -198,7 +198,6 @@ class STTGoogleService(HarmoniServiceManager):
 
             audio_generator = self.generator()
 
-            """
             requests = (
                 speech.StreamingRecognizeRequest(audio_content=content)
                 for content in audio_generator
@@ -208,7 +207,7 @@ class STTGoogleService(HarmoniServiceManager):
                 types.StreamingRecognizeRequest(audio_content=content)
                 for content in audio_generator
             )
-
+            """
             responses = self.client.streaming_recognize(self.streaming_config, requests)
 
             self.listen_print_loop(responses)
@@ -234,14 +233,12 @@ class STTGoogleService(HarmoniServiceManager):
 
     def generator(self):
         """ Generator of data for Google STT """
-        print("generator start")
         # From https://cloud.google.com/speech-to-text/docs/streaming-recognize
         while not self.closed:
             # Use a blocking get() to ensure there's at least one chunk of
             # data, and stop iteration if the chunk is None, indicating the
             # end of the audio stream.
             chunk = self._buff.get()
-            print("chunk: "+chunk)
             if chunk is None:
                 return
             data = [chunk]
@@ -267,7 +264,7 @@ class STTGoogleService(HarmoniServiceManager):
             # Transcribes data coming from microphone 
             audio_generator = self.generator()
             requests = (
-                types.StreamingRecognizeRequest(audio_content=content)
+                speech.StreamingRecognizeRequest(audio_content=content)
                 for content in audio_generator
             )
             rospy.loginfo("AFTER REQUEST")
