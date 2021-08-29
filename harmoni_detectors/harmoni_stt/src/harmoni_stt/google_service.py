@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 # Common Imports
-from numpy.lib.function_base import _quantile_is_valid
 import rospy
 import roslib
 
@@ -10,17 +9,12 @@ from harmoni_common_lib.service_server import HarmoniServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 import harmoni_common_lib.helper_functions as hf
 
-from google.cloud import speech
-#from google.cloud.speech import enums
-#from google.cloud.speech import types
-
 # Specific Imports
 from harmoni_common_lib.constants import State, DetectorNameSpace, SensorNameSpace
 from audio_common_msgs.msg import AudioData
 from google.cloud import speech
 from std_msgs.msg import String
 import numpy as np
-import time
 import os
 import io
 from six.moves import queue
@@ -84,7 +78,6 @@ class STTGoogleService(HarmoniServiceManager):
     def setup_google(self):
         os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = self.credential_path
         self.client = speech.SpeechClient()
-        
         self.config = speech.RecognitionConfig(
             encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
             sample_rate_hertz=self.sample_rate,
@@ -94,26 +87,16 @@ class STTGoogleService(HarmoniServiceManager):
         self.streaming_config = speech.StreamingRecognitionConfig(
             config=self.config, interim_results=True
         )
-        """
-        self.config = types.RecognitionConfig(
-            encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
-            sample_rate_hertz=self.sample_rate,
-            language_code=self.language,
-            max_alternatives=1,
-        )
-        self.streaming_config = types.StreamingRecognitionConfig(
-            config=self.config, interim_results=True
-        )
-        """
         rospy.loginfo("SETUP FINISHED")
         return
 
     def callback(self, data):
         """ Callback function subscribing to the microphone topic"""
+
         if self.state == State.START:
-            #rospy.loginfo("Add data to buffer")
+            # rospy.loginfo("Add data to buffer")
             self._buff.put(data.data)
-            #rospy.loginfo("Items in buffer: "+ str(self._buff.get()))
+            # rospy.loginfo("Items in buffer: "+ str(self._buff.qsize()))
 
         # else:
             # rospy.loginfo("Not Transcribing data")
@@ -121,6 +104,7 @@ class STTGoogleService(HarmoniServiceManager):
     def listen_print_loop(self,responses):
         """ Prints responses coming from Google STT """ 
         self.stt_response = ""
+
         for response in responses:
             if not response.results:
                 continue
@@ -183,33 +167,29 @@ class STTGoogleService(HarmoniServiceManager):
             self.result_msg = ""
         return
 
+
+
     def stt_callback(self, data):
         """ Callback function subscribing to the microphone topic"""
         self.response_received = True
 
-    #TODO 
+
+#TODO 
     def request(self, data):
+
         rospy.loginfo("Start the %s request" % self.name)
         self.state = State.REQUEST
         self.response_received = False
-        
+
         try:
+
             # Transcribes data coming from microphone 
-
             audio_generator = self.generator()
-
             requests = (
                 speech.StreamingRecognizeRequest(audio_content=content)
                 for content in audio_generator
             )
-            """
-            requests = (
-                types.StreamingRecognizeRequest(audio_content=content)
-                for content in audio_generator
-            )
-            """
             responses = self.client.streaming_recognize(self.streaming_config, requests)
-
             self.listen_print_loop(responses)
         
             r = rospy.Rate(1)
@@ -224,6 +204,7 @@ class STTGoogleService(HarmoniServiceManager):
             rospy.loginfo("Service call failed")
             self.response_received = True
             self.result_msg = ""
+
         return {"response": self.state, "message": self.result_msg}
 
     def wav_to_data(self, path):
@@ -252,34 +233,31 @@ class STTGoogleService(HarmoniServiceManager):
                     data.append(chunk)
                 except queue.Empty:
                     break
+
             yield b"".join(data)
 
 
     def start(self, rate=""):
-        #try:
-        rospy.loginfo("Start the %s service" % self.name)
-        if self.state == State.INIT:
-            self.state = State.START
-            rospy.loginfo("BEFORE REQUEST")
-            # Transcribes data coming from microphone 
-            audio_generator = self.generator()
-            requests = (
-                speech.StreamingRecognizeRequest(audio_content=content)
-                for content in audio_generator
-            )
-            rospy.loginfo("AFTER REQUEST")
-            responses = self.client.streaming_recognize(self.streaming_config, requests)
+        try:
+            rospy.loginfo("Start the %s service" % self.name)
+            if self.state == State.INIT:
+                self.state = State.START
+                
+                # Transcribes data coming from microphone 
+                audio_generator = self.generator()
+                requests = (
+                    speech.StreamingRecognizeRequest(audio_content=content)
+                    for content in audio_generator
+                )
+                responses = self.client.streaming_recognize(self.streaming_config, requests)
+                self.listen_print_loop(responses)
 
-            rospy.loginfo("AFTER RESPONSE")
-            self.listen_print_loop(responses)
-            print(responses)
-            self.state=State.SUCCESS
 
-        else:
-            self.state = State.START
+            else:
+                self.state = State.START
 
-        #except Exception:
-        #    rospy.loginfo("Killed the %s service" % self.name)
+        except Exception:
+            rospy.loginfo("Killed the %s service" % self.name)
         return
 
     def stop(self):
@@ -299,8 +277,6 @@ class STTGoogleService(HarmoniServiceManager):
         rospy.loginfo("Pause the %s service" % self.name)
         self.state = State.SUCCESS
         return
-
-
 
 def main():
     """Set names, collect params, and give service to server"""
@@ -326,7 +302,6 @@ def main():
         
     except rospy.ROSInterruptException:
         pass
-
 
 if __name__ == "__main__":
     main()
