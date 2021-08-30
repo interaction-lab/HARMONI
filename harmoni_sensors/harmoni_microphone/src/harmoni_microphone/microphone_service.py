@@ -188,7 +188,6 @@ class MicrophoneService(HarmoniServiceManager):
     def _record_audio_data_callback(self, data):
         """Callback function to write data"""
         data = np.fromstring(data.data, np.uint8)
-        rospy.loginfo("__________________________"+str(self.first_audio_frame))
         if self.first_audio_frame:
             rospy.loginfo("Start recording")
             self.wf = wave.open(self.file_path, "wb")
