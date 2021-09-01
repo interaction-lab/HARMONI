@@ -2,6 +2,7 @@
 
 
 PKG = "test_lex"
+
 # Common Imports
 import unittest, rospy, roslib, sys
 
@@ -18,7 +19,7 @@ import ast
 import time
 #py_tree
 import py_trees
-from harmoni_bot.aws_lex_service_pytree import AWSLexServicePytree
+from harmoni_pytree.aws_lex_service_pytree import AWSLexServicePytree
 
 class TestLexPyTree(unittest.TestCase):
 
@@ -71,7 +72,6 @@ def main():
     rospy.loginfo("test_lex started")
     rospy.loginfo("TestLex: sys.argv: %s" % str(sys.argv))
     rostest.rosrun(PKG, "test_lex_pytree", TestLexPyTree, sys.argv)
-
 
 if __name__ == "__main__":
     main()

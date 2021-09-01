@@ -18,7 +18,7 @@ import ast
 import time
 #py_tree
 import py_trees
-from harmoni_tts.aws_tts_service_pytree import AWSTtsServicePytree
+from harmoni_pytree.aws_tts_service_pytree import AWSTtsServicePytree
 
 
 class TestPollyPyTree(unittest.TestCase):

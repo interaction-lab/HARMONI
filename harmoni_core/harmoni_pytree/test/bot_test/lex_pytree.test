@@ -5,5 +5,5 @@
     <param name="name_bot" value="lex"/>
     <node pkg="harmoni_bot" type="aws_lex_service.py" name="harmoni_bot_lex_default" output="screen"/>
     <param name="test_bot_input" value="Voglio comprare dei fiori"/>
-    <test test-name="test_lex" pkg="harmoni_bot" type="rostest_lex_pytree.py" />
+    <test test-name="test_lex" pkg="harmoni_pytree" type="rostest_lex_pytree.py" />
 </launch>
