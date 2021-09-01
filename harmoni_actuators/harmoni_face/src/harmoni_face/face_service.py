@@ -12,7 +12,7 @@ import harmoni_common_lib.helper_functions as hf
 # Specific Imports
 from harmoni_common_lib.constants import ActuatorNameSpace
 from harmoni_face.msg import FaceRequest
-from harmoni_face.face_client import Face
+#from harmoni_face.face_client import Face
 from std_msgs.msg import String, Bool
 from geometry_msgs.msg import Point
 from threading import Timer
