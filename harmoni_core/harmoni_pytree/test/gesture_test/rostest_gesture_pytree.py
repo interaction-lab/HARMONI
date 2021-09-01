@@ -18,7 +18,7 @@ import ast
 import time
 #py_tree
 import py_trees
-from harmoni_gesture.gesture_service_pytree import GestureServicePytree
+from harmoni_pytree.gesture_service_pytree import GestureServicePytree
 
 
 class TestGesturePyTree(unittest.TestCase):

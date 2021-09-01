@@ -10,10 +10,10 @@ from harmoni_common_lib.service_server import HarmoniServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 from harmoni_common_lib.action_client import HarmoniActionClient
 import harmoni_common_lib.helper_functions as hf
-from gesture_service import GestureService
+from harmoni_gesture.gesture_service import GestureService
 # Specific Imports
 from harmoni_common_lib.constants import ActuatorNameSpace, ActionType, State
-from qt_gesture_interface import GestureInterface
+from harmoni_gesture.qt_gesture_interface import GestureInterface
 from botocore.exceptions import BotoCoreError, ClientError
 from contextlib import closing
 from collections import deque 
