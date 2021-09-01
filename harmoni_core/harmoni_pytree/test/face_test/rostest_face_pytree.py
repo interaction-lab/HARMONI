@@ -18,7 +18,7 @@ import ast
 import time
 #py_tree
 import py_trees
-from harmoni_face.face_service_pytree import FaceServicePytree
+from harmoni_pytree.face_service_pytree import FaceServicePytree
 
 
 class TestFacePyTree(unittest.TestCase):

@@ -18,7 +18,7 @@ import ast
 import time
 #py_tree
 import py_trees
-from harmoni_web.web_service_pytree import WebServicePytree
+from harmoni_pytree.web_service_pytree import WebServicePytree
 
 
 class TestWebPyTree(unittest.TestCase):
