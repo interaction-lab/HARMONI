@@ -86,7 +86,7 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
 
         #TODO questo dobbiamo farlo nell'if 
         #rospy init node mi fa diventare un nodo ros
-        #rospy.init_node("stt_default", log_level=rospy.INFO)
+        rospy.init_node("stt_default", log_level=rospy.INFO)
 
         if(not self.mode):
             self.service_client_stt = HarmoniActionClient(self.name)
@@ -103,50 +103,45 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
         
         """ 
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
+
     def update(self):
         """
         
         """
         #Secondo me dovremmo usare transcribe_stream
-
-        if(self.mode):
-            #Dobbiamo prima fare la richiesta
-            if(self.result_data["response"] == State.SUCCESS):
+        if self.service_client_stt.get_state() == GoalStatus.LOST:
+            print("Mandiamo il goal")
+            
+            self.logger.debug(f"Sending goal to {self.google_service}")
+            # Dove posso prendere details["action_goal"]?
+            self.service_client_stt.send_goal(
+                action_goal = ActionType["REQUEST"].value,
+                optional_data="",
+                wait=False,
+            )
+            self.logger.debug(f"Goal sent to {self.google_service}")
+            
+            new_status = py_trees.common.Status.RUNNING
+        else:
+            print("Leggiamo i possibili risultati: "+ str(len(self.client_result)))
+            if len(self.client_result) > 0:
+                #se siamo qui vuol dire che il risultato c'è e quindi 
+                #possiamo terminare la foglia
+                print("Effettivamente abbiamo un risultato: ")
+                self.result_data = self.client_result.popleft()["data"]
+                print(self.result_data)
                 self.blackboard_input_bot.result_message = "SUCCESS"
-                self.blackboard_input_bot.result_data = self.result_data['message']
-                self.result_data = self.result_data['message']
+                self.blackboard_input_bot.result_data = self.result_data
                 new_status = py_trees.common.Status.SUCCESS
             else:
+                #se siamo qui vuol dire che il risultato ancora non c'è
+                self.blackboard_input_bot.result_message = "RUNNING"
+                new_status = py_trees.common.Status.RUNNING
+
+            #incerti di questa riga
+            if(self.google_service.state == State.FAILED):
                 self.blackboard_input_bot.result_message = "FAILURE"
                 new_status = py_trees.common.Status.FAILURE
-        else:
-            if self.service_client_stt.get_state() == GoalStatus.LOST:
-                    self.logger.debug(f"Sending goal to {self.google_service}")
-                    # Dove posso prendere details["action_goal"]?
-                    self.service_client_stt.send_goal(
-                        action_goal = ActionType["ON"].value,
-                        optional_data="",
-                        wait=False,
-                    )
-                    self.logger.debug(f"Goal sent to {self.google_service}")
-                    new_status = py_trees.common.Status.RUNNING
-            else:
-                if len(self.client_result) > 0:
-                    #se siamo qui vuol dire che il risultato c'è e quindi 
-                    #possiamo terminare la foglia
-                    self.result_data = self.client_result.popleft()["data"]
-                    self.blackboard_input_bot.result_message = "SUCCESS"
-                    self.blackboard_input_bot.result_data = self.result_data
-                    new_status = py_trees.common.Status.SUCCESS
-                else:
-                    #se siamo qui vuol dire che il risultato ancora non c'è
-                    self.blackboard_input_bot.result_message = "RUNNING"
-                    new_status = py_trees.common.Status.RUNNING
-
-                #incerti di questa riga
-                if(self.google_service.state == State.FAILED):
-                    self.blackboard_input_bot.result_message = "FAILURE"
-                    new_status = py_trees.common.Status.FAILURE
             
             self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status
@@ -209,7 +204,7 @@ def main():
 
     sttPyTree.setup(**additional_parameters)
     try:
-        for unused_i in range(0, 7):
+        for unused_i in range(0, 30):
             sttPyTree.tick_once()
             time.sleep(0.5)
             print(blackboardProva)

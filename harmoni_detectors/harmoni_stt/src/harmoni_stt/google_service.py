@@ -126,12 +126,35 @@ class STTGoogleService(HarmoniServiceManager):
             for result in response.results:
                 if result.is_final:
                     # rospy.loginfo(result.alternatives[0].transcript)
-                    # self.stt_response += result.alternatives[0].transcript
-                    # self.stt_response += "\n"
                     rospy.loginfo("STT response text: "+ result.alternatives[0].transcript)
-                    self.text_pub.publish(result.alternatives[0].transcript)
+                    self.stt_response = result.alternatives[0].transcript
+                    self.text_pub.publish(self.stt_response)
                     self.response_received = True
+    
+    def listen_print_untill_result_is_final(self,responses):
+        """ Prints responses coming from Google STT """ 
+        self.stt_response = ""
 
+        for response in responses:
+            if not response.results:
+                continue
+
+            rospy.loginfo(f"Response: {response}")
+
+            result = response.results[0]
+            if not result.alternatives:
+                continue
+
+            #transcript = result.alternatives[0].transcript
+            
+            for result in response.results:
+                if result.is_final:
+                    # rospy.loginfo(result.alternatives[0].transcript)
+                    rospy.loginfo("STT response text: "+ result.alternatives[0].transcript)
+                    self.stt_response = result.alternatives[0].transcript
+                    self.text_pub.publish(self.stt_response)
+                    self.response_received = True
+                    return
 
     def transcribe_file_request(self, data):
         """ Transcribes a single audio file """
@@ -167,30 +190,27 @@ class STTGoogleService(HarmoniServiceManager):
             self.result_msg = ""
         return
 
-
-
     def stt_callback(self, data):
         """ Callback function subscribing to the microphone topic"""
         self.response_received = True
 
 
-#TODO 
     def request(self, data):
 
         rospy.loginfo("Start the %s request" % self.name)
-        self.state = State.REQUEST
+        #self.state = State.REQUEST
+        #self.state = State.START
         self.response_received = False
-
         try:
-
             # Transcribes data coming from microphone 
+
             audio_generator = self.generator()
-            requests = (
+            self.requests = (
                 speech.StreamingRecognizeRequest(audio_content=content)
                 for content in audio_generator
             )
-            responses = self.client.streaming_recognize(self.streaming_config, requests)
-            self.listen_print_loop(responses)
+            responses = self.client.streaming_recognize(self.streaming_config, self.requests)
+            self.listen_print_untill_result_is_final(responses)
         
             r = rospy.Rate(1)
             while not self.response_received:
@@ -198,13 +218,16 @@ class STTGoogleService(HarmoniServiceManager):
 
             self.state = State.SUCCESS
             self.result_msg = self.stt_response
+            self.response_received = False
 
         except rospy.ServiceException:
             self.start = State.FAILED
             rospy.loginfo("Service call failed")
             self.response_received = True
             self.result_msg = ""
-
+        print("Le risposte sono: ")
+        print(self.state)
+        print(self.result_msg)
         return {"response": self.state, "message": self.result_msg}
 
     def wav_to_data(self, path):
@@ -244,14 +267,15 @@ class STTGoogleService(HarmoniServiceManager):
                 self.state = State.START
                 
                 # Transcribes data coming from microphone 
+                """
                 audio_generator = self.generator()
-                requests = (
+                self.requests = (
                     speech.StreamingRecognizeRequest(audio_content=content)
                     for content in audio_generator
                 )
-                responses = self.client.streaming_recognize(self.streaming_config, requests)
+                responses = self.client.streaming_recognize(self.streaming_config, self.requests)
                 self.listen_print_loop(responses)
-
+                """
 
             else:
                 self.state = State.START
