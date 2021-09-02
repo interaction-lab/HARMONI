@@ -7,8 +7,8 @@ bot:
     region_name: "eu-west-2"
   default_param:
     user_id: "corradopacelli"
-    bot_name: "ProvaHarmoni"
-    bot_alias: "test_bot"
+    bot_name: "ProvaHarmoniV2"
+    bot_alias: "corryV2"
     region_name: "eu-west-2"
 
 google:

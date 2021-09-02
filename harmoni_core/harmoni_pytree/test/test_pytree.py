@@ -16,7 +16,7 @@ from harmoni_common_lib.constants import (
     ActionType,
     State,
 )
-from harmoni_pattern.pytree_root import PyTreeRoot
+from harmoni_pytree.pytree_root import PyTreeRoot
 from harmoni_common_msgs.msg import harmoniAction, harmoniFeedback, harmoniResult
 from audio_common_msgs.msg import AudioData
 from std_msgs.msg import String

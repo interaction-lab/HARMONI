@@ -4,10 +4,10 @@
 # Imports
 ##############################################################################
 import rospy
-from harmoni_tts.aws_tts_service_pytree import AWSTtsServicePytree
-from harmoni_bot.aws_lex_service_pytree import AWSLexServicePytree
-from harmoni_speaker.speaker_service_pytree import SpeakerServicePytree
-from harmoni_face.face_service_pytree import FaceServicePytree
+from harmoni_pytree.aws_tts_service_pytree import AWSTtsServicePytree
+from harmoni_pytree.aws_lex_service_pytree import AWSLexServicePytree
+from harmoni_pytree.speaker_service_pytree import SpeakerServicePytree
+from harmoni_pytree.face_service_pytree import FaceServicePytree
 from harmoni_common_lib.constants import ActuatorNameSpace, DialogueNameSpace, State
 import argparse
 import py_trees

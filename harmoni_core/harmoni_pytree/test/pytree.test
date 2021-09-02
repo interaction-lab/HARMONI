@@ -6,5 +6,5 @@
     <include file="$(find harmoni_tts)/launch/tts_service.launch"></include>
     <include file="$(find harmoni_bot)/launch/bot_service.launch"></include>
     <include file="$(find harmoni_face)/launch/face_service.launch"></include>
-    <test test-name="test_pytree" pkg="harmoni_pattern" type="test_pytree.py" time-limit="120.00"/>
+    <test test-name="test_pytree" pkg="harmoni_pytree" type="test_pytree.py" time-limit="120.00"/>
 </launch>
