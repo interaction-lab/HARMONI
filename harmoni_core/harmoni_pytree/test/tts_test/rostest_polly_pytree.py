@@ -52,7 +52,7 @@ class TestPollyPyTree(unittest.TestCase):
         print(self.blackboard_output_bot)
 
         additional_parameters = dict([
-            (ActuatorNameSpace.tts.name,True)])   
+            (ActuatorNameSpace.tts.name,False)])   
         rospy.loginfo("--------------------"+str(additional_parameters)) 
         self.ttsPyTree =  AWSTtsServicePytree("ttsPyTreeTest")
         self.ttsPyTree.setup(**additional_parameters)
