@@ -95,7 +95,7 @@ class ImageAIYoloService(HarmoniServiceManager):
             self.video_path = detector.detectObjectsFromVideo(
                 custom_objects=self.custom_objects,
                 camera_input=self.camera,
-                output_file_path=os.path.join(self.temp_path, "camera_detected_video"),
+                output_file_path=os.path.join(self.temp_path, self.output_file_name),
                 frames_per_second=self.frame_per_second, 
                 log_progress=True, 
                 per_second_function=self.forSeconds,

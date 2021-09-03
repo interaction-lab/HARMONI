@@ -1,6 +1,6 @@
 <!-- This is an example launch file for how a ROS application could use a node -->
 <launch>
-   
+
 	<arg name="instance_id" default="default"/>
 	<param name="instance_id" value="$(arg instance_id)"/>
     <rosparam file="$(find harmoni_stt)/config/google_configuration.yaml" subst_value="True"/>
