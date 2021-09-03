@@ -13,6 +13,7 @@ import harmoni_common_lib.helper_functions as hf
 from harmoni_common_lib.constants import State, DetectorNameSpace, SensorNameSpace
 from sensor_msgs.msg import Image
 from imageai.Detection import VideoObjectDetection
+from std_msgs.msg import String
 import numpy as np
 import os
 import io
@@ -190,7 +191,7 @@ def main():
         # imageai/default_param/[all your params]
         params = rospy.get_param(service_name + "/" + instance_id + "_param/")
 
-        s = ImageAIService(service_id, params)
+        s = ImageAIYoloService(service_id, params)
 
         service_server = HarmoniServiceServer(name=service_id, service_manager=s)
 
