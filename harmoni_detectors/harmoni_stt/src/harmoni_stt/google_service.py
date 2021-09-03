@@ -33,6 +33,8 @@ class STTGoogleService(HarmoniServiceManager):
     def __init__(self, name, param):
         super().__init__(name)
         """ Initialization of variables and google parameters """
+        print("PARAAAM")
+        print(param)
         self.sample_rate = param["sample_rate"]
         self.language = param["language_id"]
         self.audio_channel = param["audio_channel"]

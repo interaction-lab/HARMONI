@@ -53,6 +53,7 @@ class DialogueNameSpace(Enum):
 class DetectorNameSpace(Enum):
     stt = "/harmoni/detecting/stt/"
     face_detect = "/harmoni/detecting/face_detect/"
+    imageai = "/harmoni/detecting/imageai/"
 
 
 class Resources(Enum):
