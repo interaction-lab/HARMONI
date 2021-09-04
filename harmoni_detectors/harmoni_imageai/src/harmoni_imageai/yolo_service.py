@@ -11,6 +11,7 @@ import harmoni_common_lib.helper_functions as hf
 
 # Specific Imports
 from harmoni_common_lib.constants import State, DetectorNameSpace, SensorNameSpace
+from cv_bridge import CvBridge
 from sensor_msgs.msg import Image
 from imageai.Detection import VideoObjectDetection
 from std_msgs.msg import String
@@ -35,16 +36,18 @@ class ImageAIYoloService(HarmoniServiceManager):
         self.return_detected_frame = param["return_detected_frame"]
         self.log_progress = param["log_progress"]
     
-        self.model_path = os.getcwd()
-        self.temp_path = os.chdir("/root/harmoni_catkin_ws/src/HARMONI/harmoni_detectors/harmoni_imageai/temp_data")
+        self.model_path = "/root/harmoni_catkin_ws/src/HARMONI/harmoni_detectors/harmoni_imageai/src/"
+        self.temp_path = "/root/harmoni_catkin_ws/src/HARMONI/harmoni_detectors/harmoni_imageai/temp_data/"
         self.service_id = hf.get_child_id(self.name)
         self.result_msg = ""
+
+        self.cv_bridge = CvBridge()
 
         self._buff = queue.Queue()
         self.closed = False
 
         """Setup publishers and subscribers"""
-        rospy.Subscriber(
+        self.channel = rospy.Subscriber(
             SensorNameSpace.camera.value + self.subscriber_id,
             Image,
             self.callback,
@@ -76,9 +79,10 @@ class ImageAIYoloService(HarmoniServiceManager):
 
         if self.state == State.START:
             # rospy.loginfo("Add data to buffer")
-            self._buff.put(data.data)
+            
+            data_tmp = self.cv_bridge.imgmsg_to_cv2(data, desired_encoding='passthrough')
+            self._buff.put(data_tmp)
             # rospy.loginfo("Items in buffer: "+ str(self._buff.qsize()))
-
     
     def imageai_callback(self, data):
         """ Callback function subscribing to the camera topic"""
@@ -93,7 +97,7 @@ class ImageAIYoloService(HarmoniServiceManager):
         #self.state = State.START
         try:
             #detect objects coming from camera stream
-            self.video_path = detector.detectObjectsFromVideo(
+            self.video_path = self.detector.detectObjectsFromVideo(
                 custom_objects=self.custom_objects,
                 camera_input=self.camera,
                 output_file_path=os.path.join(self.temp_path, self.output_file_name),
@@ -119,27 +123,44 @@ class ImageAIYoloService(HarmoniServiceManager):
         return {"response": self.state, "message": self.result_msg}
 
     def start(self, rate=""):
-        try:
-            rospy.loginfo("Start the %s service" % self.name)
-            if self.state == State.INIT:
-                self.state = State.START
-                self.camera = cv2.VideoCapture(self._buff) #TODO link with published camera data
-                #In the following 4 lines, we created a new instance of 
-                #the VideoObjectDetection class in the first line, 
-                #set the model type to YOLOv3 in the second line,
-                #set the model path to the YOLOv3 model file in the third line
-                #and load the model in the fourth line.
-                self.detector = VideoObjectDetection()
-                self.detector.setModelTypeAsYOLOv3()
-                self.detector.setModelPath(os.path.join(self.model_path, "yolo.h5"))
-                self.detector.loadModel()
-                #custom_objects refers to the objects we want to detect
-                self.custom_objects = detector.CustomObjects(person=True) 
-            else:
-                self.state = State.START
+        
+        #try:
+        rospy.loginfo("Start the %s service" % self.name)
+        if self.state == State.INIT:
+            self.state = State.START
+            self.camera = cv2.VideoCapture(0) #TODO link with published camera data
+            #In the following 4 lines, we created a new instance of 
+            #the VideoObjectDetection class in the first line, 
+            #set the model type to YOLOv3 in the second line,
+            #set the model path to the YOLOv3 model file in the third line
+            #and load the model in the fourth line.
+            self.detector = VideoObjectDetection()
+            self.detector.setModelTypeAsYOLOv3()
+            self.detector.setModelPath(os.path.join(self.model_path, "yolo.h5"))
+            self.detector.loadModel()
+            #custom_objects refers to the objects we want to detect
+            self.custom_objects = self.detector.CustomObjects(person=True) 
+            
+            #JUST FOR TRY THE SERVICE COMMENT THE FOLLOWING
+            #START REGION
 
-        except Exception:
-            rospy.loginfo("Killed the %s service" % self.name)
+            self.video_path = self.detector.detectObjectsFromVideo(
+                custom_objects=self.custom_objects,
+                camera_input=self.camera,
+                output_file_path=os.path.join(self.temp_path, self.output_file_name),
+                frames_per_second=self.frame_per_second, 
+                log_progress=True, 
+                per_second_function=self.forSeconds,
+                per_frame_function=self.forFrame,
+                per_minute_function=self.forMinute,
+                minimum_percentage_probability=self.minimum_percentage_probability)
+            #END REGION
+
+        else:
+            self.state = State.START
+
+        #except Exception:
+        #    rospy.loginfo("Killed the %s service" % self.name)
         return
 
     #TODO
@@ -160,6 +181,7 @@ class ImageAIYoloService(HarmoniServiceManager):
         return
 
     def forFrame(self, frame_number, output_array, output_count):
+        rospy.loginfo("FOR FRAME " , frame_number)
         print("FOR FRAME " , frame_number)
         print("Output for each object : ", output_array)
         print("Output count for unique objects : ", output_count)

@@ -150,6 +150,8 @@ def main():
 
         service_server = HarmoniServiceServer(service_id, s)
 
+        s.start()
+
         service_server.start_sending_feedback()
         rospy.spin()
     except rospy.ROSInterruptException:
