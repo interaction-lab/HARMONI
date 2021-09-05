@@ -3,9 +3,9 @@ imageai:
     model_name: #model has to be pretrained with "pretrained_YOLOv3"
     json_name: 
     subscriber_id: "default"
-    frame_per_second:
+    frame_per_second: 30 
     frame_detection_interval: #the object detection will be updated after 5 frames (the number has to be between 5-20) 
-    output_file_name: 
+    output_file_name: "temp_custom_output"
     log_progress: True
-    minimum_percentage_probability: #minimum percentage for recognizing objects
+    minimum_percentage_probability: 50 #minimum percentage for recognizing objects
     return_detected_frame: False #if true, allows you to obtain the detected video frame as a Numpy array
