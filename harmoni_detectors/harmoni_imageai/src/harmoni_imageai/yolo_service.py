@@ -13,7 +13,7 @@ import harmoni_common_lib.helper_functions as hf
 from harmoni_common_lib.constants import State, DetectorNameSpace, SensorNameSpace
 from cv_bridge import CvBridge
 from sensor_msgs.msg import Image
-from imageai.Detection import VideoObjectDetection
+from imageai.Detection import ObjectDetection
 from std_msgs.msg import String
 import numpy as np
 import os
@@ -40,6 +40,9 @@ class ImageAIYoloService(HarmoniServiceManager):
         self.temp_path = "/root/harmoni_catkin_ws/src/HARMONI/harmoni_detectors/harmoni_imageai/temp_data/"
         self.service_id = hf.get_child_id(self.name)
         self.result_msg = ""
+
+        self.VAIMO = False
+        self.contatore = 0
 
         self.cv_bridge = CvBridge()
 
@@ -82,7 +85,17 @@ class ImageAIYoloService(HarmoniServiceManager):
             
             data_tmp = self.cv_bridge.imgmsg_to_cv2(data, desired_encoding='passthrough')
             self._buff.put(data_tmp)
-            # rospy.loginfo("Items in buffer: "+ str(self._buff.qsize()))
+            if self.VAIMO:
+                self.detections, self.objects_path = self.detector.detectObjectsFromImage(input_type="stream", 
+                                                                        input_image=data_tmp,
+                                                                        minimum_percentage_probability=self.minimum_percentage_probability,
+                                                                        extract_detected_objects=True)
+                print(self.contatore)
+                self.contatore+=1
+                for eachObject, eachObjectPath in zip(self.detections, self.objects_path):
+                    print(eachObject["name"] , " : " , eachObject["percentage_probability"], " : ", eachObject["box_points"] )
+                    print("Object's image saved in " + eachObjectPath)
+                    print("--------------------------------")
     
     def imageai_callback(self, data):
         """ Callback function subscribing to the camera topic"""
@@ -97,7 +110,8 @@ class ImageAIYoloService(HarmoniServiceManager):
         #self.state = State.START
         try:
             #detect objects coming from camera stream
-            self.video_path = self.detector.detectObjectsFromVideo(
+            """
+            self.video_path = self.detector.detectObjectsFromImage(
                 custom_objects=self.custom_objects,
                 camera_input=self.camera,
                 output_file_path=os.path.join(self.temp_path, self.output_file_name),
@@ -107,7 +121,7 @@ class ImageAIYoloService(HarmoniServiceManager):
                 per_frame_function=self.forFrame,
                 per_minute_function=self.forMinute,
                 minimum_percentage_probability=self.minimum_percentage_probability)
-
+            """
             #r = rospy.Rate(1)
             #while not self.response_received:
             #    r.sleep()
@@ -128,13 +142,8 @@ class ImageAIYoloService(HarmoniServiceManager):
         rospy.loginfo("Start the %s service" % self.name)
         if self.state == State.INIT:
             self.state = State.START
-            self.camera = cv2.VideoCapture(0) #TODO link with published camera data
-            #In the following 4 lines, we created a new instance of 
-            #the VideoObjectDetection class in the first line, 
-            #set the model type to YOLOv3 in the second line,
-            #set the model path to the YOLOv3 model file in the third line
-            #and load the model in the fourth line.
-            self.detector = VideoObjectDetection()
+
+            self.detector = ObjectDetection()
             self.detector.setModelTypeAsYOLOv3()
             self.detector.setModelPath(os.path.join(self.model_path, "yolo.h5"))
             self.detector.loadModel()
@@ -142,18 +151,20 @@ class ImageAIYoloService(HarmoniServiceManager):
             self.custom_objects = self.detector.CustomObjects(person=True) 
             
             #JUST FOR TRY THE SERVICE COMMENT THE FOLLOWING
+            self.VAIMO = True
             #START REGION
-
-            self.video_path = self.detector.detectObjectsFromVideo(
-                custom_objects=self.custom_objects,
-                camera_input=self.camera,
-                output_file_path=os.path.join(self.temp_path, self.output_file_name),
-                frames_per_second=self.frame_per_second, 
-                log_progress=True, 
-                per_second_function=self.forSeconds,
-                per_frame_function=self.forFrame,
-                per_minute_function=self.forMinute,
-                minimum_percentage_probability=self.minimum_percentage_probability)
+            """
+            self.detections, self.objects_path = self.detector.detectObjectsFromImage(input_type="stream", 
+                                                                    input_image=self._buff.get(0),
+                                                                    output_image_path=os.path.join(self.temp_path, self.output_file_name),
+                                                                    minimum_percentage_probability=self.minimum_percentage_probability,
+                                                                    extract_detected_objects=True)
+            
+            for eachObject, eachObjectPath in zip(self.detections, self.objects_path):
+                print(eachObject["name"] , " : " , eachObject["percentage_probability"], " : ", eachObject["box_points"] )
+                print("Object's image saved in " + eachObjectPath)
+                print("--------------------------------")
+            """
             #END REGION
 
         else:
