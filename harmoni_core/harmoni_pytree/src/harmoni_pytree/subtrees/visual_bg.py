@@ -165,7 +165,7 @@ def create_root(name = "Visual_Bg"):
                                                       running_until=1,
                                                       success_until=10,
                                                       reset=False)
-    #TODO modulo per timer
+    #TODO timer
     Write_On_BB_Timer = py_trees.behaviours.SetBlackboardVariable(name="Write_On_BB_Timer",
                                                     variable_name="timer", 
                                                     variable_value=5, 
