@@ -88,15 +88,15 @@ def create_root(name = "Activity"):
 
     inverter_mainactivity = py_trees.decorators.Inverter(name="InverterMainActivity",child=mainactivity)
 
-    nontivedo = ntv.create_root()
+    visual_bg = visual_bg.create_root()
 
-    inverter_nontivedo = py_trees.decorators.Inverter(name="InverterNonTiVedo",child=nontivedo)
+    visual_bg_inverter = py_trees.decorators.Inverter(name="VisualBg Inverter",child=nontivedo)
 
-    nonmiparli = nmp.create_root()
+    interaction_bg = interaction_bg.create_root()
 
-    inverter_nonmiparli = py_trees.decorators.Inverter(name="InverterNonMiParli",child=nonmiparli)
+    interaction_bg_inverter = py_trees.decorators.Inverter(name="InverterNonMiParli",child=nonmiparli)
 
-    root.add_children([therapist ,inverter_camera, inverter_nontivedo, inverter_nonmiparli, inverter_mainactivity])
+    root.add_children([therapist ,inverter_camera, visual_bg_inverter, interaction_bg_inverter, inverter_mainactivity])
 
     return root
 

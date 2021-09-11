@@ -28,7 +28,7 @@ def description(root):
         banner_line = console.green + "*" * 79 + "\n" + console.reset
         s = "\n"
         s += banner_line
-        s += console.bold_white + "Terapist".center(79) + "\n" + console.reset
+        s += console.bold_white + "Therapist".center(79) + "\n" + console.reset
         s += banner_line
         s += "\n"
         s += content

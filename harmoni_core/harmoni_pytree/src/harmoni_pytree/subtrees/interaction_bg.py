@@ -4,12 +4,10 @@
 
 import argparse
 import functools
-from os import name
 from py_trees.behaviours import dummy
 from py_trees.idioms import either_or
 import py_trees
 import time
-from random import randint
 import subprocess
 import operator
 import py_trees.console as console
@@ -29,7 +27,7 @@ def description(root):
         banner_line = console.green + "*" * 79 + "\n" + console.reset
         s = "\n"
         s += banner_line
-        s += console.bold_white + "Non ti vedo".center(79) + "\n" + console.reset
+        s += console.bold_white + "Interaction_Bg".center(79) + "\n" + console.reset
         s += banner_line
         s += "\n"
         s += content
@@ -53,7 +51,6 @@ def command_line_argument_parser():
                                      formatter_class=argparse.RawDescriptionHelpFormatter,
                                      )
     group = parser.add_mutually_exclusive_group()
-    group.add_argument('-b', '--with-blackboard-variables', default=False, action='store_true', help='add nodes for the blackboard variables')
     group.add_argument('-r', '--render', action='store_true', help='render dot tree to file')
     group.add_argument('-i', '--interactive', action='store_true', help='pause and wait for keypress at each tick')
     return parser
@@ -73,34 +70,39 @@ def post_tick_handler(snapshot_visitor, behaviour_tree):
     )
     print(py_trees.display.unicode_blackboard())
 
-
-def create_root(name = "Non_Ti_Vedo"):
-    root = py_trees.composites.Sequence(name = name)
+def create_root(name = "Interaction_Bg"):
+    root = py_trees.composites.Sequence(name=name)
     
     Success = py_trees.behaviours.Success(name="Success")
 
-    Scene_Manager_Non_Ti_Vedo = py_trees.behaviours.SetBlackboardVariable(name="Scene_Manager_Non_Ti_Vedo(do_speech)",
-                                                        variable_name="scene/chatbot_in_namespace/result_data", 
-                                                        variable_value="non vedo il bimbo (intent)", 
+    Interaction_Bg_Scene = py_trees.behaviours.SetBlackboardVariable(name="Interaction_Bg_Scene(do_speech)",
+                                                        variable_name="do_speech", 
+                                                        variable_value="null", 
                                                         overwrite=True)
     dummy1 = py_trees.behaviours.SetBlackboardVariable(name="do_face",
-                                                        variable_name="scene/face_bb_namespace/result_data", 
-                                                        variable_value="Triste", 
+                                                        variable_name="do_face", 
+                                                        variable_value="null", 
                                                         overwrite=True)
-    Chat_Bot = py_trees.behaviours.SetBlackboardVariable(name="Chat_bot",
-                                                        variable_name="bot_output_bb_namespace/result_data", 
-                                                        variable_value="Non ti vedo, dove sei?", 
-                                                        overwrite=True)
+    Chat_Bot = py_trees.behaviours.Count(name="Chat_Bot",
+                                                      fail_until=0,
+                                                      running_until=1,
+                                                      success_until=10,
+                                                      reset=False)
     Tts = py_trees.behaviours.Count(name="Tts",
-                                        fail_until=0,
-                                        running_until=1,
-                                        success_until=10,
-                                        reset=False)
+                                                      fail_until=0,
+                                                      running_until=1,
+                                                      success_until=10,
+                                                      reset=False)
     Stt = py_trees.behaviours.Count(name="Stt",
-                                        fail_until=0,
-                                        running_until=1,
-                                        success_until=10,
-                                        reset=False)
+                                                      fail_until=0,
+                                                      running_until=1,
+                                                      success_until=10,
+                                                      reset=False)
+    Detection_Card = py_trees.behaviours.Count(name="Detection_Card",
+                                                      fail_until=0,
+                                                      running_until=1,
+                                                      success_until=10,
+                                                      reset=False)
     Facial_Expression = py_trees.behaviours.Count(name="Facial_Expression",
                                                       fail_until=0,
                                                       running_until=1,
@@ -121,11 +123,7 @@ def create_root(name = "Non_Ti_Vedo"):
                                                       running_until=1,
                                                       success_until=10,
                                                       reset=False)
-    Detection_Face = py_trees.behaviours.SetBlackboardVariable(name="Detection_Face",
-                                                        variable_name="scene/detection_face_bb_namespace/result_message", 
-                                                        variable_value="non null", 
-                                                        overwrite=True)
-    Invalid_BB_Speech = py_trees.behaviours.Count(name="Invalid_BB_Speech",
+    Invalid_BB_Speech_And_Card = py_trees.behaviours.Count(name="Invalid_BB_Speech_And_Card",
                                                       fail_until=0,
                                                       running_until=1,
                                                       success_until=10,
@@ -141,10 +139,13 @@ def create_root(name = "Non_Ti_Vedo"):
                                                       reset=False)
 
     parall_Speaker = py_trees.composites.Parallel(name="Parallel_Speaker")
-    parall_Speaker.add_children([Speaker,Lips_Synk])    
+    parall_Speaker.add_children([Speaker,Lips_Synk])  
 
     sequen_Speech_Kid = py_trees.composites.Sequence(name="Sequence_Speech_Kid")
     sequen_Speech_Kid.add_children([Microphone ,Stt])
+
+    parall_Detect_Kid = py_trees.composites.Parallel(name="Parallel_Detect_Kid")
+    parall_Detect_Kid.add_children([sequen_Speech_Kid,Detection_Card])
 
     Either_Or_Timer_Detection = eu.either_or(
         name="Either_Or_Timer_Detection",
@@ -153,7 +154,7 @@ def create_root(name = "Non_Ti_Vedo"):
             py_trees.common.ComparisonExpression("timer", 10, operator.ge),
         ],
         preemptible = False,
-        subtrees=[sequen_Speech_Kid, Invalid_BB_Speech],
+        subtrees=[parall_Detect_Kid, Invalid_BB_Speech_And_Card],
         namespace="either_or_timer_detection",
     )
 
@@ -163,22 +164,23 @@ def create_root(name = "Non_Ti_Vedo"):
     parall_Detect_And_Face = py_trees.composites.Parallel(name="Parallel_Detect_And_Face")
     parall_Detect_And_Face.add_children([sequen_Detect_Kid, Facial_Expression])  
 
-    sequen_Non_Ti_Vedo = py_trees.composites.Sequence(name="Sequence_Non_Ti_Vedo")
-    sequen_Non_Ti_Vedo.add_children([Scene_Manager_Non_Ti_Vedo,dummy1,Chat_Bot,Tts,parall_Speaker,parall_Detect_And_Face])
+    sequen_Interaction_Bg = py_trees.composites.Sequence(name="Sequence_Interaction_Bg")
+    sequen_Interaction_Bg.add_children([Scene_Manager_Interaction_Bg ,dummy1, Chat_Bot, Tts, parall_Speaker, parall_Detect_And_Face])  
 
-    Either_Or_Non_Ti_Vedo = eu.either_or(
-        name="Either_Or_Non_Ti_Vedo",
+    Either_Or_Interaction_Bg = eu.either_or(
+        name="Either_Or_Interaction_Bg",
         conditions=[
-            py_trees.common.ComparisonExpression("bb_face_detection", "null", operator.ne),
-            py_trees.common.ComparisonExpression("bb_face_detection", "null", operator.eq),
+            py_trees.common.ComparisonExpression("bb_counter_non_risposto", 2, operator.lt),
+            py_trees.common.ComparisonExpression("bb_counter_non_risposto", 2, operator.ge),
         ],
         preemptible = False,
-        subtrees=[Success, sequen_Non_Ti_Vedo],
-        namespace="either_or_non_ti_vedo",
+        subtrees=[Success, sequen_Interaction_Bg],
+        namespace="either_or_Interaction_Bg",
     )
+
     Running_Or_Success = rs.create_root()
 
-    root.add_children([Detection_Face,Either_Or_Non_Ti_Vedo, Subtree_Results, Running_Or_Success])
+    root.add_children([Either_Or_Interaction_Bg, Subtree_Results, Running_Or_Success])
 
     return root
 
