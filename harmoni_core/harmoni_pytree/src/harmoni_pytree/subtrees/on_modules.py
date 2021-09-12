@@ -1,4 +1,5 @@
 import py_trees
+from leaves.camera_service_pytree import CameraServicePytree
 
 def create_root():
     camera = py_trees.behaviours.Count(name="Camera",
