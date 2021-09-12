@@ -16,12 +16,12 @@ import py_trees.console as console
 import either_custom as eu
 import running_or_success as rs
 
-from leaves.aws_lex_service_pytree import AWSLexServicePytree
-from leaves.aws_tts_service_pytree import AWSTtsServicePytree
-from leaves.face_service_pytree import FaceServicePytree
-from leaves.google_service_pytree import SpeechToTextServicePytree
-from leaves.microphone_service_pytree import MicrophoneServicePytree
-from leaves.speaker_service_pytree import SpeakerServicePytree
+from harmoni_pytree.leaves.aws_lex_service_pytree import AWSLexServicePytree
+from harmoni_pytree.leaves.aws_tts_service_pytree import AWSTtsServicePytree
+from harmoni_pytree.leaves.face_service_pytree import FaceServicePytree
+from harmoni_pytree.leaves.google_service_pytree import SpeechToTextServicePytree
+from harmoni_pytree.leaves.microphone_service_pytree import MicrophoneServicePytree
+from harmoni_pytree.leaves.speaker_service_pytree import SpeakerServicePytree
 
 ##############################################################################
 # Classes

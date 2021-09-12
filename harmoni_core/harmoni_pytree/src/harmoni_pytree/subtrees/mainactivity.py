@@ -13,14 +13,15 @@ import subprocess
 import operator
 import py_trees.console as console
 import either_custom as eu
+import running_or_success as rs
 
-from leaves.aws_lex_service_pytree import AWSLexServicePytree
-from leaves.aws_tts_service_pytree import AWSTtsServicePytree
-from leaves.face_service_pytree import FaceServicePytree
-from leaves.google_service_pytree import SpeechToTextServicePytree
-from leaves.microphone_service_pytree import MicrophoneServicePytree
-from leaves.speaker_service_pytree import SpeakerServicePytree
-from leaves.gesture_service_pytree import GestureServicePytree
+from harmoni_pytree.leaves.aws_lex_service_pytree import AWSLexServicePytree
+from harmoni_pytree.leaves.aws_tts_service_pytree import AWSTtsServicePytree
+from harmoni_pytree.leaves.face_service_pytree import FaceServicePytree
+from harmoni_pytree.leaves.google_service_pytree import SpeechToTextServicePytree
+from harmoni_pytree.leaves.microphone_service_pytree import MicrophoneServicePytree
+from harmoni_pytree.leaves.speaker_service_pytree import SpeakerServicePytree
+from harmoni_pytree.leaves.gesture_service_pytree import GestureServicePytree
 
 ##############################################################################
 # Classes
@@ -317,7 +318,16 @@ def create_root():
     sequen_Kid = py_trees.composites.Sequence(name="Sequence_Kid")
     sequen_Kid.add_children([sequen_Detect_Kid, Analysis, Either_Or_Face2])
 
-    root.add_children([sequen_Robot, sequen_Kid])
+    #TODO modulo per vedere se il sottoalbero è terminato                                                
+    MainActivity_Subtree_Results = py_trees.behaviours.Count(name="Interaction_Bg_Subtree_Results",
+                                                      fail_until=0,
+                                                      running_until=1,
+                                                      success_until=10,
+                                                      reset=False)
+
+    Running_Or_Success = rs.create_root()
+
+    root.add_children([sequen_Robot, sequen_Kid, MainActivity_Subtree_Results, Running_Or_Success])
 
     return root
 

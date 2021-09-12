@@ -12,8 +12,8 @@ import subprocess
 import py_trees.console as console
 import either_custom as eu
 import os
-import nontivedo as ntv
-import nonmiparli as nmp
+import visual_bg as vbg
+import interaction_bg as ibg
 import mainactivity as ma
 import on_modules as om
 import therapist as t
@@ -88,13 +88,13 @@ def create_root(name = "Activity"):
 
     inverter_mainactivity = py_trees.decorators.Inverter(name="InverterMainActivity",child=mainactivity)
 
-    visual_bg = visual_bg.create_root()
+    visual_bg = vbg.create_root()
 
-    visual_bg_inverter = py_trees.decorators.Inverter(name="VisualBg Inverter",child=nontivedo)
+    visual_bg_inverter = py_trees.decorators.Inverter(name="VisualBg Inverter",child=visual_bg)
 
-    interaction_bg = interaction_bg.create_root()
+    interaction_bg = ibg.create_root()
 
-    interaction_bg_inverter = py_trees.decorators.Inverter(name="InverterNonMiParli",child=nonmiparli)
+    interaction_bg_inverter = py_trees.decorators.Inverter(name="InverterNonMiParli",child=interaction_bg)
 
     root.add_children([therapist ,inverter_camera, visual_bg_inverter, interaction_bg_inverter, inverter_mainactivity])
 

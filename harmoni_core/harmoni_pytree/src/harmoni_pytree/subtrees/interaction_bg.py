@@ -14,12 +14,12 @@ import py_trees.console as console
 import either_custom as eu
 import running_or_success as rs
 
-from leaves.aws_lex_service_pytree import AWSLexServicePytree
-from leaves.aws_tts_service_pytree import AWSTtsServicePytree
-from leaves.face_service_pytree import FaceServicePytree
-from leaves.google_service_pytree import SpeechToTextServicePytree
-from leaves.microphone_service_pytree import MicrophoneServicePytree
-from leaves.speaker_service_pytree import SpeakerServicePytree
+from harmoni_pytree.leaves.aws_lex_service_pytree import AWSLexServicePytree
+from harmoni_pytree.leaves.aws_tts_service_pytree import AWSTtsServicePytree
+from harmoni_pytree.leaves.face_service_pytree import FaceServicePytree
+from harmoni_pytree.leaves.google_service_pytree import SpeechToTextServicePytree
+from harmoni_pytree.leaves.microphone_service_pytree import MicrophoneServicePytree
+from harmoni_pytree.leaves.speaker_service_pytree import SpeakerServicePytree
 
 ##############################################################################
 # Classes
@@ -88,12 +88,13 @@ def create_root(name = "Interaction_Bg"):
     Interaction_Bg_Scene = py_trees.behaviours.SetBlackboardVariable(name="Interaction_Bg_Scene(do_speech)",
                                                         variable_name="do_speech", 
                                                         variable_value="null", 
+                                                        overwrite=True)
     #dummy1 è da sostituire con la variabile face_exp nel scene.                                                     overwrite=True)
     dummy1 = py_trees.behaviours.SetBlackboardVariable(name="do_face",
                                                         variable_name="do_face", 
                                                         variable_value="null", 
                                                         overwrite=True)
-    chatbot=AWSLexServicePytree("AwsLexPyTreeInteractionBg")
+    chatbot = AWSLexServicePytree("AwsLexPyTreeInteractionBg")
     """                                                    
     Chat_Bot = py_trees.behaviours.Count(name="Chat_Bot",
                                                       fail_until=0,
@@ -109,7 +110,7 @@ def create_root(name = "Interaction_Bg"):
                                                       success_until=10,
                                                       reset=False)
     """
-    stt=SpeechToTextServicePytree("SpeechToTextPytreeInteractionBg")
+    stt = SpeechToTextServicePytree("SpeechToTextPytreeInteractionBg")
     """                                            
     Stt = py_trees.behaviours.Count(name="Stt",
                                                       fail_until=0,
@@ -160,7 +161,8 @@ def create_root(name = "Interaction_Bg"):
                                                       fail_until=0,
                                                       running_until=1,
                                                       success_until=10,
-    #TODO timer                                                  reset=False)
+                                                      reset=False)
+    #TODO timer                                                  
     Write_On_BB_Timer = py_trees.behaviours.SetBlackboardVariable(name="Write_On_BB_Timer",
                                                     variable_name="timer", 
                                                     variable_value=5, 
@@ -200,7 +202,16 @@ def create_root(name = "Interaction_Bg"):
 
     sequen_Interaction_Bg = py_trees.composites.Sequence(name="Sequence_Interaction_Bg")
     Interaction_Bg_Scene = py_trees.behaviours.SetBlackboardVariable(name="Interaction_Bg_Scene(do_speech)",
-    sequen_Interaction_Bg.add_children([Scene_Manager_Interaction_Bg ,dummy1, chatbot, tts, parall_Speaker, parall_Detect_And_Face])  
+                                                                        variable_name="timer", 
+                                                                        variable_value=5, 
+                                                                        overwrite=True)
+
+    sequen_Interaction_Bg.add_children([Interaction_Bg_Scene, 
+                                        dummy1, 
+                                        chatbot, 
+                                        tts, 
+                                        parall_Speaker, 
+                                        parall_Detect_And_Face])  
 
     Either_Or_Interaction_Bg = eu.either_or(
         name="Either_Or_Interaction_Bg",
