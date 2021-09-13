@@ -75,8 +75,6 @@ def post_tick_handler(snapshot_visitor, behaviour_tree):
 
 def create_root(name= "Therapist"):
 
-    
-
     root = eu.either_or(
         name=name,
         conditions=[

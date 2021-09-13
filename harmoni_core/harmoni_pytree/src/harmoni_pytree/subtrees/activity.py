@@ -90,7 +90,7 @@ def create_root(name = "Activity"):
 
     visual_bg = vbg.create_root()
 
-    visual_bg_inverter = py_trees.decorators.Inverter(name="VisualBg Inverter",child=visual_bg)
+    visual_bg_inverter = py_trees.decorators.Inverter(name="VisualBgInverter",child=visual_bg)
 
     interaction_bg = ibg.create_root()
 

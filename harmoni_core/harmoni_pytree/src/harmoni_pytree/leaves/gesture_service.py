@@ -53,6 +53,10 @@ class GestureServicePytree(py_trees.behaviour.Behaviour):
         self.blackboard_gesture.register_key("result_data", access=py_trees.common.Access.READ)
         self.blackboard_gesture.register_key("result_message", access=py_trees.common.Access.READ)
 
+        #TODO: usa queste bb che sono le nuove
+        self.blackboard_scene = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name)
+        self.blackboard_scene.register_key("gesture", access=py_trees.common.Access.READ)
+
         super(GestureServicePytree, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 

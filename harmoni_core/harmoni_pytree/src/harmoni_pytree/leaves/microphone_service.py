@@ -55,8 +55,12 @@ class MicrophoneServicePytree(py_trees.behaviour.Behaviour):
 
         # here there is the inizialization of the blackboards
         self.blackboards = []
-        self.blackboard_microphone = self.attach_blackboard_client(name=self.name, namespace="harmoni_microphone")
-        self.blackboard_microphone.register_key("result_message", access=py_trees.common.Access.WRITE)
+        self.blackboard_microphone_OLD = self.attach_blackboard_client(name=self.name, namespace="harmoni_microphone")
+        self.blackboard_microphone_OLD.register_key("result_message", access=py_trees.common.Access.WRITE)
+
+        #TODO: usa queste bb che sono le nuove
+        self.blackboard_microphone = self.attach_blackboard_client(name=self.name, namespace=SensorNameSpace.microphone.name)
+        self.blackboard_microphone.register_key("state", access=py_trees.common.Access.WRITE)
 
         super(MicrophoneServicePytree, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
@@ -116,24 +120,24 @@ class MicrophoneServicePytree(py_trees.behaviour.Behaviour):
                     wait="",
                 )
                 self.logger.debug(f"Goal sent to {self.microphone_service}")
-                self.blackboard_microphone.result_message = "RUNNING"
+                self.blackboard_microphone_OLD.result_message = "RUNNING"
                 new_status = py_trees.common.Status.RUNNING
             else:
                 if self.service_client_microphone.get_state() != GoalStatus.LOST:
                     #TODO when an audio arrives we overwrite, this is not totally correct!
                     if len(self.client_result) > 0:
                         self.result_data = self.client_result.popleft()["data"]
-                        self.blackboard_microphone.result_message = "SUCCESS"
+                        self.blackboard_microphone_OLD.result_message = "SUCCESS"
                         new_status = py_trees.common.Status.SUCCESS
                     else:
                         #if we are here it means that we dont have the result yet, so
                         #do we have to wait or something went wrong?
                         #not sure about the followings lines, see row 408 of sequential_pattern.py
                         if(self.microphone_service.state == State.FAILED):
-                            self.blackboard_microphone.result_message = "FAILURE"
+                            self.blackboard_microphone_OLD.result_message = "FAILURE"
                             new_status = py_trees.common.Status.FAILURE
                         else:
-                            self.blackboard_microphone.result_message = "RUNNING"
+                            self.blackboard_microphone_OLD.result_message = "RUNNING"
                             new_status = py_trees.common.Status.RUNNING
                 else:
                     new_status = py_trees.common.Status.FAILURE

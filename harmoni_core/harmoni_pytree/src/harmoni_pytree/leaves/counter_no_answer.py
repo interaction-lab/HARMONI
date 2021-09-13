@@ -4,19 +4,29 @@
 import py_trees
 import random
 
-
-class SubTreeResultVisualBg(py_trees.behaviour.Behaviour):
-    def __init__(self, name):
+#TODO prendi spunto da Count di py_trees
+class CounterNoAnswer(py_trees.behaviour.Behaviour):
+    def __init__(self,
+            variable_name: str,
+            name: typing.Union[str, common.Name]=common.Name.AUTO_GENERATED,
+    ):
         """
         Minimal one-time initialisation. A good rule of thumb is
         to only include the initialisation relevant for being able
         to insert this behaviour in a tree for offline rendering to
         dot graphs.
 
-        Other one-time initialisation requirements should be met viass
+        Other one-time initialisation requirements should be met via
         the setup() method.
         """
-        super(SubTreeResultVisualBg, self).__init__(name)
+
+        self.blackboards = []
+        self.blackboard_camera = self.attach_blackboard_client(name=self.name)
+        self.blackboard_camera.register_key(variable_name, access=py_trees.common.Access.WRITE)
+        #TODO scrivere nella bb il timer
+
+        super(CounterNoAnswer, self).__init__(name)
+        self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self):
         """
@@ -46,7 +56,7 @@ class SubTreeResultVisualBg(py_trees.behaviour.Behaviour):
           - A parallel checking for a valid policy configuration after
             children have been added or removed
         """
-        self.logger.debug("  %s [SubTreeResultVisualBg::setup()]" % self.name)
+        self.logger.debug("  %s [CounterNoAnswer::setup()]" % self.name)
 
     def initialise(self):
         """
@@ -58,7 +68,7 @@ class SubTreeResultVisualBg(py_trees.behaviour.Behaviour):
           Any initialisation you need before putting your behaviour
           to work.
         """
-        self.logger.debug("  %s [SubTreeResultVisualBg::initialise()]" % self.name)
+        self.logger.debug("  %s [CounterNoAnswer::initialise()]" % self.name)
 
     def update(self):
         """
@@ -70,7 +80,7 @@ class SubTreeResultVisualBg(py_trees.behaviour.Behaviour):
           - Set a feedback message
           - return a py_trees.common.Status.[RUNNING, SUCCESS, FAILURE]
         """
-        self.logger.debug("  %s [SubTreeResultVisualBg::update()]" % self.name)
+        self.logger.debug("  %s [CounterNoAnswer::update()]" % self.name)
         ready_to_make_a_decision = random.choice([True, False])
         decision = random.choice([True, False])
         if not ready_to_make_a_decision:
@@ -89,4 +99,4 @@ class SubTreeResultVisualBg(py_trees.behaviour.Behaviour):
             - SUCCESS || FAILURE : your behaviour's work cycle has finished
             - INVALID : a higher priority branch has interrupted, or shutting down
         """
-        self.logger.debug("  %s [SubTreeResultVisualBg::terminate().terminate()][%s->%s]" % (self.name, self.status, new_status))
+        self.logger.debug("  %s [CounterNoAnswer::terminate().terminate()][%s->%s]" % (self.name, self.status, new_status))

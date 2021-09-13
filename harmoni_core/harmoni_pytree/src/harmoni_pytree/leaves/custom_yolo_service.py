@@ -5,7 +5,7 @@ import py_trees
 import random
 
 
-class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
+class CustomYoloServicePytree(py_trees.behaviour.Behaviour):
     def __init__(self, name):
         """
         Minimal one-time initialisation. A good rule of thumb is
@@ -13,10 +13,18 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
         to insert this behaviour in a tree for offline rendering to
         dot graphs.
 
-        Other one-time initialisation requirements should be met via
+        Other one-time initialisation requirements should be met viass
         the setup() method.
         """
-        super(SceneManagerInteractionBg, self).__init__(name)
+        self.blackboards = []
+        self.blackboard_camera = self.attach_blackboard_client(name=self.name, namespace=SensorNameSpace.camera.name+"/external")
+        self.blackboard_camera.register_key("state", access=py_trees.common.Access.READ)
+        self.blackboard_card_detection = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.card_detect.name)
+        self.blackboard_card_detection.register_key("state", access=py_trees.common.Access.WRITE)
+        self.blackboard_card_detection.register_key("result", access=py_trees.common.Access.WRITE)
+
+        super(CustomYoloServicePytree, self).__init__(name)
+        self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self):
         """
@@ -46,7 +54,7 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
           - A parallel checking for a valid policy configuration after
             children have been added or removed
         """
-        self.logger.debug("  %s [SceneManagerInteractionBg::setup()]" % self.name)
+        self.logger.debug("  %s [CustomYoloServicePytree::setup()]" % self.name)
 
     def initialise(self):
         """
@@ -58,7 +66,7 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
           Any initialisation you need before putting your behaviour
           to work.
         """
-        self.logger.debug("  %s [SceneManagerInteractionBg::initialise()]" % self.name)
+        self.logger.debug("  %s [CustomYoloServicePytree::initialise()]" % self.name)
 
     def update(self):
         """
@@ -70,7 +78,7 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
           - Set a feedback message
           - return a py_trees.common.Status.[RUNNING, SUCCESS, FAILURE]
         """
-        self.logger.debug("  %s [SceneManagerInteractionBg::update()]" % self.name)
+        self.logger.debug("  %s [CustomYoloServicePytree::update()]" % self.name)
         ready_to_make_a_decision = random.choice([True, False])
         decision = random.choice([True, False])
         if not ready_to_make_a_decision:
@@ -89,4 +97,4 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
             - SUCCESS || FAILURE : your behaviour's work cycle has finished
             - INVALID : a higher priority branch has interrupted, or shutting down
         """
-        self.logger.debug("  %s [SceneManagerInteractionBg::terminate().terminate()][%s->%s]" % (self.name, self.status, new_status))
+        self.logger.debug("  %s [CustomYoloServicePytree::terminate().terminate()][%s->%s]" % (self.name, self.status, new_status))

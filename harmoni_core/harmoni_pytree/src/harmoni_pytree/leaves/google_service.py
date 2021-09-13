@@ -61,6 +61,11 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
         self.blackboard_input_bot.register_key("result_data",access=py_trees.common.Access.WRITE)
         self.blackboard_input_bot.register_key("result_message", access=py_trees.common.Access.WRITE)
 
+        #TODO: usa queste bb che sono le nuove
+        self.blackboard_microphone = self.attach_blackboard_client(name=self.name, namespace=SensorNameSpace.microphone.name)
+        self.blackboard_microphone.register_key("state", access=py_trees.common.Access.READ)
+        self.blackboard_stt = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.stt.name)
+        self.blackboard_stt.register_key("result", access=py_trees.common.Access.WRITE)
 
         super(SpeechToTextServicePytree, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))

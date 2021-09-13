@@ -5,7 +5,7 @@ import py_trees
 import random
 
 
-class SceneManagerMain(py_trees.behaviour.Behaviour):
+class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
     def __init__(self, name):
         """
         Minimal one-time initialisation. A good rule of thumb is
@@ -16,7 +16,21 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         Other one-time initialisation requirements should be met via
         the setup() method.
         """
-        super(SceneManagerMain, self).__init__(name)
+
+        self.blackboards = []
+        self.blackboard_scene = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name)
+        self.blackboard_scene.register_key(PyTreeNameSpace.visual.name+"/state", access=py_trees.common.Access.WRITE)
+        self.blackboard_scene.register_key("utterance", access=py_trees.common.Access.WRITE)
+        self.blackboard_scene.register_key("face_exp", access=py_trees.common.Access.WRITE)
+        self.blackboard_scene.register_key("therapist_needed", access=py_trees.common.Access.WRITE)
+        self.blackboard_scene.register_key(PyTreeNameSpace.visual.name+"/scene_counter", access=py_trees.common.Access.WRITE)
+        self.blackboard_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name)
+        self.blackboard_bot.register_key("result", access=py_trees.common.Access.READ)
+        self.blackboard_stt = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.stt.name)
+        self.blackboard_stt.register_key("result", access=py_trees.common.Access.READ)
+
+        super(SceneManagerVisualBg, self).__init__(name)
+        self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self):
         """
@@ -46,7 +60,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
           - A parallel checking for a valid policy configuration after
             children have been added or removed
         """
-        self.logger.debug("  %s [SceneManagerMain::setup()]" % self.name)
+        self.logger.debug("  %s [SceneManagerVisualBg::setup()]" % self.name)
 
     def initialise(self):
         """
@@ -58,7 +72,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
           Any initialisation you need before putting your behaviour
           to work.
         """
-        self.logger.debug("  %s [SceneManagerMain::initialise()]" % self.name)
+        self.logger.debug("  %s [SceneManagerVisualBg::initialise()]" % self.name)
 
     def update(self):
         """
@@ -70,7 +84,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
           - Set a feedback message
           - return a py_trees.common.Status.[RUNNING, SUCCESS, FAILURE]
         """
-        self.logger.debug("  %s [SceneManagerMain::update()]" % self.name)
+        self.logger.debug("  %s [SceneManagerVisualBg::update()]" % self.name)
         ready_to_make_a_decision = random.choice([True, False])
         decision = random.choice([True, False])
         if not ready_to_make_a_decision:
@@ -89,4 +103,4 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
             - SUCCESS || FAILURE : your behaviour's work cycle has finished
             - INVALID : a higher priority branch has interrupted, or shutting down
         """
-        self.logger.debug("  %s [SceneManagerMain::terminate().terminate()][%s->%s]" % (self.name, self.status, new_status))
+        self.logger.debug("  %s [SceneManagerVisualBg::terminate().terminate()][%s->%s]" % (self.name, self.status, new_status))

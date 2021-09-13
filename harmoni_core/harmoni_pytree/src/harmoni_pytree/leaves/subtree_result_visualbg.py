@@ -5,7 +5,7 @@ import py_trees
 import random
 
 
-class SubTreeResultInteractionBg(py_trees.behaviour.Behaviour):
+class SubTreeResultVisualBg(py_trees.behaviour.Behaviour):
     def __init__(self, name):
         """
         Minimal one-time initialisation. A good rule of thumb is
@@ -13,10 +13,19 @@ class SubTreeResultInteractionBg(py_trees.behaviour.Behaviour):
         to insert this behaviour in a tree for offline rendering to
         dot graphs.
 
-        Other one-time initialisation requirements should be met via
+        Other one-time initialisation requirements should be met viass
         the setup() method.
         """
-        super(SubTreeResultInteractionBg, self).__init__(name)
+
+        self.blackboard_scene_visual = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name "/" PyTreeNameSpace.visual.name)
+        self.blackboard_scene_visual.register_key("scene_counter", access=py_trees.common.Access.WRITE)
+        self.blackboard_visual = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.visual.name)
+        self.blackboard_visual.register_key("inside", access=py_trees.common.Access.WRITE)
+        self.blackboard_face_detect = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.face_detect.name)
+        self.blackboard_face_detect.register_key("result", access=py_trees.common.Access.READ)
+
+        super(SubTreeResultVisualBg, self).__init__(name)
+        self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self):
         """
@@ -46,7 +55,7 @@ class SubTreeResultInteractionBg(py_trees.behaviour.Behaviour):
           - A parallel checking for a valid policy configuration after
             children have been added or removed
         """
-        self.logger.debug("  %s [SubTreeResultInteractionBg::setup()]" % self.name)
+        self.logger.debug("  %s [SubTreeResultVisualBg::setup()]" % self.name)
 
     def initialise(self):
         """
@@ -58,7 +67,7 @@ class SubTreeResultInteractionBg(py_trees.behaviour.Behaviour):
           Any initialisation you need before putting your behaviour
           to work.
         """
-        self.logger.debug("  %s [SubTreeResultInteractionBg::initialise()]" % self.name)
+        self.logger.debug("  %s [SubTreeResultVisualBg::initialise()]" % self.name)
 
     def update(self):
         """
@@ -70,7 +79,7 @@ class SubTreeResultInteractionBg(py_trees.behaviour.Behaviour):
           - Set a feedback message
           - return a py_trees.common.Status.[RUNNING, SUCCESS, FAILURE]
         """
-        self.logger.debug("  %s [SubTreeResultInteractionBg::update()]" % self.name)
+        self.logger.debug("  %s [SubTreeResultVisualBg::update()]" % self.name)
         ready_to_make_a_decision = random.choice([True, False])
         decision = random.choice([True, False])
         if not ready_to_make_a_decision:
@@ -89,4 +98,4 @@ class SubTreeResultInteractionBg(py_trees.behaviour.Behaviour):
             - SUCCESS || FAILURE : your behaviour's work cycle has finished
             - INVALID : a higher priority branch has interrupted, or shutting down
         """
-        self.logger.debug("  %s [SubTreeResultInteractionBg::terminate().terminate()][%s->%s]" % (self.name, self.status, new_status))
+        self.logger.debug("  %s [SubTreeResultVisualBg::terminate().terminate()][%s->%s]" % (self.name, self.status, new_status))

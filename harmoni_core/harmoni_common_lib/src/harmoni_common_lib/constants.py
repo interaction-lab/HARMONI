@@ -53,7 +53,19 @@ class DialogueNameSpace(Enum):
 class DetectorNameSpace(Enum):
     stt = "/harmoni/detecting/stt/"
     face_detect = "/harmoni/detecting/face_detect/"
+    card_detect = "/harmoni/detecting/card_detect/"
 
 
 class Resources(Enum):
     face = ["eyes", "mouth", "nose"]
+
+
+class PyTreeNameSpace(Enum):
+    scene = "scene"
+    visual = "visual"
+    interaction = "interaction"
+    mainactivity = "mainactivity"
+    timer = "timer"
+    invalid_response = "invalid_response"
+
+
