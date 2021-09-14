@@ -21,9 +21,7 @@ class SubTreeResultInteractionBg(py_trees.behaviour.Behaviour):
         self.blackboard_scene_interaction.register_key("scene_counter", access=py_trees.common.Access.WRITE)
         self.blackboard_interaction = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.interaction.name)
         self.blackboard_interaction.register_key("inside", access=py_trees.common.Access.WRITE)
-        self.blackboard_face_detect = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.invalid_response.name +"/"+ PyTreeNameSpace.mainactivity.name)
-        self.blackboard_face_detect.register_key("counter_no_answer", access=py_trees.common.Access.READ)
-
+        
         super(SubTreeResultInteractionBg, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 

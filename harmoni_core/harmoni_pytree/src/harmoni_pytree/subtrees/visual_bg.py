@@ -101,7 +101,8 @@ def create_root(name = "Visual_Bg"):
                                                         variable_value="Triste", 
                                                         overwrite=True)
     """
-    chatbot=AWSLexServicePytree("AwsLexVisualBg")
+    chatbot = AWSLexServicePytree("AwsLexVisualBg")
+    chatbot2 = AWSLexServicePytree("AwsLexVisualBg2")
     """                                                    
     Chat_Bot = py_trees.behaviours.SetBlackboardVariable(name="Chat_bot",
                                                         variable_name="bot_output_bb_namespace/result_data", 
@@ -199,7 +200,7 @@ def create_root(name = "Visual_Bg"):
     )
 
     sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid",memory=False)
-    sequen_detect_kid.add_children([timeout_kid_detection, eor_timer_detection])                                         
+    sequen_detect_kid.add_children([timeout_kid_detection, eor_timer_detection, chatbot2])                                         
 
     parall_detect_and_face = py_trees.composites.Parallel(name="ParallelDetectAndFace")
     parall_detect_and_face.add_children([sequen_detect_kid, face_exp])  

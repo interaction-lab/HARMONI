@@ -100,6 +100,7 @@ def create_root(name = "Interaction_Bg"):
                                                         overwrite=True)
     """
     chatbot = AWSLexServicePytree("AwsLexInteractionBg")
+    chatbot2 = AWSLexServicePytree("AwsLexInteractionBg2")
     """                                                    
     Chat_Bot = py_trees.behaviours.Count(name="Chat_Bot",
                                                       fail_until=0,
@@ -210,7 +211,7 @@ def create_root(name = "Interaction_Bg"):
     )
 
     sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid",memory=False)
-    sequen_detect_kid.add_children([timeout_kid_detection, eor_timer_detection])                                         
+    sequen_detect_kid.add_children([timeout_kid_detection, eor_timer_detection, chatbot2])                                         
 
     parall_detect_and_face = py_trees.composites.Parallel(name="ParallelDetectAndFace")
     parall_detect_and_face.add_children([sequen_detect_kid, face_exp])  
@@ -223,7 +224,6 @@ def create_root(name = "Interaction_Bg"):
                                         parall_speaker, 
                                         parall_detect_and_face])  
 
-    #TODO
     eor_interaction_bg = either_custom.either_or(
         name="Either_Or_Interaction_Bg",
         conditions=[
