@@ -22,7 +22,7 @@ def either_or(
     
     if preemptible:
         root = composites.Sequence(name=name, memory=False)
-    else
+    else:
         root = composites.Sequence(name=name)
     configured_namespace: str = namespace if namespace is not None else \
         blackboard.Blackboard.separator + name.lower().replace("-", "_").replace(" ", "_") + \
