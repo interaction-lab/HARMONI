@@ -86,17 +86,16 @@ class ImageAIYoloService(HarmoniServiceManager):
             data_tmp = self.cv_bridge.imgmsg_to_cv2(data, desired_encoding='passthrough')
             self._buff.put(data_tmp)
             if self.VAIMO:
-                self.detections, self.objects_path = self.detector.detectObjectsFromImage(input_type="stream", 
+                self.detections = self.detector.detectObjectsFromImage(input_type="stream", 
+                                                                        output_type="array",
                                                                         input_image=data_tmp,
                                                                         minimum_percentage_probability=self.minimum_percentage_probability,
                                                                         extract_detected_objects=True)
-                print(self.contatore)
                 self.contatore+=1
-                for eachObject, eachObjectPath in zip(self.detections, self.objects_path):
+                for eachObject in self.detections[1]:
                     print(eachObject["name"] , " : " , eachObject["percentage_probability"], " : ", eachObject["box_points"] )
-                    print("Object's image saved in " + eachObjectPath)
                     print("--------------------------------")
-    
+
     def imageai_callback(self, data):
         """ Callback function subscribing to the camera topic"""
         self.response_received = True

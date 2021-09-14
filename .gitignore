@@ -122,3 +122,4 @@ harmoni_actuators/harmoni_tts/content/*
 doc/_build
 harmoni_actuators/harmoni_tts/scale_stats.npy
 harmoni_actuators/harmoni_tts/temp_data/tts.wav
+harmoni_detectors/harmoni_imageai/src/yolo.h5
