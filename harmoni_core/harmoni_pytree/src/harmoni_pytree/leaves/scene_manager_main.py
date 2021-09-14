@@ -16,6 +16,9 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         Other one-time initialisation requirements should be met via
         the setup() method.
         """
+        super(SceneManagerMain, self).__init__(name)
+
+        self.scene_counter = 0
 
         self.blackboards = []
         self.blackboard_scene = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name)
@@ -30,47 +33,39 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         self.blackboard_scene.register_key("therapist_needed", access=py_trees.common.Access.WRITE)
         self.blackboard_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name)
         self.blackboard_bot.register_key("result", access=py_trees.common.Access.READ)
+        """
         self.blackboard_stt = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.stt.name)
         self.blackboard_stt.register_key("result", access=py_trees.common.Access.READ)
+        """
         self.blackboard_visual= self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.visual.name)
         self.blackboard_visual.register_key("inside", access=py_trees.common.Access.READ)
         self.blackboard_interaction= self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.interaction.name)
         self.blackboard_interaction.register_key("inside", access=py_trees.common.Access.READ)
+        """
         self.blackboard_card_detect = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.card_detect.name)
         self.blackboard_card_detect.register_key("result", access=py_trees.common.Access.READ)
+        """
 
-        super(SceneManagerMain, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
 
     def setup(self):
-        """
-        When is this called?
-          This function should be either manually called by your program
-          to setup this behaviour alone, or more commonly, via
-          :meth:`~py_trees.behaviour.Behaviour.setup_with_descendants`
-          or :meth:`~py_trees.trees.BehaviourTree.setup`, both of which
-          will iterate over this behaviour, it's children (it's children's
-          children ...) calling :meth:`~py_trees.behaviour.Behaviour.setup`
-          on each in turn.
+        #TODO load all the utterance in a varaible
+        # number_of_scene(0):
+        #                     utterance:
+        #                     gesture:
+        #                     .
+        #                     .
+        #                     .
+        #                 1:
+        #                     utterance:
+        #                     gesture:
+        #                     ...
+        #                 .
+        #                 .
+        #                 .
+        #context[number_of_scene][utterance]
 
-          If you have vital initialisation necessary to the success
-          execution of your behaviour, put a guard in your
-          :meth:`~py_trees.behaviour.Behaviour.initialise` method
-          to protect against entry without having been setup.
-
-        What to do here?
-          Delayed one-time initialisation that would otherwise interfere
-          with offline rendering of this behaviour in a tree to dot graph
-          or validation of the behaviour's configuration.
-
-          Good examples include:
-
-          - Hardware or driver initialisation
-          - Middleware initialisation (e.g. ROS pubs/subs/services)
-          - A parallel checking for a valid policy configuration after
-            children have been added or removed
-        """
         self.logger.debug("  %s [SceneManagerMain::setup()]" % self.name)
 
     def initialise(self):
@@ -96,16 +91,31 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
           - return a py_trees.common.Status.[RUNNING, SUCCESS, FAILURE]
         """
         self.logger.debug("  %s [SceneManagerMain::update()]" % self.name)
-        ready_to_make_a_decision = random.choice([True, False])
-        decision = random.choice([True, False])
-        if not ready_to_make_a_decision:
-            return py_trees.common.Status.RUNNING
-        elif decision:
-            self.feedback_message = "We are not bar!"
-            return py_trees.common.Status.SUCCESS
-        else:
-            self.feedback_message = "Uh oh"
-            return py_trees.common.Status.FAILURE
+
+        if self.blackboard_visual.inside == True or self.blackboard_interaction.inside == True:
+          setta tutte le bb con quello che sta dentro context
+        else if intent raggiunto:
+          self.scene_counter += 1
+          setta tutte le bb con quello che sta dentro context
+        else if:
+          se è partito intent stop --> 
+            self.blackboard_scene.therapist_needed = True
+            fai partire intent terapista
+        else if:
+          se è partito intent nocapito --> 
+            se non ha capito 2 volte di seguito -->
+              self.blackboard_scene.therapist_needed = True
+              fai partire intent terapista
+            eltrimenti -->
+              setta tutte le bb con quello che sta dentro context
+        else if:
+          se hai sbagliato due volte di seguito salta alla prossima scena altrimenti fai -->
+          #TODO intent sbagliato, far dire una cosa leggermente diversa, sei sicuro? dovre butteresti questo?
+        else if:
+          scene_counter == 0 -->
+          setta tutte le bb con quello che sta dentro context
+        
+        return py_trees.common.Status.SUCCESS
 
     def terminate(self, new_status):
         """

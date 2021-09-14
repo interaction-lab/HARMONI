@@ -56,6 +56,12 @@ class AWSLexServicePytree(py_trees.behaviour.Behaviour):
         self.blackboard_scene.register_key("utterance", access=py_trees.common.Access.READ)
         self.blackboard_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name)
         self.blackboard_bot.register_key("result", access=py_trees.common.Access.WRITE)
+        
+        self.blackboard_stt = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.stt.name)
+        self.blackboard_stt.register_key("result", access=py_trees.common.Access.READ)
+        self.blackboard_card_detect = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.card_detect.name)
+        self.blackboard_card_detect.register_key("result", access=py_trees.common.Access.READ)
+        
 
         super(AWSLexServicePytree, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))

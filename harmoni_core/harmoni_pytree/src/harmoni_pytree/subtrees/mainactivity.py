@@ -136,6 +136,7 @@ def create_root():
                                                       reset=False)
     """
     chatbot=AWSLexServicePytree("AwsLexMainActivity")
+    chatbot2=AWSLexServicePytree("AwsLexMainActivity2")
     """
     Chat_Bot = py_trees.behaviours.Count(name="Chat_Bot",
                                                       fail_until=0,
@@ -303,7 +304,7 @@ def create_root():
     sequen_Detect_Kid = py_trees.composites.Parallel(name="PARALLEL_Detect_Kid")
     """
     sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid",memory=False)
-    sequen_detect_kid.add_children([timeout_kid_detection, eor_timer_detection])                                         
+    sequen_detect_kid.add_children([timeout_kid_detection, eor_timer_detection, chatbot2])                                         
 
     #TODO modulo per vedere se il sottoalbero è terminato
     subtree_result = SubTreeResultMain("SubTreeMain")
