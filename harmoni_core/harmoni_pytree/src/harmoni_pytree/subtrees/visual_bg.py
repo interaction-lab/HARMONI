@@ -204,22 +204,22 @@ def create_root(name = "Visual_Bg"):
     parall_detect_and_face = py_trees.composites.Parallel(name="ParallelDetectAndFace")
     parall_detect_and_face.add_children([sequen_detect_kid, face_exp])  
 
-    sequen_non_ti_vedo = py_trees.composites.Sequence(name="SequenceNonTiVedo")
-    sequen_non_ti_vedo.add_children([scene_manager,dummy1,chatbot,tts,parall_speaker,parall_detect_and_face])
+    sequen_visual = py_trees.composites.Sequence(name="SequenceVisual")
+    sequen_visual.add_children([scene_manager,dummy1,chatbot,tts,parall_speaker,parall_detect_and_face])
 
-    eor_non_ti_vedo = either_custom.either_or(
-        name="EitherOrNonTiVedo",
+    eor_visual = either_custom.either_or(
+        name="EitherOrVisual",
         conditions=[
             py_trees.common.ComparisonExpression(DetectorNameSpace.face_detect.name + "/result", "null", operator.ne),
             py_trees.common.ComparisonExpression(DetectorNameSpace.face_detect.name + "/result", "null", operator.eq),
         ],
         preemptible = False,
-        subtrees=[Success, sequen_non_ti_vedo],
-        namespace="eor_non_ti_vedo",
+        subtrees=[Success, sequen_visual],
+        namespace="eor_visual",
     )
     running_or_success = rs.create_root()
 
-    root.add_children([yolo_service,eor_non_ti_vedo, subtree_result, running_or_success])
+    root.add_children([yolo_service, eor_visual, subtree_result, running_or_success])
 
     return root
 
