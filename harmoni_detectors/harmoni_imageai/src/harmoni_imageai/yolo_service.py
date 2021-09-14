@@ -79,54 +79,42 @@ class ImageAIYoloService(HarmoniServiceManager):
 
     def callback(self, data):
         """ Callback function subscribing to the camera topic"""
-
         if self.state == State.START:
             # rospy.loginfo("Add data to buffer")
-            
-            data_tmp = self.cv_bridge.imgmsg_to_cv2(data, desired_encoding='passthrough')
-            self._buff.put(data_tmp)
-            if self.VAIMO:
-                self.detections = self.detector.detectObjectsFromImage(input_type="stream", 
-                                                                        output_type="array",
-                                                                        input_image=data_tmp,
-                                                                        minimum_percentage_probability=self.minimum_percentage_probability,
-                                                                        extract_detected_objects=True)
-                self.contatore+=1
-                for eachObject in self.detections[1]:
-                    print(eachObject["name"] , " : " , eachObject["percentage_probability"], " : ", eachObject["box_points"] )
-                    print("--------------------------------")
+            self._buff.put(data)
+
 
     def imageai_callback(self, data):
         """ Callback function subscribing to the camera topic"""
         self.response_received = True
 
 
-    #TODO
     def request(self, data):
 
         rospy.loginfo("Start the %s request" % self.name)
         #self.state = State.REQUEST
         #self.state = State.START
         try:
+            self.state = State.SUCCESS
             #detect objects coming from camera stream
+            data_tmp = self.cv_bridge.imgmsg_to_cv2(self._buff.get(), desired_encoding='passthrough')
+            self.detections = self.detector.detectObjectsFromImage(custom_objects=self.custom_objects,
+                                                                    input_type="stream", 
+                                                                    output_type="array",
+                                                                    input_image=data_tmp,
+                                                                    minimum_percentage_probability=self.minimum_percentage_probability,
+                                                                    extract_detected_objects=True)
+            self.result_msg = self.detections[1]
             """
-            self.video_path = self.detector.detectObjectsFromImage(
-                custom_objects=self.custom_objects,
-                camera_input=self.camera,
-                output_file_path=os.path.join(self.temp_path, self.output_file_name),
-                frames_per_second=self.frame_per_second, 
-                log_progress=True, 
-                per_second_function=self.forSeconds,
-                per_frame_function=self.forFrame,
-                per_minute_function=self.forMinute,
-                minimum_percentage_probability=self.minimum_percentage_probability)
+            for eachObject in self.detections[1]:
+                self.result_msg += str(eachObject["name"])+str(eachObject["percentage_probability"]) + "___"
+                print(eachObject["name"] , " : " , eachObject["percentage_probability"], " : ", eachObject["box_points"] )
+                print("--------------------------------")
             """
-            #r = rospy.Rate(1)
-            #while not self.response_received:
-            #    r.sleep()
 
         except rospy.ServiceException:
             self.start = State.FAILED
+            self.state = State.FAILED
             self.response_received = True
             rospy.loginfo("Service call failed")
             self.result_msg = ""
@@ -148,23 +136,6 @@ class ImageAIYoloService(HarmoniServiceManager):
             self.detector.loadModel()
             #custom_objects refers to the objects we want to detect
             self.custom_objects = self.detector.CustomObjects(person=True) 
-            
-            #JUST FOR TRY THE SERVICE COMMENT THE FOLLOWING
-            self.VAIMO = True
-            #START REGION
-            """
-            self.detections, self.objects_path = self.detector.detectObjectsFromImage(input_type="stream", 
-                                                                    input_image=self._buff.get(0),
-                                                                    output_image_path=os.path.join(self.temp_path, self.output_file_name),
-                                                                    minimum_percentage_probability=self.minimum_percentage_probability,
-                                                                    extract_detected_objects=True)
-            
-            for eachObject, eachObjectPath in zip(self.detections, self.objects_path):
-                print(eachObject["name"] , " : " , eachObject["percentage_probability"], " : ", eachObject["box_points"] )
-                print("Object's image saved in " + eachObjectPath)
-                print("--------------------------------")
-            """
-            #END REGION
 
         else:
             self.state = State.START
@@ -189,27 +160,6 @@ class ImageAIYoloService(HarmoniServiceManager):
         rospy.loginfo("Pause the %s service" % self.name)
         self.state = State.SUCCESS
         return
-
-    def forFrame(self, frame_number, output_array, output_count):
-        rospy.loginfo("FOR FRAME " , frame_number)
-        print("FOR FRAME " , frame_number)
-        print("Output for each object : ", output_array)
-        print("Output count for unique objects : ", output_count)
-        print("------------END OF A FRAME --------------")
-
-    def forSeconds(self, second_number, output_arrays, count_arrays, average_output_count):
-        print("SECOND : ", second_number)
-        print("Array for the outputs of each frame ", output_arrays)
-        print("Array for output count for unique objects in each frame : ", count_arrays)
-        print("Output average count for unique objects in the last second: ", average_output_count)
-        print("------------END OF A SECOND --------------")
-
-    def forMinute(self, minute_number, output_arrays, count_arrays, average_output_count):
-        print("MINUTE : ", minute_number)
-        print("Array for the outputs of each frame ", output_arrays)
-        print("Array for output count for unique objects in each frame : ", count_arrays)
-        print("Output average count for unique objects in the last minute: ", average_output_count)
-        print("------------END OF A MINUTE --------------")
 
 def main():
     """Set names, collect params, and give service to server"""

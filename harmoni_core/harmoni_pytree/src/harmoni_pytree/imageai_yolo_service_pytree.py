@@ -123,6 +123,7 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
                 self.logger.debug(f"Goal sent to {self.yolo_service}")
                 new_status = py_trees.common.Status.RUNNING
         else:
+            print(len(self.client_result))
             if len(self.client_result) > 0:
                 #if we are here, it means that there is the result so we can
                 #terminate the leaf
@@ -201,7 +202,7 @@ def main():
 
     yoloPyTree.setup(**additional_parameters)
     try:
-        for unused_i in range(0, 7):
+        for unused_i in range(0, 30):
             yoloPyTree.tick_once()
             time.sleep(0.5)
             print(blackboardProva)
