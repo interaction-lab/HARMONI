@@ -13,7 +13,6 @@ from random import randint
 import subprocess
 import operator
 import py_trees.console as console
-import either_custom as eu
 
 ##############################################################################
 # Classes

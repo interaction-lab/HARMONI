@@ -11,8 +11,8 @@ import time
 import subprocess
 import py_trees.console as console
 import os
-import activity as a
-import reset as r
+import activity
+import reset
 
 ##############################################################################
 # Classes
@@ -74,9 +74,9 @@ def post_tick_handler(snapshot_visitor, behaviour_tree):
 def create_root():
     root = py_trees.composites.Selector(name="root",memory=False)
 
-    Activity = a.create_root()
+    Activity = activity.create_root()
     
-    Reset = r.create_root()
+    Reset = reset.create_root()
 
     root.add_children([Activity, Reset, py_trees.behaviours.Running()])
 

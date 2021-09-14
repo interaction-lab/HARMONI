@@ -10,13 +10,13 @@ import py_trees
 import time
 import subprocess
 import py_trees.console as console
-import either_custom as eu
 import os
-import visual_bg as vbg
-import interaction_bg as ibg
-import mainactivity as ma
-import on_modules as om
-import therapist as t
+from harmoni_pytree import either_custom
+from harmoni_pytree import visual_bg
+from harmoni_pytree import interaction_bg 
+from harmoni_pytree import mainactivity
+from harmoni_pytree import on_modules
+from harmoni_pytree import therapist
 
 ##############################################################################
 # Classes
@@ -78,21 +78,21 @@ def post_tick_handler(snapshot_visitor, behaviour_tree):
 def create_root(name = "Activity"):
     root = py_trees.composites.Selector(name = name,memory=False)
 
-    therapist = t.create_root()
+    therapist = therapist.create_root()
 
-    on_module = om.create_root()
+    on_module = on_module.create_root()
 
     inverter_camera = py_trees.decorators.Inverter(name="InverterCamera",child=on_module)
 
-    mainactivity = ma.create_root()
+    mainactivity = mainactivity.create_root()
 
     inverter_mainactivity = py_trees.decorators.Inverter(name="InverterMainActivity",child=mainactivity)
 
-    visual_bg = vbg.create_root()
+    visual_bg = visual_bg.create_root()
 
     visual_bg_inverter = py_trees.decorators.Inverter(name="VisualBgInverter",child=visual_bg)
 
-    interaction_bg = ibg.create_root()
+    interaction_bg = interaction_bg.create_root()
 
     interaction_bg_inverter = py_trees.decorators.Inverter(name="InverterNonMiParli",child=interaction_bg)
 
