@@ -198,19 +198,19 @@ def create_root(name = "Interaction_Bg"):
     sequen_invalid_response = py_trees.composites.Sequence(name="SequenceInvalid")
     sequen_invalid_response.add_children([invalid_response_stt, invalid_response_card])
 
-    Either_Or_Timer_Detection = eu.either_or(
-        name="Either_Or_Timer_Detection",
+    eor_timer_detection = either_custom.either_or(
+        name="EitherOrTimerDetection",
         conditions=[
-            py_trees.common.ComparisonExpression("timer", 10, operator.lt),
-            py_trees.common.ComparisonExpression("timer", 10, operator.ge),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.interaction.name + "/kid_detection", 10, operator.lt),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.interaction.name + "/kid_detection", 10, operator.ge),
         ],
         preemptible = False,
         subtrees=[parall_detect_kid, sequen_invalid_response],
-        namespace="either_or_timer_detection",
+        namespace="eor_timer_detection",
     )
 
     sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid",memory=False)
-    sequen_detect_kid.add_children([timeout_kid_detection, Either_Or_Timer_Detection])                                         
+    sequen_detect_kid.add_children([timeout_kid_detection, eor_timer_detection])                                         
 
     parall_detect_and_face = py_trees.composites.Parallel(name="ParallelDetectAndFace")
     parall_detect_and_face.add_children([sequen_detect_kid, face_exp])  
@@ -223,20 +223,21 @@ def create_root(name = "Interaction_Bg"):
                                         parall_speaker, 
                                         parall_detect_and_face])  
 
-    Either_Or_Interaction_Bg = eu.either_or(
+    #TODO
+    eor_interaction_bg = either_custom.either_or(
         name="Either_Or_Interaction_Bg",
         conditions=[
-            py_trees.common.ComparisonExpression("bb_counter_non_risposto", 2, operator.lt),
-            py_trees.common.ComparisonExpression("bb_counter_non_risposto", 2, operator.ge),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.invalid_response.name+"/"+PyTreeNameSpace.mainactivity.name+"/counter_no_answer", 2, operator.lt),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.invalid_response.name+"/"+PyTreeNameSpace.mainactivity.name+"/counter_no_answer", 2, operator.ge),
         ],
         preemptible = False,
         subtrees=[Success, sequen_Interaction_Bg],
-        namespace="either_or_Interaction_Bg",
+        namespace="eor_interaction_bg",
     )
 
     running_or_success = rs.create_root()
 
-    root.add_children([Either_Or_Interaction_Bg, subtree_result, running_or_success])
+    root.add_children([eor_interaction_bg, subtree_result, running_or_success])
 
     return root
 

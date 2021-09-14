@@ -222,51 +222,51 @@ def create_root():
     sequen_speaker = py_trees.composites.Sequence(name="SequenceSpeaker")
     sequen_speaker.add_children([chatbot,tts,parall_speaker])
 
-    Either_Or_Speaker = py_trees.idioms.either_or(
-        name="Either_Or_Speaker",
+    eor_speaker = py_trees.idioms.either_or(
+        name="EitherOrSpeaker",
         conditions=[
-            py_trees.common.ComparisonExpression("do_speech", "null", operator.ne),
-            py_trees.common.ComparisonExpression("do_speech", "null", operator.eq),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/do_speech", "null", operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/do_speech", "null", operator.eq),
         ],
-        subtrees=[sequen_Speaker, Success1],
-        namespace="either_or_speaker",
+        subtrees=[sequen_speaker, Success1],
+        namespace="eor_speaker",
     )
-    Either_Or_Face = py_trees.idioms.either_or(
-        name="Either_Or_Face",
+    eor_face = py_trees.idioms.either_or(
+        name="EitherOrFace",
         conditions=[
-            py_trees.common.ComparisonExpression("do_face", "null", operator.ne),
-            py_trees.common.ComparisonExpression("do_face", "null", operator.eq),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/do_face", "null", operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/do_face", "null", operator.eq),
         ],
         subtrees=[face_exp, Success5],
-        namespace="either_or_face",
+        namespace="eor_face",
     )
-    Either_Or_Gesture = py_trees.idioms.either_or(
-        name="Either_Or_Gesture",
+    eor_gesture = py_trees.idioms.either_or(
+        name="EitherOrGesture",
         conditions=[
-            py_trees.common.ComparisonExpression("do_gesture", "null", operator.ne),
-            py_trees.common.ComparisonExpression("do_gesture", "null", operator.eq),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/do_gesture", "null", operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/do_gesture", "null", operator.eq),
         ],
         subtrees=[gesture, Success3],
-        namespace="either_or_gesture",
+        namespace="eor_gesture",
     )
-    Either_Or_External_Speaker = py_trees.idioms.either_or(
-        name="Either_Or_External_Speaker",
+    eor_external_speaker = py_trees.idioms.either_or(
+        name="EitherOrExternalSpeaker",
         conditions=[
-            py_trees.common.ComparisonExpression("do_sound", "null", operator.ne),
-            py_trees.common.ComparisonExpression("do_sound", "null", operator.eq),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/do_sound", "null", operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/do_sound", "null", operator.eq),
         ],
         subtrees=[ext_speaker, Success4],
-        namespace="either_or_esternal_speaker",
+        namespace="eor_external_speaker",
     )
 
     parall_face_and_gesture = py_trees.composites.Parallel(name="ParallelFaceAndGesture")
-    parall_face_and_gesture.add_children([Either_Or_Face,Either_Or_Gesture])
+    parall_face_and_gesture.add_children([eor_face,eor_gesture])
 
     sequen_speaker_and_parallel_f_g = py_trees.composites.Sequence(name="SequenceSpeakerAndParallelFG")
-    sequen_speaker_and_parallel_f_g.add_children([Either_Or_Speaker,parall_Face_And_Gesture])
+    sequen_speaker_and_parallel_f_g.add_children([eor_speaker,parall_face_and_gesture])
     
     parall_robot = py_trees.composites.Parallel(name="ParallelRobot")
-    parall_robot.add_children([Either_Or_External_Speaker, sequen_speaker_and_parallel_f_g])
+    parall_robot.add_children([eor_external_speaker, sequen_speaker_and_parallel_f_g])
     
     sequen_robot = py_trees.composites.Sequence(name="SequenceRobot")
     sequen_robot.add_children([scene_manager,dummy1,dummy2,dummy3,Projector,parall_robot])
@@ -277,15 +277,15 @@ def create_root():
     parall_detect_kid = py_trees.composites.Parallel(name="ParallelDetectKid")
     parall_detect_kid.add_children([sequen_speech_kid,custom_yolo])
 
-    Either_Or_Timer_Detection = eu.either_or(
-        name="Either_Or_Timer_Detection",
+    eor_timer_detection = either_custom.either_or(
+        name="EitherOrTimerDetection",
         conditions=[
-            py_trees.common.ComparisonExpression("timer", 10, operator.lt),
-            py_trees.common.ComparisonExpression("timer", 10, operator.ge),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.visual.name + "/kid_detection", 10, operator.lt),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.visual.name + "/kid_detection", 10, operator.ge),
         ],
         preemptible = False,
-        subtrees=[parall_Detect_Kid, invalid_response],
-        namespace="either_or_timer_detection",
+        subtrees=[parall_detect_kid, invalid_response],
+        namespace="eor_timer_detection",
     )
 
     """dummydummy
@@ -303,7 +303,7 @@ def create_root():
     sequen_Detect_Kid = py_trees.composites.Parallel(name="PARALLEL_Detect_Kid")
     """
     sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid",memory=False)
-    sequen_detect_kid.add_children([timeout_kid_detection, Either_Or_Timer_Detection])                                         
+    sequen_detect_kid.add_children([timeout_kid_detection, eor_timer_detection])                                         
 
     #TODO modulo per vedere se il sottoalbero è terminato
     subtree_result = SubTreeResultMain("SubTreeMain")
@@ -316,7 +316,7 @@ def create_root():
     """
     running_or_success = rs.create_root()
 
-    root.add_children([sequen_Robot, sequen_detect_kid, subtree_result, running_or_success])
+    root.add_children([sequen_robot, sequen_detect_kid, subtree_result, running_or_success])
 
     return root
 

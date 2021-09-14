@@ -13,7 +13,7 @@ from random import randint
 import subprocess
 import operator
 import py_trees.console as console
-import either_custom as eu
+import either_custom 
 import running_or_success as rs
 
 from harmoni_pytree.leaves.aws_lex_service_pytree import AWSLexServicePytree
@@ -157,7 +157,7 @@ def create_root(name = "Visual_Bg"):
                                                       reset=False)
     """
     #TODO mancano le foglie di imageAi 
-    yolo_service = YoloServicePytree("Face_Detection")
+    yolo_service = YoloServicePytree("FaceDetection")
     """                                           
     Detection_Face = py_trees.behaviours.SetBlackboardVariable(name="Detection_Face",
                                                         variable_name="scene/detection_face_bb_namespace/result_message", 
@@ -181,45 +181,45 @@ def create_root(name = "Visual_Bg"):
                                                       success_until=10,
                                                       reset=False)
     """
-    parall_Speaker = py_trees.composites.Parallel(name="Parallel_Speaker")
-    parall_Speaker.add_children([speaker,lips_sync])    
+    parall_speaker = py_trees.composites.Parallel(name="ParallelSpeaker")
+    parall_speaker.add_children([speaker,lips_sync])    
 
-    sequen_Speech_Kid = py_trees.composites.Sequence(name="Sequence_Speech_Kid")
-    sequen_Speech_Kid.add_children([microphone ,stt])
+    sequen_speech_kid = py_trees.composites.Sequence(name="SequenceSpeechKid")
+    sequen_speech_kid.add_children([microphone ,stt])
 
-    Either_Or_Timer_Detection = eu.either_or(
-        name="Either_Or_Timer_Detection",
+    eor_timer_detection = either_custom.either_or(
+        name="EitherOrTimerDetection",
         conditions=[
-            py_trees.common.ComparisonExpression("timer", 10, operator.lt),
-            py_trees.common.ComparisonExpression("timer", 10, operator.ge),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.visual.name + "/kid_detection", 10, operator.lt),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.visual.name + "/kid_detection", 10, operator.ge),
         ],
         preemptible = False,
-        subtrees=[sequen_Speech_Kid, Invalid_Response],
-        namespace="either_or_timer_detection",
+        subtrees=[sequen_speech_kid, invalid_response],
+        namespace="eor_timer_detection",
     )
 
-    sequen_Detect_Kid = py_trees.composites.Sequence(name="Sequence_Detect_Kid",memory=False)
-    sequen_Detect_Kid.add_children([timeout_kid_detection, Either_Or_Timer_Detection])                                         
+    sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid",memory=False)
+    sequen_detect_kid.add_children([timeout_kid_detection, eor_timer_detection])                                         
 
-    parall_Detect_And_Face = py_trees.composites.Parallel(name="Parallel_Detect_And_Face")
-    parall_Detect_And_Face.add_children([sequen_Detect_Kid, face_exp])  
+    parall_detect_and_face = py_trees.composites.Parallel(name="ParallelDetectAndFace")
+    parall_detect_and_face.add_children([sequen_detect_kid, face_exp])  
 
-    sequen_Non_Ti_Vedo = py_trees.composites.Sequence(name="Sequence_Non_Ti_Vedo")
-    sequen_Non_Ti_Vedo.add_children([scene_manager,dummy1,chatbot,tts,parall_Speaker,parall_Detect_And_Face])
+    sequen_non_ti_vedo = py_trees.composites.Sequence(name="SequenceNonTiVedo")
+    sequen_non_ti_vedo.add_children([scene_manager,dummy1,chatbot,tts,parall_speaker,parall_detect_and_face])
 
-    Either_Or_Non_Ti_Vedo = eu.either_or(
-        name="Either_Or_Non_Ti_Vedo",
+    eor_non_ti_vedo = either_custom.either_or(
+        name="EitherOrNonTiVedo",
         conditions=[
-            py_trees.common.ComparisonExpression("bb_face_detection", "null", operator.ne),
-            py_trees.common.ComparisonExpression("bb_face_detection", "null", operator.eq),
+            py_trees.common.ComparisonExpression(DetectorNameSpace.face_detect.name + "/result", "null", operator.ne),
+            py_trees.common.ComparisonExpression(DetectorNameSpace.face_detect.name + "/result", "null", operator.eq),
         ],
         preemptible = False,
-        subtrees=[Success, sequen_Non_Ti_Vedo],
-        namespace="either_or_non_ti_vedo",
+        subtrees=[Success, sequen_non_ti_vedo],
+        namespace="eor_non_ti_vedo",
     )
-    Running_Or_Success = rs.create_root()
+    running_or_success = rs.create_root()
 
-    root.add_children([Detection_Face,Either_Or_Non_Ti_Vedo, Visual_Bg_Subtree_Results, Running_Or_Success])
+    root.add_children([yolo_service,eor_non_ti_vedo, subtree_result, running_or_success])
 
     return root
 
