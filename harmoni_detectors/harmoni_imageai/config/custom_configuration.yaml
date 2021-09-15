@@ -1,10 +1,10 @@
 imageai:
   default_param: #param for detection with custom model
-    model_name: #model has to be pretrained with "pretrained_YOLOv3"
-    json_name: 
+    model_name: "yolo_custom_card.h5" #model has to be pretrained with "pretrained_YOLOv3"
+    json_name: "detection_config_card.json"
     subscriber_id: "default"
     frame_per_second: 30 
-    frame_detection_interval: #the object detection will be updated after 5 frames (the number has to be between 5-20) 
+    frame_detection_interval: 5 #the object detection will be updated after 5 frames (the number has to be between 5-20) 
     output_file_name: "temp_custom_output"
     log_progress: True
     minimum_percentage_probability: 50 #minimum percentage for recognizing objects

@@ -41,7 +41,6 @@ class ImageAIYoloService(HarmoniServiceManager):
         self.service_id = hf.get_child_id(self.name)
         self.result_msg = ""
 
-        self.VAIMO = False
         self.contatore = 0
 
         self.cv_bridge = CvBridge()
