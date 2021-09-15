@@ -7,18 +7,12 @@ import random
 
 class SubTreeResultInteractionBg(py_trees.behaviour.Behaviour):
     def __init__(self, name):
-        """
-        Minimal one-time initialisation. A good rule of thumb is
-        to only include the initialisation relevant for being able
-        to insert this behaviour in a tree for offline rendering to
-        dot graphs.
-
-        Other one-time initialisation requirements should be met via
-        the setup() method.
-        """
 
         self.blackboard_scene_interaction = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name +"/"+ PyTreeNameSpace.interaction.name)
         self.blackboard_scene_interaction.register_key("scene_counter", access=py_trees.common.Access.WRITE)
+        self.blackboard_scene_interaction.register_key("max_num_scene", access=py_trees.common.Access.READ) #NEW
+        self.blackboard_invalid_response_mainactivity = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.invalid_response.name +"/"+ PyTreeNameSpace.mainactivity.name)
+        self.blackboard_invalid_response_mainactivity.register_key("counter_no_answer", access=py_trees.common.Access.WRITE)
         self.blackboard_interaction = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.interaction.name)
         self.blackboard_interaction.register_key("inside", access=py_trees.common.Access.WRITE)
         
@@ -26,68 +20,22 @@ class SubTreeResultInteractionBg(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self):
-        """
-        When is this called?
-          This function should be either manually called by your program
-          to setup this behaviour alone, or more commonly, via
-          :meth:`~py_trees.behaviour.Behaviour.setup_with_descendants`
-          or :meth:`~py_trees.trees.BehaviourTree.setup`, both of which
-          will iterate over this behaviour, it's children (it's children's
-          children ...) calling :meth:`~py_trees.behaviour.Behaviour.setup`
-          on each in turn.
-
-          If you have vital initialisation necessary to the success
-          execution of your behaviour, put a guard in your
-          :meth:`~py_trees.behaviour.Behaviour.initialise` method
-          to protect against entry without having been setup.
-
-        What to do here?
-          Delayed one-time initialisation that would otherwise interfere
-          with offline rendering of this behaviour in a tree to dot graph
-          or validation of the behaviour's configuration.
-
-          Good examples include:
-
-          - Hardware or driver initialisation
-          - Middleware initialisation (e.g. ROS pubs/subs/services)
-          - A parallel checking for a valid policy configuration after
-            children have been added or removed
-        """
         self.logger.debug("  %s [SubTreeResultInteractionBg::setup()]" % self.name)
 
     def initialise(self):
-        """
-        When is this called?
-          The first time your behaviour is ticked and anytime the
-          status is not RUNNING thereafter.
-
-        What to do here?
-          Any initialisation you need before putting your behaviour
-          to work.
-        """
         self.logger.debug("  %s [SubTreeResultInteractionBg::initialise()]" % self.name)
 
     def update(self):
-        """
-        When is this called?
-          Every time your behaviour is ticked.
+        
+        #se si è entrati almeno una volta in interaction_bg
+        if self.blackboard_invalid_response_mainactivity.counter_no_answer >= 2:
+          self.blackboard_interaction.inside = True
+        #caso in cui si è arrivato al numero massimo di scene -->
+        if self.blackboard_scene_interaction.scene_counter == self.blackboard_scene_interaction.max_num_scene:
+          self.blackboard_invalid_response_mainactivity.counter_no_answer = 0
+          self.blackboard_scene_interaction.scene_counter = 0
 
-        What to do here?
-          - Triggering, checking, monitoring. Anything...but do not block!
-          - Set a feedback message
-          - return a py_trees.common.Status.[RUNNING, SUCCESS, FAILURE]
-        """
         self.logger.debug("  %s [SubTreeResultInteractionBg::update()]" % self.name)
-        ready_to_make_a_decision = random.choice([True, False])
-        decision = random.choice([True, False])
-        if not ready_to_make_a_decision:
-            return py_trees.common.Status.RUNNING
-        elif decision:
-            self.feedback_message = "We are not bar!"
-            return py_trees.common.Status.SUCCESS
-        else:
-            self.feedback_message = "Uh oh"
-            return py_trees.common.Status.FAILURE
 
     def terminate(self, new_status):
         """

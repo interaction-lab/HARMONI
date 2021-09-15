@@ -10,6 +10,14 @@
                     },
                     {
                         "utterance" : "scena 2",
+                        "face"      : "sorriso",
+                        "gesture"   : "alla grande",
+                        "image"     : "supermercato",
+                        "sound"     : "uccellini",
+                        "do_kid"    : "True" 
+                    },
+                    {
+                        "utterance" : "scena 3",
                         "face"      : "",
                         "gesture"   : "",
                         "image"     : "",
@@ -17,7 +25,7 @@
                         "do_kid"    : "" 
                     },
                     {
-                        "utterance" : "scena 3",
+                        "utterance" : "scena 4",
                         "face"      : "",
                         "gesture"   : "",
                         "image"     : "",

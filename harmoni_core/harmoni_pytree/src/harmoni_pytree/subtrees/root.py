@@ -72,7 +72,7 @@ def post_tick_handler(snapshot_visitor, behaviour_tree):
 
 
 def create_root():
-    root = py_trees.composites.Selector(name="root",memory=False)
+    root = py_trees.composites.Selector(name="root",memory=True)
 
     Activity = activity.create_root()
     

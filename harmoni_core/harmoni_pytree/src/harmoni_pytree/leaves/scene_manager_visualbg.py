@@ -22,10 +22,11 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
         self.blackboards = []
         self.blackboard_scene = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name)
         self.blackboard_scene.register_key(PyTreeNameSpace.visual.name+"/state", access=py_trees.common.Access.WRITE)
+        self.blackboard_scene.register_key(PyTreeNameSpace.visual.name+"/scene_counter", access=py_trees.common.Access.WRITE)
+        self.blackboard_scene.register_key(PyTreeNameSpace.visual.name+"/max_num_scene", access=py_trees.common.Access.WRITE) #NEW
         self.blackboard_scene.register_key("utterance", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key("face_exp", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key("therapist_needed", access=py_trees.common.Access.WRITE)
-        self.blackboard_scene.register_key(PyTreeNameSpace.visual.name+"/scene_counter", access=py_trees.common.Access.WRITE)
         self.blackboard_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name)
         self.blackboard_bot.register_key("result", access=py_trees.common.Access.READ)
         """
@@ -54,6 +55,9 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
         #                 .
         #                 .
         #context[number_of_scene][utterance]
+
+        self.blackboard_scene.(PyTreeNameSpace.visual.name).max_num_scene = len(self.context["scene"])
+
         self.logger.debug("  %s [SceneManagerVisualBg::setup()]" % self.name)
 
     def initialise(self):

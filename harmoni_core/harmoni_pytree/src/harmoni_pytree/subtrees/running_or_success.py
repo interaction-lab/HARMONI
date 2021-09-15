@@ -13,7 +13,7 @@ from random import randint
 import subprocess
 import operator
 import py_trees.console as console
-import either_custom as eu
+import either_custom
 
 ##############################################################################
 # Classes
@@ -73,14 +73,11 @@ def post_tick_handler(snapshot_visitor, behaviour_tree):
     print(py_trees.display.unicode_blackboard())
 
 
-def create_root(name= "RunningOrSuccess",condition = 0,namespace = 0):
+def create_root(name= "RunningOrSuccess", condition = typing.List[common.ComparisonExpression]):
 
-    root = eu.either_or(
+    root = either_custom.either_or(
         name="Either_Or"+name,
-        conditions=[
-            py_trees.common.ComparisonExpression("timer", 10, operator.lt),
-            py_trees.common.ComparisonExpression("timer", 10, operator.ge),
-        ],
+        conditions=condition,
         preemptible = False,
         subtrees=[py_trees.behaviours.Success(), py_trees.behaviours.Failure()],
         namespace="running_or_success"+name,

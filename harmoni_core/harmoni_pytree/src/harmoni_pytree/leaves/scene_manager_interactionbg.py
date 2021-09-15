@@ -22,25 +22,15 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
         self.blackboards = []
         self.blackboard_scene = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name)
         self.blackboard_scene.register_key(PyTreeNameSpace.interaction.name+"/state", access=py_trees.common.Access.WRITE)
+        self.blackboard_scene.register_key(PyTreeNameSpace.interaction.name+"/scene_counter", access=py_trees.common.Access.WRITE)
+        self.blackboard_scene.register_key(PyTreeNameSpace.interaction.name+"/max_num_scene", access=py_trees.common.Access.WRITE) #NEW
         self.blackboard_scene.register_key("utterance", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key("face_exp", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key("therapist_needed", access=py_trees.common.Access.WRITE)
-        self.blackboard_scene.register_key(PyTreeNameSpace.interaction.name+"/scene_counter", access=py_trees.common.Access.WRITE)
         self.blackboard_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name)
         self.blackboard_bot.register_key("result", access=py_trees.common.Access.READ)
-        """
-        self.blackboard_stt = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.stt.name)
-        self.blackboard_stt.register_key("result", access=py_trees.common.Access.READ)
-        """
         self.blackboard_visual= self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.visual.name)
         self.blackboard_visual.register_key("inside", access=py_trees.common.Access.READ)
-        """
-        self.blackboard_card_detect = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.card_detect.name)
-        self.blackboard_card_detect.register_key("result", access=py_trees.common.Access.READ)
-        """
-        self.blackboard_invalid_mainactivuty = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.invalid_response.name +"/"+ PyTreeNameSpace.mainactivity.name)
-        self.blackboard_invalid_mainactivuty.register_key("counter_no_answer", access=py_trees.common.Access.READ)
-
         super(SceneManagerInteractionBg, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
@@ -63,14 +53,15 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
         #context[number_of_scene][utterance]
         self.logger.debug("  %s [SceneManagerInteractionBg::setup()]" % self.name)
 
+        self.blackboard_scene.(PyTreeNameSpace.interaction.name).max_num_scene = len(self.context["scene"])
+
+
     def initialise(self):
         self.logger.debug("  %s [SceneManagerInteractionBg::initialise()]" % self.name)
 
     def update(self):
 
         self.logger.debug("  %s [SceneManagerInteractionBg::update()]" % self.name)
-        
-        self.blackboard_invalid_mainactivuty.counter_no_answer = 0
 
         if intent raggiunto:
           self.scene_counter += 1

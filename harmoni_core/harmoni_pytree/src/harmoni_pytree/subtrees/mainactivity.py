@@ -85,6 +85,9 @@ def post_tick_handler(snapshot_visitor, behaviour_tree):
 def create_root():
     root = py_trees.composites.Sequence(name="mainactivity",memory=True)
     
+    self.blackboard_scene_mainactivity = root.attach_blackboard_client(name=name, namespace=PyTreeNameSpace.scene.name +"/"+ PyTreeNameSpace.mainactivity.name)
+    self.blackboard_scene_mainactivity.register_key("max_num_scene", access=py_trees.common.Access.READ)
+
     Success1 = py_trees.behaviours.Success(name="Success")
     Success2 = py_trees.behaviours.Success(name="Success")
     Success3 = py_trees.behaviours.Success(name="Success")
@@ -226,8 +229,8 @@ def create_root():
     eor_speaker = py_trees.idioms.either_or(
         name="EitherOrSpeaker",
         conditions=[
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/do_speech", "null", operator.ne),
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/do_speech", "null", operator.eq),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/utterance", "null", operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/utterance", "null", operator.eq),
         ],
         subtrees=[sequen_speaker, Success1],
         namespace="eor_speaker",
@@ -258,6 +261,16 @@ def create_root():
         ],
         subtrees=[ext_speaker, Success4],
         namespace="eor_external_speaker",
+    )
+    #TODO aggiungere questo a monte dell'interazione del bambino
+    eor_kid = py_trees.idioms.either_or(
+        name="EitherOrKid",
+        conditions=[
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/do_kid", "null", operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/do_kid", "null", operator.eq),
+        ],
+        subtrees=[ext_speaker, Success4],
+        namespace="eor_kid",
     )
 
     parall_face_and_gesture = py_trees.composites.Parallel(name="ParallelFaceAndGesture")
@@ -315,7 +328,11 @@ def create_root():
                                                       success_until=10,
                                                       reset=False)
     """
-    running_or_success = rs.create_root()
+    running_or_success = rs.create_root(name_"SCEGLILOOOOOOO",
+    condition=[
+            py_trees.common.ComparisonExpression("scene/mainactivity/scene_counter", self.blackboard_scene_mainactivity.max_num_scene, operator.eq),
+            py_trees.common.ComparisonExpression("scene/mainactivity/scene_counter", self.blackboard_scene_mainactivity.max_num_scene, operator.ne),
+        ])
 
     root.add_children([sequen_robot, sequen_detect_kid, subtree_result, running_or_success])
 

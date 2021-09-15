@@ -26,6 +26,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         self.blackboard_scene = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name)
         self.blackboard_scene.register_key(PyTreeNameSpace.mainactivity.name+"/state", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key(PyTreeNameSpace.mainactivity.name+"/scene_counter", access=py_trees.common.Access.WRITE)
+        self.blackboard_scene.register_key(PyTreeNameSpace.mainactivity.name+"/max_num_scene", access=py_trees.common.Access.WRITE) #NEW
         self.blackboard_scene.register_key(PyTreeNameSpace.mainactivity.name+"/do_kid", access=py_trees.common.Access.WRITE) #NEW
         self.blackboard_scene.register_key("utterance", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key("face_exp", access=py_trees.common.Access.WRITE)
@@ -43,9 +44,9 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         self.blackboard_stt.register_key("result", access=py_trees.common.Access.READ)
         """
         self.blackboard_visual= self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.visual.name)
-        self.blackboard_visual.register_key("inside", access=py_trees.common.Access.READ)
+        self.blackboard_visual.register_key("inside", access=py_trees.common.Access.WRITE)
         self.blackboard_interaction= self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.interaction.name)
-        self.blackboard_interaction.register_key("inside", access=py_trees.common.Access.READ)
+        self.blackboard_interaction.register_key("inside", access=py_trees.common.Access.WRITE)
         """
         self.blackboard_card_detect = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.card_detect.name)
         self.blackboard_card_detect.register_key("result", access=py_trees.common.Access.READ)
@@ -66,6 +67,9 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         # per interagire con context fai una cosa simile a questa riga sotto
         #bb = contex["scene"][counter_scene]["gesture"]
 
+        #print("Lunghezza: " + len(self.context["scene"]))
+        self.blackboard_scene.(PyTreeNameSpace.mainactivity.name).max_num_scene = len(self.context["scene"])
+        
         print("TEST: context gesture is  %s " % self.context["scene"][self.scene_counter]["gesture"])
 
         self.logger.debug("  %s [SceneManagerMain::setup()]" % self.name)
@@ -93,9 +97,14 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
           - return a py_trees.common.Status.[RUNNING, SUCCESS, FAILURE]
         """
         self.logger.debug("  %s [SceneManagerMain::update()]" % self.name)
-        """
-        if self.blackboard_visual.inside == True or self.blackboard_interaction.inside == True:
-          setta tutte le bb con quello che sta dentro context
+        
+        if self.blackboard_visual.inside == True:
+          self.blackboard_visual.inside = False
+          #TODO gestisci visual ture, forse vogliamo fare un intent per far dire al robot "Okay riprendiamo l'attività" 
+                                      #e poi ripeti l'ultima scena che avevamo fatto
+        if self.blackboard_interaction.inside == True:
+          self.blackboard_interaction.inside = False
+          #TODO gestisci interaction ture ovvero ripeti l'ultima scena
         else if intent raggiunto:
           self.scene_counter += 1
           setta tutte le bb con quello che sta dentro context
@@ -116,7 +125,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         else if:
           scene_counter == 0 -->
           setta tutte le bb con quello che sta dentro context
-        """
+        
         return py_trees.common.Status.SUCCESS
 
     def terminate(self, new_status):
@@ -127,3 +136,22 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
             - INVALID : a higher priority branch has interrupted, or shutting down
         """
         self.logger.debug("  %s [SceneManagerMain::terminate().terminate()][%s->%s]" % (self.name, self.status, new_status))
+
+def main():
+    """
+    Entry point for the demo script.
+    """
+
+    py_trees.logging.level = py_trees.logging.Level.DEBUG
+
+    action = SceneManagerMain("ppp")
+    action.setup()
+    try:
+        for unused_i in range(0, 12):
+            action.tick_once()
+            time.sleep(0.5)
+        print("\n")
+    except KeyboardInterrupt:
+        pass
+if __name__ == "__main__":
+  main()
