@@ -1,0 +1,16 @@
+{
+    "scene" :   [
+                    {
+                        "utterance" : "scena 1",
+                        "face"      : ""
+                    },
+                    {
+                        "utterance" : "scena 2",
+                        "face"      : ""
+                    },
+                    {
+                        "utterance" : "scena 3",
+                        "face"      : ""
+                    }
+                ]
+}

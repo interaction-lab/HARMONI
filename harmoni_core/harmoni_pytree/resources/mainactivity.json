@@ -1,0 +1,28 @@
+{
+    "scene" :   [
+                    {
+                        "utterance" : "scena 1",
+                        "face"      : "sorriso",
+                        "gesture"   : "alla grande",
+                        "image"     : "supermercato",
+                        "sound"     : "uccellini",
+                        "do_kid"    : "True" 
+                    },
+                    {
+                        "utterance" : "scena 2",
+                        "face"      : "",
+                        "gesture"   : "",
+                        "image"     : "",
+                        "sound"     : "",
+                        "do_kid"    : "" 
+                    },
+                    {
+                        "utterance" : "scena 3",
+                        "face"      : "",
+                        "gesture"   : "",
+                        "image"     : "",
+                        "sound"     : "",
+                        "do_kid"    : "" 
+                    }
+                ]
+}

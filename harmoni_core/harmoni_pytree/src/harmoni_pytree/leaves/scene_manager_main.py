@@ -3,7 +3,9 @@
 
 import py_trees
 import random
-
+import os
+import json
+import time
 
 class SceneManagerMain(py_trees.behaviour.Behaviour):
     def __init__(self, name):
@@ -24,12 +26,15 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         self.blackboard_scene = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name)
         self.blackboard_scene.register_key(PyTreeNameSpace.mainactivity.name+"/state", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key(PyTreeNameSpace.mainactivity.name+"/scene_counter", access=py_trees.common.Access.WRITE)
+        self.blackboard_scene.register_key(PyTreeNameSpace.mainactivity.name+"/do_kid", access=py_trees.common.Access.WRITE) #NEW
         self.blackboard_scene.register_key("utterance", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key("face_exp", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key("gesture", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key("image", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key("sound", access=py_trees.common.Access.WRITE)
+        """
         self.blackboard_scene.register_key("do_speech", access=py_trees.common.Access.WRITE)
+        """
         self.blackboard_scene.register_key("therapist_needed", access=py_trees.common.Access.WRITE)
         self.blackboard_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name)
         self.blackboard_bot.register_key("result", access=py_trees.common.Access.READ)
@@ -48,23 +53,20 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
 
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
-
     def setup(self):
         #TODO load all the utterance in a varaible
-        # number_of_scene(0):
-        #                     utterance:
-        #                     gesture:
-        #                     .
-        #                     .
-        #                     .
-        #                 1:
-        #                     utterance:
-        #                     gesture:
-        #                     ...
-        #                 .
-        #                 .
-        #                 .
-        #context[number_of_scene][utterance]
+        base_dir = os.getcwd()
+        print(base_dir)
+        
+        with open(
+            base_dir + "/../../../resources/mainactivity.json", "r"
+        ) as json_file:
+            self.context = json.load(json_file)
+        
+        # per interagire con context fai una cosa simile a questa riga sotto
+        #bb = contex["scene"][counter_scene]["gesture"]
+
+        print("TEST: context gesture is  %s " % self.context["scene"][self.scene_counter]["gesture"])
 
         self.logger.debug("  %s [SceneManagerMain::setup()]" % self.name)
 
@@ -91,7 +93,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
           - return a py_trees.common.Status.[RUNNING, SUCCESS, FAILURE]
         """
         self.logger.debug("  %s [SceneManagerMain::update()]" % self.name)
-
+        """
         if self.blackboard_visual.inside == True or self.blackboard_interaction.inside == True:
           setta tutte le bb con quello che sta dentro context
         else if intent raggiunto:
@@ -114,7 +116,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         else if:
           scene_counter == 0 -->
           setta tutte le bb con quello che sta dentro context
-        
+        """
         return py_trees.common.Status.SUCCESS
 
     def terminate(self, new_status):
