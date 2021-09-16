@@ -1,6 +1,5 @@
 <!-- This is an example launch file for how a ROS application could use a node -->
 <launch>
-   
 	<arg name="use_aws_lex" default="true"/>
 	<arg name="use_google" default="false"/>
 	<arg name="instance_id" default="default"/>

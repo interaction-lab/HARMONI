@@ -20,7 +20,7 @@ from harmoni_pytree.leaves.face_service_pytree import FaceServicePytree
 from harmoni_pytree.leaves.google_service_pytree import SpeechToTextServicePytree
 from harmoni_pytree.leaves.microphone_service_pytree import MicrophoneServicePytree
 from harmoni_pytree.leaves.speaker_service_pytree import SpeakerServicePytree
-from harmoni_pytree.leaves.scene_manager import SceneManagerInteractionBg
+from harmoni_pytree.leaves.scene_manager_interactionbg import SceneManagerInteractionBg
 from harmoni_pytree.leaves.subtree_result_interaction import SubTreeResultInteractionBg
 
 ##############################################################################
@@ -194,7 +194,7 @@ def create_root(name = "Interaction_Bg"):
     sequen_speech_kid.add_children([microphone ,stt])
 
     parall_detect_kid = py_trees.composites.Parallel(name="ParallelDetectKid")
-    parall_detect_kid.add_children([sequen_speech_did,custom_yolo])
+    parall_detect_kid.add_children([sequen_speech_kid,custom_yolo])
 
     sequen_invalid_response = py_trees.composites.Sequence(name="SequenceInvalid")
     sequen_invalid_response.add_children([invalid_response_stt, invalid_response_card])
@@ -218,7 +218,7 @@ def create_root(name = "Interaction_Bg"):
 
     sequen_interaction_bg = py_trees.composites.Sequence(name="SequenceInteractionBg")
 
-    sequen_interaction_bg.add_children([scene_manager
+    sequen_interaction_bg.add_children([scene_manager,
                                         chatbot, 
                                         tts, 
                                         parall_speaker, 
@@ -231,7 +231,7 @@ def create_root(name = "Interaction_Bg"):
             py_trees.common.ComparisonExpression(PyTreeNameSpace.invalid_response.name+"/"+PyTreeNameSpace.mainactivity.name+"/counter_no_answer", 2, operator.ge),
         ],
         preemptible = False,
-        subtrees=[Success, sequen_Interaction_Bg],
+        subtrees=[Success, sequen_interaction_bg],
         namespace="eor_interaction_bg",
     )
 

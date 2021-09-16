@@ -23,7 +23,7 @@ from harmoni_pytree.leaves.microphone_service_pytree import MicrophoneServicePyt
 from harmoni_pytree.leaves.speaker_service_pytree import SpeakerServicePytree
 from harmoni_pytree.leaves.gesture_service_pytree import GestureServicePytree
 from harmoni_pytree.leaves.counter_no_answer import CounterNoAnswer
-from harmoni_pytree.leaves.subtree_result_main import SubTreeResultMain
+
 ##############################################################################
 # Classes
 ##############################################################################
@@ -93,6 +93,7 @@ def create_root():
     Success3 = py_trees.behaviours.Success(name="Success")
     Success4 = py_trees.behaviours.Success(name="Success")
     Success5 = py_trees.behaviours.Success(name="Success")
+    Success6 = py_trees.behaviours.Success(name="Success")
 
     #TODO modulo sceneManager!
     scene_manager = SceneManagerMain("SceneManagerMain")
@@ -213,7 +214,7 @@ def create_root():
                                                         variable_value="null", 
                                                         overwrite=True)
                                         
-    counter_no_answer = CounterNoAnswer("CounterNoAnswer".
+    counter_no_answer = CounterNoAnswer(name="CounterNoAnswer",
                                         variable_name= PyTreeNameSpace.invalid_response.name+"/"+PyTreeNameSpace.mainactivity.name+"/counter_no_answer") 
     #TODO timer                                                 
     timeout_kid_detection = Timer(name="TimeoutKidDetectionMain",
@@ -262,16 +263,6 @@ def create_root():
         subtrees=[ext_speaker, Success4],
         namespace="eor_external_speaker",
     )
-    #TODO aggiungere questo a monte dell'interazione del bambino
-    eor_kid = py_trees.idioms.either_or(
-        name="EitherOrKid",
-        conditions=[
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/do_kid", "null", operator.ne),
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/do_kid", "null", operator.eq),
-        ],
-        subtrees=[ext_speaker, Success4],
-        namespace="eor_kid",
-    )
 
     parall_face_and_gesture = py_trees.composites.Parallel(name="ParallelFaceAndGesture")
     parall_face_and_gesture.add_children([eor_face,eor_gesture])
@@ -291,6 +282,9 @@ def create_root():
     parall_detect_kid = py_trees.composites.Parallel(name="ParallelDetectKid")
     parall_detect_kid.add_children([sequen_speech_kid,custom_yolo])
 
+    sequence_invalid_response = py_trees.composites.Sequence(name="SequenceInvalidResponse")
+    sequence_invalid_response.add_children([invalid_response_stt, invalid_response_card])
+
     eor_timer_detection = either_custom.either_or(
         name="EitherOrTimerDetection",
         conditions=[
@@ -298,7 +292,7 @@ def create_root():
             py_trees.common.ComparisonExpression(PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.visual.name + "/kid_detection", 10, operator.ge),
         ],
         preemptible = False,
-        subtrees=[parall_detect_kid, invalid_response],
+        subtrees=[parall_detect_kid, sequence_invalid_response],
         namespace="eor_timer_detection",
     )
 
@@ -319,22 +313,24 @@ def create_root():
     sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid",memory=False)
     sequen_detect_kid.add_children([timeout_kid_detection, eor_timer_detection, chatbot2])                                         
 
-    #TODO modulo per vedere se il sottoalbero è terminato
-    subtree_result = SubTreeResultMain("SubTreeMain")
-    """                                            
-    MainActivity_Subtree_Results = py_trees.behaviours.Count(name="Interaction_Bg_Subtree_Results",
-                                                      fail_until=0,
-                                                      running_until=1,
-                                                      success_until=10,
-                                                      reset=False)
-    """
-    running_or_success = rs.create_root(name_"SCEGLILOOOOOOO",
-    condition=[
-            py_trees.common.ComparisonExpression("scene/mainactivity/scene_counter", self.blackboard_scene_mainactivity.max_num_scene, operator.eq),
-            py_trees.common.ComparisonExpression("scene/mainactivity/scene_counter", self.blackboard_scene_mainactivity.max_num_scene, operator.ne),
-        ])
+    running_or_success = rs.create_root(name="RSMainactivity",
+                                        condition=[
+                                                py_trees.common.ComparisonExpression("scene/mainactivity/scene_counter", self.blackboard_scene_mainactivity.max_num_scene, operator.eq),
+                                                py_trees.common.ComparisonExpression("scene/mainactivity/scene_counter", self.blackboard_scene_mainactivity.max_num_scene, operator.ne),
+                                            ])
 
-    root.add_children([sequen_robot, sequen_detect_kid, subtree_result, running_or_success])
+    #TODO aggiungere questo a monte dell'interazione del bambino
+    eor_kid = py_trees.idioms.either_or(
+        name="EitherOrKid",
+        conditions=[
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/do_kid", "null", operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/do_kid", "null", operator.eq),
+        ],
+        subtrees=[sequen_detect_kid, Success],
+        namespace="eor_kid",
+    )
+
+    root.add_children([sequen_robot, eor_kid, running_or_success])
 
     return root
 

@@ -3,6 +3,8 @@
 
 import py_trees
 import random
+import typing
+from py_trees import common
 
 #TODO prendi spunto da Count di py_trees
 class CounterNoAnswer(py_trees.behaviour.Behaviour):
