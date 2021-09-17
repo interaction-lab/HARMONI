@@ -3,7 +3,7 @@
 # Common Imports
 import rospy, rospkg, roslib
 
-from harmoni_common_lib.constants import State, ActuatorNameSpace
+from harmoni_common_lib.constants import *
 from harmoni_common_lib.service_server import HarmoniServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 from harmoni_common_lib.action_client import HarmoniActionClient
@@ -65,7 +65,7 @@ class FaceServicePytree(py_trees.behaviour.Behaviour):
         self.blackboard_tts.register_key("result", access=py_trees.common.Access.READ)
         
         #lips_sync
-        self.blackboard_lips = self.attach_blackboard_client(name=self.name, namespace=Resources.face.name[1]) #??
+        self.blackboard_lips = self.attach_blackboard_client(name=self.name, namespace=Resources.face.value[1])
         self.blackboard_lips.register_key("state", access=py_trees.common.Access.WRITE)
         
         #face_exp

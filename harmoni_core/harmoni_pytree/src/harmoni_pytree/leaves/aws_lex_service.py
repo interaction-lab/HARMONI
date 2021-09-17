@@ -2,7 +2,7 @@
 
 # Common Imports
 import rospy
-from harmoni_common_lib.constants import State
+from harmoni_common_lib.constants import *
 from actionlib_msgs.msg import GoalStatus
 from harmoni_common_lib.action_client import HarmoniActionClient
 import harmoni_common_lib.helper_functions as hf

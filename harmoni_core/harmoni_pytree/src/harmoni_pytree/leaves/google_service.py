@@ -4,7 +4,7 @@
 import rospy
 import roslib
 
-from harmoni_common_lib.constants import State
+from harmoni_common_lib.constants import *
 from actionlib_msgs.msg import GoalStatus
 from harmoni_common_lib.service_server import HarmoniServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
@@ -32,7 +32,7 @@ import time
 
 import py_trees.console
 
-class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
+class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
 
     #TODO tutte le print devono diventare console py_tree
     """
@@ -42,7 +42,7 @@ class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
     """
     #ImageAICustom è un detector
 
-    def __init__(self, name = "ImageAICustomServicePytree"):
+    def __init__(self, name = "SpeechToTextServicePytree"):
         
         """
         Here there is just the constructor of the
@@ -71,7 +71,7 @@ class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
         self.blackboard_stt = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.stt.name)
         self.blackboard_stt.register_key("result", access=py_trees.common.Access.WRITE)
 
-        super(ImageAICustomServicePytree, self).__init__(name)
+        super(SpeechToTextServicePytree, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self,**additional_parameters):
@@ -83,7 +83,7 @@ class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
         """
         for parameter in additional_parameters:
             print(parameter, additional_parameters[parameter])  
-            if(parameter =="ImageAICustomServicePytree_mode"):
+            if(parameter =="SpeechToTextServicePytree_mode"):
                 self.mode = additional_parameters[parameter]        
 
         service_name = DetectorNameSpace.imageai.name

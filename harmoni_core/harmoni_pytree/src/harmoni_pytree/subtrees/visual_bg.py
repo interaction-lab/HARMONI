@@ -14,15 +14,19 @@ from random import randint
 import subprocess
 import operator
 import py_trees.console as console
-import either_custom 
 import running_or_success as rs
 
-from harmoni_pytree.leaves.aws_lex_service_pytree import AWSLexServicePytree
-from harmoni_pytree.leaves.aws_tts_service_pytree import AWSTtsServicePytree
-from harmoni_pytree.leaves.face_service_pytree import FaceServicePytree
-from harmoni_pytree.leaves.google_service_pytree import SpeechToTextServicePytree
-from harmoni_pytree.leaves.microphone_service_pytree import MicrophoneServicePytree
-from harmoni_pytree.leaves.speaker_service_pytree import SpeakerServicePytree
+from harmoni_pytree import either_custom
+from harmoni_pytree.leaves import timer
+from harmoni_pytree.leaves.scene_manager_visualbg import SceneManagerVisualBg
+from harmoni_pytree.leaves.subtree_result_visualbg import SubTreeResultVisualBg
+from harmoni_pytree.leaves.aws_lex_service import AWSLexServicePytree
+from harmoni_pytree.leaves.aws_tts_service import AWSTtsServicePytree
+from harmoni_pytree.leaves.face_service import FaceServicePytree
+from harmoni_pytree.leaves.google_service import SpeechToTextServicePytree
+from harmoni_pytree.leaves.microphone_service import MicrophoneServicePytree
+from harmoni_pytree.leaves.speaker_service import SpeakerServicePytree
+from harmoni_pytree.leaves.yolo_service import ImageAIYoloServicePytree
 
 ##############################################################################
 # Classes
@@ -159,7 +163,7 @@ def create_root(name = "Visual_Bg"):
                                                       reset=False)
     """
     #TODO mancano le foglie di imageAi 
-    yolo_service = YoloServicePytree("FaceDetection")
+    yolo_service = ImageAIYoloServicePytree("FaceDetection")
     """                                           
     Detection_Face = py_trees.behaviours.SetBlackboardVariable(name="Detection_Face",
                                                         variable_name="scene/detection_face_bb_namespace/result_message", 
@@ -283,6 +287,7 @@ def main():
             break
     print("\n")
 
-
+print("************************************************************************************************************")
+print(__name__)
 if __name__ == "__main__":
     main()

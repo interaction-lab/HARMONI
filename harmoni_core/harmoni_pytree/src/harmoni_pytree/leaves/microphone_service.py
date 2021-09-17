@@ -8,7 +8,7 @@ from harmoni_common_lib.constants import State
 from actionlib_msgs.msg import GoalStatus
 from harmoni_common_lib.action_client import HarmoniActionClient
 import harmoni_common_lib.helper_functions as hf
-from harmoni_microphone.microphone_service import MicrophoneService
+#from harmoni_microphone.microphone_service import MicrophoneService
 # Other Imports
 from harmoni_common_lib.constants import SensorNameSpace
 from audio_common_msgs.msg import AudioData
@@ -77,13 +77,13 @@ class MicrophoneServicePytree(py_trees.behaviour.Behaviour):
             if(parameter =="MicrophoneServicePytree_mode"):
                 self.mode = additional_parameters[parameter]        
 
-        service_name = SensorNameSpace.microphone.name  # "microphone"
-        instance_id = rospy.get_param("instance_id")  # "default"
-        service_id = f"{service_name}_{instance_id}"
+        #service_name = SensorNameSpace.microphone.name  # "microphone"
+        #instance_id = rospy.get_param("instance_id")  # "default"
+        #service_id = f"{service_name}_{instance_id}"
 
-        params = rospy.get_param(service_name + "/" + instance_id + "_param/")
+        #params = rospy.get_param(service_name + "/" + instance_id + "_param/")
 
-        self.microphone_service = MicrophoneService(service_id, params) 
+        #self.microphone_service = MicrophoneService(service_id, params) 
 
         #TODO we have to do this in the if 
         #rospy.init_node("microphone_default", log_level=rospy.INFO)

@@ -15,7 +15,7 @@ from random import randint
 import subprocess
 import operator
 import py_trees.console as console
-import either_custom
+from harmoni_pytree import either_custom
 from py_trees import common
 
 ##############################################################################

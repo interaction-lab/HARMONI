@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from harmoni_common_lib.constants import *
 import py_trees
 import random
-
 
 class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
     def __init__(self, name):
@@ -16,7 +16,7 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
         Other one-time initialisation requirements should be met via
         the setup() method.
         """
-
+        self.name = name
         self.scene_counter = 0
 
         self.blackboards = []
@@ -56,7 +56,7 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
         #                 .
         #context[number_of_scene][utterance]
 
-        self.blackboard_scene.(PyTreeNameSpace.visual.name).max_num_scene = len(self.context["scene"])
+        self.blackboard_scene.visual.max_num_scene = len(self.context["scene"])
 
         self.logger.debug("  %s [SceneManagerVisualBg::setup()]" % self.name)
 
@@ -77,7 +77,7 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
         self.logger.debug("  %s [SceneManagerVisualBg::update()]" % self.name)
         
         self.blackboard_invalid_mainactivuty.counter_no_answer = 0
-
+        """
         if intent raggiunto:
           self.scene_counter += 1
           setta tutte le bb con quello che sta dentro context
@@ -88,7 +88,7 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
         else if:
           scene_counter == 0 -->
           setta tutte le bb con quello che sta dentro context
-
+        """
         return py_trees.common.Status.SUCCESS
 
     def terminate(self, new_status):

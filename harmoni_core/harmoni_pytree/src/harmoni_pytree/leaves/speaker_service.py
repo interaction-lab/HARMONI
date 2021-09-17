@@ -3,7 +3,7 @@
 # Common Imports
 import rospy, rospkg, roslib
 
-from harmoni_common_lib.constants import State, ActuatorNameSpace
+from harmoni_common_lib.constants import *
 from harmoni_common_lib.service_server import HarmoniServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 from harmoni_common_lib.action_client import HarmoniActionClient

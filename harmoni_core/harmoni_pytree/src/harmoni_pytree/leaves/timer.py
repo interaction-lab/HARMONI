@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import py_trees
+import typing
 import random
 
 #TODO prendi spunto da Timer di py_trees
@@ -9,7 +10,7 @@ class Timer(py_trees.behaviour.Behaviour):
     def __init__(self,
             variable_namespace: str, 
             variable_name: str,
-            name: typing.Union[str, common.Name]=common.Name.AUTO_GENERATED,
+            name: typing.Union[str, py_trees.common.Name]=py_trees.common.Name.AUTO_GENERATED,
     ):
         super(Timer, self).__init__(name)
 
@@ -39,7 +40,7 @@ class Timer(py_trees.behaviour.Behaviour):
         """
         self.logger.debug("  %s [Timer::update()]" % self.name)
         elapsed_time = time.time() - self.start_time #time.time() is the current time
-            self.feedback_message = "timer ran out [{0}]".format(self.duration)
+        self.feedback_message = "timer running from [{0}]".format(self.elapsed_time)
         self.blackboard_camera.variable_name = elapsed_time
         return common.Status.SUCCESS
 
