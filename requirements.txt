@@ -22,3 +22,5 @@ func_timeout
 datetimerange
 wget
 pytrees
+imageai --upgrade
+tensorflow==2.4.0

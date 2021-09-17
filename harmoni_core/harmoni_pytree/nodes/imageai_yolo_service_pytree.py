@@ -9,13 +9,13 @@ from actionlib_msgs.msg import GoalStatus
 from harmoni_common_lib.service_server import HarmoniServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 from harmoni_common_lib.action_client import HarmoniActionClient
-from harmoni_imageai.custom_service import ImageAICustomService
+#from harmoni_imageai.yolo_service import ImageAIYoloService
 import harmoni_common_lib.helper_functions as hf
 
 # Specific Imports
 from harmoni_common_lib.constants import DetectorNameSpace, ActionType
 from sensor_msgs.msg import Image
-from imageai.Detection.Custom import CustomVideoObjectDetection
+from imageai.Detection import VideoObjectDetection
 from botocore.exceptions import BotoCoreError, ClientError
 from contextlib import closing
 from collections import deque 
@@ -32,7 +32,7 @@ import time
 
 import py_trees.console
 
-class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
+class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
 
     #TODO tutte le print devono diventare console py_tree
     """
@@ -40,9 +40,9 @@ class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
     true: opzione 1 (utilizzo come una classe python)
     false: opzione 2 (utilizzo mediate action_goal)
     """
-    #ImageAICustom è un detector
+    #ImageAIYolo è un detector
 
-    def __init__(self, name = "ImageAICustomServicePytree"):
+    def __init__(self, name = "ImageAIYoloServicePytree"):
         
         """
         Here there is just the constructor of the
@@ -50,10 +50,11 @@ class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
         """
         self.name = name
         self.mode = False
-        self.custom_service = None
+        #self.yolo_service = None
         self.result_data = None
-        self.service_client_custom = None
+        self.service_client_yolo = None
         self.client_result = None
+        self.server_name = None
 
         # here there is the inizialization of the blackboards
         self.blackboards = []
@@ -61,17 +62,12 @@ class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
         self.blackboard_camera=self.attach_blackboard_client(name=self.name,namespace="harmoni_camera")
         self.blackboard_camera.register_key("result_message", access=py_trees.common.Access.READ)
         #blackboard used to comunicate with aws_lex (bot)
-        self.blackboard_custom=self.attach_blackboard_client(name=self.name,namespace="harmoni_imageai_custom")
-        self.blackboard_custom.register_key("result_data",access=py_trees.common.Access.WRITE)
-        self.blackboard_custom.register_key("result_message", access=py_trees.common.Access.WRITE)
+        self.blackboard_yolo=self.attach_blackboard_client(name=self.name,namespace="harmoni_imageai_yolo")
+        self.blackboard_yolo.register_key("result_data",access=py_trees.common.Access.WRITE)
+        self.blackboard_yolo.register_key("result_message", access=py_trees.common.Access.WRITE)
 
-        #TODO: usa queste bb che sono le nuove
-        self.blackboard_microphone = self.attach_blackboard_client(name=self.name, namespace=SensorNameSpace.microphone.name)
-        self.blackboard_microphone.register_key("state", access=py_trees.common.Access.READ)
-        self.blackboard_stt = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.stt.name)
-        self.blackboard_stt.register_key("result", access=py_trees.common.Access.WRITE)
 
-        super(ImageAICustomServicePytree, self).__init__(name)
+        super(ImageAIYoloServicePytree, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self,**additional_parameters):
@@ -83,32 +79,30 @@ class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
         """
         for parameter in additional_parameters:
             print(parameter, additional_parameters[parameter])  
-            if(parameter =="ImageAICustomServicePytree_mode"):
+            if(parameter =="ImageAIYoloServicePytree_mode"):
                 self.mode = additional_parameters[parameter]        
 
-        service_name = DetectorNameSpace.imageai.name
-        instance_id = rospy.get_param("instance_id")
+        #service_name = DetectorNameSpace.imageai.name
+        #instance_id = rospy.get_param("instance_id")
 
-        param = rospy.get_param(service_name + "/" + instance_id + "_param/")
+        #param = rospy.get_param(service_name + "/" + instance_id + "_param/")
 
-        self.custom_service = ImageAICustomService(self.name,param)
-
+        #self.yolo_service = ImageAIYoloService(self.name,param)
         #TODO questo dobbiamo farlo nell'if 
         #rospy init node mi fa diventare un nodo ros
-<<<<<<< HEAD:harmoni_core/harmoni_pytree/src/harmoni_pytree/leaves/google_service.py
-        rospy.init_node("stt_default", log_level=rospy.INFO)
-=======
         rospy.init_node("imageai_default", log_level=rospy.INFO)
->>>>>>> feature/imageAI:harmoni_core/harmoni_pytree/nodes/imageai_custom_service_pytree.py
-
         if(not self.mode):
-            self.service_client_custom = HarmoniActionClient(self.name)
+            print("CIAOOO1")
+            self.service_client_yolo = HarmoniActionClient(self.name)
+            print("CIAOOO2")
             self.client_result = deque()
-            self.service_client_custom.setup_client("imageai_default", 
+            print("CIAOOO3")
+            self.server_name = "imageai_default"
+            self.service_client_yolo.setup_client(self.server_name, 
                                                 self._result_callback,
                                                 self._feedback_callback)
+            print("CIAOOO4")
             self.logger.debug("Behavior interface action clients have been set up!")
-        
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 
     def initialise(self):
@@ -116,80 +110,41 @@ class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
         
         """ 
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
-
     def update(self):
         """
         
         """
-<<<<<<< HEAD:harmoni_core/harmoni_pytree/src/harmoni_pytree/leaves/google_service.py
-        #Secondo me dovremmo usare transcribe_stream
-        if self.service_client_stt.get_state() == GoalStatus.LOST:
-            print("Mandiamo il goal")
-            
-            self.logger.debug(f"Sending goal to {self.google_service}")
-            # Dove posso prendere details["action_goal"]?
-            self.service_client_stt.send_goal(
-                action_goal = ActionType["REQUEST"].value,
-                optional_data="",
-                wait=False,
-            )
-            self.logger.debug(f"Goal sent to {self.google_service}")
-            
-            new_status = py_trees.common.Status.RUNNING
-        else:
-            print("Leggiamo i possibili risultati: "+ str(len(self.client_result)))
-            if len(self.client_result) > 0:
-                #se siamo qui vuol dire che il risultato c'è e quindi 
-                #possiamo terminare la foglia
-                print("Effettivamente abbiamo un risultato: ")
-                self.result_data = self.client_result.popleft()["data"]
-                print(self.result_data)
-                self.blackboard_input_bot.result_message = "SUCCESS"
-                self.blackboard_input_bot.result_data = self.result_data
-                new_status = py_trees.common.Status.SUCCESS
-            else:
-                #se siamo qui vuol dire che il risultato ancora non c'è
-                self.blackboard_input_bot.result_message = "RUNNING"
-                new_status = py_trees.common.Status.RUNNING
-
-            #incerti di questa riga
-            if(self.google_service.state == State.FAILED):
-                self.blackboard_input_bot.result_message = "FAILURE"
-                new_status = py_trees.common.Status.FAILURE
-            
-            self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
-=======
     
-        if self.service_client_custom.get_state() == GoalStatus.LOST:
-                self.logger.debug(f"Sending goal to {self.google_service}")
+        if self.service_client_yolo.get_state() == GoalStatus.LOST:
+                self.logger.debug(f"Sending goal to {self.server_name}")
                 # Dove posso prendere details["action_goal"]?
-                self.service_client_custom.send_goal(
+                self.service_client_yolo.send_goal(
                     action_goal = ActionType["REQUEST"].value,
                     optional_data="",
                     wait=False,
                 )
-                self.logger.debug(f"Goal sent to {self.google_service}")
+                self.logger.debug(f"Goal sent to {self.server_name}")
                 new_status = py_trees.common.Status.RUNNING
         else:
+            print(len(self.client_result))
             if len(self.client_result) > 0:
                 #if we are here, it means that there is the result so we can
                 #terminate the leaf
                 self.result_data = self.client_result.popleft()["data"]
-                self.blackboard_custom.result_message = "SUCCESS"
-                self.blackboard_custom.result_data = self.result_data
+                self.blackboard_yolo.result_message = "SUCCESS"
+                self.blackboard_yolo.result_data = self.result_data
                 new_status = py_trees.common.Status.SUCCESS
             else:
                 #there is no result yet
-                self.blackboard_custom.result_message = "RUNNING"
+                self.blackboard_yolo.result_message = "RUNNING"
                 new_status = py_trees.common.Status.RUNNING
 
             #not sure about these lines
-            if(self.google_service.state == State.FAILED):
-                self.blackboard_custom.result_message = "FAILURE"
+            if(self.service_client_yolo.get_state() == State.FAILED):
+                self.blackboard_yolo.result_message = "FAILURE"
                 new_status = py_trees.common.Status.FAILURE
         
         self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
->>>>>>> feature/imageAI:harmoni_core/harmoni_pytree/nodes/imageai_custom_service_pytree.py
         return new_status
 
         
@@ -238,26 +193,21 @@ def main():
 
     py_trees.logging.level = py_trees.logging.Level.DEBUG
     
-    blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace="harmoni_imageai_custom")
+    blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace="harmoni_imageai_yolo")
     blackboardProva.register_key("result_data", access=py_trees.common.Access.READ)
     blackboardProva.register_key("result_message", access=py_trees.common.Access.READ)
     print(blackboardProva)
 
-    customPyTree = ImageAICustomServicePytree("ImageAICustomServicePytreeTest")
+    yoloPyTree = ImageAIYoloServicePytree("ImageAIYoloServicePytreeTest")
 
     additional_parameters = dict([
-        ("ImageAICustomServicePytree_mode",False)])
+        ("ImageAIYoloServicePytree_mode",False)])
 
-    customPyTree.setup(**additional_parameters)
+    yoloPyTree.setup(**additional_parameters)
     try:
-<<<<<<< HEAD:harmoni_core/harmoni_pytree/src/harmoni_pytree/leaves/google_service.py
-        for unused_i in range(0, 30):
-            sttPyTree.tick_once()
-=======
-        for unused_i in range(0, 7):
-            customPyTree.tick_once()
->>>>>>> feature/imageAI:harmoni_core/harmoni_pytree/nodes/imageai_custom_service_pytree.py
-            time.sleep(0.5)
+        for unused_i in range(0, 10):
+            yoloPyTree.tick_once()
+            time.sleep(2)
             print(blackboardProva)
         print("\n")
     except KeyboardInterrupt:
