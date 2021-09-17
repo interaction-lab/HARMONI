@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import py_trees
 from leaves.camera_service_pytree import CameraServicePytree
 
