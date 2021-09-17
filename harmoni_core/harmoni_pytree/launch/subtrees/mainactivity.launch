@@ -10,7 +10,7 @@
     <include file="$(find harmoni_tts)/launch/tts_service.launch"></include>
     <include file="$(find harmoni_bot)/launch/bot_service.launch"></include>
     <include file="$(find harmoni_face)/launch/face_service.launch"></include>
-    <include file="$(find harmoni_stt)/launch/google_service.launch"></include>
+    <include file="$(find harmoni_stt)/launch/stt_google_service.launch"></include>
     <include file="$(find harmoni_gesture)/launch/gesture_service.launch"></include>
     <include file="$(find harmoni_web)/launch/web_service.launch"></include>
     <include file="$(find harmoni_microphone)/launch/microphone_service.launch"></include>
