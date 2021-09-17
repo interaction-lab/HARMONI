@@ -66,6 +66,13 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
         self.blackboard_yolo.register_key("result_data",access=py_trees.common.Access.WRITE)
         self.blackboard_yolo.register_key("result_message", access=py_trees.common.Access.WRITE)
 
+        #TODO usa le nuove blackboard
+        self.blackboard_camera = self.attach_blackboard_client(name=self.name, namespace=SensorNameSpace.camera.name+"/face")
+        self.blackboard_camera.register_key("state", access=py_trees.common.Access.READ)
+        self.blackboard_face_detection = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.face_detect.name)
+        self.blackboard_face_detection.register_key("state", access=py_trees.common.Access.WRITE)
+        self.blackboard_face_detection.register_key("result", access=py_trees.common.Access.WRITE)
+
 
         super(ImageAIYoloServicePytree, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
