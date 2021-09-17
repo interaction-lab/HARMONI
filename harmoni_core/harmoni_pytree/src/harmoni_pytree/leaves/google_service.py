@@ -95,11 +95,7 @@ class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
 
         #TODO questo dobbiamo farlo nell'if 
         #rospy init node mi fa diventare un nodo ros
-<<<<<<< HEAD:harmoni_core/harmoni_pytree/src/harmoni_pytree/leaves/google_service.py
         rospy.init_node("stt_default", log_level=rospy.INFO)
-=======
-        rospy.init_node("imageai_default", log_level=rospy.INFO)
->>>>>>> feature/imageAI:harmoni_core/harmoni_pytree/nodes/imageai_custom_service_pytree.py
 
         if(not self.mode):
             self.service_client_custom = HarmoniActionClient(self.name)
@@ -121,7 +117,6 @@ class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
         """
         
         """
-<<<<<<< HEAD:harmoni_core/harmoni_pytree/src/harmoni_pytree/leaves/google_service.py
         #Secondo me dovremmo usare transcribe_stream
         if self.service_client_stt.get_state() == GoalStatus.LOST:
             print("Mandiamo il goal")
@@ -158,38 +153,6 @@ class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
                 new_status = py_trees.common.Status.FAILURE
             
             self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
-=======
-    
-        if self.service_client_custom.get_state() == GoalStatus.LOST:
-                self.logger.debug(f"Sending goal to {self.google_service}")
-                # Dove posso prendere details["action_goal"]?
-                self.service_client_custom.send_goal(
-                    action_goal = ActionType["REQUEST"].value,
-                    optional_data="",
-                    wait=False,
-                )
-                self.logger.debug(f"Goal sent to {self.google_service}")
-                new_status = py_trees.common.Status.RUNNING
-        else:
-            if len(self.client_result) > 0:
-                #if we are here, it means that there is the result so we can
-                #terminate the leaf
-                self.result_data = self.client_result.popleft()["data"]
-                self.blackboard_custom.result_message = "SUCCESS"
-                self.blackboard_custom.result_data = self.result_data
-                new_status = py_trees.common.Status.SUCCESS
-            else:
-                #there is no result yet
-                self.blackboard_custom.result_message = "RUNNING"
-                new_status = py_trees.common.Status.RUNNING
-
-            #not sure about these lines
-            if(self.google_service.state == State.FAILED):
-                self.blackboard_custom.result_message = "FAILURE"
-                new_status = py_trees.common.Status.FAILURE
-        
-        self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
->>>>>>> feature/imageAI:harmoni_core/harmoni_pytree/nodes/imageai_custom_service_pytree.py
         return new_status
 
         
@@ -250,13 +213,8 @@ def main():
 
     customPyTree.setup(**additional_parameters)
     try:
-<<<<<<< HEAD:harmoni_core/harmoni_pytree/src/harmoni_pytree/leaves/google_service.py
-        for unused_i in range(0, 30):
+        for unused_i in range(0, 10):
             sttPyTree.tick_once()
-=======
-        for unused_i in range(0, 7):
-            customPyTree.tick_once()
->>>>>>> feature/imageAI:harmoni_core/harmoni_pytree/nodes/imageai_custom_service_pytree.py
             time.sleep(0.5)
             print(blackboardProva)
         print("\n")
