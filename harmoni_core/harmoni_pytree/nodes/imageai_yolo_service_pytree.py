@@ -9,7 +9,7 @@ from actionlib_msgs.msg import GoalStatus
 from harmoni_common_lib.service_server import HarmoniServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
 from harmoni_common_lib.action_client import HarmoniActionClient
-from harmoni_imageai.yolo_service import ImageAIYoloService
+#from harmoni_imageai.yolo_service import ImageAIYoloService
 import harmoni_common_lib.helper_functions as hf
 
 # Specific Imports
@@ -50,10 +50,11 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
         """
         self.name = name
         self.mode = False
-        self.yolo_service = None
+        #self.yolo_service = None
         self.result_data = None
         self.service_client_yolo = None
         self.client_result = None
+        self.server_name = None
 
         # here there is the inizialization of the blackboards
         self.blackboards = []
@@ -81,25 +82,27 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
             if(parameter =="ImageAIYoloServicePytree_mode"):
                 self.mode = additional_parameters[parameter]        
 
-        service_name = DetectorNameSpace.imageai.name
-        instance_id = rospy.get_param("instance_id")
+        #service_name = DetectorNameSpace.imageai.name
+        #instance_id = rospy.get_param("instance_id")
 
-        param = rospy.get_param(service_name + "/" + instance_id + "_param/")
+        #param = rospy.get_param(service_name + "/" + instance_id + "_param/")
 
-        self.yolo_service = ImageAIYoloService(self.name,param)
-
+        #self.yolo_service = ImageAIYoloService(self.name,param)
         #TODO questo dobbiamo farlo nell'if 
         #rospy init node mi fa diventare un nodo ros
         rospy.init_node("imageai_default", log_level=rospy.INFO)
-
         if(not self.mode):
+            print("CIAOOO1")
             self.service_client_yolo = HarmoniActionClient(self.name)
+            print("CIAOOO2")
             self.client_result = deque()
-            self.service_client_yolo.setup_client("imageai_default", 
+            print("CIAOOO3")
+            self.server_name = "imageai_default"
+            self.service_client_yolo.setup_client(self.server_name, 
                                                 self._result_callback,
                                                 self._feedback_callback)
+            print("CIAOOO4")
             self.logger.debug("Behavior interface action clients have been set up!")
-        
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 
     def initialise(self):
@@ -113,14 +116,14 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
         """
     
         if self.service_client_yolo.get_state() == GoalStatus.LOST:
-                self.logger.debug(f"Sending goal to {self.yolo_service}")
+                self.logger.debug(f"Sending goal to {self.server_name}")
                 # Dove posso prendere details["action_goal"]?
                 self.service_client_yolo.send_goal(
                     action_goal = ActionType["REQUEST"].value,
                     optional_data="",
                     wait=False,
                 )
-                self.logger.debug(f"Goal sent to {self.yolo_service}")
+                self.logger.debug(f"Goal sent to {self.server_name}")
                 new_status = py_trees.common.Status.RUNNING
         else:
             print(len(self.client_result))
@@ -137,7 +140,7 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
                 new_status = py_trees.common.Status.RUNNING
 
             #not sure about these lines
-            if(self.yolo_service.state == State.FAILED):
+            if(self.service_client_yolo.get_state() == State.FAILED):
                 self.blackboard_yolo.result_message = "FAILURE"
                 new_status = py_trees.common.Status.FAILURE
         
@@ -202,9 +205,9 @@ def main():
 
     yoloPyTree.setup(**additional_parameters)
     try:
-        for unused_i in range(0, 30):
+        for unused_i in range(0, 10):
             yoloPyTree.tick_once()
-            time.sleep(0.5)
+            time.sleep(2)
             print(blackboardProva)
         print("\n")
     except KeyboardInterrupt:

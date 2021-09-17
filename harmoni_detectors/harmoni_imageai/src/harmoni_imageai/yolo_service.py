@@ -41,7 +41,12 @@ class ImageAIYoloService(HarmoniServiceManager):
         self.service_id = hf.get_child_id(self.name)
         self.result_msg = ""
 
-        self.contatore = 0
+        self.detector = ObjectDetection()
+        self.detector.setModelTypeAsYOLOv3()
+        self.detector.setModelPath(os.path.join(self.model_path, "yolo.h5"))
+        self.detector.loadModel()
+        #custom_objects refers to the objects we want to detect
+        self.custom_objects = self.detector.CustomObjects(person=True) 
 
         self.cv_bridge = CvBridge()
 
@@ -128,13 +133,6 @@ class ImageAIYoloService(HarmoniServiceManager):
         rospy.loginfo("Start the %s service" % self.name)
         if self.state == State.INIT:
             self.state = State.START
-
-            self.detector = ObjectDetection()
-            self.detector.setModelTypeAsYOLOv3()
-            self.detector.setModelPath(os.path.join(self.model_path, "yolo.h5"))
-            self.detector.loadModel()
-            #custom_objects refers to the objects we want to detect
-            self.custom_objects = self.detector.CustomObjects(person=True) 
 
         else:
             self.state = State.START
