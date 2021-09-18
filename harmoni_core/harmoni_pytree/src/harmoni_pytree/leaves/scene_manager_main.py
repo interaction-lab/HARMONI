@@ -69,7 +69,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         #bb = contex["scene"][counter_scene]["gesture"]
 
         #print("Lunghezza: " + len(self.context["scene"]))
-        self.blackboard_scene.(PyTreeNameSpace.mainactivity.name).max_num_scene = len(self.context["scene"])
+        self.blackboard_scene(PyTreeNameSpace.mainactivity.name).max_num_scene = len(self.context["scene"])
         
         print("TEST: context gesture is  %s " % self.context["scene"][self.scene_counter]["gesture"])
 
@@ -106,7 +106,8 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         if self.blackboard_interaction.inside == True:
           self.blackboard_interaction.inside = False
           #TODO gestisci interaction ture ovvero ripeti l'ultima scena
-        else if intent raggiunto:
+        """
+        else if intent_raggiunto:
           self.scene_counter += 1
           setta tutte le bb con quello che sta dentro context
         else if:
@@ -126,7 +127,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         else if:
           scene_counter == 0 -->
           setta tutte le bb con quello che sta dentro context
-        
+        """
         return py_trees.common.Status.SUCCESS
 
     def terminate(self, new_status):

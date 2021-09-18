@@ -13,17 +13,22 @@ from random import randint
 import subprocess
 import operator
 import py_trees.console as console
-import either_custom as eu
+from harmoni_pytree import either_custom as eu
 import running_or_success as rs
 
-from harmoni_pytree.leaves.aws_lex_service_pytree import AWSLexServicePytree
-from harmoni_pytree.leaves.aws_tts_service_pytree import AWSTtsServicePytree
-from harmoni_pytree.leaves.face_service_pytree import FaceServicePytree
-from harmoni_pytree.leaves.google_service_pytree import SpeechToTextServicePytree
-from harmoni_pytree.leaves.microphone_service_pytree import MicrophoneServicePytree
-from harmoni_pytree.leaves.speaker_service_pytree import SpeakerServicePytree
-from harmoni_pytree.leaves.gesture_service_pytree import GestureServicePytree
+from harmoni_common_lib.constants import *
+
+from harmoni_pytree.leaves.aws_lex_service import AWSLexServicePytree
+from harmoni_pytree.leaves.aws_tts_service import AWSTtsServicePytree
+from harmoni_pytree.leaves.face_service import FaceServicePytree
+from harmoni_pytree.leaves.google_service import SpeechToTextServicePytree
+from harmoni_pytree.leaves.microphone_service import MicrophoneServicePytree
+from harmoni_pytree.leaves.speaker_service import SpeakerServicePytree
+#from harmoni_pytree.leaves.gesture_service import GestureServicePytree
 from harmoni_pytree.leaves.counter_no_answer import CounterNoAnswer
+from harmoni_pytree.leaves.scene_manager_main import SceneManagerMain
+from harmoni_pytree.leaves.custom_yolo_service import ImageAICustomServicePytree
+from harmoni_pytree.leaves.timer import Timer
 
 ##############################################################################
 # Classes
@@ -86,8 +91,8 @@ def post_tick_handler(snapshot_visitor, behaviour_tree):
 def create_root():
     root = py_trees.composites.Sequence(name="mainactivity",memory=True)
     
-    self.blackboard_scene_mainactivity = root.attach_blackboard_client(name=name, namespace=PyTreeNameSpace.scene.name +"/"+ PyTreeNameSpace.mainactivity.name)
-    self.blackboard_scene_mainactivity.register_key("max_num_scene", access=py_trees.common.Access.READ)
+    blackboard_scene_mainactivity = root.attach_blackboard_client(name="mainactivity", namespace=PyTreeNameSpace.scene.name +"/"+ PyTreeNameSpace.mainactivity.name)
+    blackboard_scene_mainactivity.register_key("max_num_scene", access=py_trees.common.Access.READ)
 
     Success1 = py_trees.behaviours.Success(name="Success")
     Success2 = py_trees.behaviours.Success(name="Success")
@@ -118,14 +123,11 @@ def create_root():
                                                         variable_value="null", 
                                                         overwrite=True)
     """
-    gesture=GestureServicePytree("GestureMainActivity")
-    """                                                    
-    Gesture = py_trees.behaviours.Count(name="Gesture",
-                                                      fail_until=0,
-                                                      running_until=1,
-                                                      success_until=10,
-                                                      reset=False)
-    """
+    #TODO add gesture
+    #gesture=GestureServicePytree("GestureMainActivity")
+                                                       
+    gesture = py_trees.behaviours.Success(name="GestureMainActivity")
+    
     #TODO sostituirlo/capire se si può usare web_service.
     Projector = py_trees.behaviours.Count(name="Projector",
                                                       fail_until=0,
@@ -198,7 +200,7 @@ def create_root():
                                                       reset=False)
     """
     #TODO mancano le foglie di imageAi 
-    custom_yolo = CustomYoloServicePytree("DetectionCardMain")
+    custom_yolo = ImageAICustomServicePytree("DetectionCardMain")
     """                                                 
     Detection_Card = py_trees.behaviours.Count(name="Detection_Card",
                                                       fail_until=0,
@@ -275,7 +277,7 @@ def create_root():
     parall_robot.add_children([eor_external_speaker, sequen_speaker_and_parallel_f_g])
     
     sequen_robot = py_trees.composites.Sequence(name="SequenceRobot")
-    sequen_robot.add_children([scene_manager,dummy1,dummy2,dummy3,Projector,parall_robot])
+    sequen_robot.add_children([scene_manager,Projector,parall_robot])
 
     sequen_speech_kid = py_trees.composites.Sequence(name="SequenceSpeechKid")
     sequen_speech_kid.add_children([microphone ,stt])
@@ -286,7 +288,7 @@ def create_root():
     sequence_invalid_response = py_trees.composites.Sequence(name="SequenceInvalidResponse")
     sequence_invalid_response.add_children([invalid_response_stt, invalid_response_card])
 
-    eor_timer_detection = either_custom.either_or(
+    eor_timer_detection = eu.either_or(
         name="EitherOrTimerDetection",
         conditions=[
             py_trees.common.ComparisonExpression(PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.visual.name + "/kid_detection", 10, operator.lt),
@@ -316,8 +318,8 @@ def create_root():
 
     running_or_success = rs.create_root(name="RSMainactivity",
                                         condition=[
-                                                py_trees.common.ComparisonExpression("scene/mainactivity/scene_counter", self.blackboard_scene_mainactivity.max_num_scene, operator.eq),
-                                                py_trees.common.ComparisonExpression("scene/mainactivity/scene_counter", self.blackboard_scene_mainactivity.max_num_scene, operator.ne),
+                                                py_trees.common.ComparisonExpression("scene/mainactivity/scene_counter", blackboard_scene_mainactivity.max_num_scene, operator.eq),
+                                                py_trees.common.ComparisonExpression("scene/mainactivity/scene_counter", blackboard_scene_mainactivity.max_num_scene, operator.ne),
                                             ])
 
     #TODO aggiungere questo a monte dell'interazione del bambino

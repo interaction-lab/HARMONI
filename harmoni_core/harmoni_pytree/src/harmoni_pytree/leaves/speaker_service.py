@@ -67,7 +67,7 @@ class SpeakerServicePytree(py_trees.behaviour.Behaviour):
         self.blackboard_speaker = self.attach_blackboard_client(name=self.name, namespace=ActuatorNameSpace.speaker.name)
         self.blackboard_speaker.register_key("state", access=py_trees.common.Access.WRITE)
         #per external speaker, secondo noi questo funzionamento deve appartenere ad un'altra foglia
-        self.blackboard_speaker = self.attach_blackboard_client(name=self.name, namespace=ActuatorNameSpace.scene.name)
+        self.blackboard_speaker = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name)
         self.blackboard_speaker.register_key("sound", access=py_trees.common.Access.READ)
 
         super(SpeakerServicePytree, self).__init__(name)
