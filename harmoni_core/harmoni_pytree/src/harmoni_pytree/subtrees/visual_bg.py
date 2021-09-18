@@ -6,6 +6,7 @@
 import argparse
 import functools
 from os import name
+from harmoni_common_lib.constants import *
 from py_trees.behaviours import dummy
 from py_trees.idioms import either_or
 import py_trees
@@ -17,7 +18,7 @@ import py_trees.console as console
 import running_or_success as rs
 
 from harmoni_pytree import either_custom
-from harmoni_pytree.leaves import timer
+from harmoni_pytree.leaves.timer import Timer
 from harmoni_pytree.leaves.scene_manager_visualbg import SceneManagerVisualBg
 from harmoni_pytree.leaves.subtree_result_visualbg import SubTreeResultVisualBg
 from harmoni_pytree.leaves.aws_lex_service import AWSLexServicePytree
@@ -211,7 +212,7 @@ def create_root(name = "Visual_Bg"):
     parall_detect_and_face.add_children([sequen_detect_kid, face_exp])  
 
     sequen_visual = py_trees.composites.Sequence(name="SequenceVisual")
-    sequen_visual.add_children([scene_manager,dummy1,chatbot,tts,parall_speaker,parall_detect_and_face])
+    sequen_visual.add_children([scene_manager,chatbot,tts,parall_speaker,parall_detect_and_face])
 
     eor_visual = either_custom.either_or(
         name="EitherOrVisual",
@@ -223,7 +224,11 @@ def create_root(name = "Visual_Bg"):
         subtrees=[Success, sequen_visual],
         namespace="eor_visual",
     )
-    running_or_success = rs.create_root()
+    #TODO you have to change condition
+    running_or_success = rs.create_root(name="rs_visual",condition=[
+            py_trees.common.ComparisonExpression("/change", "change", operator.ne),
+            py_trees.common.ComparisonExpression("/change", "change", operator.eq),
+        ])
 
     root.add_children([yolo_service, eor_visual, subtree_result, running_or_success])
 
@@ -233,15 +238,9 @@ def create_root(name = "Visual_Bg"):
 # Main
 ##############################################################################
 
-def main():
-    """
-    Entry point for the demo script.
-    """
+def render_with_args():
+    
     args = command_line_argument_parser().parse_args()
-    py_trees.logging.level = py_trees.logging.Level.DEBUG
-    root = create_root()
-    print(description(root))
-
     ####################
     # Rendering
     ####################
@@ -259,6 +258,19 @@ def main():
             print("")
         print("**************END RENDERING**************")
         
+
+def main():
+    """
+    Entry point for the demo script.
+    """
+    
+    py_trees.logging.level = py_trees.logging.Level.DEBUG
+    root = create_root()
+    print(description(root))
+
+    #uncomment the following line if you want to render the dot_tree
+    #render_with_args()
+    
     ####################
     # Tree Stewardship
     ####################
@@ -268,7 +280,12 @@ def main():
     snapshot_visitor = py_trees.visitors.SnapshotVisitor()
     behaviour_tree.add_post_tick_handler(functools.partial(post_tick_handler, snapshot_visitor))
     behaviour_tree.visitors.append(snapshot_visitor)
-    behaviour_tree.setup(timeout=15)
+    additional_parameters = dict([
+            (ActuatorNameSpace.tts.name,False),
+            (ActuatorNameSpace.speaker.name,False),
+            (ActuatorNameSpace.face.name,True),
+            (DialogueNameSpace.bot.name,True)])
+    behaviour_tree.setup(timeout=15,**additional_parameters)
 
     ####################
     # Tick Tock
@@ -289,5 +306,6 @@ def main():
 
 print("************************************************************************************************************")
 print(__name__)
+
 if __name__ == "__main__":
     main()

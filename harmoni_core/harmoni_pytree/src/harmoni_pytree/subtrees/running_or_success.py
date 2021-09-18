@@ -79,11 +79,11 @@ def post_tick_handler(snapshot_visitor, behaviour_tree):
 def create_root(name= "RunningOrSuccess", condition = typing.List[common.ComparisonExpression]):
 
     root = either_custom.either_or(
-        name="Either_Or"+name,
+        name="Either_Or_"+name,
         conditions=condition,
         preemptible = False,
         subtrees=[py_trees.behaviours.Success(), py_trees.behaviours.Failure()],
-        namespace="running_or_success"+name,
+        namespace="running_or_success_"+name,
     )
     
 
