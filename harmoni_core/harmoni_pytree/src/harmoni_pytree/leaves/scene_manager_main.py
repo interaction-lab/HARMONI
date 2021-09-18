@@ -56,7 +56,8 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self):
-        #TODO load all the utterance in a varaible
+
+        """
         base_dir = os.getcwd()
         print(base_dir)
         
@@ -64,8 +65,16 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
             base_dir + "/../../../resources/mainactivity.json", "r"
         ) as json_file:
             self.context = json.load(json_file)
+        """
+
+        pattern_name = "mainactivity.json"
+        rospack = rospkg.RosPack()
+        pck_path = rospack.get_path("harmoni_pytree")
+        pattern_script_path = pck_path + f"/resources/{pattern_name}.json"
+        with open(pattern_script_path, "r") as read_file:
+          self.context = json.load(read_file)
         
-        # per interagire con context fai una cosa simile a questa riga sotto
+        #per interagire con context fai una cosa simile a questa riga sotto
         #bb = contex["scene"][counter_scene]["gesture"]
 
         #print("Lunghezza: " + len(self.context["scene"]))

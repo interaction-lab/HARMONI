@@ -6,9 +6,9 @@
 import argparse
 import functools
 from os import name
-from harmoni_common_lib.constants import *
 from py_trees.behaviours import dummy
 from py_trees.idioms import either_or
+import rospy
 import py_trees
 import time
 from random import randint
@@ -16,6 +16,8 @@ import subprocess
 import operator
 import py_trees.console as console
 import running_or_success as rs
+
+from harmoni_common_lib.constants import *
 
 from harmoni_pytree import either_custom
 from harmoni_pytree.leaves.timer import Timer
@@ -274,17 +276,15 @@ def main():
     ####################
     # Tree Stewardship
     ####################
+    rospy.init_node("visualbg_default", log_level=rospy.INFO)
+
     behaviour_tree = py_trees.trees.BehaviourTree(root)
     behaviour_tree.add_pre_tick_handler(pre_tick_handler)
     behaviour_tree.visitors.append(py_trees.visitors.DebugVisitor())
     snapshot_visitor = py_trees.visitors.SnapshotVisitor()
     behaviour_tree.add_post_tick_handler(functools.partial(post_tick_handler, snapshot_visitor))
     behaviour_tree.visitors.append(snapshot_visitor)
-    additional_parameters = dict([
-            (ActuatorNameSpace.tts.name,False),
-            (ActuatorNameSpace.speaker.name,False),
-            (ActuatorNameSpace.face.name,True),
-            (DialogueNameSpace.bot.name,True)])
+    additional_parameters = dict([])
     behaviour_tree.setup(timeout=15,**additional_parameters)
 
     ####################
@@ -303,9 +303,6 @@ def main():
         except KeyboardInterrupt:
             break
     print("\n")
-
-print("************************************************************************************************************")
-print(__name__)
 
 if __name__ == "__main__":
     main()

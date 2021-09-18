@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from harmoni_common_lib.constants import *
+import json
+import os
 import py_trees
+import rospkg
 import random
+
+from harmoni_common_lib.constants import *
 
 class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
     def __init__(self, name):
@@ -40,21 +44,14 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self):
-        #TODO load all the utterance in a varaible
-        # number_of_scene(0):
-        #                     utterance:
-        #                     gesture:
-        #                     .
-        #                     .
-        #                     .
-        #                 1:
-        #                     utterance:
-        #                     gesture:
-        #                     ...
-        #                 .
-        #                 .
-        #                 .
-        #context[number_of_scene][utterance]
+
+        #this is the name of the json without the extension
+        json_name = "mainactivity"
+        rospack = rospkg.RosPack()
+        pck_path = rospack.get_path("harmoni_pytree")
+        pattern_script_path = pck_path + f"/resources/{json_name}.json"
+        with open(pattern_script_path, "r") as read_file:
+          self.context = json.load(read_file)
 
         self.blackboard_scene.visual.max_num_scene = len(self.context["scene"])
 
