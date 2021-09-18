@@ -14,7 +14,7 @@
     <include file="$(find harmoni_camera)/launch/camera_service.launch"></include>
     <!-- <include file="$(find harmoni_camera)/launch/camera_service.launch"></include> -->
     <include file="$(find harmoni_imageai)/launch/yolo_service.launch"></include>
-    <include file="$(find harmoni_imageai)/launch/custom_yolo_service.launch"></include>
+    <include file="$(find harmoni_imageai)/launch/custom_service.launch"></include>
     <!-- end services -->
 
     <node pkg="harmoni_pytree" type="interacion_bg.py" name="harmoni_pytree_$(arg instance_id)" output="screen"/>
