@@ -22,7 +22,7 @@ class CounterNoAnswer(py_trees.behaviour.Behaviour):
         the setup() method.
         """
         self.count_no_answer = 0
-
+        self.name = name
         self.blackboards = []
         self.blackboard_camera = self.attach_blackboard_client(name=self.name)
         self.blackboard_camera.register_key(variable_name, access=py_trees.common.Access.WRITE)
