@@ -54,7 +54,8 @@ class DetectorNameSpace(Enum):
     stt = "/harmoni/detecting/stt/"
     face_detect = "/harmoni/detecting/face_detect/"
     card_detect = "/harmoni/detecting/card_detect/"
-    imageai = "/harmoni/detecting/imageai/"
+    imageai_yolo = "/harmoni/detecting/imageai/yolo"
+    imageai_custom_yolo = "/harmoni/detecting/imageai/custom_yolo"
 
 
 
