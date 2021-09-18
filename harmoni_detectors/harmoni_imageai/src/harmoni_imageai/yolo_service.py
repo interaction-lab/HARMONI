@@ -61,11 +61,11 @@ class ImageAIYoloService(HarmoniServiceManager):
         )
 
         self.text_pub = rospy.Publisher(
-            DetectorNameSpace.imageai.value + self.service_id, String, queue_size=10
+            DetectorNameSpace.imageai_yolo.value + self.service_id, String, queue_size=10
         )
 
         rospy.Subscriber(
-            DetectorNameSpace.imageai.value + self.service_id,
+            DetectorNameSpace.imageai_yolo.value + self.service_id,
             String,
             self.imageai_callback,
         )

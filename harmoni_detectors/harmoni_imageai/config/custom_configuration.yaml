@@ -1,4 +1,4 @@
-imageai:
+imageai_custom_yolo:
   default_param: #param for detection with custom model
     model_name: "yolo_custom_card.h5" #model has to be pretrained with "pretrained_YOLOv3"
     json_name: "detection_config_card.json"
