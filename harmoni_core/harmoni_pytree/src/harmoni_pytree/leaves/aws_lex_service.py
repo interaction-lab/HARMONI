@@ -73,10 +73,10 @@ class AWSLexServicePytree(py_trees.behaviour.Behaviour):
         this parameter is a dictionary that contains couples like
         name_of_the_leaf --> boolean mode
         """
-        for parameter in additional_parameters:
-            print(parameter, additional_parameters[parameter])  
-            if(parameter ==DialogueNameSpace.bot.name):
-                self.mode = additional_parameters[parameter]        
+        #for parameter in additional_parameters:
+        #    print(parameter, additional_parameters[parameter])  
+        #    if(parameter ==DialogueNameSpace.bot.name):
+        #        self.mode = additional_parameters[parameter]        
 
         #service_name = DialogueNameSpace.bot.name
         #instance_id = rospy.get_param("instance_id")  # "default"
@@ -85,17 +85,17 @@ class AWSLexServicePytree(py_trees.behaviour.Behaviour):
         #params = rospy.get_param(service_name + "/" + instance_id + "_param/")
 
         #self.aws_service = AWSLexService(service_id, params)
-        self.aws_service.setup_aws_lex()
-        if(not self.mode):
+        #self.aws_service.setup_aws_lex()
+        #if(not self.mode):
             
-            self.service_client_lex = HarmoniActionClient(self.name)
-            rospy.loginfo("Client initialized")
-            self.client_result = deque()
-            self.server_name = "bot_default"
-            self.service_client_lex.setup_client(self.server_name, 
-                                                self._result_callback,
-                                                self._feedback_callback)
-            self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
+        self.service_client_lex = HarmoniActionClient(self.name)
+        rospy.loginfo("Client initialized")
+        self.client_result = deque()
+        self.server_name = "bot_default"
+        self.service_client_lex.setup_client(self.server_name, 
+                                            self._result_callback,
+                                            self._feedback_callback)
+        self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
         
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 

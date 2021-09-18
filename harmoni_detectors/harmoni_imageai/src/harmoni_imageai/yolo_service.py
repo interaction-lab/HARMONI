@@ -176,6 +176,10 @@ def main():
 
         s.start()
 
+        print(service_name)
+        print("**********************************************************************************************")
+        print(service_id)
+
         # Streaming audio from mic
         service_server.start_sending_feedback()
         rospy.spin()

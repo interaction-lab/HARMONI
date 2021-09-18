@@ -218,6 +218,10 @@ def main():
         s.start()
         service_server = HarmoniServiceServer(service_id, s)
 
+        print(service_name)
+        print("**********************************************************************************************")
+        print(service_id)
+
         service_server.start_sending_feedback()
         rospy.spin()
     except rospy.ROSInterruptException:
