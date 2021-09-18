@@ -4,7 +4,7 @@
 import rospy
 import roslib
 
-from harmoni_common_lib.constants import State
+from harmoni_common_lib.constants import *
 from actionlib_msgs.msg import GoalStatus
 from harmoni_common_lib.service_server import HarmoniServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
