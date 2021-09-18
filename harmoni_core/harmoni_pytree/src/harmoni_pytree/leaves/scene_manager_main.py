@@ -7,6 +7,7 @@ import random
 import os
 import json
 import time
+import rospkg
 
 class SceneManagerMain(py_trees.behaviour.Behaviour):
     def __init__(self, name):
@@ -67,7 +68,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
             self.context = json.load(json_file)
         """
 
-        pattern_name = "mainactivity.json"
+        pattern_name = "mainactivity"
         rospack = rospkg.RosPack()
         pck_path = rospack.get_path("harmoni_pytree")
         pattern_script_path = pck_path + f"/resources/{pattern_name}.json"
@@ -78,7 +79,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         #bb = contex["scene"][counter_scene]["gesture"]
 
         #print("Lunghezza: " + len(self.context["scene"]))
-        self.blackboard_scene(PyTreeNameSpace.mainactivity.name).max_num_scene = len(self.context["scene"])
+        self.blackboard_scene.mainactivity.max_num_scene = len(self.context["scene"])
         
         print("TEST: context gesture is  %s " % self.context["scene"][self.scene_counter]["gesture"])
 

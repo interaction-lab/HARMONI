@@ -9,6 +9,7 @@ from py_trees.behaviours import dummy
 from py_trees.idioms import either_or
 import py_trees
 import time
+import rospy
 from random import randint
 import subprocess
 import operator
@@ -92,7 +93,8 @@ def create_root():
     root = py_trees.composites.Sequence(name="mainactivity",memory=True)
     
     blackboard_scene_mainactivity = root.attach_blackboard_client(name="mainactivity", namespace=PyTreeNameSpace.scene.name +"/"+ PyTreeNameSpace.mainactivity.name)
-    blackboard_scene_mainactivity.register_key("max_num_scene", access=py_trees.common.Access.READ)
+    blackboard_scene_mainactivity.register_key("max_num_scene", access=py_trees.common.Access.WRITE)
+    blackboard_scene_mainactivity.max_num_scene = 0
 
     Success1 = py_trees.behaviours.Success(name="Success")
     Success2 = py_trees.behaviours.Success(name="Success")
@@ -329,7 +331,7 @@ def create_root():
             py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/do_kid", "null", operator.ne),
             py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/do_kid", "null", operator.eq),
         ],
-        subtrees=[sequen_detect_kid, Success],
+        subtrees=[sequen_detect_kid, Success2],
         namespace="eor_kid",
     )
 
@@ -341,15 +343,9 @@ def create_root():
 # Main
 ##############################################################################
 
-def main():
-    """
-    Entry point for the demo script.
-    """
+def render_with_args():
+    
     args = command_line_argument_parser().parse_args()
-    py_trees.logging.level = py_trees.logging.Level.DEBUG
-    root = create_root()
-    print(description(root))
-
     ####################
     # Rendering
     ####################
@@ -366,10 +362,24 @@ def main():
             console.logerror("No xdot viewer found, skipping display [hint: sudo apt install xdot]")
             print("")
         print("**************END RENDERING**************")
+
+def main():
+    """
+    Entry point for the demo script.
+    """
+    py_trees.logging.level = py_trees.logging.Level.DEBUG
+    root = create_root()
+    print(description(root))
+
+    #uncomment the following line if you want to render the dot_tree
+    #render_with_args()
         
     ####################
     # Tree Stewardship
     ####################
+
+    rospy.init_node("mainactivity_default", log_level=rospy.INFO)
+
     behaviour_tree = py_trees.trees.BehaviourTree(root)
     behaviour_tree.add_pre_tick_handler(pre_tick_handler)
     behaviour_tree.visitors.append(py_trees.visitors.DebugVisitor())
