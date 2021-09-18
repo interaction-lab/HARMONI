@@ -85,20 +85,21 @@ class SpeakerServicePytree(py_trees.behaviour.Behaviour):
             if(parameter ==ActuatorNameSpace.speaker.name):
                 self.mode = additional_parameters[parameter]  
 
-        service_name = ActuatorNameSpace.speaker.name
-        instance_id = rospy.get_param("/instance_id")
-        service_id = f"{service_name}_{instance_id}"
+        #service_name = ActuatorNameSpace.speaker.name
+        #instance_id = rospy.get_param("/instance_id")
+        #service_id = f"{service_name}_{instance_id}"
 
-        self.speaker_service = SpeakerService(service_id)
-        #rospy.init_node("speaker_default", log_level=rospy.INFO)
+        #self.speaker_service = SpeakerService(service_id)
+        #rospy.init_node(self.server_name , log_level=rospy.INFO)
     
         if(not self.mode):
             self.service_client_speaker = HarmoniActionClient(self.name)
             self.client_result = deque()
-            self.service_client_speaker.setup_client("speaker_default", 
+            self.server_name = "speaker_default"
+            self.service_client_speaker.setup_client(self.server_name, 
                                                 self._result_callback,
                                                 self._feedback_callback)
-            self.logger.debug("Behavior interface action clients have been set up!")
+            self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
         
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 

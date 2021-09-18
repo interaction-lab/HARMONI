@@ -68,21 +68,20 @@ class WebServicePytree(py_trees.behaviour.Behaviour):
             if(parameter =="WebServicePytree_mode"):
                 self.mode = additional_parameters[parameter]        
 
-        service_name = ActuatorNameSpace.web.name
-        instance_id = rospy.get_param("/instance_id")
-        service_id = f"{service_name}_{instance_id}"
+        #service_name = ActuatorNameSpace.web.name
+        #instance_id = rospy.get_param("/instance_id")
+        #service_id = f"{service_name}_{instance_id}"
 
-        self.web_service = WebService(service_id)
-
-        #comment the following line if you are not running main
+        #self.web_service = WebService(service_id)
 
         if(not self.mode):
             self.service_client_web = HarmoniActionClient(self.name)
             self.client_result = deque()
-            self.service_client_web.setup_client("web_default",
+            self.server_name = "web_default"
+            self.service_client_web.setup_client(self.server_name,
                                                 self._result_callback,
                                                 self._feedback_callback)
-            self.logger.debug("Behavior interface action clients have been set up!")
+            self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
         
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 

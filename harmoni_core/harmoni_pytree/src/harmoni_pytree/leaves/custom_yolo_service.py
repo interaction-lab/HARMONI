@@ -88,12 +88,12 @@ class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
             if(parameter =="ImageAICustomServicePytree_mode"):
                 self.mode = additional_parameters[parameter]        
 
-        service_name = DetectorNameSpace.imageai.name
-        instance_id = rospy.get_param("instance_id")
+        #service_name = DetectorNameSpace.imageai.name
+        #instance_id = rospy.get_param("instance_id")
 
-        param = rospy.get_param(service_name + "/" + instance_id + "_param/")
+        #param = rospy.get_param(service_name + "/" + instance_id + "_param/")
 
-        self.custom_service = ImageAICustomService(self.name,param)
+        #self.custom_service = ImageAICustomService(self.name,param)
 
         #TODO questo dobbiamo farlo nell'if 
         #rospy init node mi fa diventare un nodo ros
@@ -102,10 +102,11 @@ class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
         if(not self.mode):
             self.service_client_custom = HarmoniActionClient(self.name)
             self.client_result = deque()
-            self.service_client_custom.setup_client("imageai_default", 
+            self.server_name = "imageai_default"
+            self.service_client_custom.setup_client(self.server_name, 
                                                 self._result_callback,
                                                 self._feedback_callback)
-            self.logger.debug("Behavior interface action clients have been set up!")
+            self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
         
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 

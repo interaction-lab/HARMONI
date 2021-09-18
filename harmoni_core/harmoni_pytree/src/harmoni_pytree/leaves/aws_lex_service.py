@@ -78,22 +78,24 @@ class AWSLexServicePytree(py_trees.behaviour.Behaviour):
             if(parameter ==DialogueNameSpace.bot.name):
                 self.mode = additional_parameters[parameter]        
 
-        service_name = DialogueNameSpace.bot.name
-        instance_id = rospy.get_param("instance_id")  # "default"
-        service_id = f"{service_name}_{instance_id}"
+        #service_name = DialogueNameSpace.bot.name
+        #instance_id = rospy.get_param("instance_id")  # "default"
+        #service_id = f"{service_name}_{instance_id}"
 
-        params = rospy.get_param(service_name + "/" + instance_id + "_param/")
+        #params = rospy.get_param(service_name + "/" + instance_id + "_param/")
 
-        self.aws_service = AWSLexService(service_id, params)
+        #self.aws_service = AWSLexService(service_id, params)
         self.aws_service.setup_aws_lex()
         if(not self.mode):
+            
             self.service_client_lex = HarmoniActionClient(self.name)
             rospy.loginfo("Client initialized")
             self.client_result = deque()
-            self.service_client_lex.setup_client("bot_default", 
+            self.server_name = "bot_default"
+            self.service_client_lex.setup_client(self.server_name, 
                                                 self._result_callback,
                                                 self._feedback_callback)
-            self.logger.debug("Behavior interface action clients have been set up!")
+            self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
         
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 

@@ -81,25 +81,27 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
             if(parameter ==ActuatorNameSpace.tts.name):
                 self.mode = additional_parameters[parameter]        
 
-        service_name = ActuatorNameSpace.tts.name
-        instance_id = rospy.get_param("instance_id")
+        #service_name = ActuatorNameSpace.tts.name
+        #instance_id = rospy.get_param("instance_id")
 
-        param = rospy.get_param(service_name + "/" + instance_id + "_param/")
+        #param = rospy.get_param(service_name + "/" + instance_id + "_param/")
 
-        self.aws_service = AWSTtsService(self.name,param)
+        #self.aws_service = AWSTtsService(self.name,param)
         #TODO we have to do this in the if
         #rospy init node mi fa diventare un nodo ros
-        #rospy.init_node("tts_default", log_level=rospy.INFO)
+        #rospy.init_node(self.service_name, log_level=rospy.INFO)
 
         self.blackboard_tts_OLD.result_message = "INVALID"
 
         if(not self.mode):
+            
             self.service_client_tts = HarmoniActionClient(self.name)
             self.client_result = deque()
-            self.service_client_tts.setup_client("tts_default", 
+            self.server_name = "tts_default"
+            self.service_client_tts.setup_client(self.server_name, 
                                                 self._result_callback,
                                                 self._feedback_callback)
-            self.logger.debug("Behavior interface action clients have been set up!")
+            self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
         
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 

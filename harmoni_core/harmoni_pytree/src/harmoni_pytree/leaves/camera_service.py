@@ -66,24 +66,25 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
             if(parameter =="CameraServicePytree_mode"):
                 self.mode = additional_parameters[parameter]        
 
-        service_name = SensorNameSpace.camera.name  # "camera"
-        instance_id = rospy.get_param("instance_id")  # "default"
-        service_id = f"{service_name}_{instance_id}"
+        #service_name = SensorNameSpace.camera.name  # "camera"
+        #instance_id = rospy.get_param("instance_id")  # "default"
+        #service_id = f"{service_name}_{instance_id}"
 
-        params = rospy.get_param(service_name + "/" + instance_id + "_param/")
+        #params = rospy.get_param(service_name + "/" + instance_id + "_param/")
 
-        self.camera_service = CameraService(service_id, params) 
+        #self.camera_service = CameraService(service_id, params) 
 
         #rospy init node mi fa diventare un nodo ros
-        #rospy.init_node("camera_default", log_level=rospy.INFO)
+        #rospy.init_node(self.service_name, log_level=rospy.INFO)
 
         if(not self.mode):
             self.service_client_camera = HarmoniActionClient(self.name)
             self.client_result = deque()
-            self.service_client_camera.setup_client("camera_default", 
+            self.server_name = "camera_default"
+            self.service_client_camera.setup_client(self.server_name, 
                                                 self._result_callback,
                                                 self._feedback_callback)
-            self.logger.debug("Behavior interface action clients have been set up!")
+            self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
         
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 

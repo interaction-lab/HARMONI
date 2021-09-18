@@ -75,10 +75,10 @@ class GestureServicePytree(py_trees.behaviour.Behaviour):
         service_name = ActuatorNameSpace.gesture.name   
         instance_id = rospy.get_param("/instance_id")
 
-        params = rospy.get_param(service_name + "/" + instance_id + "_param/")
+        #params = rospy.get_param(service_name + "/" + instance_id + "_param/")
 
         #comment the following line if you are not doing main()
-        rospy.init_node(service_name, log_level=rospy.INFO)
+        #rospy.init_node(self.service_name, log_level=rospy.INFO)
 
         #self.qt_gesture_service = GestureInterface(service_name, params)
 
@@ -87,10 +87,12 @@ class GestureServicePytree(py_trees.behaviour.Behaviour):
         if(not self.mode):
             self.service_client_gesture = HarmoniActionClient(self.name)
             self.client_result = deque()
-            self.service_client_gesture.setup_client(service_name + "_" + instance_id, 
+            #TODO aggiusta sto nome
+            self.server_name = service_name + "_" + instance_id
+            self.service_client_gesture.setup_client(self.server_name, 
                                                 self._result_callback,
                                                 self._feedback_callback)
-            self.logger.debug("Behavior interface action clients have been set up!")
+            self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 
     def initialise(self):

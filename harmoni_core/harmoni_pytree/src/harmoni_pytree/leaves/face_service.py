@@ -88,24 +88,25 @@ class FaceServicePytree(py_trees.behaviour.Behaviour):
             if(parameter == ActuatorNameSpace.face.name):
                 self.mode = additional_parameters[parameter]        
 
-        service_name = ActuatorNameSpace.face.name
-        instance_id = rospy.get_param("/instance_id")
-        param = rospy.get_param(service_name + "/" + instance_id + "_param")
-        param_eyes = rospy.get_param(service_name + "/" + instance_id + "_param/eyes/")
-        param_mouth = rospy.get_param(service_name + "/" + instance_id + "_param/mouth/")
-        param_nose = rospy.get_param(service_name + "/" + instance_id + "_param/nose/")
-        face = Face(ActuatorNameSpace.face.value, instance_id, param)
-        self.eyes_service = EyesService(service_name + "_eyes_" + instance_id, param_eyes, face)
-        self.mouth_service = MouthService(service_name + "_mouth_" + instance_id, param_mouth, face)
-        self.nose_service = NoseService(service_name + "_nose_" + instance_id, param_nose, face)
+        #service_name = ActuatorNameSpace.face.name
+        #instance_id = rospy.get_param("/instance_id")
+        #param = rospy.get_param(service_name + "/" + instance_id + "_param")
+        #param_eyes = rospy.get_param(service_name + "/" + instance_id + "_param/eyes/")
+        #param_mouth = rospy.get_param(service_name + "/" + instance_id + "_param/mouth/")
+        #param_nose = rospy.get_param(service_name + "/" + instance_id + "_param/nose/")
+        #face = Face(ActuatorNameSpace.face.value, instance_id, param)
+        #self.eyes_service = EyesService(service_name + "_eyes_" + instance_id, param_eyes, face)
+        #self.mouth_service = MouthService(service_name + "_mouth_" + instance_id, param_mouth, face)
+        #self.nose_service = NoseService(service_name + "_nose_" + instance_id, param_nose, face)
 
         if(not self.mode):
             self.service_client_face = HarmoniActionClient(self.name)
             self.client_result = deque()
-            self.service_client_face.setup_client("face_mouth_default",
+            self.server_name = "face_mouth_default"
+            self.service_client_face.setup_client(self.server_name,
                                                 self._result_callback,
                                                 self._feedback_callback)
-            self.logger.debug("Behavior interface action clients have been set up!")
+            self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
         
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 

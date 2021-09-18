@@ -99,18 +99,14 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
         #rospy init node mi fa diventare un nodo ros
         #rospy.init_node("imageai_default", log_level=rospy.INFO)
         if(not self.mode):
-            print("CIAOOO1")
             self.service_client_yolo = HarmoniActionClient(self.name)
-            print("CIAOOO2")
             self.client_result = deque()
-            print("CIAOOO3")
             #TODO fattelo passare sto parametro o vedi che fare
             self.server_name = "imageai_yolo_default"
             self.service_client_yolo.setup_client(self.server_name, 
                                                 self._result_callback,
                                                 self._feedback_callback)
-            print("CIAOOO4")
-            self.logger.debug("Behavior interface action clients have been set up!")
+            self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 
     def initialise(self):
