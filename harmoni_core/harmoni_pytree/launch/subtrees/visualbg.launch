@@ -5,15 +5,16 @@
     <rosparam file="$(find harmoni_pytree)/config/configuration.yaml" subst_value="True"/>
 
     <!-- In order to launch visual_bg we need the following services from HARMONI -->
-    <!--
-    <include file="$(find harmoni_speaker)/launch/speaker_service.launch"></include>
-    <include file="$(find harmoni_tts)/launch/tts_service.launch"></include>
-    <include file="$(find harmoni_face)/launch/face_service.launch"></include>
-    <include file="$(find harmoni_stt)/launch/stt_google_service.launch"></include>
-    <include file="$(find harmoni_microphone)/launch/microphone_service.launch"></include>-->
-    <include file="$(find harmoni_bot)/launch/bot_service.launch"></include>
+
     <include file="$(find harmoni_camera)/launch/camera_service.launch"></include>
     <include file="$(find harmoni_imageai)/launch/yolo_service.launch"></include>
+    <include file="$(find harmoni_face)/launch/face_service.launch"></include>
+    <include file="$(find harmoni_microphone)/launch/microphone_service.launch"></include>
+    <include file="$(find harmoni_speaker)/launch/speaker_service.launch"></include>
+    <include file="$(find harmoni_tts)/launch/tts_service.launch"></include>
+    <include file="$(find harmoni_stt)/launch/stt_google_service.launch"></include>
+    <include file="$(find harmoni_bot)/launch/bot_service.launch"></include>
+
     
     <!-- end services -->
 

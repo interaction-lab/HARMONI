@@ -34,12 +34,6 @@ import py_trees.console
 
 class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
 
-    #TODO tutte le print devono diventare console py_tree
-    """
-    mode è il boolean che controlla la modalità di funzionamento:
-    true: opzione 1 (utilizzo come una classe python)
-    false: opzione 2 (utilizzo mediate action_goal)
-    """
     #ImageAICustom è un detector
 
     def __init__(self, name = "SpeechToTextServicePytree"):
@@ -96,16 +90,15 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
         #TODO questo dobbiamo farlo nell'if 
         #rospy init node mi fa diventare un nodo ros
         #rospy.init_node(self.server_name, log_level=rospy.INFO)
-        """
-        if(not self.mode):
-            self.service_client_custom = HarmoniActionClient(self.name)
-            self.client_result = deque()
-            self.server_name = "stt_default"
-            self.service_client_custom.setup_client(self.server_name, 
-                                                self._result_callback,
-                                                self._feedback_callback)
-            self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
-        """
+        
+        self.service_client_custom = HarmoniActionClient(self.name)
+        self.client_result = deque()
+        self.server_name = "stt_default"
+        self.service_client_custom.setup_client(self.server_name, 
+                                            self._result_callback,
+                                            self._feedback_callback)
+        self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
+
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 
     def initialise(self):

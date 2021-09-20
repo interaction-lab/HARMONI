@@ -87,16 +87,15 @@ class MicrophoneServicePytree(py_trees.behaviour.Behaviour):
 
         #TODO we have to do this in the if 
         #rospy.init_node(self.server_name, log_level=rospy.INFO)
-        """
-        if(not self.mode):
-            self.service_client_microphone = HarmoniActionClient(self.name)
-            self.client_result = deque()
-            self.server_name = "microphone_default"
-            self.service_client_microphone.setup_client(self.server_name, 
-                                                self._result_callback,
-                                                self._feedback_callback)
-            self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
-        """
+
+        self.service_client_microphone = HarmoniActionClient(self.name)
+        self.client_result = deque()
+        self.server_name = "microphone_default"
+        self.service_client_microphone.setup_client(self.server_name, 
+                                            self._result_callback,
+                                            self._feedback_callback)
+        self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
+        
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 
     def initialise(self):

@@ -139,7 +139,7 @@ class MicrophoneService(HarmoniServiceManager):
                 latest_audio_data = self.stream.read(
                     self.chunk_size, exception_on_overflow=False
                 )
-                raw_audio_bitstream = np.fromstring(latest_audio_data, np.uint8)
+                raw_audio_bitstream = np.frombuffer(latest_audio_data, np.uint8)
                 raw_audio = raw_audio_bitstream.tolist()
                 self.raw_mic_pub.publish(raw_audio)  # Publishing raw AudioData
             elif (
@@ -215,7 +215,9 @@ def main():
         params = rospy.get_param(service_name + "/" + instance_id + "_param/")
 
         s = MicrophoneService(service_id, params)
-        s.start()
+
+        #s.start()
+
         service_server = HarmoniServiceServer(service_id, s)
 
         print(service_name)

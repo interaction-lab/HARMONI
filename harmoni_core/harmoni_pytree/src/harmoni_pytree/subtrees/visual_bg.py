@@ -296,10 +296,10 @@ def main():
     for unused_i in range(1, 10):
         try:
             behaviour_tree.tick()
-            if args.interactive:
-                py_trees.console.read_single_keypress()
-            else:
-                time.sleep(0.5)
+            #if args.interactive:
+            #    py_trees.console.read_single_keypress()
+            #else:
+            time.sleep(0.5)
         except KeyboardInterrupt:
             break
     print("\n")

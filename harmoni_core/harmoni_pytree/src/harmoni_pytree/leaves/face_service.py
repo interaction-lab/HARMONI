@@ -47,11 +47,13 @@ class FaceServicePytree(py_trees.behaviour.Behaviour):
 
         self.name = name
         self.mode = False
-        self.eyes_service = None
-        self.mouth_service = None
         self.result_data = None
-        self.service_client_face = None
         self.client_result = None
+
+        self.service_client_mouth = None
+        self.service_client_eyes = None
+        self.service_client_nose = None
+
         # here there is the inizialization of the blackboards
         self.blackboards = []
         #serve una blackboard a speaker?
@@ -98,15 +100,32 @@ class FaceServicePytree(py_trees.behaviour.Behaviour):
         #self.eyes_service = EyesService(service_name + "_eyes_" + instance_id, param_eyes, face)
         #self.mouth_service = MouthService(service_name + "_mouth_" + instance_id, param_mouth, face)
         #self.nose_service = NoseService(service_name + "_nose_" + instance_id, param_nose, face)
-        """
+    
         self.service_client_face = HarmoniActionClient(self.name)
         self.client_result = deque()
-        self.server_name = "face_mouth_default"
+        
+        self.server_name = "face"
+        """
         self.service_client_face.setup_client(self.server_name,
                                             self._result_callback,
                                             self._feedback_callback)
-        self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
         """
+        self.instance_id = "default"
+        self.name_mouth = ActuatorNameSpace.face.name + "_mouth_" + self.instance_id
+        self.service_client_mouth = HarmoniActionClient(self.name_mouth)
+        self.client_result_mouth = deque()
+        self.name_nose = ActuatorNameSpace.face.name + "_nose_" + self.instance_id
+        self.service_client_nose = HarmoniActionClient(self.name_nose)
+        self.client_result_nose = deque()
+        self.name_eyes = ActuatorNameSpace.face.name + "_eyes_" + self.instance_id
+        self.service_client_eyes = HarmoniActionClient(self.name_eyes)
+        self.client_result_eyes = deque()
+        self.service_client_mouth.setup_client(self.name_mouth, self._result_callback, self._feedback_callback)
+        self.service_client_eyes.setup_client(self.name_eyes, self._result_callback, self._feedback_callback)
+        self.service_client_nose.setup_client(self.name_nose, self._result_callback, self._feedback_callback)
+        
+        self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
+        
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 
     def initialise(self):

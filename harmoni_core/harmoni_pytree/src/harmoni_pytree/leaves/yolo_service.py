@@ -99,7 +99,7 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
         #TODO questo dobbiamo farlo nell'if 
         #rospy init node mi fa diventare un nodo ros
         #rospy.init_node("imageai_default", log_level=rospy.INFO)
-
+        
         self.service_client_yolo = HarmoniActionClient(self.name)
         self.client_result = deque()
         #TODO fattelo passare sto parametro o vedi che fare

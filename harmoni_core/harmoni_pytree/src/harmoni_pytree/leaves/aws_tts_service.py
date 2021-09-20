@@ -90,7 +90,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         #TODO we have to do this in the if
         #rospy init node mi fa diventare un nodo ros
         #rospy.init_node(self.service_name, log_level=rospy.INFO)
-        """
+        
         self.blackboard_tts_OLD.result_message = "INVALID"
 
             
@@ -101,7 +101,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
                                             self._result_callback,
                                             self._feedback_callback)
         self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
-        """
+        
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 
     def initialise(self):
