@@ -4,11 +4,10 @@
 import rospy
 import roslib
 
-from harmoni_common_lib.constants import State
+from harmoni_common_lib.constants import *
 from actionlib_msgs.msg import GoalStatus
 from harmoni_common_lib.action_client import HarmoniActionClient
 import harmoni_common_lib.helper_functions as hf
-from camera_service import CameraService
 # Other Imports
 from harmoni_common_lib.constants import SensorNameSpace
 
@@ -31,24 +30,17 @@ import time
 import py_trees.console
 
 class CameraServicePytree(py_trees.behaviour.Behaviour):
-    """
-    the boolean "mode" changes the functioning of the Behaviour:
-    true: we use the leaf as both client and server (inner module)
-    false: we use the leaf as client that makes request to the server
-    """
 
     def __init__(self, name = "CameraServicePytree"):
 
         self.name = name
-        self.mode = False
-        self.camera_service = None
         self.result_data = None
         self.service_client_camera = None
         self.client_result = None
 
         # here there is the inizialization of the blackboards
         self.blackboards = []
-        self.blackboard_camera = self.attach_blackboard_client(name=self.name, namespace="harmoni_camera")
+        self.blackboard_camera = self.attach_blackboard_client(name=self.name, namespace=SensorNameSpace.camera.name)
         self.blackboard_camera.register_key("result_message", access=py_trees.common.Access.WRITE)
 
         super(CameraServicePytree, self).__init__(name)
@@ -56,23 +48,11 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
 
     def setup(self,**additional_parameters):
         """
-        In order to select the mode after that the tree is created 
-        an additional_parameters parameter is used:
-        this parameter is a dictionary that contains couples like   
-        name_of_the_leaf --> boolean mode
-        """
         for parameter in additional_parameters:
             print(parameter, additional_parameters[parameter])  
             if(parameter =="CameraServicePytree_mode"):
-                self.mode = additional_parameters[parameter]        
-
-        #service_name = SensorNameSpace.camera.name  # "camera"
-        #instance_id = rospy.get_param("instance_id")  # "default"
-        #service_id = f"{service_name}_{instance_id}"
-
-        #params = rospy.get_param(service_name + "/" + instance_id + "_param/")
-
-        #self.camera_service = CameraService(service_id, params) 
+                self.mode = additional_parameters[parameter]     
+        """
 
         #rospy init node mi fa diventare un nodo ros
         #rospy.init_node(self.service_name, log_level=rospy.INFO)
@@ -91,44 +71,29 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
         """
         
         """
-            
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
     def update(self):
         """
         
         """    
-        if(self.mode):
-            pass
-        else:
-            if self.service_client_camera.get_state() == GoalStatus.LOST:
-                self.logger.debug(f"Sending goal to {self.camera_service}")
-                # Send request for each sensor service to set themselves up
-                self.service_client_camera.send_goal(
-                    action_goal=ActionType["ON"].value,
-                    optional_data="Setup",
-                    wait="",
-                )
-                self.logger.debug(f"Goal sent to {self.camera_service}")
-                self.blackboard_camera.result_message = "RUNNING"
-                new_status = py_trees.common.Status.RUNNING
-            else:
-                if self.service_client_camera.get_state() != GoalStatus.LOST:
-                    if len(self.client_result) > 0:
-                        self.result_data = self.client_result.popleft()["data"]
-                        self.blackboard_camera.result_message = "RUNNING"
-                        new_status = py_trees.common.Status.RUNNING
-                    else:
-                        #if we are here it means that we dont have the result yet, so
-                        #do we have to wait or something went wrong?
-                        #not sure about the followings lines, see row 408 of sequential_pattern.py
-                        if(self.camera_service.state == State.FAILED):
-                            self.blackboard_camera.result_message = "FAILURE"
-                            new_status = py_trees.common.Status.FAILURE
-                        else:
-                            self.blackboard_camera.result_message = "RUNNING"
-                            new_status = py_trees.common.Status.RUNNING
-                else:
-                    new_status = py_trees.common.Status.FAILURE
+    
+        if self.service_client_camera.get_state() == GoalStatus.LOST:
+            self.logger.debug(f"Sending goal to {self.server_name}")
+            # Send request for each sensor service to set themselves up
+            self.service_client_camera.send_goal(
+                action_goal=ActionType["ON"].value,
+                optional_data="Setup",
+                wait="",
+            )
+            self.logger.debug(f"Goal sent to {self.server_name}")
+            self.blackboard_camera.result_message = "RUNNING"
+            new_status = py_trees.common.Status.RUNNING
+        else if self.service_client_camera.get_state() == GoalStatus.ACTIVE:
+            new_status = py_trees.common.Status.SUCCESS
+        else if self.service_client_camera.get_state() == GoalStatus.PENDING:
+            new_status = py_trees.common.Status.RUNNING
+        else if self.service_client_camera.get_state() == GoalStatus.REJECTED:
+            new_status = py_trees.common.Status.FAILURE
 
         self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status

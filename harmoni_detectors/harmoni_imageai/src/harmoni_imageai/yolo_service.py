@@ -174,11 +174,11 @@ def main():
 
         service_server = HarmoniServiceServer(name=service_id, service_manager=s)
 
-        s.start()
-
         print(service_name)
         print("**********************************************************************************************")
         print(service_id)
+
+        s.start()
 
         # Streaming audio from mic
         service_server.start_sending_feedback()

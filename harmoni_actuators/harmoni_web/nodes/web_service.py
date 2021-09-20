@@ -29,6 +29,11 @@ def main():
         # params = rospy.get_param(service_name + "/" + instance_id + "_param/")
         s = WebService(service_id)
         service_server = HarmoniServiceServer(service_id, s)
+
+        print(service_name)
+        print("**********************************************************************************************")
+        print(service_id)
+
         service_server.start_sending_feedback()
         rospy.spin()
     except rospy.ROSInterruptException:

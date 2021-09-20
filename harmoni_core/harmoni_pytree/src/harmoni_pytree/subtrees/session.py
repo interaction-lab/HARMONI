@@ -32,7 +32,7 @@ def description(root):
         banner_line = console.green + "*" * 79 + "\n" + console.reset
         s = "\n"
         s += banner_line
-        s += console.bold_white + "Activity".center(79) + "\n" + console.reset
+        s += console.bold_white + "Session".center(79) + "\n" + console.reset
         s += banner_line
         s += "\n"
         s += content
@@ -76,7 +76,7 @@ def post_tick_handler(snapshot_visitor, behaviour_tree):
     print(py_trees.display.unicode_blackboard())
 
 
-def create_root(name = "Activity"):
+def create_root(name = "Session"):
     root = py_trees.composites.Selector(name = name,memory=False)
 
     therapist = therapist.create_root()

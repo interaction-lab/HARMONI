@@ -190,6 +190,10 @@ def main():
 
         service_server = HarmoniServiceServer(name=service_id, service_manager=s)
 
+        print(service_name)
+        print("**********************************************************************************************")
+        print(service_id)
+
         s.start()
 
         # Streaming audio from mic

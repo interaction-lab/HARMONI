@@ -12,7 +12,7 @@ import time
 import subprocess
 import py_trees.console as console
 import os
-import activity
+import session
 import reset
 
 ##############################################################################
@@ -75,11 +75,11 @@ def post_tick_handler(snapshot_visitor, behaviour_tree):
 def create_root():
     root = py_trees.composites.Selector(name="root",memory=True)
 
-    Activity = activity.create_root()
+    Session = session.create_root()
     
     Reset = reset.create_root()
 
-    root.add_children([Activity, Reset, py_trees.behaviours.Running()])
+    root.add_children([Session, Reset, py_trees.behaviours.Running()])
 
     b1 = root.attach_blackboard_client(name="b1", namespace="microphone_bb_namespace")
     b2 = root.attach_blackboard_client(name="b2", namespace="scene/stt_bb_namespace")

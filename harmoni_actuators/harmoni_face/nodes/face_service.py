@@ -47,6 +47,12 @@ def main():
         service_server_mouth.start_sending_feedback()
         service_server_nose.start_sending_feedback()
 
+        print(service_name)
+        print("****************************************************************************")
+        print(service_id_eyes)
+        print(service_id_mouth)
+        print(service_id_nose)
+
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
