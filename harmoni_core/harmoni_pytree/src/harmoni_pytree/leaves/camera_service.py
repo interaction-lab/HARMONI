@@ -34,6 +34,7 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
     def __init__(self, name = "CameraServicePytree"):
 
         self.name = name
+        self.server_state = None
         self.result_data = None
         self.service_client_camera = None
         self.client_result = None 
@@ -59,7 +60,6 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
         #rospy.init_node(self.service_name, log_level=rospy.INFO)
         
         self.service_client_camera = HarmoniActionClient(self.name)
-        self.client_result = deque()
         self.server_name = "camera_default"
         self.service_client_camera.setup_client(self.server_name, 
                                             self._result_callback,
@@ -72,19 +72,17 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
 
     def update(self):
-        if self.service_client_camera.get_state() == GoalStatus.LOST:
+        if self.self.server_state == State.INIT:
             self.logger.debug(f"Sending goal to {self.server_name}")
             # Send request for each sensor service to set themselves up
             self.service_client_camera.send_goal(
-                action_goal=ActionType["ON"].value,
+                action_goal=ActionType["START"].value,
                 optional_data="Setup",
                 wait="",
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
-        else if self.service_client_camera.get_state() == GoalStatus.PENDING or self.service_client_camera.get_state() == GoalStatus.ACTIVE:
-            new_status = py_trees.common.Status.RUNNING
-        else if self.service_client_camera.get_state() == GoalStatus.SUCCEEDED:
+        else if self.self.server_state == State.START
             new_status = py_trees.common.Status.SUCCESS
         else:
             new_status = py_trees.common.Status.FAILURE
@@ -95,7 +93,7 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
         
 
     def terminate(self, new_status):
-        if(new_status == py_trees.common.Status.INVALID):
+        if new_status == py_trees.common.Status.INVALID:
             self.logger.debug(f"Sending goal to {self.server_name} to stop the service")
             # Send request for each sensor service to set themselves up
             self.service_client_camera.send_goal(
@@ -104,7 +102,7 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
                 wait="",
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
-            self.client_result = deque()
+            self.client_result = None
         else:
             #execute actions for the following states (SUCCESS || FAILURE)
             pass
@@ -117,18 +115,14 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug(
             f"The result callback message from {result['service']} was {len(result['message'])} long"
         )
-        self.client_result.append(
-            {"data": result["message"]}
-        )
+        self.client_result = result["message"]
         # TODO add handling of errors and continue=False
         return
 
     def _feedback_callback(self, feedback):
         """ Feedback is currently just logged """
         self.logger.debug("The feedback recieved is %s." % feedback)
-        # Check if the state is end, stop the behavior pattern
-        # if feedback["state"] == State.END:
-        #    self.end_pattern = True
+        self.server_state = feedback["state"]
         return
 
 def main():

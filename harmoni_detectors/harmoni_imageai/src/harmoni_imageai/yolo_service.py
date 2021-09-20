@@ -122,6 +122,7 @@ class ImageAIYoloService(HarmoniServiceManager):
             self.response_received = True
             rospy.loginfo("Service call failed")
             self.result_msg = ""
+        self.state = State.SUCCESS
         print("Le risposte sono: ")
         print(self.state)
         print(self.result_msg)
@@ -178,7 +179,7 @@ def main():
         print("**********************************************************************************************")
         print(service_id)
 
-        s.start()
+        #s.start()
 
         # Streaming audio from mic
         service_server.start_sending_feedback()

@@ -41,7 +41,7 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
         behaviour tree 
         """
         self.name = name
-        self.result_data = None
+        self.server_state = None
         self.service_client_yolo = None
         self.client_result = None
         self.server_name = None
@@ -81,7 +81,6 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
         #rospy.init_node("imageai_default", log_level=rospy.INFO)
         
         self.service_client_yolo = HarmoniActionClient(self.name)
-        self.client_result = deque()
         #TODO fattelo passare sto parametro o vedi che fare
         self.server_name = "imageai_yolo_default"
         self.service_client_yolo.setup_client(self.server_name, 
@@ -95,7 +94,7 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
 
     def update(self):
-        if self.service_client_yolo.get_state() == GoalStatus.LOST:
+        if self.self.server_state == State.INIT:
             self.logger.debug(f"Sending goal to {self.server_name}")
             self.service_client_yolo.send_goal(
                 action_goal = ActionType["REQUEST"].value,
@@ -104,17 +103,14 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
-        else if self.service_client_yolo.get_state() == GoalStatus.ACTIVE or self.service_client_yolo.get_state() == GoalStatus.PENDING:
+        else if self.self.server_state == State.REQUEST:
             #there is no result yet
             self.blackboard_yolo.result_message = "RUNNING"
             new_status = py_trees.common.Status.RUNNING
-        else if self.service_client_yolo.get_state() == GoalStatus.SUCCEEDED:
-            if len(self.client_result) > 0:
-                #if we are here, it means that there is the result so we can
-                #terminate the leaf
-                self.result_data = self.client_result.popleft()["data"]
-                self.blackboard_yolo.result_message = "SUCCESS"
-                self.blackboard_yolo.result_data = self.result_data
+        else if self.self.server_state == State.SUCCESS:
+            if self.client_result is not None:
+                self.blackboard_face_detection.result = self.client_result
+                self.client_result = None
                 new_status = py_trees.common.Status.SUCCESS
             else:
                 #we haven't received the result correctly.
@@ -135,7 +131,8 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
                 optional_data="",
                 wait="",
             )
-            self.client_result = deque()
+            self.client_result = None
+            self.blackboard_face_detection.result = None
             self.logger.debug(f"Goal sent to {self.server_name}")
         else:
             #execute actions for the following states (SUCCESS || FAILURE)
@@ -149,18 +146,14 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug(
             f"The result callback message from {result['service']} was {len(result['message'])} long"
         )
-        self.client_result.append(
-            {"data": result["message"]}
-        )
+        self.client_result = result["message"]
         # TODO add handling of errors and continue=False
         return
 
     def _feedback_callback(self, feedback):
         """ Feedback is currently just logged """
         self.logger.debug("The feedback recieved is %s." % feedback)
-        # Check if the state is end, stop the behavior pattern
-        # if feedback["state"] == State.END:
-        #    self.end_pattern = True
+        self.server_state = feedback["state"]
         return
 
 def main():

@@ -33,9 +33,7 @@ import py_trees.console
 class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
     def __init__(self, name):
         self.name = name
-        self.mode = False
-        self.aws_service = None
-        self.result_data = None
+        self.server_state = None
         self.service_client_tts = None
         self.client_result = None
 
@@ -66,23 +64,9 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
             if(parameter ==ActuatorNameSpace.tts.name):
                 self.mode = additional_parameters[parameter] 
         """
-               
-
-        #service_name = ActuatorNameSpace.tts.name
-        #instance_id = rospy.get_param("instance_id")
-
-        #param = rospy.get_param(service_name + "/" + instance_id + "_param/")
-
-        #self.aws_service = AWSTtsService(self.name,param)
-        #TODO we have to do this in the if
         #rospy init node mi fa diventare un nodo ros
         #rospy.init_node(self.service_name, log_level=rospy.INFO)
-        
-        self.blackboard_tts_OLD.result_message = "INVALID"
-
-            
         self.service_client_tts = HarmoniActionClient(self.name)
-        self.client_result = deque()
         self.server_name = "tts_default"
         self.service_client_tts.setup_client(self.server_name, 
                                             self._result_callback,
@@ -91,78 +75,52 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 
-    def initialise(self):
-        """
-        
-        """    
+    def initialise(self):   
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
 
     def update(self):
-        """
-        
-        """
-        if(self.mode):
-            if self.blackboard_output_bot.result_message == State.SUCCESS:
-                # results data contains all the response from the lex service (not only the sentence)
-                self.result_data = self.aws_service.request(self.blackboard_output_bot.result_data["message"])
-                self.blackboard_tts_OLD.result_message = State.SUCCESS
-                self.blackboard_tts_OLD.result_data = self.result_data['message']
+        if self.self.server_state == State.INIT:
+            self.logger.debug(f"Sending goal to {self.aws_service}")
+            #Where can we take details["action_goal"]?
+            rospy.loginfo(self.blackboard_output_bot.result_data)
+            self.service_client_tts.send_goal(
+                action_goal = ActionType["REQUEST"].value,
+                optional_data = self.blackboard_bot.result,
+                wait=False,
+            )
+            self.logger.debug(f"Goal sent to {self.aws_service}")
+            new_status = py_trees.common.Status.RUNNING
+        else if self.self.server_state == State.REQUEST:
+            new_status = py_trees.common.Status.RUNNING
+        else if self.self.server_state == State.SUCCESS:
+            if self.client_result is not None:
+                #if we reach this point we have the result(s) 
+                #so we can make the leaf terminate
+                self.blackboard_tts.result = self.client_result
+                self.client_result = None
                 new_status = py_trees.common.Status.SUCCESS
             else:
-                new_status = self.blackboard_output_bot.result_message
-        else:
-            if self.blackboard_output_bot.result_message ==  State.SUCCESS:
-                if self.service_client_tts.get_state() == GoalStatus.LOST:
-                    self.logger.debug(f"Sending goal to {self.aws_service}")
-                    #Where can we take details["action_goal"]?
-                    rospy.loginfo(self.blackboard_output_bot.result_data)
-                    self.service_client_tts.send_goal(
-                        action_goal = ActionType["REQUEST"].value,
-                        optional_data = self.blackboard_output_bot.result_data['message'],
-                        wait=False,
-                    )
-                    self.logger.debug(f"Goal sent to {self.aws_service}")
-                    new_status = py_trees.common.Status.RUNNING
-                else:
-                    if len(self.client_result) > 0:
-                        #if we reach this point we have the result(s) 
-                        #so we can make the leaf terminate
-                        self.result_data = self.client_result.popleft()["data"]
-                        self.blackboard_tts_OLD.result_message = State.SUCCESS
-                        self.blackboard_tts_OLD.result_data = self.result_data
-                        new_status = py_trees.common.Status.SUCCESS
-                    else:
-                        #not sure about the followings lines
-                        if(self.aws_service.state == State.FAILED):
-                            self.blackboard_tts_OLD.result_message = State.FAILED
-                            new_status = py_trees.common.Status.FAILURE
-                        else:
-                            new_status = py_trees.common.Status.RUNNING
-            else:
-                new_status = self.blackboard_output_bot.result_message
-            self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
+                #we haven't received the result correctly.
+                new_status = py_trees.common.Status.FAILURE
+        self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status
 
         
-
     def terminate(self, new_status):
-        """
-        When is this called?
-           Whenever your behaviour switches to a non-running state.
-            - SUCCESS || FAILURE : your behaviour's work cycle has finished
-            - INVALID : a higher priority branch has interrupted, or shutting down
-        """
         if(new_status == py_trees.common.Status.INVALID):
-            #do the code for handling interuptions
-            #self.blackboard_tts_OLD.result_message = "INVALID"
-            #TODO 
-            if(self.mode):
-                pass
-            else:
-                pass
+            self.logger.debug(f"Sending goal to {self.server_name} to stop the service")
+            # Send request for each sensor service to set themselves up
+            self.service_client_camera.send_goal(
+                action_goal=ActionType["STOP"].value,
+                optional_data="",
+                wait="",
+            )
+            self.client_result = None
+            self.blackboard_tts.result = None
+            self.logger.debug(f"Goal sent to {self.server_name}")
         else:
-            #do the code for the termination of the leaf (SUCCESS || FAILURE)
-            self.client_result = deque()
+            #execute actions for the following states (SUCCESS || FAILURE)
+            pass
 
         self.logger.debug("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))
 
@@ -172,16 +130,12 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug(
             f"The result callback message from {result['service']} was {len(result['message'])} long"
         )
-        self.client_result.append(
-            {"data": result["message"]}
-        )
+        self.client_result = result["message"]
         # TODO add handling of errors and continue=False
         return
 
     def _feedback_callback(self, feedback):
         """ Feedback is currently just logged """
         self.logger.debug("The feedback recieved is %s." % feedback)
-        # Check if the state is end, stop the behavior pattern
-        # if feedback["state"] == State.END:
-        #    self.end_pattern = True
+        self.server_state = feedback["state"]
         return
