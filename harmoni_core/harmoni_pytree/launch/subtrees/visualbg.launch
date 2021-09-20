@@ -5,6 +5,7 @@
     <rosparam file="$(find harmoni_pytree)/config/configuration.yaml" subst_value="True"/>
 
     <!-- In order to launch visual_bg we need the following services from HARMONI -->
+    <!--
     <include file="$(find harmoni_speaker)/launch/speaker_service.launch"></include>
     <include file="$(find harmoni_tts)/launch/tts_service.launch"></include>
     <include file="$(find harmoni_bot)/launch/bot_service.launch"></include>
@@ -13,6 +14,7 @@
     <include file="$(find harmoni_microphone)/launch/microphone_service.launch"></include>
     <include file="$(find harmoni_camera)/launch/camera_service.launch"></include>
     <include file="$(find harmoni_imageai)/launch/yolo_service.launch"></include>
+    -->
     <!-- end services -->
 
     <node pkg="harmoni_pytree" type="visual_bg.py" name="harmoni_pytree_$(arg instance_id)" output="screen"/>

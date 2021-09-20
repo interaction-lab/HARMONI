@@ -32,6 +32,12 @@ def main():
     service_id_nose = f"{service_name}_nose_{instance_id}"
     try:
         rospy.init_node(service_name)
+        print(ActuatorNameSpace.face.value)
+        print("*************************************************************************")
+        print(instance_id)
+        print(service_name + "_eyes_" + instance_id)
+        print(service_name + "_mouth_" + instance_id)
+        print(service_name + "_nose_" + instance_id)
         param = rospy.get_param(service_name + "/" + instance_id + "_param")
         param_eyes = rospy.get_param(service_name + "/" + instance_id + "_param/eyes/")
         param_mouth = rospy.get_param(service_name + "/" + instance_id + "_param/mouth/")
@@ -46,6 +52,7 @@ def main():
         service_server_eyes.start_sending_feedback()
         service_server_mouth.start_sending_feedback()
         service_server_nose.start_sending_feedback()
+
         rospy.spin()
     except rospy.ROSInterruptException:
         pass

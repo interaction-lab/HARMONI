@@ -36,6 +36,10 @@ def main():
         param = rospy.get_param(service_name + "/" + instance_id + "_param/")
 
         s = AWSTtsService(service_id, param)
+        
+        print(service_name)
+        print("****************************************************************************")
+        print(service_id)
 
         service_server = HarmoniServiceServer(service_id, s)
 
