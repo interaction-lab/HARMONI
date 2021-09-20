@@ -86,12 +86,7 @@ class AWSLexServicePytree(py_trees.behaviour.Behaviour):
 
         #self.aws_service = AWSLexService(service_id, params)
         #self.aws_service.setup_aws_lex()
-<<<<<<< HEAD
         #if(not self.mode):
-=======
-        if(not self.mode):
->>>>>>> 875abbc975997aed210e7d918276353e4410dd40
-            
         self.service_client_lex = HarmoniActionClient(self.name)
         rospy.loginfo("Client initialized")
         self.client_result = deque()
