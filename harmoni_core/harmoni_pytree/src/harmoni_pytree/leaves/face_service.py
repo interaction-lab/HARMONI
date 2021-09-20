@@ -99,14 +99,14 @@ class FaceServicePytree(py_trees.behaviour.Behaviour):
         #self.mouth_service = MouthService(service_name + "_mouth_" + instance_id, param_mouth, face)
         #self.nose_service = NoseService(service_name + "_nose_" + instance_id, param_nose, face)
 
-        if(not self.mode):
-            self.service_client_face = HarmoniActionClient(self.name)
-            self.client_result = deque()
-            self.server_name = "face_mouth_default"
-            self.service_client_face.setup_client(self.server_name,
-                                                self._result_callback,
-                                                self._feedback_callback)
-            self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
+        #if(not self.mode):
+        self.service_client_face = HarmoniActionClient(self.name)
+        self.client_result = deque()
+        self.server_name = "face_mouth_default"
+        self.service_client_face.setup_client(self.server_name,
+                                            self._result_callback,
+                                            self._feedback_callback)
+        self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
         
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 
