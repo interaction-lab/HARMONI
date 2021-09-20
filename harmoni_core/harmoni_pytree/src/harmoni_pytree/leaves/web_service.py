@@ -73,7 +73,7 @@ class WebServicePytree(py_trees.behaviour.Behaviour):
         #service_id = f"{service_name}_{instance_id}"
 
         #self.web_service = WebService(service_id)
-
+        """
         if(not self.mode):
             self.service_client_web = HarmoniActionClient(self.name)
             self.client_result = deque()
@@ -82,7 +82,7 @@ class WebServicePytree(py_trees.behaviour.Behaviour):
                                                 self._result_callback,
                                                 self._feedback_callback)
             self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
-        
+        """
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 
     def initialise(self):

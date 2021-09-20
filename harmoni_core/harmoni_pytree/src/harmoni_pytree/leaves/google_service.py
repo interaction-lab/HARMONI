@@ -96,7 +96,7 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
         #TODO questo dobbiamo farlo nell'if 
         #rospy init node mi fa diventare un nodo ros
         #rospy.init_node(self.server_name, log_level=rospy.INFO)
-
+        """
         if(not self.mode):
             self.service_client_custom = HarmoniActionClient(self.name)
             self.client_result = deque()
@@ -105,7 +105,7 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
                                                 self._result_callback,
                                                 self._feedback_callback)
             self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
-        
+        """
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 
     def initialise(self):

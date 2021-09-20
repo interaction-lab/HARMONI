@@ -26,18 +26,12 @@ import os
 def main():
     """Set names, collect params, and give service to server"""
     service_name = ActuatorNameSpace.face.name
-    instance_id = rospy.get_param("/instance_id")
+    instance_id = rospy.get_param("/instance_id") #default
     service_id_mouth = f"{service_name}_mouth_{instance_id}"
     service_id_eyes = f"{service_name}_eyes_{instance_id}"
     service_id_nose = f"{service_name}_nose_{instance_id}"
     try:
         rospy.init_node(service_name)
-        print(ActuatorNameSpace.face.value)
-        print("*************************************************************************")
-        print(instance_id)
-        print(service_name + "_eyes_" + instance_id)
-        print(service_name + "_mouth_" + instance_id)
-        print(service_name + "_nose_" + instance_id)
         param = rospy.get_param(service_name + "/" + instance_id + "_param")
         param_eyes = rospy.get_param(service_name + "/" + instance_id + "_param/eyes/")
         param_mouth = rospy.get_param(service_name + "/" + instance_id + "_param/mouth/")

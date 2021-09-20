@@ -291,8 +291,8 @@ def main():
     # Tick Tock
     ####################
 
-    if args.interactive:
-        py_trees.console.read_single_keypress()
+    #if args.interactive:
+    #    py_trees.console.read_single_keypress()
     for unused_i in range(1, 10):
         try:
             behaviour_tree.tick()

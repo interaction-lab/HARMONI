@@ -67,6 +67,7 @@ class GestureServicePytree(py_trees.behaviour.Behaviour):
         this parameter is a dictionary that contains couples like   
         name_of_the_leaf --> boolean mode
         """
+        """
         for parameter in additional_parameters:
             print(parameter, additional_parameters[parameter])  
             if(parameter == ActuatorNameSpace.gesture.name):
@@ -82,7 +83,7 @@ class GestureServicePytree(py_trees.behaviour.Behaviour):
 
         #self.qt_gesture_service = GestureInterface(service_name, params)
 
-        self.gesture_service = GestureService(service_name,params)
+        #self.gesture_service = GestureService(service_name,params)
         #TODO the first parameter in setup_client must be "equals" in all the leaves
         if(not self.mode):
             self.service_client_gesture = HarmoniActionClient(self.name)
@@ -93,6 +94,7 @@ class GestureServicePytree(py_trees.behaviour.Behaviour):
                                                 self._result_callback,
                                                 self._feedback_callback)
             self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
+        """
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 
     def initialise(self):
