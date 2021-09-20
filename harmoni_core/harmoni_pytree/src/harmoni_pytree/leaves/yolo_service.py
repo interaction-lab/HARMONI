@@ -34,14 +34,6 @@ import py_trees.console
 
 class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
 
-    #TODO tutte le print devono diventare console py_tree
-    """
-    mode è il boolean che controlla la modalità di funzionamento:
-    true: opzione 1 (utilizzo come una classe python)
-    false: opzione 2 (utilizzo mediate action_goal)
-    """
-    #ImageAIYolo è un detector
-
     def __init__(self, name = "ImageAIYoloServicePytree"):
         
         """
@@ -49,8 +41,6 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
         behaviour tree 
         """
         self.name = name
-        self.mode = False
-        #self.yolo_service = None
         self.result_data = None
         self.service_client_yolo = None
         self.client_result = None
@@ -58,6 +48,7 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
 
         # here there is the inizialization of the blackboards
         self.blackboards = []
+        """
         #blackboard we suppose are useful to know when to start imageai detection
         self.blackboard_camera=self.attach_blackboard_client(name=self.name,namespace="harmoni_camera")
         self.blackboard_camera.register_key("result_message", access=py_trees.common.Access.READ)
@@ -65,38 +56,27 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
         self.blackboard_yolo=self.attach_blackboard_client(name=self.name,namespace="harmoni_imageai_yolo")
         self.blackboard_yolo.register_key("result_data",access=py_trees.common.Access.WRITE)
         self.blackboard_yolo.register_key("result_message", access=py_trees.common.Access.WRITE)
+        """
 
         #TODO usa le nuove blackboard
-        self.blackboard_camera = self.attach_blackboard_client(name=self.name, namespace=SensorNameSpace.camera.name+"/face")
+        """
+        self.blackboard_camera = self.attach_blackboard_client(name=self.name, namespace=SensorNameSpace.camera.name)
         self.blackboard_camera.register_key("state", access=py_trees.common.Access.READ)
+        """
         self.blackboard_face_detection = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.face_detect.name)
-        self.blackboard_face_detection.register_key("state", access=py_trees.common.Access.WRITE)
+        #self.blackboard_face_detection.register_key("state", access=py_trees.common.Access.WRITE)
         self.blackboard_face_detection.register_key("result", access=py_trees.common.Access.WRITE)
-
 
         super(ImageAIYoloServicePytree, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self,**additional_parameters):
         """
-        Qui chiamiamo l'inizializzazione del servizio SpeechToTextService, 
-        motivo per cui abbiamo aggiunto param al metodo che 
-        pensiamo debbano essere passati dal chiamante e non possono essere
-        creati all'interno del metodo stesso.  
-        """
-        
         for parameter in additional_parameters:
             print(parameter, additional_parameters[parameter])  
             if(parameter =="ImageAIYoloServicePytree_mode"):
-                self.mode = additional_parameters[parameter]        
-
-        #service_name = DetectorNameSpace.imageai.name
-        #instance_id = rospy.get_param("instance_id")
-
-        #param = rospy.get_param(service_name + "/" + instance_id + "_param/")
-
-        #self.yolo_service = ImageAIYoloService(self.name,param)
-        #TODO questo dobbiamo farlo nell'if 
+                self.mode = additional_parameters[parameter] 
+        """       
         #rospy init node mi fa diventare un nodo ros
         #rospy.init_node("imageai_default", log_level=rospy.INFO)
         
@@ -112,27 +92,23 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 
     def initialise(self):
-        """
-        
-        """ 
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
+
     def update(self):
-        """
-        
-        """
-    
         if self.service_client_yolo.get_state() == GoalStatus.LOST:
-                self.logger.debug(f"Sending goal to {self.server_name}")
-                # Dove posso prendere details["action_goal"]?
-                self.service_client_yolo.send_goal(
-                    action_goal = ActionType["REQUEST"].value,
-                    optional_data="",
-                    wait=False,
-                )
-                self.logger.debug(f"Goal sent to {self.server_name}")
-                new_status = py_trees.common.Status.RUNNING
-        else:
-            print(len(self.client_result))
+            self.logger.debug(f"Sending goal to {self.server_name}")
+            self.service_client_yolo.send_goal(
+                action_goal = ActionType["REQUEST"].value,
+                optional_data="",
+                wait=False,
+            )
+            self.logger.debug(f"Goal sent to {self.server_name}")
+            new_status = py_trees.common.Status.RUNNING
+        else if self.service_client_yolo.get_state() == GoalStatus.ACTIVE or self.service_client_yolo.get_state() == GoalStatus.PENDING:
+            #there is no result yet
+            self.blackboard_yolo.result_message = "RUNNING"
+            new_status = py_trees.common.Status.RUNNING
+        else if self.service_client_yolo.get_state() == GoalStatus.SUCCEEDED:
             if len(self.client_result) > 0:
                 #if we are here, it means that there is the result so we can
                 #terminate the leaf
@@ -141,36 +117,29 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
                 self.blackboard_yolo.result_data = self.result_data
                 new_status = py_trees.common.Status.SUCCESS
             else:
-                #there is no result yet
-                self.blackboard_yolo.result_message = "RUNNING"
-                new_status = py_trees.common.Status.RUNNING
-
-            #not sure about these lines
-            if(self.service_client_yolo.get_state() == State.FAILED):
-                self.blackboard_yolo.result_message = "FAILURE"
+                #we haven't received the result correctly.
                 new_status = py_trees.common.Status.FAILURE
-        
+        else: 
+            new_status = py_trees.common.Status.FAILURE
+
         self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status
 
         
     def terminate(self, new_status):
-        """
-        When is this called?
-           Whenever your behaviour switches to a non-running state.
-            - SUCCESS || FAILURE : your behaviour's work cycle has finished
-            - INVALID : a higher priority branch has interrupted, or shutting down
-        """
         if(new_status == py_trees.common.Status.INVALID):
-            #esegui codice per interrupt 
-            #TODO 
-            if(self.mode):
-                pass
-            else:
-                pass
-        else:
-            #esegui codice per terminare (SUCCESS || FAILURE)
+            self.logger.debug(f"Sending goal to {self.server_name} to stop the service")
+            # Send request for each sensor service to set themselves up
+            self.service_client_camera.send_goal(
+                action_goal=ActionType["STOP"].value,
+                optional_data="",
+                wait="",
+            )
             self.client_result = deque()
+            self.logger.debug(f"Goal sent to {self.server_name}")
+        else:
+            #execute actions for the following states (SUCCESS || FAILURE)
+            pass
 
         self.logger.debug("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))
 
@@ -219,7 +188,4 @@ def main():
     except KeyboardInterrupt:
         print("Exception occurred")
         pass
-    
 
-if __name__ == "__main__":
-    main()

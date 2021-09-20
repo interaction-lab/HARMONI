@@ -36,12 +36,13 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
         self.name = name
         self.result_data = None
         self.service_client_camera = None
-        self.client_result = None
-
+        self.client_result = None 
+        """
         # here there is the inizialization of the blackboards
         self.blackboards = []
         self.blackboard_camera = self.attach_blackboard_client(name=self.name, namespace=SensorNameSpace.camera.name)
         self.blackboard_camera.register_key("result_message", access=py_trees.common.Access.WRITE)
+        """
 
         super(CameraServicePytree, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
@@ -68,15 +69,9 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 
     def initialise(self):
-        """
-        
-        """
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
+
     def update(self):
-        """
-        
-        """    
-    
         if self.service_client_camera.get_state() == GoalStatus.LOST:
             self.logger.debug(f"Sending goal to {self.server_name}")
             # Send request for each sensor service to set themselves up
@@ -86,13 +81,12 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
                 wait="",
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
-            self.blackboard_camera.result_message = "RUNNING"
             new_status = py_trees.common.Status.RUNNING
-        else if self.service_client_camera.get_state() == GoalStatus.ACTIVE:
+        else if self.service_client_camera.get_state() == GoalStatus.PENDING or self.service_client_camera.get_state() == GoalStatus.ACTIVE:
+            new_status = py_trees.common.Status.RUNNING
+        else if self.service_client_camera.get_state() == GoalStatus.SUCCEEDED:
             new_status = py_trees.common.Status.SUCCESS
-        else if self.service_client_camera.get_state() == GoalStatus.PENDING:
-            new_status = py_trees.common.Status.RUNNING
-        else if self.service_client_camera.get_state() == GoalStatus.REJECTED:
+        else:
             new_status = py_trees.common.Status.FAILURE
 
         self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
@@ -101,23 +95,19 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
         
 
     def terminate(self, new_status):
-        """
-        When is this called?
-           Whenever your behaviour switches to a non-running state.
-            - SUCCESS || FAILURE : your behaviour's work cycle has finished
-            - INVALID : a higher priority branch has interrupted, or shutting down
-        """
         if(new_status == py_trees.common.Status.INVALID):
-            #esegui codice per interrupt 
-            #self.blackboard_tts.result_message = "INVALID"
-            #TODO 
-            if(self.mode):
-                pass
-            else:
-                pass
-        else:
-            #esegui codice per terminare (SUCCESS || FAILURE)
+            self.logger.debug(f"Sending goal to {self.server_name} to stop the service")
+            # Send request for each sensor service to set themselves up
+            self.service_client_camera.send_goal(
+                action_goal=ActionType["STOP"].value,
+                optional_data="",
+                wait="",
+            )
+            self.logger.debug(f"Goal sent to {self.server_name}")
             self.client_result = deque()
+        else:
+            #execute actions for the following states (SUCCESS || FAILURE)
+            pass
 
         self.logger.debug("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))
 
@@ -169,5 +159,3 @@ def main():
         pass
     
 
-if __name__ == "__main__":
-    main()

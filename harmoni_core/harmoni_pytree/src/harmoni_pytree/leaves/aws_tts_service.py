@@ -31,19 +31,7 @@ import time
 import py_trees.console
 
 class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
-
-    #TODO log with pytree
-    """
-    the boolean "mode" changes the functioning of the Behaviour:
-    true: we use the leaf as both client and server (inner module)
-    false: we use the leaf as client that makes request to the server
-    """
-    #TTS è un actuators
-
     def __init__(self, name):
-        
-        """
-        """
         self.name = name
         self.mode = False
         self.aws_service = None
@@ -53,12 +41,14 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
 
         # here there is the inizialization of the blackboards
         self.blackboards = []
+        """
         self.blackboard_tts_OLD = self.attach_blackboard_client(name=self.name, namespace=ActuatorNameSpace.tts.name)
         self.blackboard_tts_OLD.register_key("result_data", access=py_trees.common.Access.WRITE)
         self.blackboard_tts_OLD.register_key("result_message", access=py_trees.common.Access.WRITE)
         self.blackboard_output_bot=self.attach_blackboard_client(name=self.name,namespace=DialogueNameSpace.bot.name+"output")
         self.blackboard_output_bot.register_key("result_data", access=py_trees.common.Access.READ)
         self.blackboard_output_bot.register_key("result_message", access=py_trees.common.Access.READ)
+        """
 
         #TODO: usa queste bb che sono le nuove
         self.blackboard_tts = self.attach_blackboard_client(name=self.name, namespace=ActuatorNameSpace.tts.name)
@@ -71,15 +61,12 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
 
     def setup(self,**additional_parameters):
         """
-        In order to select the mode after that the tree is created 
-        an additional_parameters parameter is used:
-        this parameter is a dictionary that contains couples like   
-        name_of_the_leaf --> boolean mode
-        """
         for parameter in additional_parameters:
             print(parameter, additional_parameters[parameter])  
             if(parameter ==ActuatorNameSpace.tts.name):
-                self.mode = additional_parameters[parameter]        
+                self.mode = additional_parameters[parameter] 
+        """
+               
 
         #service_name = ActuatorNameSpace.tts.name
         #instance_id = rospy.get_param("instance_id")

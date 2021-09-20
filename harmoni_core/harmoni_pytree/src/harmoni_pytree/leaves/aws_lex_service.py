@@ -27,31 +27,26 @@ import time
 import py_trees.console
 
 class AWSLexServicePytree(py_trees.behaviour.Behaviour):
-
-    """
-    the boolean "mode" changes the functioning of the Behaviour:
-    true: we use the leaf as both client and server (inner module)
-    false: we use the leaf as client that makes request to the server
-    """
-
     def __init__(self, name):
         self.name = name
-        self.mode = False
-        self.aws_service = None
-        self.input_message_lex = None
+        #self.input_message_lex = None
         self.result_data = None
         self.service_client_lex = None
         self.client_result = None
 
         self.blackboards = []
+        """
         self.blackboard_output_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name+"output")
         self.blackboard_output_bot.register_key("result_data", access=py_trees.common.Access.WRITE)
         self.blackboard_output_bot.register_key("result_message", access=py_trees.common.Access.WRITE)
         self.blackboard_input_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name)
         self.blackboard_input_bot.register_key("result_data", access=py_trees.common.Access.READ)
         self.blackboard_input_bot.register_key("result_message", access=py_trees.common.Access.READ)
+        """
 
         #TODO: usa queste bb che sono le nuove
+        #TODO creare due foglie per il bot uno che si occupa del trigger e viene messo in EOR con scene dove useremo solo
+        #json e il secondo bot che invece usiamo come analyzer. 
         self.blackboard_scene = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name)
         self.blackboard_scene.register_key("utterance", access=py_trees.common.Access.READ)
         self.blackboard_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name)
