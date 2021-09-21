@@ -69,7 +69,7 @@ class AWSLexService(HarmoniServiceManager):
             )
             rospy.loginfo(f"The lex response is {lex_response}")
             #if lex_response["ResponseMetadata"]["HTTPStatusCode"] == 200:
-            self.state = State.SUCCESS
+            
             if "intentName" in lex_response:
                 if lex_response["dialogState"] == "Fulfilled":
                     rospy.loginfo(
@@ -78,6 +78,7 @@ class AWSLexService(HarmoniServiceManager):
             rospy.loginfo("The response is %s" % (lex_response["message"]))
             self.response_received = True
             self.result_msg = lex_response["message"]
+            self.state = State.SUCCESS
             #else:
             #    self.start = State.FAILED
             #    rospy.loginfo("Service call failed")

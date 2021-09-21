@@ -55,7 +55,7 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
             if(parameter =="CameraServicePytree_mode"):
                 self.mode = additional_parameters[parameter]     
         """
-
+        
         #rospy init node mi fa diventare un nodo ros
         #rospy.init_node(self.service_name, log_level=rospy.INFO)
         
@@ -72,7 +72,7 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
 
     def update(self):
-        if self.self.server_state == State.INIT:
+        if self.server_state == State.INIT:
             self.logger.debug(f"Sending goal to {self.server_name}")
             # Send request for each sensor service to set themselves up
             self.service_client_camera.send_goal(
@@ -82,7 +82,7 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
-        else if self.self.server_state == State.START
+        else if self.server_state == State.START
             new_status = py_trees.common.Status.SUCCESS
         else:
             new_status = py_trees.common.Status.FAILURE
@@ -116,7 +116,6 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
             f"The result callback message from {result['service']} was {len(result['message'])} long"
         )
         self.client_result = result["message"]
-        # TODO add handling of errors and continue=False
         return
 
     def _feedback_callback(self, feedback):
@@ -132,7 +131,6 @@ def main():
     
     blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace="harmoni_camera")
     blackboardProva.register_key("result_message", access=py_trees.common.Access.READ)
-
 
     print(blackboardProva)
 

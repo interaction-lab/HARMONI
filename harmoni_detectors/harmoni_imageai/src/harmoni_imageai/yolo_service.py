@@ -94,12 +94,9 @@ class ImageAIYoloService(HarmoniServiceManager):
 
 
     def request(self, data):
-
         rospy.loginfo("Start the %s request" % self.name)
-        #self.state = State.REQUEST
-        #self.state = State.START
+        self.state = State.REQUEST
         try:
-            self.state = State.SUCCESS
             #detect objects coming from camera stream
             data_tmp = self.cv_bridge.imgmsg_to_cv2(self._buff.get(), desired_encoding='passthrough')
             self.detections = self.detector.detectObjectsFromImage(custom_objects=self.custom_objects,
@@ -115,17 +112,13 @@ class ImageAIYoloService(HarmoniServiceManager):
                 print(eachObject["name"] , " : " , eachObject["percentage_probability"], " : ", eachObject["box_points"] )
                 print("--------------------------------")
             """
+            self.state = State.SUCCESS
 
         except rospy.ServiceException:
-            self.start = State.FAILED
             self.state = State.FAILED
             self.response_received = True
             rospy.loginfo("Service call failed")
             self.result_msg = ""
-        self.state = State.SUCCESS
-        print("Le risposte sono: ")
-        print(self.state)
-        print(self.result_msg)
         return {"response": self.state, "message": self.result_msg}
 
     def start(self, rate=""):

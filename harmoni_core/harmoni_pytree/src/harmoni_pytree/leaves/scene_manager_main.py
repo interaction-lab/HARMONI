@@ -35,12 +35,9 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         self.blackboard_scene.register_key("gesture", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key("image", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key("sound", access=py_trees.common.Access.WRITE)
-        """
-        self.blackboard_scene.register_key("do_speech", access=py_trees.common.Access.WRITE)
-        """
         self.blackboard_scene.register_key("therapist_needed", access=py_trees.common.Access.WRITE)
         self.blackboard_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name)
-        self.blackboard_bot.register_key("result", access=py_trees.common.Access.READ)
+        self.blackboard_bot.register_key("result", access=py_trees.common.Access.WRITE)
         """
         self.blackboard_stt = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.stt.name)
         self.blackboard_stt.register_key("result", access=py_trees.common.Access.READ)

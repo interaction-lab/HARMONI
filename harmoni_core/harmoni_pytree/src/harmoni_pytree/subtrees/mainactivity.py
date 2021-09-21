@@ -19,7 +19,8 @@ import running_or_success as rs
 
 from harmoni_common_lib.constants import *
 
-from harmoni_pytree.leaves.aws_lex_service import AWSLexServicePytree
+from harmoni_pytree.leaves.aws_lex_trigger_service import AWSLexTriggerServicePytree
+from harmoni_pytree.leaves.aws_lex_analyzer_service import AWSLexAnalyzerServicePytree
 from harmoni_pytree.leaves.aws_tts_service import AWSTtsServicePytree
 from harmoni_pytree.leaves.face_service import FaceServicePytree
 from harmoni_pytree.leaves.google_service import SpeechToTextServicePytree
@@ -102,6 +103,7 @@ def create_root():
     Success4 = py_trees.behaviours.Success(name="Success")
     Success5 = py_trees.behaviours.Success(name="Success")
     Success6 = py_trees.behaviours.Success(name="Success")
+    Success7 = py_trees.behaviours.Success(name="Success")
 
     #TODO modulo sceneManager!
     scene_manager = SceneManagerMain("SceneManagerMain")
@@ -144,8 +146,8 @@ def create_root():
                                                       success_until=10,
                                                       reset=False)
     """
-    chatbot=AWSLexServicePytree("AwsLexMainActivity")
-    chatbot2=AWSLexServicePytree("AwsLexMainActivity2")
+    bot_trigger=AWSLexTriggerServicePytree("AwsLexTriggerMainActivity")
+    bot_analyzer=AWSLexAnalyzerServicePytree("AwsLexAnalyzerMainActivity")
     """
     Chat_Bot = py_trees.behaviours.Count(name="Chat_Bot",
                                                       fail_until=0,
@@ -229,8 +231,18 @@ def create_root():
     parall_speaker = py_trees.composites.Parallel(name="ParallelSpeaker")
     parall_speaker.add_children([speaker,lips_sync]) 
 
+    eor_trigger = py_trees.idioms.either_or(
+        name="EitherOrTrigger",
+        conditions=[
+            py_trees.common.ComparisonExpression("/aggiusta", "null", operator.ne),
+            py_trees.common.ComparisonExpression("/aggiusta", "null", operator.eq),
+        ],
+        subtrees=[bot_trigger, Success7],
+        namespace="eor_trigger",
+    )
+
     sequen_speaker = py_trees.composites.Sequence(name="SequenceSpeaker")
-    sequen_speaker.add_children([chatbot,tts,parall_speaker])
+    sequen_speaker.add_children([eor_trigger,tts,parall_speaker])
 
     eor_speaker = py_trees.idioms.either_or(
         name="EitherOrSpeaker",
@@ -316,7 +328,7 @@ def create_root():
     sequen_Detect_Kid = py_trees.composites.Parallel(name="PARALLEL_Detect_Kid")
     """
     sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid",memory=False)
-    sequen_detect_kid.add_children([timeout_kid_detection, eor_timer_detection, chatbot2])                                         
+    sequen_detect_kid.add_children([timeout_kid_detection, eor_timer_detection, bot_analyzer])                                         
 
     running_or_success = rs.create_root(name="RSMainactivity",
                                         condition=[

@@ -2,23 +2,19 @@
 
 # Common Imports
 import rospy
-import roslib
-
-from harmoni_common_lib.constants import State
+from harmoni_common_lib.constants import *
 from actionlib_msgs.msg import GoalStatus
-from harmoni_common_lib.service_server import HarmoniServiceServer
-from harmoni_common_lib.service_manager import HarmoniServiceManager
 from harmoni_common_lib.action_client import HarmoniActionClient
 import harmoni_common_lib.helper_functions as hf
-from harmoni_tts.aws_tts_service import AWSTtsService
+from harmoni_bot.aws_lex_service import AWSLexService
+
 # Specific Imports
-from harmoni_common_lib.constants import ActuatorNameSpace, ActionType, State, DialogueNameSpace
+from harmoni_common_lib.constants import ActuatorNameSpace, ActionType, DialogueNameSpace
 from botocore.exceptions import BotoCoreError, ClientError
 from contextlib import closing
 from collections import deque 
 import soundfile as sf
 import numpy as np
-import boto3
 import re
 import json
 import ast
@@ -30,93 +26,91 @@ import time
 
 import py_trees.console
 
-class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
+class AWSLexTriggerServicePytree(py_trees.behaviour.Behaviour):
     def __init__(self, name):
         self.name = name
-        self.server_state = None
-        self.service_client_tts = None
+        self.service_client_lex = None
         self.client_result = None
 
-        # here there is the inizialization of the blackboards
         self.blackboards = []
         """
-        self.blackboard_tts_OLD = self.attach_blackboard_client(name=self.name, namespace=ActuatorNameSpace.tts.name)
-        self.blackboard_tts_OLD.register_key("result_data", access=py_trees.common.Access.WRITE)
-        self.blackboard_tts_OLD.register_key("result_message", access=py_trees.common.Access.WRITE)
-        self.blackboard_output_bot=self.attach_blackboard_client(name=self.name,namespace=DialogueNameSpace.bot.name+"output")
-        self.blackboard_output_bot.register_key("result_data", access=py_trees.common.Access.READ)
-        self.blackboard_output_bot.register_key("result_message", access=py_trees.common.Access.READ)
+        self.blackboard_output_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name+"output")
+        self.blackboard_output_bot.register_key("result_data", access=py_trees.common.Access.WRITE)
+        self.blackboard_output_bot.register_key("result_message", access=py_trees.common.Access.WRITE)
+        self.blackboard_input_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name)
+        self.blackboard_input_bot.register_key("result_data", access=py_trees.common.Access.READ)
+        self.blackboard_input_bot.register_key("result_message", access=py_trees.common.Access.READ)
         """
-
         #TODO: usa queste bb che sono le nuove
-        self.blackboard_tts = self.attach_blackboard_client(name=self.name, namespace=ActuatorNameSpace.tts.name)
-        self.blackboard_tts.register_key("result", access=py_trees.common.Access.WRITE)
+        #TODO creare due foglie per il bot uno che si occupa del trigger e viene messo in EOR con scene dove useremo solo
+        #json e il secondo bot che invece usiamo come analyzer. 
+        self.blackboard_scene = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name)
+        self.blackboard_scene.register_key("utterance", access=py_trees.common.Access.READ)
         self.blackboard_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name)
-        self.blackboard_bot.register_key("result", access=py_trees.common.Access.READ)
+        self.blackboard_bot.register_key("result", access=py_trees.common.Access.WRITE)
 
-        super(AWSTtsServicePytree, self).__init__(name)
+        super(AWSLexTriggerServicePytree, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self,**additional_parameters):
         """
         for parameter in additional_parameters:
             print(parameter, additional_parameters[parameter])  
-            if(parameter ==ActuatorNameSpace.tts.name):
-                self.mode = additional_parameters[parameter] 
+            if(parameter ==DialogueNameSpace.bot.name):
+                self.mode = additional_parameters[parameter]        
         """
-        #rospy init node mi fa diventare un nodo ros
-        #rospy.init_node(self.service_name, log_level=rospy.INFO)
-        self.service_client_tts = HarmoniActionClient(self.name)
-        self.server_name = "tts_default"
-        self.service_client_tts.setup_client(self.server_name, 
+        self.service_client_lex = HarmoniActionClient(self.name)
+        self.server_name = "bot_default"
+        self.service_client_lex.setup_client(self.server_name, 
                                             self._result_callback,
                                             self._feedback_callback)
         self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
         
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 
-    def initialise(self):   
+    def initialise(self):
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
 
-    def update(self):
+    def update(self):              
         if self.server_state == State.INIT:
-            self.logger.debug(f"Sending goal to {self.aws_service}")
-            #Where can we take details["action_goal"]?
-            rospy.loginfo(self.blackboard_output_bot.result_data)
-            self.service_client_tts.send_goal(
+            self.logger.debug(f"Sending goal to {self.server_name}")
+            self.service_client_lex.send_goal(
                 action_goal = ActionType["REQUEST"].value,
-                optional_data = self.blackboard_bot.result,
+                optional_data=self.blackboard_scene.utterance,
                 wait=False,
             )
-            self.logger.debug(f"Goal sent to {self.aws_service}")
+            self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
         else if self.server_state == State.REQUEST:
+            #there is no result yet
             new_status = py_trees.common.Status.RUNNING
         else if self.server_state == State.SUCCESS:
             if self.client_result is not None:
-                #if we reach this point we have the result(s) 
-                #so we can make the leaf terminate
-                self.blackboard_tts.result = self.client_result
+                self.blackboard_bot.result = self.client_result
                 self.client_result = None
                 new_status = py_trees.common.Status.SUCCESS
             else:
                 #we haven't received the result correctly.
                 new_status = py_trees.common.Status.FAILURE
+        else: 
+            new_status = py_trees.common.Status.FAILURE
+
         self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status
 
         
+
     def terminate(self, new_status):
         if(new_status == py_trees.common.Status.INVALID):
             self.logger.debug(f"Sending goal to {self.server_name} to stop the service")
             # Send request for each sensor service to set themselves up
-            self.service_client_tts.send_goal(
+            self.service_client_lex.send_goal(
                 action_goal=ActionType["STOP"].value,
                 optional_data="",
                 wait="",
             )
             self.client_result = None
-            self.blackboard_tts.result = None
+            self.blackboard_bot.result = None
             self.logger.debug(f"Goal sent to {self.server_name}")
         else:
             #execute actions for the following states (SUCCESS || FAILURE)
@@ -138,3 +132,5 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("The feedback recieved is %s." % feedback)
         self.server_state = feedback["state"]
         return
+
+

@@ -94,7 +94,7 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
 
     def update(self):
-        if self.self.server_state == State.INIT:
+        if self.server_state == State.INIT:
             self.logger.debug(f"Sending goal to {self.server_name}")
             self.service_client_yolo.send_goal(
                 action_goal = ActionType["REQUEST"].value,
@@ -103,11 +103,10 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
-        else if self.self.server_state == State.REQUEST:
+        else if self.server_state == State.REQUEST:
             #there is no result yet
-            self.blackboard_yolo.result_message = "RUNNING"
             new_status = py_trees.common.Status.RUNNING
-        else if self.self.server_state == State.SUCCESS:
+        else if self.server_state == State.SUCCESS:
             if self.client_result is not None:
                 self.blackboard_face_detection.result = self.client_result
                 self.client_result = None
@@ -126,7 +125,7 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
         if(new_status == py_trees.common.Status.INVALID):
             self.logger.debug(f"Sending goal to {self.server_name} to stop the service")
             # Send request for each sensor service to set themselves up
-            self.service_client_camera.send_goal(
+            self.service_client_yolo.send_goal(
                 action_goal=ActionType["STOP"].value,
                 optional_data="",
                 wait="",
@@ -147,7 +146,6 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
             f"The result callback message from {result['service']} was {len(result['message'])} long"
         )
         self.client_result = result["message"]
-        # TODO add handling of errors and continue=False
         return
 
     def _feedback_callback(self, feedback):

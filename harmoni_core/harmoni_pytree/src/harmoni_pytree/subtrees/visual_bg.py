@@ -23,7 +23,8 @@ from harmoni_pytree import either_custom
 from harmoni_pytree.leaves.timer import Timer
 from harmoni_pytree.leaves.scene_manager_visualbg import SceneManagerVisualBg
 from harmoni_pytree.leaves.subtree_result_visualbg import SubTreeResultVisualBg
-from harmoni_pytree.leaves.aws_lex_service import AWSLexServicePytree
+from harmoni_pytree.leaves.aws_lex_trigger_service import AWSLexTriggerServicePytree
+from harmoni_pytree.leaves.aws_lex_analyzer_service import AWSLexAnalyzerServicePytree
 from harmoni_pytree.leaves.aws_tts_service import AWSTtsServicePytree
 from harmoni_pytree.leaves.face_service import FaceServicePytree
 from harmoni_pytree.leaves.google_service import SpeechToTextServicePytree
@@ -109,8 +110,8 @@ def create_root(name = "Visual_Bg"):
                                                         variable_value="Triste", 
                                                         overwrite=True)
     """
-    chatbot = AWSLexServicePytree("AwsLexVisualBg")
-    chatbot2 = AWSLexServicePytree("AwsLexVisualBg2")
+    bot_trigger=AWSLexTriggerServicePytree("AwsLexTriggerVisualActivity")
+    bot_analyzer=AWSLexAnalyzerServicePytree("AwsLexAnalyzerVisualActivity")
     """                                                    
     Chat_Bot = py_trees.behaviours.SetBlackboardVariable(name="Chat_bot",
                                                         variable_name="bot_output_bb_namespace/result_data", 
@@ -208,13 +209,13 @@ def create_root(name = "Visual_Bg"):
     )
 
     sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid",memory=False)
-    sequen_detect_kid.add_children([timeout_kid_detection, eor_timer_detection, chatbot2])                                         
+    sequen_detect_kid.add_children([timeout_kid_detection, eor_timer_detection, bot_analyzer])                                         
 
     parall_detect_and_face = py_trees.composites.Parallel(name="ParallelDetectAndFace")
     parall_detect_and_face.add_children([sequen_detect_kid, face_exp])  
 
     sequen_visual = py_trees.composites.Sequence(name="SequenceVisual")
-    sequen_visual.add_children([scene_manager,chatbot,tts,parall_speaker,parall_detect_and_face])
+    sequen_visual.add_children([scene_manager,bot_trigger,tts,parall_speaker,parall_detect_and_face])
 
     eor_visual = either_custom.either_or(
         name="EitherOrVisual",

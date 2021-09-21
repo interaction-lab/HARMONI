@@ -15,7 +15,8 @@ import py_trees.console as console
 import either_custom as eu
 import running_or_success as rs
 
-from harmoni_pytree.leaves.aws_lex_service_pytree import AWSLexServicePytree
+from harmoni_pytree.leaves.aws_lex_trigger_service import AWSLexTriggerServicePytree
+from harmoni_pytree.leaves.aws_lex_analyzer_service import AWSLexAnalyzerServicePytree
 from harmoni_pytree.leaves.aws_tts_service_pytree import AWSTtsServicePytree
 from harmoni_pytree.leaves.face_service_pytree import FaceServicePytree
 from harmoni_pytree.leaves.google_service_pytree import SpeechToTextServicePytree
@@ -100,8 +101,8 @@ def create_root(name = "Interaction_Bg"):
                                                         variable_value="null", 
                                                         overwrite=True)
     """
-    chatbot = AWSLexServicePytree("AwsLexInteractionBg")
-    chatbot2 = AWSLexServicePytree("AwsLexInteractionBg2")
+    bot_trigger=AWSLexTriggerServicePytree("AwsLexTriggerInteractionActivity")
+    bot_analyzer=AWSLexAnalyzerServicePytree("AwsLexAnalyzerInteractionActivity")
     """                                                    
     Chat_Bot = py_trees.behaviours.Count(name="Chat_Bot",
                                                       fail_until=0,
@@ -212,7 +213,7 @@ def create_root(name = "Interaction_Bg"):
     )
 
     sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid",memory=False)
-    sequen_detect_kid.add_children([timeout_kid_detection, eor_timer_detection, chatbot2])                                         
+    sequen_detect_kid.add_children([timeout_kid_detection, eor_timer_detection, bot_analyzer])                                         
 
     parall_detect_and_face = py_trees.composites.Parallel(name="ParallelDetectAndFace")
     parall_detect_and_face.add_children([sequen_detect_kid, face_exp])  
@@ -220,7 +221,7 @@ def create_root(name = "Interaction_Bg"):
     sequen_interaction_bg = py_trees.composites.Sequence(name="SequenceInteractionBg")
 
     sequen_interaction_bg.add_children([scene_manager,
-                                        chatbot, 
+                                        bot_trigger, 
                                         tts, 
                                         parall_speaker, 
                                         parall_detect_and_face])  
