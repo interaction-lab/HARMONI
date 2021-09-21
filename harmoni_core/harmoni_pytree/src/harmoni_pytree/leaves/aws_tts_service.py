@@ -102,12 +102,15 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
             else:
                 #we haven't received the result correctly.
                 new_status = py_trees.common.Status.FAILURE
+        else:
+            new_status = py_trees.common.Status.FAILURE
+        
         self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status
 
         
     def terminate(self, new_status):
-        if(new_status == py_trees.common.Status.INVALID):
+        if new_status == py_trees.common.Status.INVALID:
             self.logger.debug(f"Sending goal to {self.server_name} to stop the service")
             # Send request for each sensor service to set themselves up
             self.service_client_camera.send_goal(
