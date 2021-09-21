@@ -90,3 +90,30 @@ class AWSLexService(HarmoniServiceManager):
             self.response_received = True
             self.result_msg = ""
         return {"response": self.state, "message": lex_response}
+
+def main():
+    """[summary]
+    Main function for starting HarmoniLex service
+    """
+    service_name = DialogueNameSpace.bot.name
+    instance_id = rospy.get_param("instance_id")  # "default"
+    service_id = f"{service_name}_{instance_id}"
+    try:
+        rospy.init_node(service_name, log_level=rospy.DEBUG)
+        params = rospy.get_param(service_name + "/" + instance_id + "_param/")
+        s = AWSLexService(service_id, params)
+        s.setup_aws_lex()
+        service_server = HarmoniServiceServer(service_id, s)
+
+        print(service_name)
+        print("**********************************************************************************************")
+        print(service_id)
+
+        service_server.start_sending_feedback()
+        rospy.spin()
+    except rospy.ROSInterruptException:
+        pass
+
+
+if __name__ == "__main__":
+    main()

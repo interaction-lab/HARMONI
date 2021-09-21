@@ -60,6 +60,7 @@ class LipSyncServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self,**additional_parameters):
+        self.logger.debug("Begin %s.setup()" % (self.__class__.__name__))
         """
         for parameter in additional_parameters:
             print(parameter, additional_parameters[parameter])  
@@ -85,7 +86,7 @@ class LipSyncServicePytree(py_trees.behaviour.Behaviour):
         
         self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
         
-        self.logger.debug("%s.setup()" % (self.__class__.__name__))
+        self.logger.debug("End %s.setup()" % (self.__class__.__name__))
 
     def initialise(self):
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))

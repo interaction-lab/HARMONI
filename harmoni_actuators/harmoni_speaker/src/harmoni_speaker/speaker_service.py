@@ -105,3 +105,32 @@ class SpeakerService(HarmoniServiceManager):
         if "http" in path:
             os.remove(file_handle)
         return {"audio_data": data, "duration": duration}
+
+def main():
+    """Set names, collect params, and give service to server"""
+
+    service_name = ActuatorNameSpace.speaker.name
+    instance_id = rospy.get_param("/instance_id")
+    service_id = f"{service_name}_{instance_id}"
+
+    try:
+        rospy.init_node(service_name)
+
+        # params = rospy.get_param(service_name + "/" + instance_id + "_param/")
+
+        s = SpeakerService(service_id)
+
+        service_server = HarmoniServiceServer(service_id, s)
+
+        print(service_name)
+        print("****************************************************************************")
+        print(service_id)
+
+        service_server.start_sending_feedback()
+        rospy.spin()
+    except rospy.ROSInterruptException:
+        pass
+
+
+if __name__ == "__main__":
+    main()
