@@ -29,6 +29,7 @@ import py_trees.console
 class AWSLexAnalyzerServicePytree(py_trees.behaviour.Behaviour):
     def __init__(self, name):
         self.name = name
+        self.server_state = None
         self.service_client_lex = None
         self.client_result = None
 
@@ -87,7 +88,7 @@ class AWSLexAnalyzerServicePytree(py_trees.behaviour.Behaviour):
                 )
                 self.logger.debug(f"Goal sent to {self.server_name}")
                 new_status = py_trees.common.Status.RUNNING
-            else if self.blackboard_stt.result != "null":
+            elif self.blackboard_stt.result != "null":
                 #metti in input quello che è nella bb
                 self.logger.debug(f"Sending goal to {self.server_name}")
                 self.service_client_lex.send_goal(
@@ -100,10 +101,10 @@ class AWSLexAnalyzerServicePytree(py_trees.behaviour.Behaviour):
             else:
                 self.blackboard_bot.result = "null"
                 new_status = py_trees.common.Status.SUCCESS
-        else if self.server_state == State.REQUEST:
+        elif self.server_state == State.REQUEST:
             #there is no result yet
             new_status = py_trees.common.Status.RUNNING
-        else if self.server_state == State.SUCCESS:
+        elif self.server_state == State.SUCCESS:
             if self.client_result is not None:
                 self.blackboard_bot.result = self.client_result
                 self.client_result = None

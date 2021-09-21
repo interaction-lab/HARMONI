@@ -35,15 +35,9 @@ import py_trees.console
 class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
 
     def __init__(self, name = "ImageAIYoloServicePytree"):
-        
-        """
-        Here there is just the constructor of the
-        behaviour tree 
-        """
         self.name = name
         self.server_state = None
         self.service_client_yolo = None
-        self.client_result = None
         self.server_name = None
 
         # here there is the inizialization of the blackboards
@@ -103,10 +97,10 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
-        else if self.server_state == State.REQUEST:
+        elif self.server_state == State.REQUEST:
             #there is no result yet
             new_status = py_trees.common.Status.RUNNING
-        else if self.server_state == State.SUCCESS:
+        elif self.server_state == State.SUCCESS:
             if self.client_result is not None:
                 self.blackboard_face_detection.result = self.client_result
                 self.client_result = None

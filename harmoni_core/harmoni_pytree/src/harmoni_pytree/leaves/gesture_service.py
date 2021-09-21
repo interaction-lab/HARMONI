@@ -41,18 +41,12 @@ class GestureServicePytree(py_trees.behaviour.Behaviour):
 
     def __init__(self, name):
         self.name = name
-        self.mode = False
-        self.gesture_service = None
-        self.result_data = None
+        self.server_state = None
         self.service_client_gesture = None
         self.client_result = None
 
         # here there is the inizialization of the blackboards
         self.blackboards = []
-        self.blackboard_gesture = self.attach_blackboard_client(name=self.name, namespace= ActuatorNameSpace.gesture.name)
-        self.blackboard_gesture.register_key("result_data", access=py_trees.common.Access.READ)
-        self.blackboard_gesture.register_key("result_message", access=py_trees.common.Access.READ)
-
         #TODO: usa queste bb che sono le nuove
         self.blackboard_scene = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name)
         self.blackboard_scene.register_key("gesture", access=py_trees.common.Access.READ)
@@ -62,22 +56,11 @@ class GestureServicePytree(py_trees.behaviour.Behaviour):
 
     def setup(self,**additional_parameters):
         """
-        In order to select the mode after that the tree is created 
-        an additional_parameters parameter is used:
-        this parameter is a dictionary that contains couples like   
-        name_of_the_leaf --> boolean mode
-        """
-        """
         for parameter in additional_parameters:
             print(parameter, additional_parameters[parameter])  
             if(parameter == ActuatorNameSpace.gesture.name):
                 self.mode = additional_parameters[parameter]        
-
-        service_name = ActuatorNameSpace.gesture.name   
-        instance_id = rospy.get_param("/instance_id")
-
-        #params = rospy.get_param(service_name + "/" + instance_id + "_param/")
-
+        """
         #comment the following line if you are not doing main()
         #rospy.init_node(self.service_name, log_level=rospy.INFO)
 
@@ -85,85 +68,52 @@ class GestureServicePytree(py_trees.behaviour.Behaviour):
 
         #self.gesture_service = GestureService(service_name,params)
         #TODO the first parameter in setup_client must be "equals" in all the leaves
-        if(not self.mode):
-            self.service_client_gesture = HarmoniActionClient(self.name)
-            self.client_result = deque()
-            #TODO aggiusta sto nome
-            self.server_name = service_name + "_" + instance_id
-            self.service_client_gesture.setup_client(self.server_name, 
-                                                self._result_callback,
-                                                self._feedback_callback)
-            self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
-        """
+        self.service_client_gesture = HarmoniActionClient(self.name)
+        self.client_result = deque()
+        #TODO aggiusta sto nome
+        self.server_name = service_name + "_" + instance_id
+        self.service_client_gesture.setup_client(self.server_name, 
+                                            self._result_callback,
+                                            self._feedback_callback)
+        self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 
     def initialise(self):
-        """
-        
-        """    
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
 
     def update(self):
-        """
-        
-        """
-        if(self.mode):
-            if self.blackboard_gesture.result_message == State.SUCCESS:
-                self.result_data = self.gesture_service.do(self.blackboard_gesture.result_data)
-                new_status = py_trees.common.Status.SUCCESS
-            else:
-                new_status = self.blackboard_gesture.result_message
+        if self.server_state == State.INIT:
+            self.logger.debug(f"Sending goal to {self.server_name}")
+            self.service_client_gesture.send_goal(
+                action_goal = ActionType["DO"].value,
+                optional_data = self.blackboard_scene.gesture,
+                wait=False,
+            )
+            self.logger.debug(f"Goal sent to {self.server_name}")
+            new_status = py_trees.common.Status.RUNNING
+        elif self.server_state == State.REQUEST
+            new_status = py_trees.common.Status.RUNNING
+        elif: self.server_state == State.SUCCESS
+            new_status = py_trees.common.Status.SUCCESS
         else:
-            if self.blackboard_gesture.result_message == State.SUCCESS:
-                if self.service_client_gesture.get_state() == GoalStatus.LOST:
-                    self.logger.debug(f"Sending goal to {self.gesture_service}")
-                    # Dove posso prendere details["action_goal"]?
-                    self.service_client_gesture.send_goal(
-                        action_goal = ActionType["DO"].value,
-                        optional_data = self.blackboard_gesture.result_data,
-                        wait=False,
-                    )
-                    self.logger.debug(f"Goal sent to {self.gesture_service}")
-                    new_status = py_trees.common.Status.RUNNING
-                else:
-                    if len(self.client_result) > 0:
-                        #if we reach this point we have the result(s) 
-                        #so we can make the leaf terminate
-                        self.result_data = self.client_result.popleft()["data"]
-                        self.logger.debug(f"Results of gesture module: {self.result_data}")
-                        new_status = py_trees.common.Status.SUCCESS
-                    else:
-                        #not sure about the followings lines
-                        if(self.gesture_service.state == State.FAILED):
-                            new_status = py_trees.common.Status.FAILURE
-                        else:
-                            new_status = py_trees.common.Status.RUNNING
-            else:
-                new_status = self.blackboard_gesture.result_message
-            self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
+            new_status = py_trees.common.Status.FAILURE
+        self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status
 
-        
-
     def terminate(self, new_status):
-        """
-        When is this called?
-           Whenever your behaviour switches to a non-running state.
-            - SUCCESS || FAILURE : your behaviour's work cycle has finished
-            - INVALID : a higher priority branch has interrupted, or shutting down
-        """
-        if(new_status == py_trees.common.Status.INVALID):
-            #do the code for handling interuptions
-            #self.blackboard_tts.result_message = "INVALID"
-            #TODO 
-            if(self.mode):
-                pass
-            else:
-                pass
+        if new_status == py_trees.common.Status.INVALID:
+            self.logger.debug(f"Sending goal to {self.server_name} to stop the service")
+            # Send request for each sensor service to set themselves up
+            self.service_client_gesture.send_goal(
+                action_goal=ActionType["STOP"].value,
+                optional_data="",
+                wait="",
+            )
+            self.logger.debug(f"Goal sent to {self.server_name}")
+            self.client_result = None
         else:
-            #do the code for the termination of the leaf (SUCCESS || FAILURE)
-            self.client_result = deque()
-
+            #execute actions for the following states (SUCCESS || FAILURE)
+            pass
         self.logger.debug("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))
 
     def _result_callback(self, result):
@@ -172,18 +122,13 @@ class GestureServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug(
             f"The result callback message from {result['service']} was {len(result['message'])} long"
         )
-        self.client_result.append(
-            {"data": result["message"]}
-        )
-        # TODO add handling of errors and continue=False
+        self.client_result = result["message"]
         return
 
     def _feedback_callback(self, feedback):
         """ Feedback is currently just logged """
         self.logger.debug("The feedback recieved is %s." % feedback)
-        # Check if the state is end, stop the behavior pattern
-        # if feedback["state"] == State.END:
-        #    self.end_pattern = True
+        self.server_state = feedback["state"]
         return
 
 def main():
@@ -215,7 +160,3 @@ def main():
     except KeyboardInterrupt:
         print("Exception occurred")
         pass
-    
-
-if __name__ == "__main__":
-    main()

@@ -35,15 +35,13 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
 
         self.name = name
         self.server_state = None
-        self.result_data = None
         self.service_client_camera = None
         self.client_result = None 
-        """
+
         # here there is the inizialization of the blackboards
         self.blackboards = []
         self.blackboard_camera = self.attach_blackboard_client(name=self.name, namespace=SensorNameSpace.camera.name)
-        self.blackboard_camera.register_key("result_message", access=py_trees.common.Access.WRITE)
-        """
+        self.blackboard_camera.register_key("state", access=py_trees.common.Access.WRITE)
 
         super(CameraServicePytree, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
@@ -55,7 +53,7 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
             if(parameter =="CameraServicePytree_mode"):
                 self.mode = additional_parameters[parameter]     
         """
-        
+
         #rospy init node mi fa diventare un nodo ros
         #rospy.init_node(self.service_name, log_level=rospy.INFO)
         
@@ -82,15 +80,13 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
-        else if self.server_state == State.START
+        elif self.server_state == State.START
             new_status = py_trees.common.Status.SUCCESS
         else:
             new_status = py_trees.common.Status.FAILURE
 
         self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status
-
-        
 
     def terminate(self, new_status):
         if new_status == py_trees.common.Status.INVALID:

@@ -80,7 +80,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
 
     def update(self):
         if self.server_state == State.INIT:
-            self.logger.debug(f"Sending goal to {self.aws_service}")
+            self.logger.debug(f"Sending goal to {self.server_name}")
             #Where can we take details["action_goal"]?
             rospy.loginfo(self.blackboard_output_bot.result_data)
             self.service_client_tts.send_goal(
@@ -88,11 +88,11 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
                 optional_data = self.blackboard_bot.result,
                 wait=False,
             )
-            self.logger.debug(f"Goal sent to {self.aws_service}")
+            self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
-        else if self.server_state == State.REQUEST:
+        elif self.server_state == State.REQUEST:
             new_status = py_trees.common.Status.RUNNING
-        else if self.server_state == State.SUCCESS:
+        elif self.server_state == State.SUCCESS:
             if self.client_result is not None:
                 #if we reach this point we have the result(s) 
                 #so we can make the leaf terminate
