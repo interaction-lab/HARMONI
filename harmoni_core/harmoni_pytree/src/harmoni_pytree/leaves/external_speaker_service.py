@@ -35,11 +35,11 @@ import os
 #py_tree
 import py_trees
 
-class SpeakerServicePytree(py_trees.behaviour.Behaviour):
+class ExternalSpeakerServicePytree(py_trees.behaviour.Behaviour):
 
-    def __init__(self, name = "SpeakerServicePytree"):
+    def __init__(self, name = "ExternalSpeakerServicePytree"):
         self.name = name
-        self.service_client_speaker = None
+        self.service_client_ext_speaker = None
         self.client_result = None
         self.server_state = None
         self.server_name = None
@@ -53,14 +53,11 @@ class SpeakerServicePytree(py_trees.behaviour.Behaviour):
         self.blackboard_tts.register_key("result_data", access=py_trees.common.Access.READ)
         self.blackboard_tts.register_key("result_message", access=py_trees.common.Access.READ)
         """
+    
+        self.blackboard_ext_speaker = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name)
+        self.blackboard_ext_speaker.register_key("sound", access=py_trees.common.Access.READ)
 
-        #TODO: usa queste bb che sono le nuove
-        self.blackboard_tts = self.attach_blackboard_client(name=self.name, namespace=ActuatorNameSpace.tts.name)
-        self.blackboard_tts.register_key("result", access=py_trees.common.Access.READ)
-        self.blackboard_speaker = self.attach_blackboard_client(name=self.name, namespace=ActuatorNameSpace.speaker.name)
-        self.blackboard_speaker.register_key("state", access=py_trees.common.Access.WRITE)
-
-        super(SpeakerServicePytree, self).__init__(name)
+        super(ExternalSpeakerServicePytree, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self,**additional_parameters):
@@ -73,23 +70,24 @@ class SpeakerServicePytree(py_trees.behaviour.Behaviour):
         #rospy init node mi fa diventare un nodo ros
         #rospy.init_node(self.server_name , log_level=rospy.INFO)
        
-        self.service_client_speaker = HarmoniActionClient(self.name)
+        self.service_client_ext_speaker = HarmoniActionClient(self.name)
         self.server_name = "speaker_default"
-        self.service_client_speaker.setup_client(self.server_name, 
+        self.service_client_ext_speaker.setup_client(self.server_name, 
                                             self._result_callback,
                                             self._feedback_callback)
         self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
      
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 
-    def initialise(self):
+    def initialise(self):  
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
+    
     
     def update(self):
        
         if self.server_state == State.INIT:
             self.logger.debug(f"Sending goal to {self.server_name}")
-            self.service_client_speaker.send_goal(
+            self.service_client_ext_speaker.send_goal(
                 action_goal = ActionType["DO"].value,
                 optional_data="",
                 wait=False,
@@ -111,13 +109,11 @@ class SpeakerServicePytree(py_trees.behaviour.Behaviour):
         if(new_status == py_trees.common.Status.INVALID):
             self.logger.debug(f"Sending goal to {self.server_name} to stop the service")
             # Send request for each sensor service to set themselves up
-            self.service_client_speaker.send_goal(
+            self.service_client_ext_speaker.send_goal(
                 action_goal=ActionType["STOP"].value,
                 optional_data="",
                 wait="",
             )
-            self.client_result = None
-            self.blackboard_speaker.state = None
             self.logger.debug(f"Goal sent to {self.server_name}")
         else:
             #execute actions for the following states (SUCCESS || FAILURE)

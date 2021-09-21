@@ -42,7 +42,11 @@ class ImageAICustomService(HarmoniServiceManager):
         self.service_id = hf.get_child_id(self.name)
         self.result_msg = ""
 
-        self.VAIMO = False
+        self.detector = CustomObjectDetection()
+        self.detector.setModelTypeAsYOLOv3()
+        self.detector.setJsonPath("/root/harmoni_catkin_ws/src/HARMONI/harmoni_detectors/harmoni_imageai/src/detection_config_card.json") 
+        self.detector.setModelPath(os.path.join(self.model_path, self.model_name))
+        self.detector.loadModel()
 
         self.cv_bridge = CvBridge()
         self._buff = queue.Queue()
@@ -83,19 +87,9 @@ class ImageAICustomService(HarmoniServiceManager):
         """ Callback function subscribing to the camera topic"""
 
         if self.state == State.START:
-            self._buff.put(data.data)
-            if self.VAIMO:
-                data_tmp = self.cv_bridge.imgmsg_to_cv2(data, desired_encoding='passthrough')
-                self.detections = self.detector.detectObjectsFromImage(input_type="array", 
-                                                                    output_type="array",
-                                                                    input_image=data_tmp,
-                                                                    minimum_percentage_probability=self.minimum_percentage_probability,
-                                                                    extract_detected_objects=True)
-                print(self.detections[1])
-
-        # else:
-            # rospy.loginfo("Not Transcribing data")
-
+            self._buff.put(data) #prima era put(data.data)
+        
+    
     
     def imageai_callback(self, data):
         """ Callback function subscribing to the camera topic"""
@@ -103,18 +97,19 @@ class ImageAICustomService(HarmoniServiceManager):
 
 
     def request(self, data):
+    
         rospy.loginfo("Start the %s request" % self.name)
-        #self.state = State.REQUEST
-        #self.state = State.START
+        self.state = State.REQUEST
         try:
-            self.state = State.SUCCESS
-            #detect objects coming from camera stream
+            
             data_tmp = self.cv_bridge.imgmsg_to_cv2(self._buff.get(), desired_encoding='passthrough')
-            self.detections = self.detector.detectCustomObjectsFromImage(input_type="stream", 
-                                                                    output_type="array",
-                                                                    input_image=data_tmp,
-                                                                    minimum_percentage_probability=self.minimum_percentage_probability,
-                                                                    extract_detected_objects=True)
+            self.detections = self.detector.detectObjectsFromImage(input_type="array", 
+                                                                output_type="array",
+                                                                input_image=data_tmp,
+                                                                minimum_percentage_probability=self.minimum_percentage_probability,
+                                                                extract_detected_objects=True)
+            
+            
             self.result_msg = self.detections[1]
             """
             for eachObject in self.detections[1]:
@@ -122,16 +117,13 @@ class ImageAICustomService(HarmoniServiceManager):
                 print(eachObject["name"] , " : " , eachObject["percentage_probability"], " : ", eachObject["box_points"] )
                 print("--------------------------------")
             """
+            self.state = State.SUCCESS
 
         except rospy.ServiceException:
-            self.start = State.FAILED
             self.state = State.FAILED
             self.response_received = True
             rospy.loginfo("Service call failed")
             self.result_msg = ""
-        print("Le risposte sono: ")
-        print(self.state)
-        print(self.result_msg)
         return {"response": self.state, "message": self.result_msg}
 
     #TODO
@@ -142,12 +134,7 @@ class ImageAICustomService(HarmoniServiceManager):
         if self.state == State.INIT:
             self.state = State.START
 
-            self.detector = CustomObjectDetection()
-            self.detector.setModelTypeAsYOLOv3()
-            self.detector.setJsonPath("/root/harmoni_catkin_ws/src/HARMONI/harmoni_detectors/harmoni_imageai/src/detection_config_card.json") 
-            self.detector.setModelPath(os.path.join(self.model_path, self.model_name))
-            self.detector.loadModel()
-            self.VAIMO = True
+            
         else:
             self.state = State.START
 
@@ -194,7 +181,7 @@ def main():
         print("**********************************************************************************************")
         print(service_id)
 
-        s.start()
+        #s.start()
 
         # Streaming audio from mic
         service_server.start_sending_feedback()
