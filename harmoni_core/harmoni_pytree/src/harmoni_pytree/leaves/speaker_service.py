@@ -96,9 +96,9 @@ class SpeakerServicePytree(py_trees.behaviour.Behaviour):
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
-        else if self.server_state == State.REQUEST:
+        elif self.server_state == State.REQUEST:
             new_status = py_trees.common.Status.RUNNING
-        else if self.server_state == State.SUCCESS:
+        elif self.server_state == State.SUCCESS:
             new_status = py_trees.common.Status.SUCCESS
         else: 
             new_status = py_trees.common.Status.FAILURE

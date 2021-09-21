@@ -69,7 +69,7 @@ class LipSyncServicePytree(py_trees.behaviour.Behaviour):
         self.service_client_face = HarmoniActionClient(self.name)
         self.server_name = "face"
         
-        self.service_client_face.setup_client(self.server_name, self._result_callback, self._feedback_callback)
+        #self.service_client_face.setup_client(self.server_name, self._result_callback, self._feedback_callback)
         
         self.instance_id = "default"
         
@@ -91,7 +91,7 @@ class LipSyncServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
 
     def update(self):
-        """
+        
         #OPPURE prova solo con mouth
         if self.server_state == State.INIT:
             self.logger.debug(f"Sending goal to {self.server_name}")
@@ -102,9 +102,9 @@ class LipSyncServicePytree(py_trees.behaviour.Behaviour):
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
-        elif self.server_state == State.REQUEST
+        elif self.server_state == State.REQUEST:
             new_status = py_trees.common.Status.RUNNING
-        elif: self.server_state == State.SUCCESS
+        elif self.server_state == State.SUCCESS:
             new_status = py_trees.common.Status.SUCCESS
         else:
             new_status = py_trees.common.Status.FAILURE
@@ -120,14 +120,15 @@ class LipSyncServicePytree(py_trees.behaviour.Behaviour):
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
-        elif self.server_state == State.REQUEST
+        elif self.server_state == State.REQUEST:
             new_status = py_trees.common.Status.RUNNING
-        elif: self.server_state == State.SUCCESS
+        elif self.server_state == State.SUCCESS:
             new_status = py_trees.common.Status.SUCCESS
         else:
             new_status = py_trees.common.Status.FAILURE
         self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status 
+        """
 
     def terminate(self, new_status):
         if new_status == py_trees.common.Status.INVALID:

@@ -43,15 +43,16 @@ def main():
         service_server_eyes = HarmoniServiceServer(service_id_eyes, s_eyes)
         service_server_mouth = HarmoniServiceServer(service_id_mouth, s_mouth)
         service_server_nose = HarmoniServiceServer(service_id_nose, s_nose)
-        service_server_eyes.start_sending_feedback()
-        service_server_mouth.start_sending_feedback()
-        service_server_nose.start_sending_feedback()
 
         print(service_name)
         print("****************************************************************************")
         print(service_id_eyes)
         print(service_id_mouth)
         print(service_id_nose)
+        
+        service_server_eyes.start_sending_feedback()
+        service_server_mouth.start_sending_feedback()
+        service_server_nose.start_sending_feedback()
 
         rospy.spin()
     except rospy.ROSInterruptException:

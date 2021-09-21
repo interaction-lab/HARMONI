@@ -25,12 +25,12 @@ def main():
         s = AWSLexService(service_id, params)
         s.setup_aws_lex()
         service_server = HarmoniServiceServer(service_id, s)
-        service_server.start_sending_feedback()
-        
+
         print(service_name)
         print("**********************************************************************************************")
         print(service_id)
 
+        service_server.start_sending_feedback()
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
