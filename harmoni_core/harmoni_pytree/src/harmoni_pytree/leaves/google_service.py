@@ -34,8 +34,6 @@ import py_trees.console
 
 class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
 
-    #ImageAICustom è un detector
-
     def __init__(self, name = "SpeechToTextServicePytree"):
         
         """
@@ -43,14 +41,14 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
         behaviour tree 
         """
         self.name = name
-        self.mode = False
-        self.custom_service = None
-        self.result_data = None
-        self.service_client_custom = None
+        self.service_client_stt = None
         self.client_result = None
+        self.server_state = None
+        self.server_name = None
 
         # here there is the inizialization of the blackboards
         self.blackboards = []
+        """
         #blackboard we suppose are useful to know when to start imageai detection
         self.blackboard_camera=self.attach_blackboard_client(name=self.name,namespace="harmoni_camera")
         self.blackboard_camera.register_key("result_message", access=py_trees.common.Access.READ)
@@ -58,6 +56,7 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
         self.blackboard_custom=self.attach_blackboard_client(name=self.name,namespace="harmoni_imageai_custom")
         self.blackboard_custom.register_key("result_data",access=py_trees.common.Access.WRITE)
         self.blackboard_custom.register_key("result_message", access=py_trees.common.Access.WRITE)
+        """
 
         #TODO: usa queste bb che sono le nuove
         self.blackboard_microphone = self.attach_blackboard_client(name=self.name, namespace=SensorNameSpace.microphone.name)
@@ -70,31 +69,17 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
 
     def setup(self,**additional_parameters):
         """
-        Qui chiamiamo l'inizializzazione del servizio SpeechToTextService, 
-        motivo per cui abbiamo aggiunto param al metodo che 
-        pensiamo debbano essere passati dal chiamante e non possono essere
-        creati all'interno del metodo stesso.  
-        """
-        for parameter in additional_parameters:
+         for parameter in additional_parameters:
             print(parameter, additional_parameters[parameter])  
             if(parameter =="SpeechToTextServicePytree_mode"):
-                self.mode = additional_parameters[parameter]        
-
-        #service_name = DetectorNameSpace.imageai.name
-        #instance_id = rospy.get_param("instance_id")
-
-        #param = rospy.get_param(service_name + "/" + instance_id + "_param/")
-
-        #self.custom_service = ImageAICustomService(self.name,param)
-
-        #TODO questo dobbiamo farlo nell'if 
+                self.mode = additional_parameters[parameter]
+        """
         #rospy init node mi fa diventare un nodo ros
         #rospy.init_node(self.server_name, log_level=rospy.INFO)
         
-        self.service_client_custom = HarmoniActionClient(self.name)
-        self.client_result = deque()
+        self.service_client_stt = HarmoniActionClient(self.name)
         self.server_name = "stt_default"
-        self.service_client_custom.setup_client(self.server_name, 
+        self.service_client_stt.setup_client(self.server_name, 
                                             self._result_callback,
                                             self._feedback_callback)
         self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
@@ -102,71 +87,52 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 
     def initialise(self):
-        """
-        
-        """ 
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
 
     def update(self):
-        """
-        
-        """
-        #Secondo me dovremmo usare transcribe_stream
-        if self.service_client_stt.get_state() == GoalStatus.LOST:
-            print("Mandiamo il goal")
-            
-            self.logger.debug(f"Sending goal to {self.google_service}")
-            # Dove posso prendere details["action_goal"]?
-            self.service_client_stt.send_goal(
-                action_goal = ActionType["REQUEST"].value,
-                optional_data="",
-                wait=False,
-            )
-            self.logger.debug(f"Goal sent to {self.google_service}")
-            
+
+        if self.server_state == State.INIT:
+        self.logger.debug(f"Sending goal to {self.server_name}")
+        self.service_client_stt.send_goal(
+            action_goal = ActionType["REQUEST"].value,
+            optional_data="",
+            wait=False,
+        )
+        self.logger.debug(f"Goal sent to {self.server_name}")
+        new_status = py_trees.common.Status.RUNNING
+        else if self.server_state == State.REQUEST:
+            #there is no result yet
             new_status = py_trees.common.Status.RUNNING
-        else:
-            print("Leggiamo i possibili risultati: "+ str(len(self.client_result)))
-            if len(self.client_result) > 0:
-                #se siamo qui vuol dire che il risultato c'è e quindi 
-                #possiamo terminare la foglia
-                print("Effettivamente abbiamo un risultato: ")
-                self.result_data = self.client_result.popleft()["data"]
-                print(self.result_data)
-                self.blackboard_input_bot.result_message = "SUCCESS"
-                self.blackboard_input_bot.result_data = self.result_data
+        else if self.server_state == State.SUCCESS:
+            if self.client_result is not None:
+                self.blackboard_stt.result = self.client_result
+                self.client_result = None
                 new_status = py_trees.common.Status.SUCCESS
             else:
-                #se siamo qui vuol dire che il risultato ancora non c'è
-                self.blackboard_input_bot.result_message = "RUNNING"
-                new_status = py_trees.common.Status.RUNNING
-
-            #incerti di questa riga
-            if(self.google_service.state == State.FAILED):
-                self.blackboard_input_bot.result_message = "FAILURE"
+                #we haven't received the result correctly.
                 new_status = py_trees.common.Status.FAILURE
-            
-            self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
+        else: 
+            new_status = py_trees.common.Status.FAILURE
+        
+        self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status
 
         
     def terminate(self, new_status):
-        """
-        When is this called?
-           Whenever your behaviour switches to a non-running state.
-            - SUCCESS || FAILURE : your behaviour's work cycle has finished
-            - INVALID : a higher priority branch has interrupted, or shutting down
-        """
         if(new_status == py_trees.common.Status.INVALID):
-            #esegui codice per interrupt 
-            #TODO 
-            if(self.mode):
-                pass
-            else:
-                pass
+            self.logger.debug(f"Sending goal to {self.server_name} to stop the service")
+            # Send request for each sensor service to set themselves up
+            self.service_client_stt.send_goal(
+                action_goal=ActionType["STOP"].value,
+                optional_data="",
+                wait="",
+            )
+            self.client_result = None
+            self.blackboard_stt.result = None
+            self.logger.debug(f"Goal sent to {self.server_name}")
         else:
-            #esegui codice per terminare (SUCCESS || FAILURE)
-            self.client_result = deque()
+            #execute actions for the following states (SUCCESS || FAILURE)
+            pass
 
         self.logger.debug("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))
 
@@ -176,18 +142,13 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug(
             f"The result callback message from {result['service']} was {len(result['message'])} long"
         )
-        self.client_result.append(
-            {"data": result["message"]}
-        )
-        # TODO add handling of errors and continue=False
+        self.client_result = result["message"]
         return
 
     def _feedback_callback(self, feedback):
         """ Feedback is currently just logged """
         self.logger.debug("The feedback recieved is %s." % feedback)
-        # Check if the state is end, stop the behavior pattern
-        # if feedback["state"] == State.END:
-        #    self.end_pattern = True
+        self.server_state = feedback["state"]
         return
 
 def main():
@@ -215,7 +176,4 @@ def main():
     except KeyboardInterrupt:
         print("Exception occurred")
         pass
-    
 
-if __name__ == "__main__":
-    main()

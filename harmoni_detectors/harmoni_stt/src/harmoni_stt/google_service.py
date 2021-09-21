@@ -196,9 +196,8 @@ class STTGoogleService(HarmoniServiceManager):
 
 
     def request(self, data):
-
         rospy.loginfo("Start the %s request" % self.name)
-        #self.state = State.REQUEST
+        self.state = State.REQUEST
         #self.state = State.START
         self.response_received = False
         try:
@@ -322,7 +321,7 @@ def main():
         print("**********************************************************************************************")
         print(service_id)
 
-        s.start()
+        #s.start()
 
         # Streaming audio from mic
         service_server.start_sending_feedback()
