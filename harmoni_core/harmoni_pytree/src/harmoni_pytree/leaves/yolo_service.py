@@ -36,7 +36,7 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
 
     def __init__(self, name = "ImageAIYoloServicePytree"):
         self.name = name
-        self.server_state = None
+        self.server_state = State.INIT
         self.service_client_yolo = None
         self.server_name = None
 
@@ -89,6 +89,7 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
 
     def update(self):
         if self.server_state == State.INIT:
+            print("Sono in INIT")
             self.logger.debug(f"Sending goal to {self.server_name}")
             self.service_client_yolo.send_goal(
                 action_goal = ActionType["REQUEST"].value,
@@ -98,9 +99,11 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
             self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
         elif self.server_state == State.REQUEST:
+            print("Sono in REQUEST")
             #there is no result yet
             new_status = py_trees.common.Status.RUNNING
         elif self.server_state == State.SUCCESS:
+            print("Sono in SUCCESS")
             if self.client_result is not None:
                 self.blackboard_face_detection.result = self.client_result
                 self.client_result = None
@@ -108,7 +111,8 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
             else:
                 #we haven't received the result correctly.
                 new_status = py_trees.common.Status.FAILURE
-        else: 
+        else:
+            print("Sono in FAILURE") 
             new_status = py_trees.common.Status.FAILURE
 
         self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
@@ -120,9 +124,9 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
             self.logger.debug(f"Sending goal to {self.server_name} to stop the service")
             # Send request for each sensor service to set themselves up
             self.service_client_yolo.send_goal(
-                action_goal=ActionType["STOP"].value,
+                action_goal=ActionType["OFF"].value,
                 optional_data="",
-                wait="",
+                wait=False,
             )
             self.client_result = None
             self.blackboard_face_detection.result = None
@@ -145,7 +149,8 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
     def _feedback_callback(self, feedback):
         """ Feedback is currently just logged """
         self.logger.debug("The feedback recieved is %s." % feedback)
-        self.server_state = feedback["state"]
+        self.server_state = feedback
+        print(self.server_name ," is in ", self.server_state)
         return
 
 def main():
