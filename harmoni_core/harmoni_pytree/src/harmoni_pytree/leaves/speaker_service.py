@@ -128,9 +128,6 @@ class SpeakerServicePytree(py_trees.behaviour.Behaviour):
     def _result_callback(self, result):
         """ Recieve and store result with timestamp """
         self.logger.debug("The result of the request has been received")
-        self.logger.debug(
-            f"The result callback message from {result['service']} was {len(result['message'])} long"
-        )
         self.client_result = result["response"]
         return
 

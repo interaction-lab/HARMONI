@@ -49,13 +49,6 @@ class FaceServicePytree(py_trees.behaviour.Behaviour):
         self.blackboards = []
 
         #TODO: usa queste bb che sono le nuove
-        self.blackboard_tts = self.attach_blackboard_client(name=self.name, namespace=ActuatorNameSpace.tts.name)
-        self.blackboard_tts.register_key("result", access=py_trees.common.Access.READ)
-        
-        #lips_sync
-        self.blackboard_lips = self.attach_blackboard_client(name=self.name, namespace=Resources.face.value[1])
-        self.blackboard_lips.register_key("state", access=py_trees.common.Access.WRITE)
-        
         #face_exp
         self.blackboard_scene = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name)
         self.blackboard_scene.register_key("face_exp", access=py_trees.common.Access.READ)
@@ -70,11 +63,7 @@ class FaceServicePytree(py_trees.behaviour.Behaviour):
             if(parameter == ActuatorNameSpace.face.name):
                 self.mode = additional_parameters[parameter]        
         """
-        self.service_client_face = HarmoniActionClient(self.name)
         self.server_name = "face"
-        
-        self.service_client_face.setup_client(self.server_name, self._result_callback, self._feedback_callback)
-        
         self.instance_id = "default"
         self.name_mouth = ActuatorNameSpace.face.name + "_mouth_" + self.instance_id
         self.service_client_mouth = HarmoniActionClient(self.name_mouth)
@@ -85,7 +74,6 @@ class FaceServicePytree(py_trees.behaviour.Behaviour):
         self.service_client_mouth.setup_client(self.name_mouth, self._result_callback, self._feedback_callback)
         self.service_client_eyes.setup_client(self.name_eyes, self._result_callback, self._feedback_callback)
         self.service_client_nose.setup_client(self.name_nose, self._result_callback, self._feedback_callback)
-        
         self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
         
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
@@ -94,36 +82,32 @@ class FaceServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
 
     def update(self):
-
-            if self.blackboard_tts.result_message == State.SUCCESS:
-                #have I already done the request? check for this
-                if self.service_client_face.get_state() == GoalStatus.LOST:
-                    self.audio_data = self.blackboard_tts.result_data
-                    self.logger.debug(f"Sending goal to {self.mouth_service} and {self.eyes_service}")
-                    self.service_client_face.send_goal(
-                        action_goal = ActionType["DO"].value,
-                        optional_data = self.audio_data,
-                        wait=False,
-                    )
-                    self.logger.debug(f"Goal sent to {self.mouth_service} and {self.eyes_service}")
-                    new_status = py_trees.common.Status.RUNNING
-                else:
-                    if len(self.client_result) > 0:
-                        #if we reach this point we have the result(s) 
-                        #so we can make the leaf terminate
-                        self.result_data = self.client_result.popleft()["data"]
-                        new_status = py_trees.common.Status.SUCCESS
-                    else:
-                        #if we are here it means that we dont have the result yet, so
-                        #do we have to wait or something went wrong?
-                        #not sure about the followings lines, see row 408 of sequential_pattern.py
-                        if(self.mouth_service.state == State.FAILED):
-                            self.blackboard_tts.result_message = "FAILURE"
-                            new_status = py_trees.common.Status.FAILURE
-                        else:
-                            new_status = py_trees.common.Status.RUNNING
-
-            self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
+        if self.server_state == State.INIT:
+            self.logger.debug(f"Sending goal to {self.server_name}")
+            self.service_client_mouth.send_goal(
+                action_goal=ActionType.DO.value,
+                optional_data=self.data,
+                wait=True,
+            )
+            self.service_client_eyes.send_goal(
+                action_goal=ActionType.DO.value,
+                optional_data=self.data,
+                wait=True,
+            )
+            self.service_client_nose.send_goal(
+                action_goal=ActionType.DO.value,
+                optional_data=self.data,
+                wait=True,
+            )
+            self.logger.debug(f"Goal sent to {self.server_name}")
+            new_status = py_trees.common.Status.RUNNING
+        elif self.server_state == State.REQUEST
+            new_status = py_trees.common.Status.RUNNING
+        elif: self.server_state == State.SUCCESS
+            new_status = py_trees.common.Status.SUCCESS
+        else:
+            new_status = py_trees.common.Status.FAILURE
+        self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status 
 
     def terminate(self, new_status):
@@ -156,3 +140,36 @@ class FaceServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("The feedback recieved is %s." % feedback)
         self.server_state = feedback["state"]
         return
+
+def main():
+    #command_line_argument_parser().parse_args()
+
+    py_trees.logging.level = py_trees.logging.Level.DEBUG
+    
+    blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace="harmoni_gesture")
+    blackboardProva.register_key("result_data", access=py_trees.common.Access.WRITE)
+    blackboardProva.register_key("result_message", access=py_trees.common.Access.WRITE)
+
+    blackboardProva.result_message = "SUCCESS"
+    blackboardProva.result_data = "{'gesture':'QT/sad', 'timing': 2}"
+
+    print(blackboardProva)
+
+    gesturePyTree = GestureServicePytree("GestureServiceTest")
+
+    additional_parameters = dict([
+        ("GestureServicePytree_mode",False)])
+
+    gesturePyTree.setup(**additional_parameters)
+    try:
+        for unused_i in range(0, 7):
+            gesturePyTree.tick_once()
+            time.sleep(0.5)
+            print(blackboardProva)
+        print("\n")
+    except KeyboardInterrupt:
+        print("Exception occurred")
+        pass
+
+if __name__ == "__main__":
+    main()
