@@ -22,7 +22,8 @@ from harmoni_common_lib.constants import *
 from harmoni_pytree.leaves.aws_lex_trigger_service import AWSLexTriggerServicePytree
 from harmoni_pytree.leaves.aws_lex_analyzer_service import AWSLexAnalyzerServicePytree
 from harmoni_pytree.leaves.aws_tts_service import AWSTtsServicePytree
-from harmoni_pytree.leaves.face_service import FaceServicePytree
+from harmoni_pytree.leaves.facial_exp_service import FacialExpServicePytree
+from harmoni_pytree.leaves.lip_sync_service import LipSyncServicePytree
 from harmoni_pytree.leaves.google_service import SpeechToTextServicePytree
 from harmoni_pytree.leaves.microphone_service import MicrophoneServicePytree
 from harmoni_pytree.leaves.speaker_service import SpeakerServicePytree
@@ -171,7 +172,7 @@ def create_root():
                                                       success_until=10,
                                                       reset=False)
     """
-    face_exp=FaceServicePytree("FaceMainActivity")
+    face_exp=FacialExpServicePytree("FacialExpMainActivity")
     """                                                  
     Facial_Expression = py_trees.behaviours.Count(name="Facial_Expression",
                                                       fail_until=0,
@@ -187,7 +188,7 @@ def create_root():
                                                       success_until=10,
                                                       reset=False)
     """
-    lips_sync=FaceServicePytree("LipsSyncMainActivity")
+    lip_sync=LipSyncServicePytree("LipsSyncMainActivity")
     """                                                  
     Lips_Synk = py_trees.behaviours.Count(name="Lips_Synk",
                                                       fail_until=0,
@@ -229,7 +230,7 @@ def create_root():
                                                     variable_name="kid_detection")
 
     parall_speaker = py_trees.composites.Parallel(name="ParallelSpeaker")
-    parall_speaker.add_children([speaker,lips_sync]) 
+    parall_speaker.add_children([speaker,lip_sync]) 
 
     eor_trigger = py_trees.idioms.either_or(
         name="EitherOrTrigger",

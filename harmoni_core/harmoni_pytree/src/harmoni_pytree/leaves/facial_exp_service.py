@@ -36,7 +36,7 @@ import os
 #py_tree
 import py_trees
 
-class FaceServicePytree(py_trees.behaviour.Behaviour):
+class FacialExpServicePytree(py_trees.behaviour.Behaviour):
     def __init__(self, name):
 
         self.name = name
@@ -53,7 +53,7 @@ class FaceServicePytree(py_trees.behaviour.Behaviour):
         self.blackboard_scene = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name)
         self.blackboard_scene.register_key("face_exp", access=py_trees.common.Access.READ)
 
-        super(FaceServicePytree, self).__init__(name)
+        super(FacialExpServicePytree, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self,**additional_parameters):

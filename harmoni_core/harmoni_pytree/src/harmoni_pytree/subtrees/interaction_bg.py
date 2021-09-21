@@ -18,7 +18,8 @@ import running_or_success as rs
 from harmoni_pytree.leaves.aws_lex_trigger_service import AWSLexTriggerServicePytree
 from harmoni_pytree.leaves.aws_lex_analyzer_service import AWSLexAnalyzerServicePytree
 from harmoni_pytree.leaves.aws_tts_service_pytree import AWSTtsServicePytree
-from harmoni_pytree.leaves.face_service_pytree import FaceServicePytree
+from harmoni_pytree.leaves.facial_exp_service import FacialExpServicePytree
+from harmoni_pytree.leaves.lip_sync_service import LipSyncServicePytree
 from harmoni_pytree.leaves.google_service_pytree import SpeechToTextServicePytree
 from harmoni_pytree.leaves.microphone_service_pytree import MicrophoneServicePytree
 from harmoni_pytree.leaves.speaker_service_pytree import SpeakerServicePytree
@@ -135,7 +136,7 @@ def create_root(name = "Interaction_Bg"):
                                                       success_until=10,
                                                       reset=False)
     """
-    face_exp=FaceServicePytree("FaceInteractionBg")
+    face_exp=FacialExpServicePytree("FacialExpInteractionBg")
     """                                                  
     Facial_Expression = py_trees.behaviours.Count(name="Facial_Expression",
                                                       fail_until=0,
@@ -151,7 +152,7 @@ def create_root(name = "Interaction_Bg"):
                                                       success_until=10,
                                                       reset=False)
     """
-    lips_sync=FaceServicePytree("LipsSyncInteractionBg")
+    lip_sync=LipSyncServicePytree("LipSyncInteractionBg")
     """                                                  
     Lips_Synk = py_trees.behaviours.Count(name="Lips_Synk",
                                                       fail_until=0,
@@ -190,7 +191,7 @@ def create_root(name = "Interaction_Bg"):
     """
 
     parall_speaker = py_trees.composites.Parallel(name="ParallelSpeaker")
-    parall_speaker.add_children([speaker,lips_sync])  
+    parall_speaker.add_children([speaker,lip_sync])  
 
     sequen_speech_kid = py_trees.composites.Sequence(name="SequenceSpeechKid")
     sequen_speech_kid.add_children([microphone ,stt])

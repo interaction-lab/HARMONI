@@ -36,7 +36,7 @@ import os
 #py_tree
 import py_trees
 
-class FaceServicePytree(py_trees.behaviour.Behaviour):
+class LipSyncServicePytree(py_trees.behaviour.Behaviour):
     def __init__(self, name):
 
         self.name = name
@@ -56,7 +56,7 @@ class FaceServicePytree(py_trees.behaviour.Behaviour):
         self.blackboard_lips = self.attach_blackboard_client(name=self.name, namespace=Resources.face.value[1])
         self.blackboard_lips.register_key("state", access=py_trees.common.Access.WRITE)
 
-        super(FaceServicePytree, self).__init__(name)
+        super(LipSyncServicePytree, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self,**additional_parameters):
@@ -162,7 +162,8 @@ class FaceServicePytree(py_trees.behaviour.Behaviour):
 
 def main():
     #command_line_argument_parser().parse_args()
-
+    pass
+    """
     py_trees.logging.level = py_trees.logging.Level.DEBUG
     
     blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace="harmoni_gesture")
@@ -189,6 +190,4 @@ def main():
     except KeyboardInterrupt:
         print("Exception occurred")
         pass
-
-if __name__ == "__main__":
-    main()
+    """
