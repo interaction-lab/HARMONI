@@ -49,5 +49,5 @@ class Timer(py_trees.behaviour.Behaviour):
         Clear the expected finishing time.
         """
         self.logger.debug("  %s [Timer::terminate().terminate()][%s->%s]" % (self.name, self.status, new_status))
-        if new_status == common.Status.INVALID:
+        if new_status == py_trees.common.Status.INVALID:
             self.start_time = None

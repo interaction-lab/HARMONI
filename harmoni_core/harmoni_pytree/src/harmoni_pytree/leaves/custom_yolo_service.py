@@ -127,9 +127,9 @@ class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
             self.logger.debug(f"Sending goal to {self.server_name} to stop the service")
             # Send request for each sensor service to set themselves up
             self.service_client_custom.send_goal(
-                action_goal=ActionType["STOP"].value,
+                action_goal=ActionType["OFF"].value,
                 optional_data="",
-                wait="",
+                wait=False,
             )
             self.client_result = None
             self.blackboard_card_detection.result = None

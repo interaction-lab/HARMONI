@@ -36,7 +36,7 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
 
     def __init__(self, name = "ImageAIYoloServicePytree"):
         self.name = name
-        self.server_state = State.INIT
+        self.server_state = None
         self.service_client_yolo = None
         self.server_name = None
 
@@ -112,8 +112,9 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
                 #we haven't received the result correctly.
                 new_status = py_trees.common.Status.FAILURE
         else:
-            print("Sono in FAILURE") 
-            new_status = py_trees.common.Status.FAILURE
+            print("Sono in FAILURE")
+            self.blackboard_face_detection.result = "null"
+            new_status = py_trees.common.Status.SUCCESS
 
         self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status
