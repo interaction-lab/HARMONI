@@ -8,6 +8,7 @@ import functools
 from py_trees.behaviours import dummy
 from py_trees.idioms import either_or
 import py_trees
+import rospy
 import time
 import subprocess
 import operator
@@ -263,10 +264,11 @@ def main():
     py_trees.logging.level = py_trees.logging.Level.DEBUG
     root = create_root()
     print(description(root))
-     #uncomment the following line if you want to render the dot_tree
+    #uncomment the following line if you want to render the dot_tree
     #render_with_args()
 
-        
+    rospy.init_node("interactionbg_default", log_level=rospy.INFO)
+
     ####################
     # Tree Stewardship
     ####################
