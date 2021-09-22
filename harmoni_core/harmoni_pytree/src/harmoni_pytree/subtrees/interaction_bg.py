@@ -232,6 +232,7 @@ def create_root(name = "Interaction_Bg"):
                                         parall_speaker, 
                                         parall_detect_and_face])  
 
+    #Invertire poi success e seq_int_bg (era solo per provare)
     eor_interaction_bg = either_custom.either_or(
         name="Either_Or_Interaction_Bg",
         conditions=[
@@ -239,7 +240,7 @@ def create_root(name = "Interaction_Bg"):
             py_trees.common.ComparisonExpression(PyTreeNameSpace.invalid_response.name+"/"+PyTreeNameSpace.mainactivity.name+"/counter_no_answer", 2, operator.ge),
         ],
         preemptible = False,
-        subtrees=[Success, sequen_interaction_bg],
+        subtrees=[sequen_interaction_bg,Success],
         namespace="eor_interaction_bg",
     )
     #TODO you have to change condition

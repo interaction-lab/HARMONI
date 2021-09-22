@@ -35,26 +35,15 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
         self.blackboard_bot.register_key("result", access=py_trees.common.Access.READ)
         self.blackboard_visual= self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.visual.name)
         self.blackboard_visual.register_key("inside", access=py_trees.common.Access.READ)
+
+        self.blackboard_invalid_mainactivity = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.invalid_response.name +"/"+ PyTreeNameSpace.mainactivity.name)
+        self.blackboard_invalid_mainactivity.register_key("counter_no_answer", access=py_trees.common.Access.WRITE)
+        
         super(SceneManagerInteractionBg, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
 
     def setup(self):
-        #TODO load all the utterance in a varaible
-        # number_of_scene(0):
-        #                     utterance:
-        #                     gesture:
-        #                     .
-        #                     .
-        #                     .
-        #                 1:
-        #                     utterance:
-        #                     gesture:
-        #                     ...
-        #                 .
-        #                 .
-        #                 .
-        #context[number_of_scene][utterance]
         self.logger.debug("  %s [SceneManagerInteractionBg::setup()]" % self.name)
         #this is the name of the json without the extension
         json_name = "interaction_bg"
@@ -66,6 +55,11 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
 
 
         self.blackboard_scene.interaction.max_num_scene = len(self.context["scene"])
+        self.blackboard_invalid_mainactivity.counter_no_answer = 0
+        self.blackboard_scene.interaction.scene_counter = self.scene_counter 
+        self.blackboard_scene.utterance = None
+        self.blackboard_scene.face_exp = None
+        self.blackboard_scene.therapist_needed = None
 
 
     def initialise(self):
