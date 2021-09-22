@@ -86,8 +86,9 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
 
     def update(self):
-        if self.service_client_yolo.get_state() == GoalStatus.LOST:
-            print("Sono in INIT-LOST")
+        new_state = self.service_client_yolo.get_state()
+        print(new_state)
+        if new_state == GoalStatus.LOST:
             self.logger.debug(f"Sending goal to {self.server_name}")
             self.service_client_yolo.send_goal(
                 action_goal = ActionType["REQUEST"].value,
@@ -96,12 +97,12 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
-        elif self.service_client_yolo.get_state() == GoalStatus.PENDING or self.service_client_yolo.get_state() == GoalStatus.ACTIVE:
-            print("Sono in REQUEST-PENDING-ACTIVE")
+        elif new_state == GoalStatus.PENDING or new_state == GoalStatus.ACTIVE:
             #there is no result yet
-            new_status = py_trees.common.Status.RUNNING
-        elif self.service_client_yolo.get_state() == GoalStatus.SUCCEEDED:
-            print("Sono in SUCCESS-SUCCEDED")
+            self.blackboard_face_detection.result = "person"
+            new_status = py_trees.common.Status.SUCCESS
+            #new_status = py_trees.common.Status.RUNNING
+        elif new_state == GoalStatus.SUCCEEDED:
             if self.client_result is not None:
                 self.blackboard_face_detection.result = self.client_result
                 self.client_result = None
@@ -110,7 +111,6 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
                 #we haven't received the result correctly.
                 new_status = py_trees.common.Status.FAILURE
         else:
-            print("Sono in FAILURE")
             self.blackboard_face_detection.result = "null"
             new_status = py_trees.common.Status.SUCCESS
 
@@ -119,7 +119,7 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
 
         
     def terminate(self, new_status):
-        if(new_status == py_trees.common.Status.INVALID):
+        if new_status == py_trees.common.Status.INVALID:
             self.logger.debug(f"Sending goal to {self.server_name} to stop the service")
             # Send request for each sensor service to set themselves up
             self.service_client_yolo.send_goal(
@@ -171,9 +171,9 @@ def main():
 
     yoloPyTree.setup(**additional_parameters)
     try:
-        for unused_i in range(0, 10):
+        for unused_i in range(0, 6):
             yoloPyTree.tick_once()
-            time.sleep(0.5)
+            time.sleep(2)
             print(blackboardProva)
         print("\n")
     except KeyboardInterrupt:

@@ -221,8 +221,8 @@ def create_root(name = "Visual_Bg"):
     eor_visual = either_custom.either_or(
         name="EitherOrVisual",
         conditions=[
-            py_trees.common.ComparisonExpression(DetectorNameSpace.face_detect.name + "/result", "null", operator.ne),
             py_trees.common.ComparisonExpression(DetectorNameSpace.face_detect.name + "/result", "null", operator.eq),
+            py_trees.common.ComparisonExpression(DetectorNameSpace.face_detect.name + "/result", "null", operator.ne),
         ],
         preemptible = False,
         subtrees=[Success, sequen_visual],
@@ -295,13 +295,13 @@ def main():
 
     #if args.interactive:
     #    py_trees.console.read_single_keypress()
-    for unused_i in range(1, 15):
+    for unused_i in range(1, 5):
         try:
             behaviour_tree.tick()
             #if args.interactive:
             #    py_trees.console.read_single_keypress()
             #else:
-            time.sleep(1)
+            time.sleep(2)
         except KeyboardInterrupt:
             break
     print("\n")

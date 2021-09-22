@@ -38,14 +38,9 @@ class CounterNoAnswer(py_trees.behaviour.Behaviour):
         self.blackboard_camera.variable_name = self.count_no_answer
 
         self.logger.debug("  %s [CounterNoAnswer::update()][# = %s]" % (self.name,self.count_no_answer))
+        return py_trees.common.Status.SUCCESS
 
     def terminate(self, new_status):
-        """
-        When is this called?
-           Whenever your behaviour switches to a non-running state.
-            - SUCCESS || FAILURE : your behaviour's work cycle has finished
-            - INVALID : a higher priority branch has interrupted, or shutting down
-        """
         if new_status == common.Status.INVALID:
             self.count_no_answer = 0
             self.blackboard_camera.variable_name = self.count_no_answer

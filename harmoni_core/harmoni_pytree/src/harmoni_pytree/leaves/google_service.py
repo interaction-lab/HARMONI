@@ -78,7 +78,9 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
 
     def update(self):
-        if self.service_client_stt.get_state() == GoalStatus.LOST:
+        new_state = self.service_client_stt.get_state()
+        print(new_state)
+        if new_state == GoalStatus.LOST:
             self.logger.debug(f"Sending goal to {self.server_name}")
             self.service_client_stt.send_goal(
                 action_goal = ActionType["REQUEST"].value,
@@ -87,10 +89,10 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
-        elif self.service_client_stt.get_state() == GoalStatus.PENDING or self.service_client_stt.get_state() == GoalStatus.ACTIVE:
+        elif new_state == GoalStatus.PENDING or new_state == GoalStatus.ACTIVE:
             #there is no result yet
             new_status = py_trees.common.Status.RUNNING
-        elif self.service_client_stt.get_state() == GoalStatus.SUCCEEDED:
+        elif new_state == GoalStatus.SUCCEEDED:
             if self.client_result is not None:
                 self.blackboard_stt.result = self.client_result
                 self.client_result = None
@@ -154,9 +156,9 @@ def main():
 
     sttPyTree.setup()
     try:
-        for unused_i in range(0, 10):
+        for unused_i in range(0, 7):
             sttPyTree.tick_once()
-            time.sleep(0.5)
+            time.sleep(2)
             print(blackboardProva)
         print("\n")
     except KeyboardInterrupt:

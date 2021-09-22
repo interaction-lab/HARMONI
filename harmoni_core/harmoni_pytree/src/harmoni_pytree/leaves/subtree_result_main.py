@@ -25,6 +25,7 @@ class SubTreeResultMain(py_trees.behaviour.Behaviour):
         self.logger.debug("  %s [SubTreeResultMain::update()]" % self.name)
         #TODO cancella questa folgia e menti del either or successivo la condizione
         #max_num_scene == scene_counter
+        return py_trees.common.Status.SUCCESS
 
     def terminate(self, new_status):
         """

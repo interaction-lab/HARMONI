@@ -31,20 +31,13 @@ class SubTreeResultVisualBg(py_trees.behaviour.Behaviour):
 
     def update(self):
         #se si è entrati almeno una volta in visual_bg
-        if self.blackboard_scene_visual.scene_counter is not 0 and self.blackboard_face_detect.result is "null":
-          self.blackboard_visual.inside = True
+        if self.blackboard_scene_visual.scene_counter != 0 and self.blackboard_face_detect.result == "null":
+            self.blackboard_visual.inside = True
         #caso in cui si è arrivato al numero massimo di scene o il bimbo c'è -->
         if self.blackboard_scene_visual.scene_counter == self.blackboard_scene_visual.max_num_scene or self.blackboard_face_detect.result is not "null":
-          self.blackboard_scene_visual.scene_counter = 0
-        
+            self.blackboard_scene_visual.scene_counter = 0
         self.logger.debug("  %s [SubTreeResultVisualBg::update()]" % self.name)
-        
+        return py_trees.common.Status.SUCCESS
 
     def terminate(self, new_status):
-        """
-        When is this called?
-           Whenever your behaviour switches to a non-running state.
-            - SUCCESS || FAILURE : your behaviour's work cycle has finished
-            - INVALID : a higher priority branch has interrupted, or shutting down
-        """
         self.logger.debug("  %s [SubTreeResultVisualBg::terminate().terminate()][%s->%s]" % (self.name, self.status, new_status))

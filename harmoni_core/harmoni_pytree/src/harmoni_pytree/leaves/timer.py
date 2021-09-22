@@ -42,7 +42,7 @@ class Timer(py_trees.behaviour.Behaviour):
         elapsed_time = time.time() - self.start_time #time.time() is the current time
         self.feedback_message = "timer running from [{0}]".format(self.elapsed_time)
         self.blackboard_camera.variable_name = elapsed_time
-        return common.Status.SUCCESS
+        return py_trees.common.Status.SUCCESS
 
     def terminate(self, new_status):
         """

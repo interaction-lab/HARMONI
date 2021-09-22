@@ -41,6 +41,7 @@ class SubTreeResultInteractionBg(py_trees.behaviour.Behaviour):
           self.blackboard_scene_interaction.scene_counter = 0
 
         self.logger.debug("  %s [SubTreeResultInteractionBg::update()]" % self.name)
+        return py_trees.common.Status.SUCCESS
 
     def terminate(self, new_status):
         """
