@@ -1,0 +1,14 @@
+<!-- This launch file invokes a python based launcher to dynamically launch the configured services  -->
+<launch>
+	<arg name="launch" default="true"/> <!--Set to false if you want to just create a launch file-->
+	<!-- If you want to launch multiple services from different repos set service variable to 
+            include both repos e.g. service:="harmoni,hardware", -->
+	<arg name="service" default="pytree"/> 
+		<node pkg="harmoni_pytree" type="launcher.py" name="harmoni_launcher_$(arg service)" output="screen">
+			<param name="service" value="$(arg service)"/>
+			<param name="launch" value="$(arg launch)"/>
+		</node>
+    <!--
+        <node pkg="harmoni_pytree" type="visual_bg.py" name="harmoni_pytree_$(arg instance_id)" output="screen"/>
+    -->
+</launch>
