@@ -71,8 +71,6 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
             if(parameter =="ImageAIYoloServicePytree_mode"):
                 self.mode = additional_parameters[parameter] 
         """       
-        #rospy init node mi fa diventare un nodo ros
-        #rospy.init_node("imageai_default", log_level=rospy.INFO)
         
         self.service_client_yolo = HarmoniActionClient(self.name)
         #TODO fattelo passare sto parametro o vedi che fare
@@ -88,8 +86,8 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
 
     def update(self):
-        if self.server_state == State.INIT:
-            print("Sono in INIT")
+        if self.service_client_yolo.get_state() == GoalStatus.LOST:
+            print("Sono in INIT-LOST")
             self.logger.debug(f"Sending goal to {self.server_name}")
             self.service_client_yolo.send_goal(
                 action_goal = ActionType["REQUEST"].value,
@@ -98,12 +96,12 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
-        elif self.server_state == State.REQUEST:
-            print("Sono in REQUEST")
+        elif self.service_client_yolo.get_state() == GoalStatus.PENDING or self.service_client_yolo.get_state() == GoalStatus.ACTIVE:
+            print("Sono in REQUEST-PENDING-ACTIVE")
             #there is no result yet
             new_status = py_trees.common.Status.RUNNING
-        elif self.server_state == State.SUCCESS:
-            print("Sono in SUCCESS")
+        elif self.service_client_yolo.get_state() == GoalStatus.SUCCEEDED:
+            print("Sono in SUCCESS-SUCCEDED")
             if self.client_result is not None:
                 self.blackboard_face_detection.result = self.client_result
                 self.client_result = None
@@ -151,7 +149,6 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
         """ Feedback is currently just logged """
         self.logger.debug("The feedback recieved is %s." % feedback)
         self.server_state = feedback
-        print(self.server_name ," is in ", self.server_state)
         return
 
 def main():
@@ -159,6 +156,9 @@ def main():
 
     py_trees.logging.level = py_trees.logging.Level.DEBUG
     
+    #rospy init node mi fa diventare un nodo ros
+    rospy.init_node("imageai_default", log_level=rospy.INFO)
+
     blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace="harmoni_imageai_yolo")
     blackboardProva.register_key("result_data", access=py_trees.common.Access.READ)
     blackboardProva.register_key("result_message", access=py_trees.common.Access.READ)
@@ -180,3 +180,5 @@ def main():
         print("Exception occurred")
         pass
 
+if __name__ == "__main__":
+    main()

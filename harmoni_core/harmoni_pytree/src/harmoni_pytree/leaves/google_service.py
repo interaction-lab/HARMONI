@@ -48,15 +48,6 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
 
         # here there is the inizialization of the blackboards
         self.blackboards = []
-        """
-        #blackboard we suppose are useful to know when to start imageai detection
-        self.blackboard_camera=self.attach_blackboard_client(name=self.name,namespace="harmoni_camera")
-        self.blackboard_camera.register_key("result_message", access=py_trees.common.Access.READ)
-        #blackboard used to comunicate with aws_lex (bot)
-        self.blackboard_custom=self.attach_blackboard_client(name=self.name,namespace="harmoni_imageai_custom")
-        self.blackboard_custom.register_key("result_data",access=py_trees.common.Access.WRITE)
-        self.blackboard_custom.register_key("result_message", access=py_trees.common.Access.WRITE)
-        """
 
         #TODO: usa queste bb che sono le nuove
         self.blackboard_microphone = self.attach_blackboard_client(name=self.name, namespace=SensorNameSpace.microphone.name)
@@ -74,9 +65,6 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
             if(parameter =="SpeechToTextServicePytree_mode"):
                 self.mode = additional_parameters[parameter]
         """
-        #rospy init node mi fa diventare un nodo ros
-        #rospy.init_node(self.server_name, log_level=rospy.INFO)
-        
         self.service_client_stt = HarmoniActionClient(self.name)
         self.server_name = "stt_default"
         self.service_client_stt.setup_client(self.server_name, 
@@ -90,8 +78,7 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
 
     def update(self):
-
-        if self.server_state == State.INIT:
+        if self.service_client_stt.get_state() == GoalStatus.LOST:
             self.logger.debug(f"Sending goal to {self.server_name}")
             self.service_client_stt.send_goal(
                 action_goal = ActionType["REQUEST"].value,
@@ -100,10 +87,10 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
-        elif self.server_state == State.REQUEST:
+        elif self.service_client_stt.get_state() == GoalStatus.PENDING or self.service_client_stt.get_state() == GoalStatus.ACTIVE:
             #there is no result yet
             new_status = py_trees.common.Status.RUNNING
-        elif self.server_state == State.SUCCESS:
+        elif self.service_client_stt.get_state() == GoalStatus.SUCCEEDED:
             if self.client_result is not None:
                 self.blackboard_stt.result = self.client_result
                 self.client_result = None
@@ -156,17 +143,16 @@ def main():
 
     py_trees.logging.level = py_trees.logging.Level.DEBUG
     
-    blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace="harmoni_imageai_custom")
-    blackboardProva.register_key("result_data", access=py_trees.common.Access.READ)
-    blackboardProva.register_key("result_message", access=py_trees.common.Access.READ)
+    blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace=DetectorNameSpace.stt.name)
+    blackboardProva.register_key("result", access=py_trees.common.Access.READ)
     print(blackboardProva)
 
-    customPyTree = ImageAICustomServicePytree("ImageAICustomServicePytreeTest")
+    #rospy init node mi fa diventare un nodo ros
+    rospy.init_node("stt_default", log_level=rospy.INFO)
+    
+    sttPyTree = SpeechToTextServicePytree("GoogleSSTPytreeTest")
 
-    additional_parameters = dict([
-        ("ImageAICustomServicePytree_mode",False)])
-
-    customPyTree.setup(**additional_parameters)
+    sttPyTree.setup()
     try:
         for unused_i in range(0, 10):
             sttPyTree.tick_once()
@@ -177,3 +163,5 @@ def main():
         print("Exception occurred")
         pass
 
+if __name__ == "__main__":
+    main()

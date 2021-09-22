@@ -222,7 +222,7 @@ def main():
         print("**********************************************************************************************")
         print(service_id)
 
-        #s.start()
+        s.start()
 
         service_server.start_sending_feedback()
         rospy.spin()

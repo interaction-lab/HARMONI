@@ -92,11 +92,9 @@ class STTGoogleService(HarmoniServiceManager):
 
     def callback(self, data):
         """ Callback function subscribing to the microphone topic"""
-
-        if self.state == State.START:
-            # rospy.loginfo("Add data to buffer")
-            self._buff.put(data.data)
-            # rospy.loginfo("Items in buffer: "+ str(self._buff.qsize()))
+        # rospy.loginfo("Add data to buffer")
+        self._buff.put(data.data)
+        # rospy.loginfo("Items in buffer: "+ str(self._buff.qsize()))
 
         # else:
             # rospy.loginfo("Not Transcribing data")

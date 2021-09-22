@@ -83,9 +83,7 @@ class ImageAIYoloService(HarmoniServiceManager):
 
     def callback(self, data):
         """ Callback function subscribing to the camera topic"""
-        if self.state == State.START:
-            # rospy.loginfo("Add data to buffer")
-            self._buff.put(data)
+        self._buff.put(data)
 
 
     def imageai_callback(self, data):
@@ -119,6 +117,8 @@ class ImageAIYoloService(HarmoniServiceManager):
             self.response_received = True
             rospy.loginfo("Service call failed")
             self.result_msg = ""
+        print("@@@@@@@@@@@@@@@@")
+        print(self.result_msg)
         return {"response": self.state, "message": self.result_msg}
 
     def start(self, rate=""):
