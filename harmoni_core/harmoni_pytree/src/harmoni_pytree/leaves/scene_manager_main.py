@@ -78,7 +78,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         #print("Lunghezza: " + len(self.context["scene"]))
         self.blackboard_scene.mainactivity.max_num_scene = len(self.context["scene"])
         
-        print("TEST: context gesture is  %s " % self.context["scene"][self.scene_counter]["gesture"])
+        #print("TEST: context gesture is  %s " % self.context["scene"][self.scene_counter]["gesture"])
 
         self.logger.debug("  %s [SceneManagerMain::setup()]" % self.name)
 

@@ -1,7 +1,7 @@
 {
     "scene" :   [
                     {
-                        "utterance" : "Ci siamo appena svegliati, andiamo a far colazione con latte e cereali",
+                        "utterance" : "Voglio dei fiori",
                         "face"      : "sorriso",
                         "gesture"   : "null",
                         "image"     : "cucina",

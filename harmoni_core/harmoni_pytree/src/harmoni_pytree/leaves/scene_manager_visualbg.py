@@ -63,12 +63,10 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
         self.logger.debug("  %s [SceneManagerVisualBg::setup()]" % self.name)
 
     def initialise(self):
-
         self.logger.debug("  %s [SceneManagerVisualBg::initialise()]" % self.name)
 
     def update(self):
         self.logger.debug("  %s [SceneManagerVisualBg::update()]" % self.name)
-        self.scene_counter += 1
         self.blackboard_invalid_mainactivity.counter_no_answer = 0
         self.blackboard_scene.visual.scene_counter = self.scene_counter 
         """
@@ -79,10 +77,13 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
           è la seconda volta che fai questo BG --> 
             self.blackboard_scene.therapist_needed = True
             fai partire intent terapista
-        elif:
-          scene_counter == 0 -->
-          setta tutte le bb con quello che sta dentro context
         """
+        #FIXME the following if MUST be a elif
+        if self.scene_counter == 0:
+            self.blackboard_scene.utterance = self.context["scene"][self.scene_counter]["utterance"]
+            self.blackboard_scene.face_exp = "null"
+        #FIXME the following line dont have to be here
+        self.scene_counter += 1
         return py_trees.common.Status.SUCCESS
 
     def terminate(self, new_status):

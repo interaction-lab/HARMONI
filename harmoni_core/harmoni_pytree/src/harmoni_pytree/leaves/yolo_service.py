@@ -99,7 +99,8 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
             new_status = py_trees.common.Status.RUNNING
         elif new_state == GoalStatus.PENDING or new_state == GoalStatus.ACTIVE:
             #there is no result yet
-            self.blackboard_face_detection.result = "person"
+            #FIXME resolve the following line
+            self.blackboard_face_detection.result = "??"
             new_status = py_trees.common.Status.SUCCESS
             #new_status = py_trees.common.Status.RUNNING
         elif new_state == GoalStatus.SUCCEEDED:
