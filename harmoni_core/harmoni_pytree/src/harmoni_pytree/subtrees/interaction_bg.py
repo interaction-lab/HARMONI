@@ -12,17 +12,21 @@ import time
 import subprocess
 import operator
 import py_trees.console as console
-import either_custom as eu
+from harmoni_pytree import either_custom 
 import running_or_success as rs
 
+from harmoni_common_lib.constants import *
+
+from harmoni_pytree.leaves.timer import Timer
 from harmoni_pytree.leaves.aws_lex_trigger_service import AWSLexTriggerServicePytree
 from harmoni_pytree.leaves.aws_lex_analyzer_service import AWSLexAnalyzerServicePytree
-from harmoni_pytree.leaves.aws_tts_service_pytree import AWSTtsServicePytree
+from harmoni_pytree.leaves.aws_tts_service import AWSTtsServicePytree
 from harmoni_pytree.leaves.facial_exp_service import FacialExpServicePytree
 from harmoni_pytree.leaves.lip_sync_service import LipSyncServicePytree
-from harmoni_pytree.leaves.google_service_pytree import SpeechToTextServicePytree
-from harmoni_pytree.leaves.microphone_service_pytree import MicrophoneServicePytree
-from harmoni_pytree.leaves.speaker_service_pytree import SpeakerServicePytree
+from harmoni_pytree.leaves.google_service import SpeechToTextServicePytree
+from harmoni_pytree.leaves.microphone_service import MicrophoneServicePytree
+from harmoni_pytree.leaves.speaker_service import SpeakerServicePytree
+from harmoni_pytree.leaves.custom_yolo_service import ImageAICustomServicePytree
 from harmoni_pytree.leaves.scene_manager_interactionbg import SceneManagerInteractionBg
 from harmoni_pytree.leaves.subtree_result_interaction import SubTreeResultInteractionBg
 
@@ -128,7 +132,7 @@ def create_root(name = "Interaction_Bg"):
                                                       reset=False)
     """
     #TODO mancano le foglie di imageAi         
-    custom_yolo = CustomYoloServicePytree("DetectionCardInteraction")
+    custom_yolo = ImageAICustomServicePytree("DetectionCardInteraction")
     """                                      
     Detection_Card = py_trees.behaviours.Count(name="Detection_Card",
                                                       fail_until=0,
@@ -168,11 +172,11 @@ def create_root(name = "Interaction_Bg"):
                                                       success_until=10,
                                                       reset=False)
     """                                               
-    invalid_response_stt = py_trees.behaviours.SetBlackboardVariable(name="InvalidResponseIntStt",
+    invalid_response_stt = py_trees.behaviours.SetBlackboardVariable(name="invalid_response_interaction_stt",
                                                         variable_name=DetectorNameSpace.stt.name+"/result", 
                                                         variable_value="null", 
                                                         overwrite=True)
-    invalid_response_card = py_trees.behaviours.SetBlackboardVariable(name="InvalidResponseIntCard",
+    invalid_response_card = py_trees.behaviours.SetBlackboardVariable(name="invalid_response_interaction_card",
                                                         variable_name=DetectorNameSpace.card_detect.name+"/result", 
                                                         variable_value="null", 
                                                         overwrite=True)
@@ -237,8 +241,11 @@ def create_root(name = "Interaction_Bg"):
         subtrees=[Success, sequen_interaction_bg],
         namespace="eor_interaction_bg",
     )
-
-    running_or_success = rs.create_root()
+    #TODO you have to change condition
+    running_or_success = rs.create_root(name="rs_interacion", condition=[
+            py_trees.common.ComparisonExpression("/fixme", 2, operator.lt),
+            py_trees.common.ComparisonExpression("/fixme", 2, operator.ge),
+        ])
 
     root.add_children([eor_interaction_bg, subtree_result, running_or_success])
 
