@@ -9,6 +9,10 @@ import random
 class SubTreeResultInteractionBg(py_trees.behaviour.Behaviour):
     def __init__(self, name):
 
+
+        self.name = name
+        self.blackboards = []
+        
         self.blackboard_scene_interaction = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name +"/"+ PyTreeNameSpace.interaction.name)
         self.blackboard_scene_interaction.register_key("scene_counter", access=py_trees.common.Access.WRITE)
         self.blackboard_scene_interaction.register_key("max_num_scene", access=py_trees.common.Access.READ) #NEW

@@ -17,7 +17,7 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
         Other one-time initialisation requirements should be met via
         the setup() method.
         """
-
+        self.name = name
         self.scene_counter = 0
 
         self.blackboards = []
@@ -54,7 +54,7 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
         #context[number_of_scene][utterance]
         self.logger.debug("  %s [SceneManagerInteractionBg::setup()]" % self.name)
 
-        self.blackboard_scene.(PyTreeNameSpace.interaction.name).max_num_scene = len(self.context["scene"])
+        self.blackboard_scene.interaction.max_num_scene = len(self.context["scene"])
 
 
     def initialise(self):
@@ -63,7 +63,7 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
     def update(self):
 
         self.logger.debug("  %s [SceneManagerInteractionBg::update()]" % self.name)
-
+        """
         if intent raggiunto:
           self.scene_counter += 1
           setta tutte le bb con quello che sta dentro context
@@ -81,6 +81,7 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
         else if:
           scene_counter == 0 -->
           setta tutte le bb con quello che sta dentro context
+        """
         
         return py_trees.common.Status.SUCCESS
 
