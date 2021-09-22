@@ -103,13 +103,14 @@ class ImageAIYoloService(HarmoniServiceManager):
                                                                     input_image=data_tmp,
                                                                     minimum_percentage_probability=self.minimum_percentage_probability,
                                                                     extract_detected_objects=True)
-            self.result_msg = self.detections[1]
+            self.result_msg = str(self.detections[1])
             """
             for eachObject in self.detections[1]:
                 self.result_msg += str(eachObject["name"])+str(eachObject["percentage_probability"]) + "___"
                 print(eachObject["name"] , " : " , eachObject["percentage_probability"], " : ", eachObject["box_points"] )
                 print("--------------------------------")
             """
+            self.response_received = True
             self.state = State.SUCCESS
 
         except rospy.ServiceException:

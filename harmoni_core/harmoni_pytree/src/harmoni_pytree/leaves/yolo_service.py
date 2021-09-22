@@ -159,9 +159,8 @@ def main():
     #rospy init node mi fa diventare un nodo ros
     rospy.init_node("imageai_default", log_level=rospy.INFO)
 
-    blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace="harmoni_imageai_yolo")
-    blackboardProva.register_key("result_data", access=py_trees.common.Access.READ)
-    blackboardProva.register_key("result_message", access=py_trees.common.Access.READ)
+    blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace=DetectorNameSpace.face_detect.name)
+    blackboardProva.register_key("result", access=py_trees.common.Access.READ)
     print(blackboardProva)
 
     yoloPyTree = ImageAIYoloServicePytree("ImageAIYoloServicePytreeTest")
@@ -171,7 +170,7 @@ def main():
 
     yoloPyTree.setup(**additional_parameters)
     try:
-        for unused_i in range(0, 6):
+        for unused_i in range(0, 10):
             yoloPyTree.tick_once()
             time.sleep(2)
             print(blackboardProva)
