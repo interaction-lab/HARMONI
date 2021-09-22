@@ -178,9 +178,6 @@ class HarmoniActionServer(object):
     def publish_feedback(self, state):
         self._feedback.state = state
         rospy.logdebug("(Server) The feedback is " + str(self._feedback.state))
-        print("STO PUBBLICANDOOOO:    ")
-        print(self._feedback.state)
-        print("FINE")
         self.current_goal.publish_feedback(self._feedback)
 
     def get_default_result(self):

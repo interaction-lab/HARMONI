@@ -53,8 +53,8 @@ class HarmoniServiceServer(HarmoniActionServer, object):
         rospy.loginfo(f"{self.name} Service Server sending feedback at {rate}/sec")
         while not rospy.is_shutdown():
             if self.service_manager.state != State.FAILED:
-                #if self.service_manager.state != State.INIT:
-                self.publish_feedback(self.service_manager.state)
+                if self.service_manager.state != State.INIT:
+                    self.publish_feedback(self.service_manager.state)
                 r.sleep()
             else:
                 # if state has failed the node should be restarted
