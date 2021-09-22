@@ -76,9 +76,6 @@ class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
             if(parameter =="ImageAICustomServicePytree_mode"):
                 self.mode = additional_parameters[parameter]    
         """
-    
-        #rospy init node mi fa diventare un nodo ros
-        #rospy.init_node("imageai_default", log_level=rospy.INFO)
 
         self.service_client_custom = HarmoniActionClient(self.name)
         #TODO fattelo passare sto parametro o vedi che fare
@@ -94,8 +91,9 @@ class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
 
     def update(self):
-
-        if self.server_state == State.INIT:
+        new_state = self.service_client_custom.get_state()
+        print(new_state)
+        if new_state == GoalStatus.LOST:
             self.logger.debug(f"Sending goal to {self.server_name}")
             self.service_client_custom.send_goal(
                 action_goal = ActionType["REQUEST"].value,
@@ -104,10 +102,10 @@ class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
-        elif self.server_state == State.REQUEST:
+        elif new_state == GoalStatus.PENDING or new_state == GoalStatus.ACTIVE:
             #there is no result yet
             new_status = py_trees.common.Status.RUNNING
-        elif self.server_state == State.SUCCESS:
+        elif new_state == GoalStatus.SUCCEEDED:
             if self.client_result is not None:
                 self.blackboard_card_detection.result = self.client_result
                 self.client_result = None
@@ -163,6 +161,8 @@ def main():
     blackboardProva.register_key("result_data", access=py_trees.common.Access.READ)
     blackboardProva.register_key("result_message", access=py_trees.common.Access.READ)
     print(blackboardProva)
+
+    rospy.init_node("imageai_default", log_level=rospy.INFO)
 
     customPyTree = ImageAICustomServicePytree("ImageAICustomServicePytreeTest")
 

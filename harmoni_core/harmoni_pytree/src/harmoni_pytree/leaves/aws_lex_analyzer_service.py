@@ -77,7 +77,9 @@ class AWSLexAnalyzerServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
 
     def update(self):
-        if self.server_state == State.INIT:
+        new_state = self.service_client_lex.get_state()
+        print(new_state)
+        if new_state == GoalStatus.LOST:
             if self.blackboard_card_detect.result != "null":
                 #metti in input quello che è nella bb
                 self.logger.debug(f"Sending goal to {self.server_name}")
@@ -101,10 +103,10 @@ class AWSLexAnalyzerServicePytree(py_trees.behaviour.Behaviour):
             else:
                 self.blackboard_bot.result = "null"
                 new_status = py_trees.common.Status.SUCCESS
-        elif self.server_state == State.REQUEST:
+        elif new_state == GoalStatus.PENDING or new_state == GoalStatus.ACTIVE:
             #there is no result yet
             new_status = py_trees.common.Status.RUNNING
-        elif self.server_state == State.SUCCESS:
+        elif new_state == GoalStatus.SUCCEEDED:
             if self.client_result is not None:
                 self.blackboard_bot.result = self.client_result
                 self.client_result = None
@@ -121,7 +123,7 @@ class AWSLexAnalyzerServicePytree(py_trees.behaviour.Behaviour):
         
 
     def terminate(self, new_status):
-        if(new_status == py_trees.common.Status.INVALID):
+        if new_status == py_trees.common.Status.INVALID:
             self.logger.debug(f"Sending goal to {self.server_name} to stop the service")
             # Send request for each sensor service to set themselves up
             self.service_client_lex.send_goal(

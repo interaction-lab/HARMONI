@@ -92,9 +92,9 @@ class LipSyncServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
 
     def update(self):
-        
-        #OPPURE prova solo con mouth
-        if self.server_state == State.INIT:
+        new_state = self.service_client_mouth.get_state()
+        print(new_state)
+        if new_state == GoalStatus.LOST:
             self.logger.debug(f"Sending goal to {self.server_name}")
             self.service_client_mouth.send_goal(
                 action_goal = ActionType["DO"].value,
@@ -103,9 +103,9 @@ class LipSyncServicePytree(py_trees.behaviour.Behaviour):
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
-        elif self.server_state == State.REQUEST:
+        elif new_state == GoalStatus.PENDING or new_state == GoalStatus.ACTIVE:
             new_status = py_trees.common.Status.RUNNING
-        elif self.server_state == State.SUCCESS:
+        elif new_state == GoalStatus.SUCCEEDED:
             new_status = py_trees.common.Status.SUCCESS
         else:
             new_status = py_trees.common.Status.FAILURE
@@ -174,6 +174,8 @@ def main():
 
     blackboardProva.result_message = "SUCCESS"
     blackboardProva.result_data = "{'gesture':'QT/sad', 'timing': 2}"
+
+    rospy.init_node
 
     print(blackboardProva)
 

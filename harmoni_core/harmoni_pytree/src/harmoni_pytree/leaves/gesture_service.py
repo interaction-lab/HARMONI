@@ -61,8 +61,6 @@ class GestureServicePytree(py_trees.behaviour.Behaviour):
             if(parameter == ActuatorNameSpace.gesture.name):
                 self.mode = additional_parameters[parameter]        
         """
-        #comment the following line if you are not doing main()
-        #rospy.init_node(self.service_name, log_level=rospy.INFO)
 
         #self.qt_gesture_service = GestureInterface(service_name, params)
 
@@ -82,7 +80,9 @@ class GestureServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
 
     def update(self):
-        if self.server_state == State.INIT:
+        new_state = self.service_client_gesture.get_state()
+        print(new_state)
+        if new_state == GoalStatus.LOST:
             self.logger.debug(f"Sending goal to {self.server_name}")
             self.service_client_gesture.send_goal(
                 action_goal = ActionType["DO"].value,
@@ -91,9 +91,9 @@ class GestureServicePytree(py_trees.behaviour.Behaviour):
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
-        elif self.server_state == State.REQUEST
+        elif new_state == GoalStatus.PENDING or new_state == GoalStatus.ACTIVE:
             new_status = py_trees.common.Status.RUNNING
-        elif: self.server_state == State.SUCCESS
+        elif new_state == GoalStatus.SUCCEEDED:
             new_status = py_trees.common.Status.SUCCESS
         else:
             new_status = py_trees.common.Status.FAILURE
@@ -144,6 +144,8 @@ def main():
     blackboardProva.result_data = "{'gesture':'QT/sad', 'timing': 2}"
 
     print(blackboardProva)
+
+    rospy.init_node("gesture_default", log_level=rospy.INFO)
 
     gesturePyTree = GestureServicePytree("GestureServiceTest")
 

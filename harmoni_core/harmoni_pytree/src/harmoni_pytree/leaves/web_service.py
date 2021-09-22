@@ -66,7 +66,9 @@ class WebServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
 
     def update(self):
-        if self.server_state == State.INIT:
+        new_state = self.service_client_web.get_state()
+        print(new_state)
+        if new_state == GoalStatus.LOST:
             self.logger.debug(f"Sending goal to {self.server_name}")
             self.service_client_web.send_goal(
                 action_goal = ActionType["DO"].value,
@@ -75,9 +77,9 @@ class WebServicePytree(py_trees.behaviour.Behaviour):
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
-        elif self.server_state == State.REQUEST
+        elif new_state == GoalStatus.PENDING or new_state == GoalStatus.ACTIVE:
             new_status = py_trees.common.Status.RUNNING
-        elif: self.server_state == State.SUCCESS
+        elif new_state == GoalStatus.SUCCEEDED:
             new_status = py_trees.common.Status.SUCCESS
         else:
             new_status = py_trees.common.Status.FAILURE
@@ -117,3 +119,5 @@ class WebServicePytree(py_trees.behaviour.Behaviour):
         self.server_state = feedback["state"]
         return
 
+def main():
+    rospy.init_node("web_default" , log_level=rospy.INFO)

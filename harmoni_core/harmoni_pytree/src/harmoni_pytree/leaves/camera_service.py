@@ -53,9 +53,6 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
             if(parameter =="CameraServicePytree_mode"):
                 self.mode = additional_parameters[parameter]     
         """
-
-        #rospy init node mi fa diventare un nodo ros
-        #rospy.init_node(self.service_name, log_level=rospy.INFO)
         
         self.service_client_camera = HarmoniActionClient(self.name)
         self.server_name = "camera_default"
@@ -70,7 +67,9 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
 
     def update(self):
-        if self.server_state == State.INIT:
+        new_state = self.service_client_camera.get_state()
+        print(new_state)
+        if new_state == GoalStatus.LOST:
             self.logger.debug(f"Sending goal to {self.server_name}")
             # Send request for each sensor service to set themselves up
             self.service_client_camera.send_goal(
@@ -80,7 +79,7 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
-        elif self.server_state == State.START
+        elif new_state == GoalStatus.SUCCEEDED:
             new_status = py_trees.common.Status.SUCCESS
         else:
             new_status = py_trees.common.Status.FAILURE
@@ -128,6 +127,8 @@ def main():
     blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace="harmoni_camera")
     blackboardProva.register_key("result_message", access=py_trees.common.Access.READ)
 
+    rospy.init_node("camera_default", log_level=rospy.INFO)
+    
     print(blackboardProva)
 
     cameraPyTree = CameraServicePytree("CameraServicePytreeTest")

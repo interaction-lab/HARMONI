@@ -64,8 +64,6 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
             if(parameter ==ActuatorNameSpace.tts.name):
                 self.mode = additional_parameters[parameter] 
         """
-        #rospy init node mi fa diventare un nodo ros
-        #rospy.init_node(self.service_name, log_level=rospy.INFO)
         self.service_client_tts = HarmoniActionClient(self.name)
         self.server_name = "tts_default"
         self.service_client_tts.setup_client(self.server_name, 
@@ -79,7 +77,9 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
 
     def update(self):
-        if self.server_state == State.INIT:
+        new_state = self.service_client_tts.get_state()
+        print(new_state)
+        if new_state == GoalStatus.LOST:
             self.logger.debug(f"Sending goal to {self.server_name}")
             #Where can we take details["action_goal"]?
             rospy.loginfo(self.blackboard_output_bot.result_data)
@@ -90,9 +90,9 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
-        elif self.server_state == State.REQUEST:
+        elif new_state == GoalStatus.PENDING or new_state == GoalStatus.ACTIVE:
             new_status = py_trees.common.Status.RUNNING
-        elif self.server_state == State.SUCCESS:
+        elif new_state == GoalStatus.SUCCEEDED:
             if self.client_result is not None:
                 #if we reach this point we have the result(s) 
                 #so we can make the leaf terminate
@@ -141,3 +141,6 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("The feedback recieved is %s." % feedback)
         self.server_state = feedback["state"]
         return
+
+def main():
+    rospy.init_node("tts_default", log_level=rospy.INFO)

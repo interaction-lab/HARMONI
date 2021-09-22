@@ -63,8 +63,6 @@ class MicrophoneServicePytree(py_trees.behaviour.Behaviour):
                 self.mode = additional_parameters[parameter]        
         """
 
-        #rospy.init_node(self.server_name, log_level=rospy.INFO)
-
         self.service_client_microphone = HarmoniActionClient(self.name)
         self.server_name = "microphone_default"
         self.service_client_microphone.setup_client(self.server_name, 
@@ -78,7 +76,9 @@ class MicrophoneServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
 
     def update(self):
-        if self.server_state == State.INIT:
+        new_state = self.service_client_microphone.get_state()
+        print(new_state)
+        if new_state == GoalStatus.LOST:
             self.logger.debug(f"Sending goal to {self.server_name}")
             # Send request for each sensor service to set themselves up
             self.service_client_microphone.send_goal(
@@ -88,15 +88,14 @@ class MicrophoneServicePytree(py_trees.behaviour.Behaviour):
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
-        elif self.server_state == State.START:
+        #TODO check if these states are good
+        elif new_state == GoalStatus.PENDING or new_state == GoalStatus.ACTIVE:
             new_status = py_trees.common.Status.SUCCESS
         else:
             new_status = py_trees.common.Status.FAILURE
 
         self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status
-
-        
 
     def terminate(self, new_status):
         if new_status == py_trees.common.Status.INVALID:
@@ -138,6 +137,8 @@ def main():
     
     blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace="harmoni_microphone")
     blackboardProva.register_key("result_message", access=py_trees.common.Access.READ)
+
+    rospy.init_node("microphone_default", log_level=rospy.INFO)
 
     print(blackboardProva)
 

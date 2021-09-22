@@ -43,7 +43,7 @@ class HarmoniServiceServer(HarmoniActionServer, object):
 
         return
 
-    def start_sending_feedback(self, rate=2):
+    def start_sending_feedback(self, rate=0.2):
         """Provides feedback at a constant rate on the status of the server
             FIXME: this is a blocking function, so it probably needs to be threaded.
         Args:
