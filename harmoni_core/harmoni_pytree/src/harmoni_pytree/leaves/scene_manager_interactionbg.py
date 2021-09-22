@@ -4,6 +4,9 @@
 from harmoni_common_lib.constants import *
 import py_trees
 import random
+import rospkg
+import json
+import os
 
 
 class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
@@ -53,6 +56,14 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
         #                 .
         #context[number_of_scene][utterance]
         self.logger.debug("  %s [SceneManagerInteractionBg::setup()]" % self.name)
+        #this is the name of the json without the extension
+        json_name = "interaction_bg"
+        rospack = rospkg.RosPack()
+        pck_path = rospack.get_path("harmoni_pytree")
+        pattern_script_path = pck_path + f"/resources/{json_name}.json"
+        with open(pattern_script_path, "r") as read_file:
+          self.context = json.load(read_file)
+
 
         self.blackboard_scene.interaction.max_num_scene = len(self.context["scene"])
 

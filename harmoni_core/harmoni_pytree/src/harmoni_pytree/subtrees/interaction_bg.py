@@ -259,27 +259,13 @@ def main():
     """
     Entry point for the demo script.
     """
-    args = command_line_argument_parser().parse_args()
+    
     py_trees.logging.level = py_trees.logging.Level.DEBUG
     root = create_root()
     print(description(root))
+     #uncomment the following line if you want to render the dot_tree
+    #render_with_args()
 
-    ####################
-    # Rendering
-    ####################
-    if args.render:
-        print("**************START RENDERING**************")
-        py_trees.display.render_dot_tree(root)
-        if py_trees.utilities.which("xdot"):
-            try:
-                subprocess.call(["xdot", "%s.dot" % root.name])
-            except KeyboardInterrupt:
-                pass
-        else:
-            print("")
-            console.logerror("No xdot viewer found, skipping display [hint: sudo apt install xdot]")
-            print("")
-        print("**************END RENDERING**************")
         
     ####################
     # Tree Stewardship
@@ -296,15 +282,15 @@ def main():
     # Tick Tock
     ####################
 
-    if args.interactive:
-        py_trees.console.read_single_keypress()
+    #if args.interactive:
+    #    py_trees.console.read_single_keypress()
     for unused_i in range(1, 10):
         try:
             behaviour_tree.tick()
-            if args.interactive:
-                py_trees.console.read_single_keypress()
-            else:
-                time.sleep(0.5)
+            #if args.interactive:
+            #   py_trees.console.read_single_keypress()
+       
+            time.sleep(0.5)
         except KeyboardInterrupt:
             break
     print("\n")

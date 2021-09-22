@@ -1,16 +1,36 @@
 {
     "scene" :   [
                     {
-                        "utterance" : "scena 1",
-                        "face"      : ""
+                        "utterance" : "Ci siamo appena svegliati, andiamo a far colazione con latte e cereali",
+                        "face"      : "sorriso",
+                        "gesture"   : "null",
+                        "image"     : "cucina",
+                        "sound"     : "null",
+                        "do_kid"    : "False" 
                     },
                     {
-                        "utterance" : "scena 2",
-                        "face"      : ""
+                        "utterance" : "Oh no come sempre il papà lascia il cartone o le bottiglie vuote in frigo!. Il latte è finito" ,
+                        "face"      : "sorpresp",
+                        "gesture"   : "null",
+                        "image"     : "frigorifero",
+                        "sound"     : "null",
+                        "do_kid"    : "False" 
                     },
                     {
-                        "utterance" : "scena 3",
-                        "face"      : ""
+                        "utterance" : "chiedi raccolta differenziata",
+                        "face"      : "null",
+                        "gesture"   : "null",
+                        "image"     : "cartone latte, bottiglia",
+                        "sound"     : "null",
+                        "do_kid"    : "True" 
+                    },
+                    {
+                        "utterance" : "La raccolta differenziata consiste nel...",
+                        "face"      : "null",
+                        "gesture"   : "null",
+                        "image"     : "bidoni vetro, plastica, carta",
+                        "sound"     : "null",
+                        "do_kid"    : "False" 
                     }
                 ]
 }
