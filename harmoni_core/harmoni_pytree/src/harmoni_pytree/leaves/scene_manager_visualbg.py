@@ -81,7 +81,7 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
         #FIXME the following if MUST be a elif
         if self.scene_counter == 0:
             self.blackboard_scene.utterance = self.context["scene"][self.scene_counter]["utterance"]
-            self.blackboard_scene.face_exp = "null"
+            self.blackboard_scene.face_exp = self.context["scene"][self.scene_counter]["face"]
         #FIXME the following line dont have to be here
         self.scene_counter += 1
         return py_trees.common.Status.SUCCESS

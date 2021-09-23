@@ -291,9 +291,9 @@ class AWSTtsService(HarmoniServiceManager):
             self.response_received = True
             #FIXME
             #vorrei scrivere
-            self.result_msg = tts_response
+            #self.result_msg = tts_response["audio_data"]
             #ma scrivo
-            self.result_msg = tts_response["audio_data"]
+            self.result_msg = tts_response
             rospy.loginfo("Request successfully completed")
         except (BotoCoreError, ClientError) as error:
             rospy.logerr("The erros is " + str(error))

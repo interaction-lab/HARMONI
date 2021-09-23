@@ -8,7 +8,8 @@ import random
 
 class SubTreeResultInteractionBg(py_trees.behaviour.Behaviour):
     def __init__(self, name):
-
+        super(SubTreeResultInteractionBg, self).__init__(name)
+        self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
         self.name = name
         self.blackboards = []
@@ -20,9 +21,6 @@ class SubTreeResultInteractionBg(py_trees.behaviour.Behaviour):
         self.blackboard_invalid_response_mainactivity.register_key("counter_no_answer", access=py_trees.common.Access.WRITE)
         self.blackboard_interaction = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.interaction.name)
         self.blackboard_interaction.register_key("inside", access=py_trees.common.Access.WRITE)
-        
-        super(SubTreeResultInteractionBg, self).__init__(name)
-        self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self):
         self.logger.debug("  %s [SubTreeResultInteractionBg::setup()]" % self.name)
@@ -31,7 +29,6 @@ class SubTreeResultInteractionBg(py_trees.behaviour.Behaviour):
         self.logger.debug("  %s [SubTreeResultInteractionBg::initialise()]" % self.name)
 
     def update(self):
-        
         #se si è entrati almeno una volta in interaction_bg
         if self.blackboard_invalid_response_mainactivity.counter_no_answer >= 2:
           self.blackboard_interaction.inside = True

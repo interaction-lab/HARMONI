@@ -8,9 +8,10 @@ import random
 
 class SubTreeResultVisualBg(py_trees.behaviour.Behaviour):
     def __init__(self, name):
+        super(SubTreeResultVisualBg, self).__init__(name)
+        self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
         self.name = name
-
         self.blackboards = []
         self.blackboard_scene_visual = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name + "/" + PyTreeNameSpace.visual.name)
         self.blackboard_scene_visual.register_key("scene_counter", access=py_trees.common.Access.WRITE)
@@ -20,8 +21,7 @@ class SubTreeResultVisualBg(py_trees.behaviour.Behaviour):
         self.blackboard_face_detect = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.face_detect.name)
         self.blackboard_face_detect.register_key("result", access=py_trees.common.Access.READ)
 
-        super(SubTreeResultVisualBg, self).__init__(name)
-        self.logger.debug("%s.__init__()" % (self.__class__.__name__))
+
 
     def setup(self):
         self.logger.debug("  %s [SubTreeResultVisualBg::setup()]" % self.name)

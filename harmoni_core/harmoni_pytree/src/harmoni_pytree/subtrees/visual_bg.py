@@ -21,6 +21,7 @@ from harmoni_common_lib.constants import *
 
 from harmoni_pytree import either_custom
 from harmoni_pytree.leaves.timer import Timer
+from harmoni_pytree.leaves.timer_reset import TimerReset
 from harmoni_pytree.leaves.scene_manager_visualbg import SceneManagerVisualBg
 from harmoni_pytree.leaves.subtree_result_visualbg import SubTreeResultVisualBg
 from harmoni_pytree.leaves.aws_lex_trigger_service import AWSLexTriggerServicePytree
@@ -95,6 +96,9 @@ def post_tick_handler(snapshot_visitor, behaviour_tree):
 
 def create_root(name = "Visual_Bg"):
     root = py_trees.composites.Sequence(name = name)
+    bb = root.attach_blackboard_client(name="bb", namespace= PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.visual.name)
+    bb.register_key("kid_detection", access=py_trees.common.Access.WRITE)
+    bb.kid_detection = 0
     
     Success = py_trees.behaviours.Success(name="Success")
 
@@ -175,14 +179,23 @@ def create_root(name = "Visual_Bg"):
                                                         variable_value="non null", 
                                                         overwrite=True)
     """
-    invalid_response = py_trees.behaviours.SetBlackboardVariable(name="invalid_response_visual_stt",
+    invalid_response = py_trees.behaviours.SetBlackboardVariable(name="InvalidResponseVisualStt",
                                                         variable_name=DetectorNameSpace.stt.name+"/result", 
                                                         variable_value="null", 
                                                         overwrite=True)
-    #TODO timer
-    timeout_kid_detection = Timer(name="TimeoutKidDetectionVis",
-                                                    variable_namespace=PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.visual.name, 
-                                                    variable_name="kid_detection")
+    """
+    timer_kid_detection = Timer(name="TimerKidDetectionVis",
+                                variable_name=PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.visual.name+"/kid_detection",
+                                duration = 10)
+    timer_reset = TimerReset(name="TimerResetKidDetectionVis",
+                            variable_name=PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.visual.name+"/kid_detection")                                               
+    """
+
+    timer_kid_detection = py_trees.behaviours.Success(name="SuccessTIMER")
+
+    timer_reset = py_trees.behaviours.Success(name="SuccessRESET")
+
+
     #TODO modulo per vedere se il sottoalbero è terminato
     subtree_result = SubTreeResultVisualBg("SubTreeVisual")
     """
@@ -204,13 +217,13 @@ def create_root(name = "Visual_Bg"):
             py_trees.common.ComparisonExpression(PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.visual.name + "/kid_detection", 10, operator.lt),
             py_trees.common.ComparisonExpression(PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.visual.name + "/kid_detection", 10, operator.ge),
         ],
-        preemptible = False,
+        preemptible = True,
         subtrees=[sequen_speech_kid, invalid_response],
         namespace="eor_timer_detection",
     )
 
     sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid",memory=False)
-    sequen_detect_kid.add_children([timeout_kid_detection, eor_timer_detection, bot_analyzer])                                         
+    sequen_detect_kid.add_children([timer_kid_detection, eor_timer_detection, timer_reset, bot_analyzer])                                         
 
     parall_detect_and_face = py_trees.composites.Parallel(name="ParallelDetectAndFace")
     parall_detect_and_face.add_children([sequen_detect_kid, face_exp])  
@@ -218,13 +231,12 @@ def create_root(name = "Visual_Bg"):
     sequen_visual = py_trees.composites.Sequence(name="SequenceVisual")
     sequen_visual.add_children([scene_manager,bot_trigger,tts,parall_speaker,parall_detect_and_face])
 
-    eor_visual = either_custom.either_or(
+    eor_visual = py_trees.idioms.either_or(
         name="EitherOrVisual",
         conditions=[
             py_trees.common.ComparisonExpression(DetectorNameSpace.face_detect.name + "/result", "null", operator.eq),
             py_trees.common.ComparisonExpression(DetectorNameSpace.face_detect.name + "/result", "null", operator.ne),
         ],
-        preemptible = False,
         subtrees=[Success, sequen_visual],
         namespace="eor_visual",
     )
@@ -295,13 +307,13 @@ def main():
 
     #if args.interactive:
     #    py_trees.console.read_single_keypress()
-    for unused_i in range(1, 5):
+    for unused_i in range(1, 10):
         try:
             behaviour_tree.tick()
             #if args.interactive:
             #    py_trees.console.read_single_keypress()
             #else:
-            time.sleep(2)
+            time.sleep(1)
         except KeyboardInterrupt:
             break
     print("\n")

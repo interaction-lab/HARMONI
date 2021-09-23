@@ -85,6 +85,7 @@ class FacialExpServicePytree(py_trees.behaviour.Behaviour):
         new_state = self.service_client_mouth.get_state()
         print(new_state)
         if new_state == GoalStatus.LOST:
+            self.data = self.blackboard_scene.face_exp
             self.logger.debug(f"Sending goal to {self.server_name}")
             self.service_client_mouth.send_goal(
                 action_goal=ActionType.DO.value,
@@ -155,29 +156,31 @@ class FacialExpServicePytree(py_trees.behaviour.Behaviour):
 
 def main():
     #command_line_argument_parser().parse_args()
-
     py_trees.logging.level = py_trees.logging.Level.DEBUG
     
-    blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace="harmoni_gesture")
-    blackboardProva.register_key("result_data", access=py_trees.common.Access.WRITE)
-    blackboardProva.register_key("result_message", access=py_trees.common.Access.WRITE)
+    blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace=PyTreeNameSpace.scene.name)
+    blackboardProva.register_key("face_exp", access=py_trees.common.Access.WRITE)
 
-    blackboardProva.result_message = "SUCCESS"
-    blackboardProva.result_data = "{'gesture':'QT/sad', 'timing': 2}"
+    blackboardProva.face_exp = "[{'start':8, 'type': 'gaze', 'id':'target', 'point': [1,5,10]}]"
+    """
+    [{'start':10, 'type': 'gaze', 'id':'target', 'point': [1,5,10]}]
+    [{'start': 1, 'type': 'au', 'id': 'au13', 'pose': 1}]
+    [{'start': 2, 'type': 'action', 'id': 'breath_face'}]
+    [{'start': 5, 'type': 'action', 'id': 'saucy_face'}]
+    [{'start': 8, 'type': 'viseme', 'id': 'POSTALVEOLAR'}]
+    """
+   
 
     print(blackboardProva)
 
-    #rospy.init_node
+    rospy.init_node("face_default", log_level=rospy.INFO)
 
-    gesturePyTree = GestureServicePytree("GestureServiceTest")
+    facePyTree = FacialExpServicePytree("FaceServiceTest")
 
-    additional_parameters = dict([
-        ("GestureServicePytree_mode",False)])
-
-    gesturePyTree.setup(**additional_parameters)
+    facePyTree.setup()
     try:
-        for unused_i in range(0, 7):
-            gesturePyTree.tick_once()
+        for unused_i in range(0, 12):
+            facePyTree.tick_once()
             time.sleep(0.5)
             print(blackboardProva)
         print("\n")

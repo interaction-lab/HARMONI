@@ -2,7 +2,7 @@
     "scene" :   [
                     {
                         "utterance" : "Voglio dei fiori",
-                        "face"      : "sorriso",
+                        "face"      : "[{'start':8, 'type': 'gaze', 'id':'target', 'point': [1,5,10]}]",
                         "gesture"   : "null",
                         "image"     : "cucina",
                         "sound"     : "null",

@@ -118,8 +118,6 @@ class ImageAIYoloService(HarmoniServiceManager):
             self.response_received = True
             rospy.loginfo("Service call failed")
             self.result_msg = ""
-        print("@@@@@@@@@@@@@@@@")
-        print(self.result_msg)
         return {"response": self.state, "message": self.result_msg}
 
     def start(self, rate=""):

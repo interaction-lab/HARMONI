@@ -255,6 +255,7 @@ class MouthService(HarmoniServiceManager):
         else:
             behavior_data = data
         viseme_set = []
+        #FIXME decommenta le righe
         for b in behavior_data:
             if "id" in b.keys():
                 if b["id"] in self.face.visemes:

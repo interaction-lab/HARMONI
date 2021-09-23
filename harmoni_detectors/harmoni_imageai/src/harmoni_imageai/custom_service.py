@@ -117,6 +117,7 @@ class ImageAICustomService(HarmoniServiceManager):
                 print(eachObject["name"] , " : " , eachObject["percentage_probability"], " : ", eachObject["box_points"] )
                 print("--------------------------------")
             """
+            self.response_received = True
             self.state = State.SUCCESS
 
         except rospy.ServiceException:

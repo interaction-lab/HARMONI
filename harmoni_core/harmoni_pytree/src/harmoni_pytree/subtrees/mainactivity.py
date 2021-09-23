@@ -32,6 +32,7 @@ from harmoni_pytree.leaves.counter_no_answer import CounterNoAnswer
 from harmoni_pytree.leaves.scene_manager_main import SceneManagerMain
 from harmoni_pytree.leaves.custom_yolo_service import ImageAICustomServicePytree
 from harmoni_pytree.leaves.timer import Timer
+from harmoni_pytree.leaves.timer_reset import TimerReset
 
 ##############################################################################
 # Classes
@@ -224,10 +225,14 @@ def create_root():
                                         
     counter_no_answer = CounterNoAnswer(name="CounterNoAnswer",
                                         variable_name= PyTreeNameSpace.invalid_response.name+"/"+PyTreeNameSpace.mainactivity.name+"/counter_no_answer") 
-    #TODO timer                                                 
-    timeout_kid_detection = Timer(name="TimeoutKidDetectionMain",
+                                             
+    timer_kid_detection = Timer(name="TimerKidDetectionVis",
                                                     variable_namespace=PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.mainactivity.name, 
-                                                    variable_name="kid_detection")
+                                                    variable_name="kid_detection",
+                                                    duration = 10)
+    timer_reset = TimerReset(name="TimerResetKidDetectionVis",
+                                                    variable_namespace=PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.mainactivity.name, 
+                                                    variable_name="kid_detection")     
 
     parall_speaker = py_trees.composites.Parallel(name="ParallelSpeaker")
     parall_speaker.add_children([speaker,lip_sync]) 
@@ -309,7 +314,7 @@ def create_root():
             py_trees.common.ComparisonExpression(PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.visual.name + "/kid_detection", 10, operator.lt),
             py_trees.common.ComparisonExpression(PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.visual.name + "/kid_detection", 10, operator.ge),
         ],
-        preemptible = False,
+        preemptible = True,
         subtrees=[parall_detect_kid, sequence_invalid_response],
         namespace="eor_timer_detection",
     )
@@ -329,7 +334,7 @@ def create_root():
     sequen_Detect_Kid = py_trees.composites.Parallel(name="PARALLEL_Detect_Kid")
     """
     sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid",memory=False)
-    sequen_detect_kid.add_children([timeout_kid_detection, eor_timer_detection, bot_analyzer])                                         
+    sequen_detect_kid.add_children([timer_kid_detection, eor_timer_detection, timer_reset, bot_analyzer])                                         
 
     running_or_success = rs.create_root(name="RSMainactivity",
                                         condition=[

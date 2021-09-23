@@ -54,9 +54,9 @@ class SpeakerServicePytree(py_trees.behaviour.Behaviour):
         self.blackboard_tts.register_key("result_message", access=py_trees.common.Access.READ)
         """
 
-        #TODO: usa queste bb che sono le nuove
+        #FIXME result deve essere READ però per evitare di avere un terminale pieno la metto a write e la annullo
         self.blackboard_tts = self.attach_blackboard_client(name=self.name, namespace=ActuatorNameSpace.tts.name)
-        self.blackboard_tts.register_key("result", access=py_trees.common.Access.READ)
+        self.blackboard_tts.register_key("result", access=py_trees.common.Access.WRITE)
         self.blackboard_speaker = self.attach_blackboard_client(name=self.name, namespace=ActuatorNameSpace.speaker.name)
         self.blackboard_speaker.register_key("state", access=py_trees.common.Access.WRITE)
 
@@ -90,7 +90,7 @@ class SpeakerServicePytree(py_trees.behaviour.Behaviour):
             self.logger.debug(f"Sending goal to {self.server_name}")
             self.service_client_speaker.send_goal(
                 action_goal = ActionType["DO"].value,
-                optional_data="",
+                optional_data=self.blackboard_tts.result,
                 wait=False,
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
@@ -99,6 +99,7 @@ class SpeakerServicePytree(py_trees.behaviour.Behaviour):
             new_status = py_trees.common.Status.RUNNING
         elif new_state == GoalStatus.SUCCEEDED:
             new_status = py_trees.common.Status.SUCCESS
+            self.blackboard_tts.result = "annullata da riga ~100 speaker_service_pytree.py "
         else: 
             new_status = py_trees.common.Status.FAILURE
         
@@ -127,7 +128,7 @@ class SpeakerServicePytree(py_trees.behaviour.Behaviour):
     def _result_callback(self, result):
         """ Recieve and store result with timestamp """
         self.logger.debug("The result of the request has been received")
-        self.client_result = result["response"]
+        self.client_result = result
         return
 
     def _feedback_callback(self, feedback):
