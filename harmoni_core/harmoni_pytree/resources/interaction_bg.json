@@ -1,8 +1,8 @@
 {
     "scene" :   [
                     {
-                        "utterance" : "Ci siamo appena svegliati, andiamo a far colazione con latte e cereali",
-                        "face"      : "sorriso",
+                        "utterance" : "il bimbo non parla",
+                        "face"      : "[{'start':8, 'type': 'gaze', 'id':'target', 'point': [1,5,10]}]",
                         "gesture"   : "null",
                         "image"     : "cucina",
                         "sound"     : "null",

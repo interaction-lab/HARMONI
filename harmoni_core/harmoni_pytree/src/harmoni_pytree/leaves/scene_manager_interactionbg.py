@@ -61,6 +61,9 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
         self.blackboard_scene.face_exp = None
         self.blackboard_scene.therapist_needed = None
 
+        self.scene_counter = 0
+        self.blackboard_scene.interaction.scene_counter = self.scene_counter 
+
 
     def initialise(self):
         self.logger.debug("  %s [SceneManagerInteractionBg::initialise()]" % self.name)
@@ -87,7 +90,12 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
           scene_counter == 0 -->
           setta tutte le bb con quello che sta dentro context
         """
-        
+        if self.scene_counter == 0:
+            self.blackboard_scene.utterance = self.context["scene"][self.scene_counter]["utterance"]
+            self.blackboard_scene.face_exp = self.context["scene"][self.scene_counter]["face"]
+        #FIXME the following line MUST NOT be here
+        self.scene_counter += 1
+        self.blackboard_scene.interaction.scene_counter = self.scene_counter 
         return py_trees.common.Status.SUCCESS
 
     def terminate(self, new_status):

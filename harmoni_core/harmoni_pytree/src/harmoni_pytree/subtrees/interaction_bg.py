@@ -92,7 +92,11 @@ def post_tick_handler(snapshot_visitor, behaviour_tree):
 
 def create_root(name = "Interaction_Bg"):
     root = py_trees.composites.Sequence(name=name)
-    
+
+    bb = root.attach_blackboard_client(name="bb", namespace= PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.visual.name)
+    bb.register_key("kid_detection", access=py_trees.common.Access.WRITE)
+    bb.kid_detection = 0
+
     Success = py_trees.behaviours.Success(name="Success")
 
     #TODO modulo sceneManager!
@@ -182,14 +186,13 @@ def create_root(name = "Interaction_Bg"):
                                                         variable_name=DetectorNameSpace.card_detect.name+"/result", 
                                                         variable_value="null", 
                                                         overwrite=True)                                               
-
-    timer_kid_detection = Timer(name="TimerKidDetectionVis",
-                                                    variable_namespace=PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.interaction.name, 
-                                                    variable_name="kid_detection",
-                                                    duration = 10)
-    timer_reset = TimerReset(name="TimerResetKidDetectionVis",
-                                                    variable_namespace=PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.interaction.name, 
-                                                    variable_name="kid_detection")     
+                                                        
+    timer_kid_detection = Timer(name="TimerKidDetectionInt",
+                                variable_name=PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.interaction.name+"/kid_detection",
+                                duration = 10)
+    timer_reset = TimerReset(name="TimerResetKidDetectionInt",
+                            variable_name=PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.interaction.name+"/kid_detection")                                               
+    
     #TODO modulo per vedere se il sottoalbero è terminato
     subtree_result=SubTreeResultInteractionBg("SubTreeInteraction")
     """                                              
