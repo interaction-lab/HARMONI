@@ -96,13 +96,13 @@ def post_tick_handler(snapshot_visitor, behaviour_tree):
 
 def create_root(name = "DetectKid"):
     root = py_trees.composites.Sequence(name=name)
+
     bb = root.attach_blackboard_client(name="bb", namespace= PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.visual.name)
     bb.register_key("kid_detection", access=py_trees.common.Access.WRITE)
     bb.kid_detection = 0
     
     Success = py_trees.behaviours.Success(name="Success")
 
-    #TODO modulo sceneManager!
     scene_manager = SceneManagerVisualBg("SceneManagerVisual")
     """
     Visual_Bg_Scene = py_trees.behaviours.SetBlackboardVariable(name="Visual_Bg_Scene(do_speech)",
@@ -222,14 +222,7 @@ def create_root(name = "DetectKid"):
         namespace="eor_timer_detection",
     )
 
-    sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid",memory=False)
-    sequen_detect_kid.add_children([timer_kid_detection, eor_timer_detection, timer_reset, bot_analyzer])                                         
-
-    parall_detect_and_face = py_trees.composites.Parallel(name="ParallelDetectAndFace")
-    parall_detect_and_face.add_children([sequen_detect_kid, face_exp])  
-
-    
-    root.add_children([scene_manager,bot_trigger,tts,parall_speaker,parall_detect_and_face])
+    root.add_children([timer_kid_detection, eor_timer_detection, timer_reset, bot_analyzer])                                         
 
 
     return root

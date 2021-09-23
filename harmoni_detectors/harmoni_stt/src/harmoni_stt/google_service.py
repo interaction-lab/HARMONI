@@ -215,15 +215,14 @@ class STTGoogleService(HarmoniServiceManager):
 
             self.state = State.SUCCESS
             self.result_msg = self.stt_response
-            self.response_received = False
+            self.response_received = True
 
         except rospy.ServiceException:
             self.start = State.FAILED
             rospy.loginfo("Service call failed")
             self.response_received = True
             self.result_msg = ""
-        print("Le risposte sono: ")
-        print(self.state)
+        print("@@@@@@@@@@@@@@@@@@@@@")
         print(self.result_msg)
         return {"response": self.state, "message": self.result_msg}
 

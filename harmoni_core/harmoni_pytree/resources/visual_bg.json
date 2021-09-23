@@ -1,7 +1,7 @@
 {
     "scene" :   [
                     {
-                        "utterance" : "Voglio dei fiori",
+                        "utterance" : "non c'è il bimbo",
                         "face"      : "[{'start':8, 'type': 'gaze', 'id':'target', 'point': [1,5,10]}]",
                         "gesture"   : "null",
                         "image"     : "cucina",

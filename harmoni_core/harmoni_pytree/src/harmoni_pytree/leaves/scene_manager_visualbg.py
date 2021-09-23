@@ -33,6 +33,8 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
         self.blackboard_scene.register_key("therapist_needed", access=py_trees.common.Access.WRITE)
         self.blackboard_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name)
         self.blackboard_bot.register_key("result", access=py_trees.common.Access.READ)
+        self.blackboard_card_detection = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.card_detect.name)
+        self.blackboard_card_detection.register_key("result", access=py_trees.common.Access.WRITE)
         """
         self.blackboard_stt = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.stt.name)
         self.blackboard_stt.register_key("result", access=py_trees.common.Access.READ)
@@ -59,7 +61,7 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
         self.blackboard_scene.utterance = None
         self.blackboard_scene.face_exp = None
         self.blackboard_scene.therapist_needed = None
-
+        self.scene_counter = 0
         self.logger.debug("  %s [SceneManagerVisualBg::setup()]" % self.name)
 
     def initialise(self):
@@ -78,11 +80,15 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
             self.blackboard_scene.therapist_needed = True
             fai partire intent terapista
         """
-        #FIXME the following if MUST be a elif
+        #FIXME the following "if" MUST be a elif
+        self.blackboard_scene.utterance = self.context["scene"][self.scene_counter]["utterance"]
+        self.blackboard_scene.face_exp = self.context["scene"][self.scene_counter]["face"]
+        self.blackboard_card_detection.result = "null"
         if self.scene_counter == 0:
             self.blackboard_scene.utterance = self.context["scene"][self.scene_counter]["utterance"]
             self.blackboard_scene.face_exp = self.context["scene"][self.scene_counter]["face"]
-        #FIXME the following line dont have to be here
+            self.blackboard_card_detection.result = "null"
+        #FIXME the following line MUST NOT be here
         self.scene_counter += 1
         return py_trees.common.Status.SUCCESS
 

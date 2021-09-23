@@ -101,84 +101,28 @@ def create_root(name = "Visual_Bg"):
     bb.kid_detection = 0
     
     Success = py_trees.behaviours.Success(name="Success")
+    Success2 = py_trees.behaviours.Success(name="Success")
 
-    #TODO modulo sceneManager!
     scene_manager = SceneManagerVisualBg("SceneManagerVisual")
-    """
-    Visual_Bg_Scene = py_trees.behaviours.SetBlackboardVariable(name="Visual_Bg_Scene(do_speech)",
-                                                        variable_name="scene/chatbot_in_namespace/result_data", 
-                                                        variable_value="non vedo il bimbo (intent)", 
-                                                        overwrite=True)
-    #dummy1 è da sostituire con la variabile face_exp nel scene. 
-    dummy1 = py_trees.behaviours.SetBlackboardVariable(name="do_face",
-                                                        variable_name="scene/face_bb_namespace/result_data", 
-                                                        variable_value="Triste", 
-                                                        overwrite=True)
-    """
+    
     bot_trigger=AWSLexTriggerServicePytree("AwsLexTriggerVisualActivity")
+    
     bot_analyzer=AWSLexAnalyzerServicePytree("AwsLexAnalyzerVisualActivity")
-    """                                                    
-    Chat_Bot = py_trees.behaviours.SetBlackboardVariable(name="Chat_bot",
-                                                        variable_name="bot_output_bb_namespace/result_data", 
-                                                        variable_value="Non ti vedo, dove sei?", 
-                                                       overwrite=True)
-    """
+
     tts = AWSTtsServicePytree("AwsTtsVisualBg")
-    """
-    Tts = py_trees.behaviours.Count(name="Tts",
-                                        fail_until=0,
-                                        running_until=1,
-                                        success_until=10,
-                                        reset=False)
-    """
+
     stt=SpeechToTextServicePytree("SpeechToTextPytreeVisualBg")
-    """
-    Stt = py_trees.behaviours.Count(name="Stt",
-                                        fail_until=0,
-                                        running_until=1,
-                                        success_until=10,
-                                        reset=False)
-    """
+
     face_exp=FacialExpServicePytree("FacialExpVisualBg")
-    """
-    Facial_Expression = py_trees.behaviours.Count(name="Facial_Expression",
-                                                      fail_until=0,
-                                                      running_until=1,
-                                                      success_until=10,
-                                                      reset=False)
-    """ 
+ 
     speaker=SpeakerServicePytree("SpeakerVisualBg") 
-    """                                                
-    Speaker = py_trees.behaviours.Count(name="Speaker",
-                                                      fail_until=0,
-                                                      running_until=1,
-                                                      success_until=10,
-                                                      reset=False)
-    """
+
     lip_sync=LipSyncServicePytree("LipSyncVisualBg")
-    """                                                  
-    Lips_Synk = py_trees.behaviours.Count(name="Lips_Synk",
-                                                      fail_until=0,
-                                                      running_until=1,
-                                                      success_until=10,
-                                                      reset=False)
-    """
+
     microphone=MicrophoneServicePytree("MicrophonePytreeVisualBg")
-    """                                                  
-    Microphone = py_trees.behaviours.Count(name="Microphone",
-                                                      fail_until=0,
-                                                      running_until=1,
-                                                      success_until=10,
-                                                      reset=False)
-    """
-    #TODO mancano le foglie di imageAi 
+
     yolo_service = ImageAIYoloServicePytree("FaceDetection")
-    """                                           
-    Detection_Face = py_trees.behaviours.SetBlackboardVariable(name="Detection_Face",
-                                                        variable_name="scene/detection_face_bb_namespace/result_message", 
-                                                        variable_value="non null", 
-                                                        overwrite=True)
-    """
+
     invalid_response = py_trees.behaviours.SetBlackboardVariable(name="InvalidResponseVisualStt",
                                                         variable_name=DetectorNameSpace.stt.name+"/result", 
                                                         variable_value="null", 
@@ -195,16 +139,8 @@ def create_root(name = "Visual_Bg"):
 
     timer_reset = py_trees.behaviours.Success(name="SuccessRESET")
 
-
-    #TODO modulo per vedere se il sottoalbero è terminato
     subtree_result = SubTreeResultVisualBg("SubTreeVisual")
-    """
-    Visual_Bg_Subtree_Results = py_trees.behaviours.Count(name="Visual_Bg_Subtree_Results",
-                                                      fail_until=0,
-                                                      running_until=1,
-                                                      success_until=10,
-                                                      reset=False)
-    """
+
     parall_speaker = py_trees.composites.Parallel(name="ParallelSpeaker")
     parall_speaker.add_children([speaker,lip_sync])    
 
@@ -217,19 +153,29 @@ def create_root(name = "Visual_Bg"):
             py_trees.common.ComparisonExpression(PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.visual.name + "/kid_detection", 10, operator.lt),
             py_trees.common.ComparisonExpression(PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.visual.name + "/kid_detection", 10, operator.ge),
         ],
-        preemptible = True,
+        preemptible = False,
         subtrees=[sequen_speech_kid, invalid_response],
         namespace="eor_timer_detection",
     )
 
-    sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid",memory=False)
+    sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid")
     sequen_detect_kid.add_children([timer_kid_detection, eor_timer_detection, timer_reset, bot_analyzer])                                         
 
     parall_detect_and_face = py_trees.composites.Parallel(name="ParallelDetectAndFace")
     parall_detect_and_face.add_children([sequen_detect_kid, face_exp])  
 
+    eor_bot_trigger = py_trees.idioms.either_or(
+        name="EitherOrBotTrigger",
+        conditions=[
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/" + PyTreeNameSpace.visual.name + "/scene_counter", 0, operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/" + PyTreeNameSpace.visual.name + "/scene_counter", 0, operator.eq),
+        ],
+        subtrees=[Success2, bot_trigger],
+        namespace="eor_bot_trigger",
+    )
+
     sequen_visual = py_trees.composites.Sequence(name="SequenceVisual")
-    sequen_visual.add_children([scene_manager,bot_trigger,tts,parall_speaker,parall_detect_and_face])
+    sequen_visual.add_children([scene_manager, eor_bot_trigger, tts,parall_speaker, parall_detect_and_face])
 
     eor_visual = py_trees.idioms.either_or(
         name="EitherOrVisual",
@@ -307,7 +253,7 @@ def main():
 
     #if args.interactive:
     #    py_trees.console.read_single_keypress()
-    for unused_i in range(1, 10):
+    for unused_i in range(1, 20):
         try:
             behaviour_tree.tick()
             #if args.interactive:

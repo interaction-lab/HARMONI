@@ -106,6 +106,7 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
         elif new_state == GoalStatus.SUCCEEDED:
             if self.client_result is not None:
                 self.blackboard_face_detection.result = self.client_result
+                self.blackboard_face_detection.result = "null"
                 self.client_result = None
                 new_status = py_trees.common.Status.SUCCESS
             else:

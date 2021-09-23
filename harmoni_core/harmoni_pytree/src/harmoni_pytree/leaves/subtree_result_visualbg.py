@@ -34,8 +34,12 @@ class SubTreeResultVisualBg(py_trees.behaviour.Behaviour):
         if self.blackboard_scene_visual.scene_counter != 0 and self.blackboard_face_detect.result == "null":
             self.blackboard_visual.inside = True
         #caso in cui si è arrivato al numero massimo di scene o il bimbo c'è -->
-        if self.blackboard_scene_visual.scene_counter == self.blackboard_scene_visual.max_num_scene or self.blackboard_face_detect.result is not "null":
+        if self.blackboard_face_detect.result is not "null":
             self.blackboard_scene_visual.scene_counter = 0
+        # if le scene sono più di 2 -->
+        # chiama terapista
+        # if la frase che ci ha dato il bot ci fa capire che dobbimao chiamare il terapita -->
+        # chiama terapista
         self.logger.debug("  %s [SubTreeResultVisualBg::update()]" % self.name)
         return py_trees.common.Status.SUCCESS
 
