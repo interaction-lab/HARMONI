@@ -1,7 +1,7 @@
 {
     "scene" :   [
                     {
-                        "utterance"     : "Ci siamo appena svegliati, andiamo a far colazione con latte e cereali",
+                        "utterance"     : "Ei fu, siccome immobile dato il mortal sospiro",
                         "face"          : "[{'start': 5, 'type': 'action', 'id': 'saucy_face'}]",
                         "gesture"       : "null",
                         "image"         : "cucina",

@@ -94,6 +94,13 @@ def create_root():
     blackboard_scene_mainactivity = root.attach_blackboard_client(name="mainactivity", namespace=PyTreeNameSpace.scene.name +"/"+ PyTreeNameSpace.mainactivity.name)
     blackboard_scene_mainactivity.register_key("max_num_scene", access=py_trees.common.Access.WRITE)
     blackboard_scene_mainactivity.max_num_scene = 0
+    
+    blackboard_visual = root.attach_blackboard_client(name="self.name", namespace=PyTreeNameSpace.visual.name)
+    blackboard_visual.register_key("inside", access=py_trees.common.Access.WRITE)
+    blackboard_visual.inside = False
+    blackboard_interaction = root.attach_blackboard_client(name="self.name", namespace=PyTreeNameSpace.interaction.name)
+    blackboard_interaction.register_key("inside", access=py_trees.common.Access.WRITE)
+    blackboard_interaction.inside = False
 
     Success1 = py_trees.behaviours.Success(name="Success")
     Success2 = py_trees.behaviours.Success(name="Success")
@@ -109,11 +116,8 @@ def create_root():
     gesture = py_trees.behaviours.Success(name="GestureMainActivity")
     
     #TODO sostituirlo/capire se si può usare web_service.
-    Projector = py_trees.behaviours.Count(name="Projector",
-                                                      fail_until=0,
-                                                      running_until=1,
-                                                      success_until=10,
-                                                      reset=False)
+    Projector = py_trees.behaviours.Success(name="Projector")
+
     ext_speaker=SpeakerServicePytree("ExternalSpeakerMainActivity")
 
     bot_trigger=AWSLexTriggerServicePytree("AwsLexTriggerMainActivity")
@@ -182,8 +186,8 @@ def create_root():
     eor_face = py_trees.idioms.either_or(
         name="EitherOrFace",
         conditions=[
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/do_face", "null", operator.ne),
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/do_face", "null", operator.eq),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/face", "null", operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/face", "null", operator.eq),
         ],
         subtrees=[face_exp, Success5],
         namespace="eor_face",
@@ -191,8 +195,8 @@ def create_root():
     eor_gesture = py_trees.idioms.either_or(
         name="EitherOrGesture",
         conditions=[
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/do_gesture", "null", operator.ne),
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/do_gesture", "null", operator.eq),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/gesture", "null", operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/gesture", "null", operator.eq),
         ],
         subtrees=[gesture, Success3],
         namespace="eor_gesture",
@@ -200,8 +204,8 @@ def create_root():
     eor_external_speaker = py_trees.idioms.either_or(
         name="EitherOrExternalSpeaker",
         conditions=[
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/do_sound", "null", operator.ne),
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/do_sound", "null", operator.eq),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/sound", "null", operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/sound", "null", operator.eq),
         ],
         subtrees=[ext_speaker, Success4],
         namespace="eor_external_speaker",
@@ -234,12 +238,12 @@ def create_root():
             py_trees.common.ComparisonExpression(PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.visual.name + "/kid_detection", 10, operator.lt),
             py_trees.common.ComparisonExpression(PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.visual.name + "/kid_detection", 10, operator.ge),
         ],
-        preemptible = True,
+        preemptible = False,
         subtrees=[parall_detect_kid, sequence_invalid_response],
         namespace="eor_timer_detection",
     )
 
-    sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid",memory=False)
+    sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid")
     sequen_detect_kid.add_children([timer_kid_detection, eor_timer_detection, timer_reset, bot_analyzer])                                         
 
     running_or_success = rs.create_root(name="RsMainactivity", condition=[
@@ -316,12 +320,12 @@ def main():
 
     #if args.interactive:
     #    py_trees.console.read_single_keypress()
-    while True:
+    for unused_i in range(1, 10):
         try:
             behaviour_tree.tick()
             #if args.interactive:
-            #   py_trees.console.read_single_keypress()
-       
+            #    py_trees.console.read_single_keypress()
+            #else:
             time.sleep(0.4)
         except KeyboardInterrupt:
             break
