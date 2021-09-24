@@ -64,7 +64,6 @@ def epilog():
     else:
         return None
 
-
 def command_line_argument_parser():
     parser = argparse.ArgumentParser(description=description(create_root()),
                                      epilog=epilog(),
@@ -75,10 +74,8 @@ def command_line_argument_parser():
     group.add_argument('-i', '--interactive', action='store_true', help='pause and wait for keypress at each tick')
     return parser
 
-
 def pre_tick_handler(behaviour_tree):
     print("\n--------- Run %s ---------\n" % behaviour_tree.count)
-
 
 def post_tick_handler(snapshot_visitor, behaviour_tree):
     print(
@@ -105,85 +102,26 @@ def create_root(name = "Interaction_Bg"):
     Success = py_trees.behaviours.Success(name="Success")
     Success2 = py_trees.behaviours.Success(name="Success")
 
-    #TODO modulo sceneManager!
     scene_manager = SceneManagerInteractionBg("SceneManagerInteractionBg")
-    """
-    Interaction_Bg_Scene = py_trees.behaviours.SetBlackboardVariable(name="Interaction_Bg_Scene(do_speech)",
-                                                        variable_name="do_speech", 
-                                                        variable_value="null", 
-                                                        overwrite=True)
-    #dummy1 è da sostituire con la variabile face_exp nel scene.
-    dummy1 = py_trees.behaviours.SetBlackboardVariable(name="do_face",
-                                                        variable_name="do_face", 
-                                                        variable_value="null", 
-                                                        overwrite=True)
-    """
+
     bot_trigger=AWSLexTriggerServicePytree("AwsLexTriggerInteractionActivity")
+
     bot_analyzer=AWSLexAnalyzerServicePytree("AwsLexAnalyzerInteractionActivity")
-    """                                                    
-    Chat_Bot = py_trees.behaviours.Count(name="Chat_Bot",
-                                                      fail_until=0,
-                                                      running_until=1,
-                                                      success_until=10,
-                                                      reset=False)
-    """
+
     tts = AWSTtsServicePytree("AwsTtsInteractionBg")
-    """                                                
-    Tts = py_trees.behaviours.Count(name="Tts",
-                                                      fail_until=0,
-                                                      running_until=1,
-                                                      success_until=10,
-                                                      reset=False)
-    """
+
     stt = SpeechToTextServicePytree("SpeechToTextInteractionBg")
-    """                                            
-    Stt = py_trees.behaviours.Count(name="Stt",
-                                                      fail_until=0,
-                                                      running_until=1,
-                                                      success_until=10,
-                                                      reset=False)
-    """
-    #TODO mancano le foglie di imageAi         
+       
     custom_yolo = ImageAICustomServicePytree("DetectionCardInteraction")
-    """                                      
-    Detection_Card = py_trees.behaviours.Count(name="Detection_Card",
-                                                      fail_until=0,
-                                                      running_until=1,
-                                                      success_until=10,
-                                                      reset=False)
-    """
+
     face_exp=FacialExpServicePytree("FacialExpInteractionBg")
-    """                                                  
-    Facial_Expression = py_trees.behaviours.Count(name="Facial_Expression",
-                                                      fail_until=0,
-                                                      running_until=1,
-                                                      success_until=10,
-                                                      reset=False)
-    """
+
     speaker=SpeakerServicePytree("SpeakerInteractionBg")
-    """                                                  
-    Speaker = py_trees.behaviours.Count(name="Speaker",
-                                                      fail_until=0,
-                                                      running_until=1,
-                                                      success_until=10,
-                                                      reset=False)
-    """
+
     lip_sync=LipSyncServicePytree("LipSyncInteractionBg")
-    """                                                  
-    Lips_Synk = py_trees.behaviours.Count(name="Lips_Synk",
-                                                      fail_until=0,
-                                                      running_until=1,
-                                                      success_until=10,
-                                                      reset=False)
-    """
+
     microphone=MicrophoneServicePytree("MicrophoneInteractionBg")
-    """                                                
-    Microphone = py_trees.behaviours.Count(name="Microphone",
-                                                      fail_until=0,
-                                                      running_until=1,
-                                                      success_until=10,
-                                                      reset=False)
-    """                                               
+                                             
     invalid_response_stt = py_trees.behaviours.SetBlackboardVariable(name="invalid_response_interaction_stt",
                                                         variable_name=DetectorNameSpace.stt.name+"/result", 
                                                         variable_value="null", 
@@ -198,16 +136,8 @@ def create_root(name = "Interaction_Bg"):
                                 duration = 10)
     timer_reset = TimerReset(name="TimerResetKidDetectionInt",
                             variable_name=PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.interaction.name+"/kid_detection")                                               
-    
-    #TODO modulo per vedere se il sottoalbero è terminato
+
     subtree_result=SubTreeResultInteractionBg("SubTreeInteraction")
-    """                                              
-    Interaction_Bg_Subtree_Results = py_trees.behaviours.Count(name="Interaction_Bg_Subtree_Results",
-                                                      fail_until=0,
-                                                      running_until=1,
-                                                      success_until=10,
-                                                      reset=False)
-    """
 
     parall_speaker = py_trees.composites.Parallel(name="ParallelSpeaker")
     parall_speaker.add_children([speaker,lip_sync])  
@@ -268,8 +198,8 @@ def create_root(name = "Interaction_Bg"):
         namespace="eor_interaction_bg",
     )
     running_or_success = rs.create_root(name="RsInteracion", condition=[
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.interaction.name+"/finished", "yes", operator.ne),
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.interaction.name+"/finished", "yes", operator.eq),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.interaction.name+"/finished", "True", operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.interaction.name+"/finished", "True", operator.eq),
     ])
 
     root.add_children([eor_interaction_bg, subtree_result, running_or_success])
@@ -310,12 +240,12 @@ def main():
 
     #if args.interactive:
     #    py_trees.console.read_single_keypress()
-    while True:
+    for unused_i in range(1, 30):
         try:
             behaviour_tree.tick()
             #if args.interactive:
-            #   py_trees.console.read_single_keypress()
-       
+            #    py_trees.console.read_single_keypress()
+            #else:
             time.sleep(0.4)
         except KeyboardInterrupt:
             break

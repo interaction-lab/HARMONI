@@ -21,6 +21,7 @@ class SubTreeResultInteractionBg(py_trees.behaviour.Behaviour):
         self.blackboard_invalid_response_mainactivity.register_key("counter_no_answer", access=py_trees.common.Access.WRITE)
         self.blackboard_interaction = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.interaction.name)
         self.blackboard_interaction.register_key("inside", access=py_trees.common.Access.WRITE)
+        self.blackboard_interaction.register_key("finished", access=py_trees.common.Access.WRITE) #NEW
 
     def setup(self):
         self.logger.debug("  %s [SubTreeResultInteractionBg::setup()]" % self.name)
@@ -37,6 +38,7 @@ class SubTreeResultInteractionBg(py_trees.behaviour.Behaviour):
           self.blackboard_invalid_response_mainactivity.counter_no_answer = 0
           self.blackboard_scene_interaction.scene_counter = 0
 
+        self.blackboard_interaction.finished = True
         self.logger.debug("  %s [SubTreeResultInteractionBg::update()]" % self.name)
         return py_trees.common.Status.SUCCESS
 

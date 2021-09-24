@@ -80,7 +80,7 @@ class AWSLexService(HarmoniServiceManager):
             #vorrei scrivere questo
             self.result_msg = str(lex_response)
             #ma scrivo questo
-            self.result_msg = lex_response["message"]
+            self.result_msg = str(lex_response["message"]+"-"+lex_response["dialogState"]+"-"+lex_response["intentName"])
             self.state = State.SUCCESS
             #else:
             #    self.start = State.FAILED

@@ -26,10 +26,10 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
 
         self.blackboards = []
         self.blackboard_scene = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name)
-        self.blackboard_scene.register_key(PyTreeNameSpace.mainactivity.name+"/state", access=py_trees.common.Access.WRITE)
+        #self.blackboard_scene.register_key(PyTreeNameSpace.mainactivity.name+"/state", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key(PyTreeNameSpace.mainactivity.name+"/scene_counter", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key(PyTreeNameSpace.mainactivity.name+"/max_num_scene", access=py_trees.common.Access.WRITE) #NEW
-        self.blackboard_scene.register_key(PyTreeNameSpace.mainactivity.name+"/do_kid", access=py_trees.common.Access.WRITE) #NEW
+        self.blackboard_scene.register_key(PyTreeNameSpace.mainactivity.name+"/do_dialogue", access=py_trees.common.Access.WRITE) #NEW
         self.blackboard_scene.register_key("utterance", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key("face_exp", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key("gesture", access=py_trees.common.Access.WRITE)
@@ -54,87 +54,94 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self):
-
-        """
-        base_dir = os.getcwd()
-        print(base_dir)
-        
-        with open(
-            base_dir + "/../../../resources/mainactivity.json", "r"
-        ) as json_file:
-            self.context = json.load(json_file)
-        """
-
         pattern_name = "mainactivity"
         rospack = rospkg.RosPack()
         pck_path = rospack.get_path("harmoni_pytree")
         pattern_script_path = pck_path + f"/resources/{pattern_name}.json"
         with open(pattern_script_path, "r") as read_file:
           self.context = json.load(read_file)
-        
-        #per interagire con context fai una cosa simile a questa riga sotto
-        #bb = contex["scene"][counter_scene]["gesture"]
 
-        #print("Lunghezza: " + len(self.context["scene"]))
+        self.scene_counter = 0
+        self.counter_non_ho_capito = 0
         self.blackboard_scene.mainactivity.max_num_scene = len(self.context["scene"])
-        
-        #print("TEST: context gesture is  %s " % self.context["scene"][self.scene_counter]["gesture"])
+        self.blackboard_invalid_mainactivity.counter_no_answer = 0
+        self.blackboard_scene.mainactivity.scene_counter = self.scene_counter 
+        self.blackboard_scene.utterance = None
+        self.blackboard_scene.face_exp = None
+        self.blackboard_scene.gesture = None
+        self.blackboard_scene.image = None
+        self.blackboard_scene.sound = None
+        self.blackboard_scene.therapist_needed = None
 
         self.logger.debug("  %s [SceneManagerMain::setup()]" % self.name)
 
     def initialise(self):
-        """
-        When is this called?
-          The first time your behaviour is ticked and anytime the
-          status is not RUNNING thereafter.
-
-        What to do here?
-          Any initialisation you need before putting your behaviour
-          to work.
-        """
         self.logger.debug("  %s [SceneManagerMain::initialise()]" % self.name)
 
     def update(self):
-        """
-        When is this called?
-          Every time your behaviour is ticked.
-
-        What to do here?
-          - Triggering, checking, monitoring. Anything...but do not block!
-          - Set a feedback message
-          - return a py_trees.common.Status.[RUNNING, SUCCESS, FAILURE]
-        """
         self.logger.debug("  %s [SceneManagerMain::update()]" % self.name)
-        
         if self.blackboard_visual.inside == True:
-          self.blackboard_visual.inside = False
-          #TODO gestisci visual ture, forse vogliamo fare un intent per far dire al robot "Okay riprendiamo l'attività" 
-                                      #e poi ripeti l'ultima scena che avevamo fatto
-        if self.blackboard_interaction.inside == True:
-          self.blackboard_interaction.inside = False
-          #TODO gestisci interaction ture ovvero ripeti l'ultima scena
-        """
-        else if intent_raggiunto:
-          self.scene_counter += 1
-          setta tutte le bb con quello che sta dentro context
-        else if:
-          se è partito intent stop --> 
-            self.blackboard_scene.therapist_needed = True
-            fai partire intent terapista
-        else if:
-          se è partito intent nocapito --> 
-            se non ha capito 2 volte di seguito -->
+            self.blackboard_visual.inside = False
+            self.scene_counter -= 1
+            self.blackboard_scene.utterance = self.content["error_handling"]["riprendiamo"]["utterance"]
+            self.blackboard_scene.face_exp = self.content["error_handling"]["riprendiamo"]["face"]
+            self.blackboard_scene.gesture = self.content["error_handling"]["riprendiamo"]["gesture"]
+            self.blackboard_scene.image = self.content["error_handling"]["riprendiamo"]["image"]
+            self.blackboard_scene.sound = self.content["error_handling"]["riprendiamo"]["sound"]
+            self.blackboard_scene.mainactivity.do_dialogue = self.content["error_handling"]["riprendiamo"]["do_dialogue"]
+        elif self.blackboard_interaction.inside == True:
+            self.blackboard_interaction.inside = False
+            self.scene_counter -= 1
+            self.blackboard_scene.utterance = self.content["error_handling"]["riprendiamo"]["utterance"]
+            self.blackboard_scene.face_exp = self.content["error_handling"]["riprendiamo"]["face"]
+            self.blackboard_scene.gesture = self.content["error_handling"]["riprendiamo"]["gesture"]
+            self.blackboard_scene.image = self.content["error_handling"]["riprendiamo"]["image"]
+            self.blackboard_scene.sound = self.content["error_handling"]["riprendiamo"]["sound"]
+            self.blackboard_scene.mainactivity.do_dialogue = self.content["error_handling"]["riprendiamo"]["do_dialogue"]
+        elif self.blackboard_scene.mainactivity.do_dialogue = True:
+          elif self.blackboard_bot.result.split('-')[1] ==  DialogStateLex.FULFILLED: #1 prende lo stato dell'intent
+              self.scene_counter += 1
+              self.counter_non_ho_capito = 0
+              self.blackboard_scene.utterance = self.content["scene"][self.scene_counter]["utterance"]
+              self.blackboard_scene.face_exp = self.content["scene"][self.scene_counter]["face"]
+              self.blackboard_scene.gesture = self.content["scene"][self.scene_counter]["gesture"]
+              self.blackboard_scene.image = self.content["scene"][self.scene_counter]["image"]
+              self.blackboard_scene.sound = self.content["scene"][self.scene_counter]["sound"]
+              self.blackboard_scene.mainactivity.do_dialogue = self.content["scene"][self.scene_counter]["do_dialogue"]
+          elif self.blackboard_bot.result.split('-')[2] == "Stop": #2 prende il nome dell'intent
               self.blackboard_scene.therapist_needed = True
-              fai partire intent terapista
-            eltrimenti -->
-              setta tutte le bb con quello che sta dentro context
-        else if:
-          se hai sbagliato due volte di seguito salta alla prossima scena altrimenti fai -->
-          #TODO intent sbagliato, far dire una cosa leggermente diversa, sei sicuro? dovre butteresti questo?
-        else if:
-          scene_counter == 0 -->
-          setta tutte le bb con quello che sta dentro context
-        """
+              self.blackboard_scene.utterance = self.content["error_handling"]["terapista"]["utterance"]
+              self.blackboard_scene.face_exp = self.content["error_handling"]["terapista"]["face"]
+              self.blackboard_scene.gesture = self.content["error_handling"]["terapista"]["gesture"]
+              self.blackboard_scene.image = self.content["error_handling"]["terapista"]["image"]
+              self.blackboard_scene.sound = self.content["error_handling"]["terapista"]["sound"]
+              self.blackboard_scene.mainactivity.do_dialogue = self.content["scene"]["terapista"]["do_dialogue"]
+          elif self.blackboard_bot.result.split('-')[2] == "NonHoCapito": #0 prenderebbe il messaggio di risposta di lex
+              self.counter_non_ho_capito += 1
+              if self.counter_non_ho_capito == 2:
+                  self.blackboard_scene.therapist_needed = True
+                  self.blackboard_scene.utterance = self.content["error_handling"]["terapista"]["utterance"]
+                  self.blackboard_scene.face_exp = self.content["error_handling"]["terapista"]["face"]
+                  self.blackboard_scene.gesture = self.content["error_handling"]["terapista"]["gesture"]
+                  self.blackboard_scene.image = self.content["error_handling"]["terapista"]["image"]
+                  self.blackboard_scene.sound = self.content["error_handling"]["terapista"]["sound"]
+                  self.blackboard_scene.mainactivity.do_dialogue = self.content["scene"]["terapista"]["do_dialogue"]
+                  self.counter_non_ho_capito = 0
+              else:
+                  self.blackboard_scene.utterance = self.content["scene"][self.scene_counter]["utterance"]
+                  self.blackboard_scene.face_exp = self.content["scene"][self.scene_counter]["face"]
+                  self.blackboard_scene.gesture = self.content["scene"][self.scene_counter]["gesture"]
+                  self.blackboard_scene.image = self.content["scene"][self.scene_counter]["image"]
+                  self.blackboard_scene.sound = self.content["scene"][self.scene_counter]["sound"]
+                  self.blackboard_scene.mainactivity.do_dialogue = self.content["scene"][self.scene_counter]["do_dialogue"]
+        else:
+          self.blackboard_scene.utterance = self.content["scene"][self.scene_counter]["utterance"]
+          self.blackboard_scene.face_exp = self.content["scene"][self.scene_counter]["face"]
+          self.blackboard_scene.gesture = self.content["scene"][self.scene_counter]["gesture"]
+          self.blackboard_scene.image = self.content["scene"][self.scene_counter]["image"]
+          self.blackboard_scene.sound = self.content["scene"][self.scene_counter]["sound"]
+          self.blackboard_scene.mainactivity.do_dialogue = self.content["scene"][self.scene_counter]["do_dialogue"]
+          self.scene_counter += 1
         return py_trees.common.Status.SUCCESS
 
     def terminate(self, new_status):

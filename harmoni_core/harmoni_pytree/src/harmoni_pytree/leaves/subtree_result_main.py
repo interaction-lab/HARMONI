@@ -12,7 +12,9 @@ class SubTreeResultMain(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
         self.blackboard_scene_mainactivity = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name +"/"+ PyTreeNameSpace.mainactivity.name)
         self.blackboard_scene_mainactivity.register_key("max_num_scene", access=py_trees.common.Access.READ) #NEW
-        self.blackboard_scene_mainactivity.register_key("scene_counter", access=py_trees.common.Access.WRITE)        
+        self.blackboard_scene_mainactivity.register_key("scene_counter", access=py_trees.common.Access.READ)
+        self.blackboard_mainactivity = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.mainactivity.name)
+        self.blackboard_mainactivity.register_key("finished", access=py_trees.common.Access.WRITE) #NEW
 
     def setup(self):
         self.logger.debug("  %s [SubTreeResultMain::setup()]" % self.name)
@@ -22,8 +24,8 @@ class SubTreeResultMain(py_trees.behaviour.Behaviour):
 
     def update(self):
         self.logger.debug("  %s [SubTreeResultMain::update()]" % self.name)
-        #TODO cancella questa folgia e menti del either or successivo la condizione
-        #max_num_scene == scene_counter
+        if self.blackboard_scene_mainactivity.max_num_scene == self.blackboard_scene_mainactivity.scene_counter:
+            self.blackboard_mainactivity.finished = True
         return py_trees.common.Status.SUCCESS
 
     def terminate(self, new_status):

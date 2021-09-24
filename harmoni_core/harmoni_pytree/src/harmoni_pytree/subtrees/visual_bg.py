@@ -66,7 +66,6 @@ def epilog():
     else:
         return None
 
-
 def command_line_argument_parser():
     parser = argparse.ArgumentParser(description=description(create_root()),
                                      epilog=epilog(),
@@ -78,10 +77,8 @@ def command_line_argument_parser():
     group.add_argument('-i', '--interactive', action='store_true', help='pause and wait for keypress at each tick')
     return parser
 
-
 def pre_tick_handler(behaviour_tree):
     print("\n--------- Run %s ---------\n" % behaviour_tree.count)
-
 
 def post_tick_handler(snapshot_visitor, behaviour_tree):
     print(
@@ -92,7 +89,6 @@ def post_tick_handler(snapshot_visitor, behaviour_tree):
         )
     )
     print(py_trees.display.unicode_blackboard())
-
 
 def create_root(name = "Visual_Bg"):
     root = py_trees.composites.Sequence(name = name)
@@ -131,18 +127,16 @@ def create_root(name = "Visual_Bg"):
                                                         variable_name=DetectorNameSpace.stt.name+"/result", 
                                                         variable_value="null", 
                                                         overwrite=True)
-    """
     timer_kid_detection = Timer(name="TimerKidDetectionVis",
                                 variable_name=PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.visual.name+"/kid_detection",
                                 duration = 10)
     timer_reset = TimerReset(name="TimerResetKidDetectionVis",
                             variable_name=PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.visual.name+"/kid_detection")                                               
     """
-
     timer_kid_detection = py_trees.behaviours.Success(name="SuccessTIMER")
 
     timer_reset = py_trees.behaviours.Success(name="SuccessRESET")
-
+    """
     subtree_result = SubTreeResultVisualBg("SubTreeVisual")
 
     parall_speaker = py_trees.composites.Parallel(name="ParallelSpeaker")
@@ -192,8 +186,8 @@ def create_root(name = "Visual_Bg"):
     )
 
     running_or_success = rs.create_root(name="RsVisual", condition=[
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.visual.name+"/finished", "yes", operator.ne),
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.visual.name+"/finished", "yes", operator.eq),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.visual.name+"/finished", "True", operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.visual.name+"/finished", "True", operator.eq),
     ])
     root.add_children([yolo_service, eor_visual, subtree_result, running_or_success])
 

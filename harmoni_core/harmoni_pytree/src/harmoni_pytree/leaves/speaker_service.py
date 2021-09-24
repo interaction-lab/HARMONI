@@ -99,6 +99,7 @@ class SpeakerServicePytree(py_trees.behaviour.Behaviour):
             new_status = py_trees.common.Status.RUNNING
         elif new_state == GoalStatus.SUCCEEDED:
             new_status = py_trees.common.Status.SUCCESS
+            self.blackboard_tts.result = "annullata da speaker riga circa 100"
         else: 
             new_status = py_trees.common.Status.FAILURE
         

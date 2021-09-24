@@ -57,6 +57,14 @@ class DetectorNameSpace(Enum):
     imageai_yolo = "/harmoni/detecting/imageai/yolo"
     imageai_custom_yolo = "/harmoni/detecting/imageai/custom_yolo"
 
+class DialogStateLex(Enum):
+    CONFIRM_INTENT = "ConfirmIntent" 
+    ELICIT_INTENT = "ElicitIntent"
+    ELICIT_SLOT = "ElicitSlot"
+    FAILED = "Faild"
+    FULFILLED = "Fulfilled"
+    READY_FOR_FULFILLMENT = "ReadyForFulfillment"
+    UNKNOWN_TO_SDK_VERSION = "UnknownToSdkVersion"
 
 
 class Resources(Enum):

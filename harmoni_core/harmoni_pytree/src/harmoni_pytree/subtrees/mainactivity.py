@@ -28,6 +28,7 @@ from harmoni_pytree.leaves.google_service import SpeechToTextServicePytree
 from harmoni_pytree.leaves.microphone_service import MicrophoneServicePytree
 from harmoni_pytree.leaves.speaker_service import SpeakerServicePytree
 #from harmoni_pytree.leaves.gesture_service import GestureServicePytree
+from harmoni_pytree.leaves.subtree_result_main import SubTreeResultMain
 from harmoni_pytree.leaves.counter_no_answer import CounterNoAnswer
 from harmoni_pytree.leaves.scene_manager_main import SceneManagerMain
 from harmoni_pytree.leaves.custom_yolo_service import ImageAICustomServicePytree
@@ -58,13 +59,11 @@ def description(root):
         s = content
     return s
 
-
 def epilog():
     if py_trees.console.has_colours:
         return console.cyan + "And his noodly appendage reached forth to tickle the blessed...\n" + console.reset
     else:
         return None
-
 
 def command_line_argument_parser():
     parser = argparse.ArgumentParser(description=description(create_root()),
@@ -76,10 +75,8 @@ def command_line_argument_parser():
     group.add_argument('-i', '--interactive', action='store_true', help='pause and wait for keypress at each tick')
     return parser
 
-
 def pre_tick_handler(behaviour_tree):
     print("\n--------- Run %s ---------\n" % behaviour_tree.count)
-
 
 def post_tick_handler(snapshot_visitor, behaviour_tree):
     print(
@@ -90,7 +87,6 @@ def post_tick_handler(snapshot_visitor, behaviour_tree):
         )
     )
     print(py_trees.display.unicode_blackboard())
-
 
 def create_root():
     root = py_trees.composites.Sequence(name="mainactivity",memory=True)
@@ -107,31 +103,9 @@ def create_root():
     Success6 = py_trees.behaviours.Success(name="Success")
     Success7 = py_trees.behaviours.Success(name="Success")
 
-    #TODO modulo sceneManager!
     scene_manager = SceneManagerMain("SceneManagerMain")
-    """
-    main_activity_scene_manager= py_trees.behaviours.SetBlackboardVariable(name="main_activity_scene_manager",
-                                                        variable_name="do_speech", 
-                                                        variable_value="null", 
-                                                        overwrite=True)
-    
-    #i seguenti dummy vanno come variabili che il scene manager scrive nella blackboard. 
-    dummy1 = py_trees.behaviours.SetBlackboardVariable(name="do_face",
-                                                        variable_name="do_face", 
-                                                        variable_value="null", 
-                                                        overwrite=True)
-    dummy2 = py_trees.behaviours.SetBlackboardVariable(name="do_gesture",
-                                                        variable_name="do_gesture", 
-                                                        variable_value="null", 
-                                                        overwrite=True)
-    dummy3 = py_trees.behaviours.SetBlackboardVariable(name="do_sound",
-                                                        variable_name="do_sound", 
-                                                        variable_value="null", 
-                                                        overwrite=True)
-    """
-    #TODO add gesture
-    #gesture=GestureServicePytree("GestureMainActivity")
-                                                       
+
+    #gesture=GestureServicePytree("GestureMainActivity")                                                 
     gesture = py_trees.behaviours.Success(name="GestureMainActivity")
     
     #TODO sostituirlo/capire se si può usare web_service.
@@ -141,79 +115,25 @@ def create_root():
                                                       success_until=10,
                                                       reset=False)
     ext_speaker=SpeakerServicePytree("ExternalSpeakerMainActivity")
-    """                                                  
-    External_Speaker = py_trees.behaviours.Count(name="External_Speaker",
-                                                      fail_until=0,
-                                                      running_until=1,
-                                                      success_until=10,
-                                                      reset=False)
-    """
+
     bot_trigger=AWSLexTriggerServicePytree("AwsLexTriggerMainActivity")
+
     bot_analyzer=AWSLexAnalyzerServicePytree("AwsLexAnalyzerMainActivity")
-    """
-    Chat_Bot = py_trees.behaviours.Count(name="Chat_Bot",
-                                                      fail_until=0,
-                                                      running_until=1,
-                                                      success_until=10,
-                                                      reset=False)
-    """
+
     tts = AWSTtsServicePytree("AwsTtsMainActivity")
-    """                                                  
-    Tts = py_trees.behaviours.Count(name="Tts",
-                                                      fail_until=0,
-                                                      running_until=1,
-                                                      success_until=10,
-                                                      reset=False)
-    """
+
     stt=SpeechToTextServicePytree("SpeechToTextMainActivity")
-    """                                                  
-    Stt = py_trees.behaviours.Count(name="Stt",
-                                                      fail_until=0,
-                                                      running_until=1,
-                                                      success_until=10,
-                                                      reset=False)
-    """
+
     face_exp=FacialExpServicePytree("FacialExpMainActivity")
-    """                                                  
-    Facial_Expression = py_trees.behaviours.Count(name="Facial_Expression",
-                                                      fail_until=0,
-                                                      running_until=1,
-                                                      success_until=10,
-                                                      reset=False)
-    """
+
     speaker=SpeakerServicePytree("SpeakerMainActivity") 
-    """                                                 
-    Speaker = py_trees.behaviours.Count(name="Speaker",
-                                                      fail_until=0,
-                                                      running_until=1,
-                                                      success_until=10,
-                                                      reset=False)
-    """
+
     lip_sync=LipSyncServicePytree("LipsSyncMainActivity")
-    """                                                  
-    Lips_Synk = py_trees.behaviours.Count(name="Lips_Synk",
-                                                      fail_until=0,
-                                                      running_until=1,
-                                                      success_until=10,
-                                                      reset=False)
-    """
+
     microphone=MicrophoneServicePytree("MicrophoneMainActivity")
-    """                                                  
-    Microphone = py_trees.behaviours.Count(name="Microphone",
-                                                      fail_until=0,
-                                                      running_until=1,
-                                                      success_until=10,
-                                                      reset=False)
-    """
-    #TODO mancano le foglie di imageAi 
+
     custom_yolo = ImageAICustomServicePytree("DetectionCardMain")
-    """                                                 
-    Detection_Card = py_trees.behaviours.Count(name="Detection_Card",
-                                                      fail_until=0,
-                                                      running_until=1,
-                                                      success_until=10,
-                                                      reset=False)
-    """                                                 
+                                               
     invalid_response_stt = py_trees.behaviours.SetBlackboardVariable(name="InvalidResponseMainStt",
                                                         variable_name=DetectorNameSpace.stt.name+"/result", 
                                                         variable_value="null", 
@@ -226,13 +146,13 @@ def create_root():
     counter_no_answer = CounterNoAnswer(name="CounterNoAnswer",
                                         variable_name= PyTreeNameSpace.invalid_response.name+"/"+PyTreeNameSpace.mainactivity.name+"/counter_no_answer") 
                                              
-    timer_kid_detection = Timer(name="TimerKidDetectionVis",
-                                                    variable_namespace=PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.mainactivity.name, 
-                                                    variable_name="kid_detection",
-                                                    duration = 10)
-    timer_reset = TimerReset(name="TimerResetKidDetectionVis",
-                                                    variable_namespace=PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.mainactivity.name, 
-                                                    variable_name="kid_detection")     
+    timer_kid_detection = Timer(name="TimerKidDetectionInt",
+                                variable_name=PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.mainactivity.name+"/kid_detection",
+                                duration = 10)
+    timer_reset = TimerReset(name="TimerResetKidDetectionInt",
+                            variable_name=PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.mainactivity.name+"/kid_detection")                                               
+    
+    subtree_result = SubTreeResultMain("SubTreeResultMain")
 
     parall_speaker = py_trees.composites.Parallel(name="ParallelSpeaker")
     parall_speaker.add_children([speaker,lip_sync]) 
@@ -240,8 +160,8 @@ def create_root():
     eor_trigger = py_trees.idioms.either_or(
         name="EitherOrTrigger",
         conditions=[
-            py_trees.common.ComparisonExpression("/aggiusta", "null", operator.ne),
-            py_trees.common.ComparisonExpression("/aggiusta", "null", operator.eq),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/" + PyTreeNameSpace.mainactivity.name + "/do_dialogue", "yes", operator.eq),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/" + PyTreeNameSpace.mainactivity.name + "/do_dialogue", "yes", operator.ne),
         ],
         subtrees=[bot_trigger, Success7],
         namespace="eor_trigger",
@@ -319,40 +239,25 @@ def create_root():
         namespace="eor_timer_detection",
     )
 
-    """dummydummy
-    dummydummy = py_trees.behaviours.Count(name="dummydummy",
-                                                      fail_until=0,
-                                                      running_until=1,
-                                                      success_until=10,
-                                                      reset=False)
-    Write_On_BB_Timer_Exceed = py_trees.behaviours.SetBlackboardVariable(name="Write_On_BB_Timer_Exceed",
-                                                    variable_name="timer", 
-                                                    variable_value=17, 
-                                                    overwrite=True)
-    dummy_sequence= py_trees.composites.Sequence(name="dummy_sequence")
-    dummy_sequence.add_children([Write_On_BB_Timer,dummydummy,Write_On_BB_Timer_Exceed])
-    sequen_Detect_Kid = py_trees.composites.Parallel(name="PARALLEL_Detect_Kid")
-    """
     sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid",memory=False)
     sequen_detect_kid.add_children([timer_kid_detection, eor_timer_detection, timer_reset, bot_analyzer])                                         
 
     running_or_success = rs.create_root(name="RsMainactivity", condition=[
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.mainactivity.name+"/finished", "yes", operator.ne),
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.mainactivity.name+"/finished", "yes", operator.eq),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.mainactivity.name+"/finished", "True", operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.mainactivity.name+"/finished", "True", operator.eq),
     ])
 
-    #TODO aggiungere questo a monte dell'interazione del bambino
     eor_kid = py_trees.idioms.either_or(
         name="EitherOrKid",
         conditions=[
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/do_kid", "null", operator.ne),
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/do_kid", "null", operator.eq),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/do_dialogue", "null", operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/do_dialogue", "null", operator.eq),
         ],
         subtrees=[sequen_detect_kid, Success2],
         namespace="eor_kid",
     )
 
-    root.add_children([sequen_robot, eor_kid, running_or_success])
+    root.add_children([sequen_robot, eor_kid, subtree_result, running_or_success])
 
     return root
 
@@ -409,15 +314,15 @@ def main():
     # Tick Tock
     ####################
 
-    if args.interactive:
-        py_trees.console.read_single_keypress()
-    for unused_i in range(1, 12):
+    #if args.interactive:
+    #    py_trees.console.read_single_keypress()
+    while True:
         try:
             behaviour_tree.tick()
-            if args.interactive:
-                py_trees.console.read_single_keypress()
-            else:
-                time.sleep(0.5)
+            #if args.interactive:
+            #   py_trees.console.read_single_keypress()
+       
+            time.sleep(0.4)
         except KeyboardInterrupt:
             break
     print("\n")
