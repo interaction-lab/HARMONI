@@ -93,6 +93,8 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
         return py_trees.common.Status.SUCCESS
 
     def terminate(self, new_status):
+        """
         if new_status == py_trees.common.Status.INVALID:
             self.scene_counter = 0
+        """
         self.logger.debug("  %s [SceneManagerVisualBg::terminate().terminate()][%s->%s]" % (self.name, self.status, new_status))

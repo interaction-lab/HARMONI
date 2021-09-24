@@ -92,12 +92,18 @@ def post_tick_handler(snapshot_visitor, behaviour_tree):
 
 def create_root(name = "Interaction_Bg"):
     root = py_trees.composites.Sequence(name=name)
+    #TODO leva ste bb quando poi provi tutto
+    b1 = root.attach_blackboard_client(name="b1", namespace= PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.visual.name)
+    
+    b1.register_key("kid_detection", access=py_trees.common.Access.WRITE)
+    b1.kid_detection = 0
 
-    bb = root.attach_blackboard_client(name="bb", namespace= PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.visual.name)
-    bb.register_key("kid_detection", access=py_trees.common.Access.WRITE)
-    bb.kid_detection = 0
+    b2 = root.attach_blackboard_client(name="b2", namespace= PyTreeNameSpace.interaction.name)
+    b2.register_key("finished", access=py_trees.common.Access.WRITE)
+    b2.finished = "no"
 
     Success = py_trees.behaviours.Success(name="Success")
+    Success2 = py_trees.behaviours.Success(name="Success")
 
     #TODO modulo sceneManager!
     scene_manager = SceneManagerInteractionBg("SceneManagerInteractionBg")
@@ -221,12 +227,12 @@ def create_root(name = "Interaction_Bg"):
             py_trees.common.ComparisonExpression(PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.interaction.name + "/kid_detection", 10, operator.lt),
             py_trees.common.ComparisonExpression(PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.interaction.name + "/kid_detection", 10, operator.ge),
         ],
-        preemptible = True,
+        preemptible = False,
         subtrees=[parall_detect_kid, sequen_invalid_response],
         namespace="eor_timer_detection",
     )
 
-    sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid",memory=False)
+    sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid")
     sequen_detect_kid.add_children([timer_kid_detection, eor_timer_detection, timer_reset, bot_analyzer])                                         
 
     parall_detect_and_face = py_trees.composites.Parallel(name="ParallelDetectAndFace")
@@ -234,8 +240,18 @@ def create_root(name = "Interaction_Bg"):
 
     sequen_interaction_bg = py_trees.composites.Sequence(name="SequenceInteractionBg")
 
+    eor_bot_trigger = py_trees.idioms.either_or(
+        name="EitherOrBotTrigger",
+        conditions=[
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/" + PyTreeNameSpace.interaction.name + "/scene_counter", 1, operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/" + PyTreeNameSpace.interaction.name + "/scene_counter", 1, operator.eq),
+        ],
+        subtrees=[Success2, bot_trigger],
+        namespace="eor_bot_trigger",
+    )
+
     sequen_interaction_bg.add_children([scene_manager,
-                                        bot_trigger, 
+                                        eor_bot_trigger, 
                                         tts, 
                                         parall_speaker, 
                                         parall_detect_and_face])  
@@ -251,11 +267,10 @@ def create_root(name = "Interaction_Bg"):
         subtrees=[sequen_interaction_bg,Success],
         namespace="eor_interaction_bg",
     )
-    #TODO you have to change condition
-    running_or_success = rs.create_root(name="rs_interacion", condition=[
-            py_trees.common.ComparisonExpression("/fixme", 2, operator.lt),
-            py_trees.common.ComparisonExpression("/fixme", 2, operator.ge),
-        ])
+    running_or_success = rs.create_root(name="RsInteracion", condition=[
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.interaction.name+"/finished", "yes", operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.interaction.name+"/finished", "yes", operator.eq),
+    ])
 
     root.add_children([eor_interaction_bg, subtree_result, running_or_success])
 
@@ -295,13 +310,13 @@ def main():
 
     #if args.interactive:
     #    py_trees.console.read_single_keypress()
-    for unused_i in range(1, 10):
+    while True:
         try:
             behaviour_tree.tick()
             #if args.interactive:
             #   py_trees.console.read_single_keypress()
        
-            time.sleep(0.5)
+            time.sleep(0.4)
         except KeyboardInterrupt:
             break
     print("\n")

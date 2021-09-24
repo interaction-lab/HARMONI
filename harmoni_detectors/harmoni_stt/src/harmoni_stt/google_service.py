@@ -136,8 +136,7 @@ class STTGoogleService(HarmoniServiceManager):
         for response in responses:
             if not response.results:
                 continue
-
-            rospy.loginfo(f"Response: {response}")
+            #rospy.loginfo(f"Response: {response}")
 
             result = response.results[0]
             if not result.alternatives:
@@ -222,8 +221,6 @@ class STTGoogleService(HarmoniServiceManager):
             rospy.loginfo("Service call failed")
             self.response_received = True
             self.result_msg = ""
-        print("@@@@@@@@@@@@@@@@@@@@@")
-        print(self.result_msg)
         return {"response": self.state, "message": self.result_msg}
 
     def wav_to_data(self, path):

@@ -59,10 +59,12 @@ class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
         """
 
         #TODO DOVREBBERO ESSERE QUESTE LE GIUSTE
+        """
         self.blackboard_camera = self.attach_blackboard_client(name=self.name, namespace=SensorNameSpace.camera.name+"/external")
         self.blackboard_camera.register_key("state", access=py_trees.common.Access.READ)
+        """
         self.blackboard_card_detection = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.card_detect.name)
-        self.blackboard_card_detection.register_key("state", access=py_trees.common.Access.WRITE)
+        #self.blackboard_card_detection.register_key("state", access=py_trees.common.Access.WRITE)
         self.blackboard_card_detection.register_key("result", access=py_trees.common.Access.WRITE)
 
 
@@ -122,20 +124,14 @@ class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
         
     def terminate(self, new_status):
         if(new_status == py_trees.common.Status.INVALID):
-            self.logger.debug(f"Sending goal to {self.server_name} to stop the service")
-            # Send request for each sensor service to set themselves up
-            self.service_client_custom.send_goal(
-                action_goal=ActionType["OFF"].value,
-                optional_data="",
-                wait=False,
-            )
+            self.logger.debug(f"Cancelling goal to {self.server_name}")
+            self.service_client_custom.cancel_goal()
             self.client_result = None
             self.blackboard_card_detection.result = None
-            self.logger.debug(f"Goal sent to {self.server_name}")
+            self.logger.debug(f"Goal cancelled to {self.server_name}")
         else:
             #execute actions for the following states (SUCCESS || FAILURE)
             pass
-
         self.logger.debug("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))
 
     def _result_callback(self, result):
@@ -157,10 +153,10 @@ def main():
 
     py_trees.logging.level = py_trees.logging.Level.DEBUG
     
-    blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace="harmoni_imageai_custom")
-    blackboardProva.register_key("result_data", access=py_trees.common.Access.READ)
-    blackboardProva.register_key("result_message", access=py_trees.common.Access.READ)
+    blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace=DetectorNameSpace.card_detect.name)
+    blackboardProva.register_key("result", access=py_trees.common.Access.READ)
     print(blackboardProva)
+
 
     rospy.init_node("imageai_default", log_level=rospy.INFO)
 
@@ -172,12 +168,14 @@ def main():
     customPyTree.setup(**additional_parameters)
     try:
 
-        for unused_i in range(0, 7):
+        for unused_i in range(0, 12):
             customPyTree.tick_once()
-            time.sleep(0.5)
+            time.sleep(1)
             print(blackboardProva)
         print("\n")
     except KeyboardInterrupt:
         print("Exception occurred")
         pass
     
+if __name__ == "__main__":
+    main()

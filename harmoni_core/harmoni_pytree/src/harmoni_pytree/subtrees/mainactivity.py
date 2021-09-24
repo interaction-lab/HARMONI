@@ -336,11 +336,10 @@ def create_root():
     sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid",memory=False)
     sequen_detect_kid.add_children([timer_kid_detection, eor_timer_detection, timer_reset, bot_analyzer])                                         
 
-    running_or_success = rs.create_root(name="RSMainactivity",
-                                        condition=[
-                                                py_trees.common.ComparisonExpression("scene/mainactivity/scene_counter", blackboard_scene_mainactivity.max_num_scene, operator.eq),
-                                                py_trees.common.ComparisonExpression("scene/mainactivity/scene_counter", blackboard_scene_mainactivity.max_num_scene, operator.ne),
-                                            ])
+    running_or_success = rs.create_root(name="RsMainactivity", condition=[
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.mainactivity.name+"/finished", "yes", operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.mainactivity.name+"/finished", "yes", operator.eq),
+    ])
 
     #TODO aggiungere questo a monte dell'interazione del bambino
     eor_kid = py_trees.idioms.either_or(

@@ -85,10 +85,7 @@ class ImageAICustomService(HarmoniServiceManager):
     #TODO
     def callback(self, data):
         """ Callback function subscribing to the camera topic"""
-
-        if self.state == State.START:
-            self._buff.put(data) #prima era put(data.data)
-        
+        self._buff.put(data) #prima era put(data.data)
     
     
     def imageai_callback(self, data):
@@ -97,26 +94,27 @@ class ImageAICustomService(HarmoniServiceManager):
 
 
     def request(self, data):
-    
         rospy.loginfo("Start the %s request" % self.name)
         self.state = State.REQUEST
         try:
             
             data_tmp = self.cv_bridge.imgmsg_to_cv2(self._buff.get(), desired_encoding='passthrough')
+            
             self.detections = self.detector.detectObjectsFromImage(input_type="array", 
                                                                 output_type="array",
                                                                 input_image=data_tmp,
                                                                 minimum_percentage_probability=self.minimum_percentage_probability,
                                                                 extract_detected_objects=True)
+            #self.result_msg = str(self.detections[1])
+            if len(self.detections[1]) != 0:
+                for eachObject in self.detections[1]:
+                    self.result_msg += str(eachObject["name"]) + " with: " +str(eachObject["percentage_probability"]) + " - "
+                    print(eachObject["name"] , " : " , eachObject["percentage_probability"], " : ", eachObject["box_points"] )
+                    print("--------------------------------")
+            else:
+                print("Yolo detection --> null")
+                self.result_msg = "null"
             
-            
-            self.result_msg = self.detections[1]
-            """
-            for eachObject in self.detections[1]:
-                self.result_msg += str(eachObject["name"])+str(eachObject["percentage_probability"]) + "___"
-                print(eachObject["name"] , " : " , eachObject["percentage_probability"], " : ", eachObject["box_points"] )
-                print("--------------------------------")
-            """
             self.response_received = True
             self.state = State.SUCCESS
 
@@ -127,7 +125,6 @@ class ImageAICustomService(HarmoniServiceManager):
             self.result_msg = ""
         return {"response": self.state, "message": self.result_msg}
 
-    #TODO
     def start(self, rate=""):
         
         #try:

@@ -38,6 +38,7 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
         self.name = name
         self.server_state = None
         self.service_client_yolo = None
+        self.client_result = None
         self.server_name = None
 
         # here there is the inizialization of the blackboards
@@ -106,7 +107,7 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
         elif new_state == GoalStatus.SUCCEEDED:
             if self.client_result is not None:
                 self.blackboard_face_detection.result = self.client_result
-                self.blackboard_face_detection.result = "null"
+                #self.blackboard_face_detection.result = "null"
                 self.client_result = None
                 new_status = py_trees.common.Status.SUCCESS
             else:
@@ -122,20 +123,14 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
         
     def terminate(self, new_status):
         if new_status == py_trees.common.Status.INVALID:
-            self.logger.debug(f"Sending goal to {self.server_name} to stop the service")
-            # Send request for each sensor service to set themselves up
-            self.service_client_yolo.send_goal(
-                action_goal=ActionType["OFF"].value,
-                optional_data="",
-                wait=False,
-            )
+            self.logger.debug(f"Cancelling goal to {self.server_name}")
+            self.service_client_yolo.cancel_goal()
             self.client_result = None
-            self.blackboard_face_detection.result = None
-            self.logger.debug(f"Goal sent to {self.server_name}")
+            #self.blackboard_face_detection.result = None
+            self.logger.debug(f"Goal cancelled to {self.server_name}")
         else:
             #execute actions for the following states (SUCCESS || FAILURE)
             pass
-
         self.logger.debug("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))
 
     def _result_callback(self, result):

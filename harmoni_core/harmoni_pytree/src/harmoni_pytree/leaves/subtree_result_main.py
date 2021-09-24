@@ -27,10 +27,4 @@ class SubTreeResultMain(py_trees.behaviour.Behaviour):
         return py_trees.common.Status.SUCCESS
 
     def terminate(self, new_status):
-        """
-        When is this called?
-           Whenever your behaviour switches to a non-running state.
-            - SUCCESS || FAILURE : your behaviour's work cycle has finished
-            - INVALID : a higher priority branch has interrupted, or shutting down
-        """
         self.logger.debug("  %s [SubTreeResultMain::terminate().terminate()][%s->%s]" % (self.name, self.status, new_status))

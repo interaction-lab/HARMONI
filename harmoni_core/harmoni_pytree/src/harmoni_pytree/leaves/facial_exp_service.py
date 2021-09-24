@@ -115,25 +115,12 @@ class FacialExpServicePytree(py_trees.behaviour.Behaviour):
 
     def terminate(self, new_status):
         if new_status == py_trees.common.Status.INVALID:
-            self.logger.debug(f"Sending goal to {self.server_name} to stop the service")
-            # Send request for each sensor service to set themselves up
-            self.service_client_mouth.send_goal(
-                action_goal=ActionType["OFF"].value,
-                optional_data="",
-                wait=False,
-            )
-            self.service_client_eyes.send_goal(
-                action_goal=ActionType["OFF"].value,
-                optional_data="",
-                wait=False,
-            )
-            self.service_client_nose.send_goal(
-                action_goal=ActionType["OFF"].value,
-                optional_data="",
-                wait=False,
-            )
-            self.logger.debug(f"Goal sent to {self.server_name}")
+            self.logger.debug(f"Cancelling goal to {self.server_name}")
+            self.service_client_mouth.cancel_goal()
+            self.service_client_eyes.cancel_goal()
+            self.service_client_nose.cancel_goal()
             self.client_result = None
+            self.logger.debug(f"Goal cancelled to {self.server_name}")
         else:
             #execute actions for the following states (SUCCESS || FAILURE)
             pass

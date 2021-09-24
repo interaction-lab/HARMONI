@@ -96,10 +96,14 @@ def post_tick_handler(snapshot_visitor, behaviour_tree):
 
 def create_root(name = "Visual_Bg"):
     root = py_trees.composites.Sequence(name = name)
-    bb = root.attach_blackboard_client(name="bb", namespace= PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.visual.name)
-    bb.register_key("kid_detection", access=py_trees.common.Access.WRITE)
-    bb.kid_detection = 0
+    b1 = root.attach_blackboard_client(name="b1", namespace= PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.visual.name)
+    b1.register_key("kid_detection", access=py_trees.common.Access.WRITE)
+    b1.kid_detection = 0
     
+    b2 = root.attach_blackboard_client(name="b2", namespace= PyTreeNameSpace.visual.name)
+    b2.register_key("finished", access=py_trees.common.Access.WRITE)
+    b2.finished = "no"
+
     Success = py_trees.behaviours.Success(name="Success")
     Success2 = py_trees.behaviours.Success(name="Success")
 
@@ -186,12 +190,11 @@ def create_root(name = "Visual_Bg"):
         subtrees=[Success, sequen_visual],
         namespace="eor_visual",
     )
-    #TODO you have to change condition
-    running_or_success = rs.create_root(name="rs_visual",condition=[
-            py_trees.common.ComparisonExpression("/change", "change", operator.ne),
-            py_trees.common.ComparisonExpression("/change", "change", operator.eq),
-        ])
 
+    running_or_success = rs.create_root(name="RsVisual", condition=[
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.visual.name+"/finished", "yes", operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.visual.name+"/finished", "yes", operator.eq),
+    ])
     root.add_children([yolo_service, eor_visual, subtree_result, running_or_success])
 
     return root
@@ -253,7 +256,7 @@ def main():
 
     #if args.interactive:
     #    py_trees.console.read_single_keypress()
-    for unused_i in range(1, 20):
+    for unused_i in range(1, 30):
         try:
             behaviour_tree.tick()
             #if args.interactive:

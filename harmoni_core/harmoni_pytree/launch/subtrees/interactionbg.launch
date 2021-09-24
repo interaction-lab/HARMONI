@@ -12,8 +12,6 @@
     <include file="$(find harmoni_stt)/launch/stt_google_service.launch"></include>
     <include file="$(find harmoni_microphone)/launch/microphone_service.launch"></include>
     <include file="$(find harmoni_camera)/launch/camera_service.launch"></include>
-    <!-- <include file="$(find harmoni_camera)/launch/camera_service.launch"></include> -->
-    <include file="$(find harmoni_imageai)/launch/yolo_service.launch"></include>
     <include file="$(find harmoni_imageai)/launch/custom_service.launch"></include>
     <!-- end services -->
 

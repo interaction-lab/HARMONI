@@ -41,9 +41,10 @@ class CounterNoAnswer(py_trees.behaviour.Behaviour):
         return py_trees.common.Status.SUCCESS
 
     def terminate(self, new_status):
+        """
         if new_status == common.Status.INVALID:
             self.count_no_answer = 0
             self.blackboard_camera.variable_name = self.count_no_answer
         self.feedback_message = ""
-
+        """
         self.logger.debug("  %s [CounterNoAnswer::terminate().terminate()][%s->%s]" % (self.name, self.status, new_status))

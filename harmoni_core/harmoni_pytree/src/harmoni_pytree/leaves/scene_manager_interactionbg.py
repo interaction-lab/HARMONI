@@ -53,7 +53,7 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
         with open(pattern_script_path, "r") as read_file:
           self.context = json.load(read_file)
 
-
+        self.scene_counter = 0
         self.blackboard_scene.interaction.max_num_scene = len(self.context["scene"])
         self.blackboard_invalid_mainactivity.counter_no_answer = 0
         self.blackboard_scene.interaction.scene_counter = self.scene_counter 
@@ -61,7 +61,6 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
         self.blackboard_scene.face_exp = None
         self.blackboard_scene.therapist_needed = None
 
-        self.scene_counter = 0
         self.blackboard_scene.interaction.scene_counter = self.scene_counter 
 
 
@@ -99,10 +98,4 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
         return py_trees.common.Status.SUCCESS
 
     def terminate(self, new_status):
-        """
-        When is this called?
-           Whenever your behaviour switches to a non-running state.
-            - SUCCESS || FAILURE : your behaviour's work cycle has finished
-            - INVALID : a higher priority branch has interrupted, or shutting down
-        """
         self.logger.debug("  %s [SceneManagerInteractionBg::terminate().terminate()][%s->%s]" % (self.name, self.status, new_status))
