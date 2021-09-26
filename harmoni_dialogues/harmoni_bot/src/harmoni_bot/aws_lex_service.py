@@ -12,7 +12,7 @@ import harmoni_common_lib.helper_functions as hf
 # Specific Imports
 from harmoni_common_lib.constants import DialogueNameSpace
 import boto3
-
+import json
 
 class AWSLexService(HarmoniServiceManager):
     """This is a class representation of a harmoni_dialogue service
@@ -78,9 +78,10 @@ class AWSLexService(HarmoniServiceManager):
             self.response_received = True
             #FIXME
             #vorrei scrivere questo
+            lex_response.pop("audioStream")
             self.result_msg = str(lex_response)
             #ma scrivo questo
-            self.result_msg = str(lex_response["message"]+"-"+lex_response["dialogState"]+"-"+lex_response["intentName"])
+            #self.result_msg = str(lex_response["message"]+"-"+lex_response["dialogState"]+"-"+lex_response["intentName"])
             self.state = State.SUCCESS
             #else:
             #    self.start = State.FAILED
@@ -92,7 +93,7 @@ class AWSLexService(HarmoniServiceManager):
             rospy.loginfo("Service call failed")
             self.response_received = True
             self.result_msg = ""
-        return {"response": self.state, "message": lex_response}
+        return {"response": self.state, "message": self.result_msg}
 
 def main():
     """[summary]

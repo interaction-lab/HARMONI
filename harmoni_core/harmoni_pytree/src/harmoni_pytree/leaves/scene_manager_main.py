@@ -121,7 +121,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                 self.blackboard_scene.mainactivity.do_dialogue = self.context["scene"][self.scene_counter]["do_dialogue"]=="True"
             else:
                 print("WEEEEE3")
-                if self.blackboard_bot.analyzer.result.split('-')[1] == DialogStateLex.FULFILLED: #1 prende lo stato dell'intent
+                if self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.FULFILLED: #1 prende lo stato dell'intent
                     self.scene_counter += 1
                     self.counter_non_ho_capito = 0
                     self.blackboard_scene.utterance = self.context["error_handling"]["risposta_corretta"]["utterance"]
@@ -130,7 +130,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                     self.blackboard_scene.image = self.context["error_handling"]["risposta_corretta"]["image"]
                     self.blackboard_scene.sound = self.context["error_handling"]["risposta_corretta"]["sound"]
                     self.blackboard_scene.mainactivity.do_dialogue = self.context["error_handling"]["risposta_corretta"]["do_dialogue"]=="True"
-                elif self.blackboard_bot.analyzer.result.split('-')[2] == "Stop": #2 prende il nome dell'intent
+                elif self.blackboard_bot.analyzer.result["intentName"] == "Stop": #2 prende il nome dell'intent
                     self.blackboard_scene.therapist_needed = True
                     self.blackboard_scene.utterance = self.context["error_handling"]["terapista"]["utterance"]
                     self.blackboard_scene.face_exp = self.context["error_handling"]["terapista"]["face"]
@@ -138,7 +138,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                     self.blackboard_scene.image = self.context["error_handling"]["terapista"]["image"]
                     self.blackboard_scene.sound = self.context["error_handling"]["terapista"]["sound"]
                     self.blackboard_scene.mainactivity.do_dialogue = self.context["scene"]["terapista"]["do_dialogue"]=="True"
-                elif self.blackboard_bot.analyzer.result.split('-')[2] == "NonHoCapito": #0 prenderebbe il messaggio di risposta di lex
+                elif self.blackboard_bot.analyzer.result["intentName"] == "NonHoCapito": #0 prenderebbe il messaggio di risposta di lex
                     self.counter_non_ho_capito += 1
                     if self.counter_non_ho_capito == 2:
                         self.blackboard_scene.therapist_needed = True
@@ -163,7 +163,8 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         else:
             print("WEEEEE4")
             self.blackboard_scene.utterance = self.context["scene"][self.scene_counter]["utterance"]
-            self.blackboard_bot.trigger.result = self.blackboard_scene.utterance
+            tmp = {"message": self.blackboard_scene.utterance}
+            self.blackboard_bot.trigger.result = tmp
             self.blackboard_scene.face_exp = self.context["scene"][self.scene_counter]["face"]
             self.blackboard_scene.gesture = self.context["scene"][self.scene_counter]["gesture"]
             self.blackboard_scene.image = self.context["scene"][self.scene_counter]["image"]

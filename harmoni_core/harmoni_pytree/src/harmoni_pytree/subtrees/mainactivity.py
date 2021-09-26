@@ -320,7 +320,7 @@ def main():
 
     #if args.interactive:
     #    py_trees.console.read_single_keypress()
-    for unused_i in range(1, 30):
+    for unused_i in range(1, 50):
         try:
             behaviour_tree.tick()
             #if args.interactive:

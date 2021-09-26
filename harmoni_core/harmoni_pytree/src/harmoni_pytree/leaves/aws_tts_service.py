@@ -80,11 +80,16 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         new_state = self.service_client_tts.get_state()
         print(new_state)
         if new_state == GoalStatus.LOST:
-            #self.blackboard_bot.result = json.loads(self.blackboard_bot.result)
+            #if type(self.blackboard_bot.result)
+            tmp= self.blackboard_bot.result
+            print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+            print(tmp)
+            print(type(tmp))
+
             self.logger.debug(f"Sending goal to {self.server_name}")
             self.service_client_tts.send_goal(
                 action_goal = ActionType["REQUEST"].value,
-                optional_data = self.blackboard_bot.result.split("-")[0],
+                optional_data = tmp["message"],
                 wait=False,
             )
             self.logger.debug(f"Goal sent to {self.server_name}")

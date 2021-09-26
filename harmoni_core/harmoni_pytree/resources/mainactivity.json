@@ -1,7 +1,7 @@
 {
     "scene" :   [
                     {
-                        "utterance"     : "Ei fu, siccome immobile dato il mortal sospiro",
+                        "utterance"     : "Ei fu, siccome immobile dato il mortàl sospiro",
                         "face"          : "[{'start': 5, 'type': 'action', 'id': 'saucy_face'}]",
                         "gesture"       : "null",
                         "image"         : "null",
@@ -9,7 +9,7 @@
                         "do_dialogue"   : "False"
                     },
                     {
-                        "utterance"     : "Oh no come sempre il papà lascia il cartone" ,
+                        "utterance"     : "Oh no!!! Come sempre il papà lascia il cartone" ,
                         "face"          : "[{'start': 5, 'type': 'action', 'id': 'saucy_face'}]",
                         "gesture"       : "null",
                         "image"         : "null",
@@ -17,7 +17,7 @@
                         "do_dialogue"   : "False"
                     },
                     {
-                        "utterance"     : "frase tre",
+                        "utterance"     : "il bimbo non parla",
                         "face"          : "[{'start': 5, 'type': 'action', 'id': 'saucy_face'}]",
                         "gesture"       : "null",
                         "image"         : "null",
