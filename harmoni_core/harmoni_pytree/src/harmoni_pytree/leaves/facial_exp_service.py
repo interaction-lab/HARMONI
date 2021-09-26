@@ -92,6 +92,7 @@ class FacialExpServicePytree(py_trees.behaviour.Behaviour):
                 optional_data=self.data,
                 wait=True,
             )
+            """
             self.service_client_eyes.send_goal(
                 action_goal=ActionType.DO.value,
                 optional_data=self.data,
@@ -102,6 +103,7 @@ class FacialExpServicePytree(py_trees.behaviour.Behaviour):
                 optional_data=self.data,
                 wait=True,
             )
+            """
             self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
         elif new_state == GoalStatus.PENDING or new_state == GoalStatus.ACTIVE:
@@ -117,10 +119,14 @@ class FacialExpServicePytree(py_trees.behaviour.Behaviour):
         if new_status == py_trees.common.Status.INVALID:
             self.logger.debug(f"Cancelling goal to {self.server_name}")
             self.service_client_mouth.cancel_goal()
-            self.service_client_eyes.cancel_goal()
-            self.service_client_nose.cancel_goal()
+            #self.service_client_eyes.cancel_goal()
+            #self.service_client_nose.cancel_goal()
             self.client_result = None
             self.logger.debug(f"Goal cancelled to {self.server_name}")
+            self.service_client_mouth.stop_tracking_goal()
+            #self.service_client_eyes.stop_tracking_goal()
+            #self.service_client_nose.stop_tracking_goal()
+            self.logger.debug(f"Goal tracking stopped to {self.server_name}")
         else:
             #execute actions for the following states (SUCCESS || FAILURE)
             pass

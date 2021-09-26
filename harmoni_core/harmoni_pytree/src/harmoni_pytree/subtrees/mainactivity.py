@@ -164,8 +164,8 @@ def create_root():
     eor_trigger = py_trees.idioms.either_or(
         name="EitherOrTrigger",
         conditions=[
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/" + PyTreeNameSpace.mainactivity.name + "/do_dialogue", "yes", operator.eq),
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/" + PyTreeNameSpace.mainactivity.name + "/do_dialogue", "yes", operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/" + PyTreeNameSpace.mainactivity.name + "/do_dialogue", True, operator.eq),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/" + PyTreeNameSpace.mainactivity.name + "/do_dialogue", True, operator.ne),
         ],
         subtrees=[bot_trigger, Success7],
         namespace="eor_trigger",
@@ -186,8 +186,8 @@ def create_root():
     eor_face = py_trees.idioms.either_or(
         name="EitherOrFace",
         conditions=[
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/face", "null", operator.ne),
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/face", "null", operator.eq),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/face_exp", "null", operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/face_exp", "null", operator.eq),
         ],
         subtrees=[face_exp, Success5],
         namespace="eor_face",
@@ -254,8 +254,8 @@ def create_root():
     eor_kid = py_trees.idioms.either_or(
         name="EitherOrKid",
         conditions=[
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/do_dialogue", "null", operator.ne),
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/do_dialogue", "null", operator.eq),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/"+PyTreeNameSpace.mainactivity.name+ "/do_dialogue", "null", operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/"+ PyTreeNameSpace.mainactivity.name+ "/do_dialogue", "null", operator.eq),
         ],
         subtrees=[sequen_detect_kid, Success2],
         namespace="eor_kid",
@@ -320,7 +320,7 @@ def main():
 
     #if args.interactive:
     #    py_trees.console.read_single_keypress()
-    for unused_i in range(1, 10):
+    for unused_i in range(1, 30):
         try:
             behaviour_tree.tick()
             #if args.interactive:

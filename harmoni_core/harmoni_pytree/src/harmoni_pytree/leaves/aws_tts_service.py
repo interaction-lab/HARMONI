@@ -4,7 +4,7 @@
 import rospy
 import roslib
 
-from harmoni_common_lib.constants import State
+from harmoni_common_lib.constants import *
 from actionlib_msgs.msg import GoalStatus
 from harmoni_common_lib.service_server import HarmoniServiceServer
 from harmoni_common_lib.service_manager import HarmoniServiceManager
@@ -51,7 +51,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         #TODO: usa queste bb che sono le nuove
         self.blackboard_tts = self.attach_blackboard_client(name=self.name, namespace=ActuatorNameSpace.tts.name)
         self.blackboard_tts.register_key("result", access=py_trees.common.Access.WRITE)
-        self.blackboard_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name)
+        self.blackboard_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name +"/"+PyTreeNameSpace.trigger.name)
         self.blackboard_bot.register_key("result", access=py_trees.common.Access.READ)
 
         super(AWSTtsServicePytree, self).__init__(name)
@@ -84,7 +84,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
             self.logger.debug(f"Sending goal to {self.server_name}")
             self.service_client_tts.send_goal(
                 action_goal = ActionType["REQUEST"].value,
-                optional_data = self.blackboard_bot.result,
+                optional_data = self.blackboard_bot.result.split("-")[0],
                 wait=False,
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
@@ -115,6 +115,8 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
             self.client_result = None
             #self.blackboard_tts.result = None
             self.logger.debug(f"Goal cancelled to {self.server_name}")
+            self.service_client_tts.stop_tracking_goal()
+            self.logger.debug(f"Goal tracking stopped to {self.server_name}")
         else:
             #execute actions for the following states (SUCCESS || FAILURE)
             pass

@@ -78,5 +78,7 @@ class PyTreeNameSpace(Enum):
     mainactivity = "mainactivity"
     timer = "timer"
     invalid_response = "invalid_response"
+    analyzer = "analyzer"
+    trigger = "trigger"
 
 

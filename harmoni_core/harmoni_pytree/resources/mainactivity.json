@@ -4,15 +4,15 @@
                         "utterance"     : "Ei fu, siccome immobile dato il mortal sospiro",
                         "face"          : "[{'start': 5, 'type': 'action', 'id': 'saucy_face'}]",
                         "gesture"       : "null",
-                        "image"         : "cucina",
+                        "image"         : "null",
                         "sound"         : "null",
                         "do_dialogue"   : "False"
                     },
                     {
-                        "utterance"     : "Oh no come sempre il papà lascia il cartone o le bottiglie vuote in frigo!. Il latte è finito" ,
+                        "utterance"     : "Oh no come sempre il papà lascia il cartone" ,
                         "face"          : "[{'start': 5, 'type': 'action', 'id': 'saucy_face'}]",
                         "gesture"       : "null",
-                        "image"         : "frigorifero",
+                        "image"         : "null",
                         "sound"         : "null",
                         "do_dialogue"   : "False"
                     },
@@ -20,7 +20,7 @@
                         "utterance"     : "frase tre",
                         "face"          : "[{'start': 5, 'type': 'action', 'id': 'saucy_face'}]",
                         "gesture"       : "null",
-                        "image"         : "cartone latte, bottiglia",
+                        "image"         : "null",
                         "sound"         : "null",
                         "do_dialogue"   : "True"
                     },
@@ -28,7 +28,7 @@
                         "utterance"     : "La raccolta differenziata consiste nel...",
                         "face"          : "[{'start': 5, 'type': 'action', 'id': 'saucy_face'}]",
                         "gesture"       : "null",
-                        "image"         : "bidoni vetro, plastica, carta",
+                        "image"         : "null",
                         "sound"         : "null",
                         "do_dialogue"   : "False"
                     }

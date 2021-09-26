@@ -51,7 +51,7 @@ class AWSLexAnalyzerServicePytree(py_trees.behaviour.Behaviour):
         self.blackboard_stt.register_key("result", access=py_trees.common.Access.READ)
         self.blackboard_card_detect = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.card_detect.name)
         self.blackboard_card_detect.register_key("result", access=py_trees.common.Access.READ)
-        self.blackboard_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name)
+        self.blackboard_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name+"/"+ PyTreeNameSpace.analyzer.name)
         self.blackboard_bot.register_key("result", access=py_trees.common.Access.WRITE)
         
         super(AWSLexAnalyzerServicePytree, self).__init__(name)
@@ -70,6 +70,7 @@ class AWSLexAnalyzerServicePytree(py_trees.behaviour.Behaviour):
                                             self._result_callback,
                                             self._feedback_callback)
         self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
+        self.blackboard_bot.result = "null"
         
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 
@@ -129,6 +130,8 @@ class AWSLexAnalyzerServicePytree(py_trees.behaviour.Behaviour):
             self.client_result = None
             #self.blackboard_bot.result = None
             self.logger.debug(f"Goal cancelled to {self.server_name}")
+            self.service_client_lex.stop_tracking_goal()
+            self.logger.debug(f"Goal tracking stopped to {self.server_name}")
         else:
             #execute actions for the following states (SUCCESS || FAILURE)
             pass

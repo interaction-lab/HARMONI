@@ -47,7 +47,7 @@ class AWSLexTriggerServicePytree(py_trees.behaviour.Behaviour):
         #json e il secondo bot che invece usiamo come analyzer. 
         self.blackboard_scene = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name)
         self.blackboard_scene.register_key("utterance", access=py_trees.common.Access.READ)
-        self.blackboard_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name)
+        self.blackboard_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name+"/"+PyTreeNameSpace.trigger.name)
         self.blackboard_bot.register_key("result", access=py_trees.common.Access.WRITE)
 
         super(AWSLexTriggerServicePytree, self).__init__(name)
@@ -110,6 +110,8 @@ class AWSLexTriggerServicePytree(py_trees.behaviour.Behaviour):
             self.client_result = None
             #self.blackboard_bot.result = None
             self.logger.debug(f"Goal cancelled to {self.server_name}")
+            self.service_client_lex.stop_tracking_goal()
+            self.logger.debug(f"Goal tracking stopped to {self.server_name}")
         else:
             #execute actions for the following states (SUCCESS || FAILURE)
             pass
