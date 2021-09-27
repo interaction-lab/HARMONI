@@ -91,7 +91,7 @@ class MicrophoneServicePytree(py_trees.behaviour.Behaviour):
         elif new_state == GoalStatus.ACTIVE:
             new_status = py_trees.common.Status.SUCCESS
         elif new_state == GoalStatus.PENDING:
-            self.service_client_microphone.cancel_all_goals()
+            self.service_client_microphone.cancel_goal()
             self.service_client_microphone.stop_tracking_goal()
             self.logger.debug(f"Sending goal to {self.server_name}")
             # Send request for each sensor service to set themselves up

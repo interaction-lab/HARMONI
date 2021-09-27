@@ -17,6 +17,7 @@ from std_msgs.msg import String
 import numpy as np
 import os
 import io
+import time
 from six.moves import queue
 
 class STTGoogleService(HarmoniServiceManager):
@@ -32,6 +33,9 @@ class STTGoogleService(HarmoniServiceManager):
         self.audio_channel = param["audio_channel"]
         self.credential_path = param["credential_path"]
         self.subscriber_id = param["subscriber_id"]
+        self.max_duration = param["max_duration"]
+        self.start_time = None
+        self.elapsed_time = None
         self.service_id = hf.get_child_id(self.name)
         self.result_msg = ""
         self.stt_response = ""
@@ -133,17 +137,19 @@ class STTGoogleService(HarmoniServiceManager):
         """ Prints responses coming from Google STT """ 
         self.stt_response = ""
 
+        self.start_time = time.time()
+
         for response in responses:
             if not response.results:
                 continue
             #rospy.loginfo(f"Response: {response}")
-
+            self.start_time = time.time()
+            
             result = response.results[0]
             if not result.alternatives:
                 continue
 
             #transcript = result.alternatives[0].transcript
-            
             for result in response.results:
                 if result.is_final:
                     # rospy.loginfo(result.alternatives[0].transcript)
@@ -195,7 +201,6 @@ class STTGoogleService(HarmoniServiceManager):
     def request(self, data):
         rospy.loginfo("Start the %s request" % self.name)
         self.state = State.REQUEST
-        #self.state = State.START
         self.response_received = False
         try:
             # Transcribes data coming from microphone 
@@ -205,9 +210,20 @@ class STTGoogleService(HarmoniServiceManager):
                 speech.StreamingRecognizeRequest(audio_content=content)
                 for content in audio_generator
             )
+
+            self.start_time = time.time() #time.time() is the current time
+            print("Timer started at: ", self.start_time)
+
             responses = self.client.streaming_recognize(self.streaming_config, self.requests)
-            self.listen_print_untill_result_is_final(responses)
-        
+
+            if self.max_duration < self.elapsed_time:
+                print("Timeout!")
+                self.response_received = True
+                self.stt_response = "null"
+                self.state = State.SUCCESS
+            else:
+                self.listen_print_untill_result_is_final(responses)
+
             r = rospy.Rate(1)
             while not self.response_received:
                 r.sleep()
@@ -231,24 +247,37 @@ class STTGoogleService(HarmoniServiceManager):
     def generator(self):
         """ Generator of data for Google STT """
         # From https://cloud.google.com/speech-to-text/docs/streaming-recognize
+        
         while not self.closed:
+            self.elapsed_time = time.time() - self.start_time
+            print("elapsed: ",self.elapsed_time)
+
             # Use a blocking get() to ensure there's at least one chunk of
             # data, and stop iteration if the chunk is None, indicating the
             # end of the audio stream.
             chunk = self._buff.get()
+            
             if chunk is None:
+                print("chunk is None")
                 return
             data = [chunk]
 
+            if self.max_duration < self.elapsed_time:
+                print("end")
+                return
+
+            #TODO prova senza questo while
             # Now consume whatever other data's still buffered.
             while True:
                 try:
                     chunk = self._buff.get(block=False)
                     if chunk is None:
+                        print("chunk is None")
                         return
                     data.append(chunk)
-                except queue.Empty:
+                except queue.Empty:  
                     break
+            
 
             yield b"".join(data)
 
@@ -260,6 +289,7 @@ class STTGoogleService(HarmoniServiceManager):
                 self.state = State.START
                 
                 # Transcribes data coming from microphone 
+                """
                 audio_generator = self.generator()
                 self.requests = (
                     speech.StreamingRecognizeRequest(audio_content=content)
@@ -267,6 +297,7 @@ class STTGoogleService(HarmoniServiceManager):
                 )
                 responses = self.client.streaming_recognize(self.streaming_config, self.requests)
                 self.listen_print_loop(responses)
+                """
 
             else:
                 self.state = State.START

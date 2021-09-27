@@ -147,8 +147,8 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                         self.blackboard_scene.gesture = self.context["scene"][self.scene_counter]["gesture"]
                         self.blackboard_scene.image = self.context["scene"][self.scene_counter]["image"]
                         self.blackboard_scene.sound = self.context["scene"][self.scene_counter]["sound"]
-                        #self.blackboard_scene.mainactivity.do_dialogue = self.context["scene"][self.scene_counter]["do_dialogue"]=="True"
-                        self.blackboard_scene.mainactivity.do_trigger = False
+                        self.blackboard_scene.mainactivity.do_dialogue = self.context["scene"][self.scene_counter]["do_dialogue"]=="True"
+                        self.blackboard_scene.mainactivity.do_trigger = self.context["scene"][self.scene_counter]["do_dialogue"]=="True"
                     else:
                         self.blackboard_scene.therapist_needed = True
                         self.blackboard_scene.utterance = self.context["error_handling"]["terapista"]["utterance"]
