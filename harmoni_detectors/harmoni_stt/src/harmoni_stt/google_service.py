@@ -260,7 +260,6 @@ class STTGoogleService(HarmoniServiceManager):
                 self.state = State.START
                 
                 # Transcribes data coming from microphone 
-                """
                 audio_generator = self.generator()
                 self.requests = (
                     speech.StreamingRecognizeRequest(audio_content=content)
@@ -268,7 +267,6 @@ class STTGoogleService(HarmoniServiceManager):
                 )
                 responses = self.client.streaming_recognize(self.streaming_config, self.requests)
                 self.listen_print_loop(responses)
-                """
 
             else:
                 self.state = State.START

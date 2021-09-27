@@ -33,6 +33,7 @@ class AWSLexService(HarmoniServiceManager):
         self.bot_name = param["bot_name"]
         self.bot_alias = param["bot_alias"]
         self.region_name = param["region_name"]
+        self.intentName = None
         self.state = State.INIT
         return
 
@@ -79,6 +80,10 @@ class AWSLexService(HarmoniServiceManager):
             #FIXME
             #vorrei scrivere questo
             lex_response.pop("audioStream")
+            if lex_response.get("intentName") is not None:
+                self.intentName = lex_response["intentName"]
+            else:
+                lex_response["intentName"] = self.intentName
             self.result_msg = str(lex_response)
             #ma scrivo questo
             #self.result_msg = str(lex_response["message"]+"-"+lex_response["dialogState"]+"-"+lex_response["intentName"])

@@ -82,7 +82,6 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         if new_state == GoalStatus.LOST:
             #if type(self.blackboard_bot.result)
             tmp= self.blackboard_bot.result
-            print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
             print(tmp)
             print(type(tmp))
 

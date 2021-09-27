@@ -149,13 +149,13 @@ def create_root():
                                         
     counter_no_answer = CounterNoAnswer(name="CounterNoAnswer",
                                         variable_name= PyTreeNameSpace.invalid_response.name+"/"+PyTreeNameSpace.mainactivity.name+"/counter_no_answer") 
-                                             
+    """                               
     timer_kid_detection = Timer(name="TimerKidDetectionInt",
                                 variable_name=PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.mainactivity.name+"/kid_detection",
                                 duration = 10)
     timer_reset = TimerReset(name="TimerResetKidDetectionInt",
                             variable_name=PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.mainactivity.name+"/kid_detection")                                               
-    
+    """
     subtree_result = SubTreeResultMain("SubTreeResultMain")
 
     parall_speaker = py_trees.composites.Parallel(name="ParallelSpeaker")
@@ -164,8 +164,8 @@ def create_root():
     eor_trigger = py_trees.idioms.either_or(
         name="EitherOrTrigger",
         conditions=[
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/" + PyTreeNameSpace.mainactivity.name + "/do_dialogue", True, operator.eq),
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/" + PyTreeNameSpace.mainactivity.name + "/do_dialogue", True, operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/" + PyTreeNameSpace.mainactivity.name + "/do_trigger", True, operator.eq),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/" + PyTreeNameSpace.mainactivity.name + "/do_trigger", True, operator.ne),
         ],
         subtrees=[bot_trigger, Success7],
         namespace="eor_trigger",
@@ -182,6 +182,49 @@ def create_root():
         ],
         subtrees=[sequen_speaker, Success1],
         namespace="eor_speaker",
+    )
+    
+    eor_external_speaker = py_trees.idioms.either_or(
+        name="EitherOrExternalSpeaker",
+        conditions=[
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/sound", "null", operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/sound", "null", operator.eq),
+        ],
+        subtrees=[ext_speaker, Success4],
+        namespace="eor_external_speaker",
+    )
+
+    parall_robot = py_trees.composites.Parallel(name="ParallelRobot")
+    parall_robot.add_children([eor_external_speaker, eor_speaker])
+    
+    sequen_robot = py_trees.composites.Sequence(name="SequenceRobot")
+    sequen_robot.add_children([scene_manager,Projector,parall_robot])
+
+    sequen_speech_kid = py_trees.composites.Sequence(name="SequenceSpeechKid")
+    sequen_speech_kid.add_children([microphone ,stt])
+
+    parall_detect_kid = py_trees.composites.Parallel(name="ParallelDetectKid")
+    parall_detect_kid.add_children([sequen_speech_kid,custom_yolo])
+
+    sequence_invalid_response = py_trees.composites.Sequence(name="SequenceInvalidResponse")
+    sequence_invalid_response.add_children([invalid_response_stt, invalid_response_card])
+
+    sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid")
+    sequen_detect_kid.add_children([parall_detect_kid, bot_analyzer])                                        
+
+    running_or_success = rs.create_root(name="RsMainactivity", condition=[
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.mainactivity.name+"/finished", "True", operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.mainactivity.name+"/finished", "True", operator.eq),
+    ])
+
+    eor_kid = py_trees.idioms.either_or(
+        name="EitherOrKid",
+        conditions=[
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/"+ PyTreeNameSpace.mainactivity.name+ "/do_dialogue", True, operator.eq),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/"+ PyTreeNameSpace.mainactivity.name+ "/do_dialogue", True, operator.ne),
+        ],
+        subtrees=[sequen_detect_kid, Success2],
+        namespace="eor_kid",
     )
     eor_face = py_trees.idioms.either_or(
         name="EitherOrFace",
@@ -201,67 +244,14 @@ def create_root():
         subtrees=[gesture, Success3],
         namespace="eor_gesture",
     )
-    eor_external_speaker = py_trees.idioms.either_or(
-        name="EitherOrExternalSpeaker",
-        conditions=[
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/sound", "null", operator.ne),
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/sound", "null", operator.eq),
-        ],
-        subtrees=[ext_speaker, Success4],
-        namespace="eor_external_speaker",
-    )
 
-    parall_face_and_gesture = py_trees.composites.Parallel(name="ParallelFaceAndGesture")
-    parall_face_and_gesture.add_children([eor_face,eor_gesture])
+    parall_face_gesture = py_trees.composites.Parallel(name="ParallelFaceGesture")
+    parall_face_gesture.add_children([eor_face,eor_gesture])
 
-    sequen_speaker_and_parallel_f_g = py_trees.composites.Sequence(name="SequenceSpeakerAndParallelFG")
-    sequen_speaker_and_parallel_f_g.add_children([eor_speaker,parall_face_and_gesture])
-    
-    parall_robot = py_trees.composites.Parallel(name="ParallelRobot")
-    parall_robot.add_children([eor_external_speaker, sequen_speaker_and_parallel_f_g])
-    
-    sequen_robot = py_trees.composites.Sequence(name="SequenceRobot")
-    sequen_robot.add_children([scene_manager,Projector,parall_robot])
+    parall_face_gesture_kid = py_trees.composites.Parallel(name="ParallelFaceGestureKid")
+    parall_face_gesture_kid.add_children([eor_kid, parall_face_gesture])
 
-    sequen_speech_kid = py_trees.composites.Sequence(name="SequenceSpeechKid")
-    sequen_speech_kid.add_children([microphone ,stt])
-
-    parall_detect_kid = py_trees.composites.Parallel(name="ParallelDetectKid")
-    parall_detect_kid.add_children([sequen_speech_kid,custom_yolo])
-
-    sequence_invalid_response = py_trees.composites.Sequence(name="SequenceInvalidResponse")
-    sequence_invalid_response.add_children([invalid_response_stt, invalid_response_card])
-
-    eor_timer_detection = eu.either_or(
-        name="EitherOrTimerDetection",
-        conditions=[
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.visual.name + "/kid_detection", 10, operator.lt),
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.visual.name + "/kid_detection", 10, operator.ge),
-        ],
-        preemptible = False,
-        subtrees=[parall_detect_kid, sequence_invalid_response],
-        namespace="eor_timer_detection",
-    )
-
-    sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid")
-    sequen_detect_kid.add_children([timer_kid_detection, eor_timer_detection, timer_reset, bot_analyzer])                                         
-
-    running_or_success = rs.create_root(name="RsMainactivity", condition=[
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.mainactivity.name+"/finished", "True", operator.ne),
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.mainactivity.name+"/finished", "True", operator.eq),
-    ])
-
-    eor_kid = py_trees.idioms.either_or(
-        name="EitherOrKid",
-        conditions=[
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/"+PyTreeNameSpace.mainactivity.name+ "/do_dialogue", "null", operator.ne),
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/"+ PyTreeNameSpace.mainactivity.name+ "/do_dialogue", "null", operator.eq),
-        ],
-        subtrees=[sequen_detect_kid, Success2],
-        namespace="eor_kid",
-    )
-
-    root.add_children([sequen_robot, eor_kid, subtree_result, running_or_success])
+    root.add_children([sequen_robot, parall_face_gesture_kid, subtree_result, running_or_success])
 
     return root
 
@@ -269,7 +259,7 @@ def create_root():
 # Main
 ##############################################################################
 
-def render_with_args():
+def render_with_args(root):
     
     args = command_line_argument_parser().parse_args()
     ####################
@@ -298,7 +288,7 @@ def main():
     print(description(root))
 
     #uncomment the following line if you want to render the dot_tree
-    #render_with_args()
+    #render_with_args(root)
         
     ####################
     # Tree Stewardship
@@ -320,7 +310,8 @@ def main():
 
     #if args.interactive:
     #    py_trees.console.read_single_keypress()
-    for unused_i in range(1, 50):
+    #while True:
+    for unused_i in range(1, 70):
         try:
             behaviour_tree.tick()
             #if args.interactive:

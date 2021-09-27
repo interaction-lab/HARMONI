@@ -89,7 +89,6 @@ class AWSLexTriggerServicePytree(py_trees.behaviour.Behaviour):
             new_status = py_trees.common.Status.RUNNING
         elif new_state == GoalStatus.SUCCEEDED:
             if self.client_result is not None:
-                print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@òòòòòòòòòò4444444444")
                 print(self.client_result)
                 self.blackboard_bot.result = eval(self.client_result)
                 self.client_result = None

@@ -17,6 +17,7 @@ class SubTreeResultMain(py_trees.behaviour.Behaviour):
         self.blackboard_mainactivity.register_key("finished", access=py_trees.common.Access.WRITE) #NEW
 
     def setup(self):
+        self.blackboard_mainactivity.finished = False
         self.logger.debug("  %s [SubTreeResultMain::setup()]" % self.name)
 
     def initialise(self):

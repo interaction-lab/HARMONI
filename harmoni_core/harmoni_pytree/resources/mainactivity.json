@@ -1,23 +1,23 @@
 {
     "scene" :   [
                     {
-                        "utterance"     : "Ei fu, siccome immobile dato il mortàl sospiro",
-                        "face"          : "[{'start': 5, 'type': 'action', 'id': 'saucy_face'}]",
+                        "utterance"     : "ciao sono quitty",
+                        "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "null",
                         "sound"         : "null",
                         "do_dialogue"   : "False"
                     },
                     {
-                        "utterance"     : "Oh no!!! Come sempre il papà lascia il cartone" ,
-                        "face"          : "[{'start': 5, 'type': 'action', 'id': 'saucy_face'}]",
+                        "utterance"     : "e sono bella" ,
+                        "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "null",
                         "sound"         : "null",
                         "do_dialogue"   : "False"
                     },
                     {
-                        "utterance"     : "il bimbo non parla",
+                        "utterance"     : "vorrei ordinare dei fiori",
                         "face"          : "[{'start': 5, 'type': 'action', 'id': 'saucy_face'}]",
                         "gesture"       : "null",
                         "image"         : "null",
@@ -56,8 +56,38 @@
                                                             }
                                 },
                                 {
-                                    "risposta_sbagliata" :   {
-                                                                "utterance"     : "La risposta esatta era: todo",
+                                    "sei_sicuro" :   {
+                                                        "utterance"     : "Sei sicuro, dove lo butteresti?",
+                                                        "face"          : "null",
+                                                        "gesture"       : "null",
+                                                        "image"         : "null",
+                                                        "sound"         : "null",
+                                                        "do_dialogue"   : "False"
+                                                    }
+                                },
+                                {
+                                    "risposta_sbagliata_carta" :   {
+                                                                "utterance"     : "La risposta esatta era carta",
+                                                                "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
+                                                                "gesture"       : "null",
+                                                                "image"         : "null",
+                                                                "sound"         : "null",
+                                                                "do_dialogue"   : "False"
+                                                            }
+                                },
+                                {
+                                    "risposta_sbagliata_vetro" :   {
+                                                                "utterance"     : "La risposta esatta era vetro",
+                                                                "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
+                                                                "gesture"       : "null",
+                                                                "image"         : "null",
+                                                                "sound"         : "null",
+                                                                "do_dialogue"   : "False"
+                                                            }
+                                },
+                                {
+                                    "risposta_sbagliata_plastica" :   {
+                                                                "utterance"     : "La risposta esatta era plastica",
                                                                 "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
                                                                 "gesture"       : "null",
                                                                 "image"         : "null",

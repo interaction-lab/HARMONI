@@ -109,7 +109,7 @@ class AWSLexAnalyzerServicePytree(py_trees.behaviour.Behaviour):
             new_status = py_trees.common.Status.RUNNING
         elif new_state == GoalStatus.SUCCEEDED:
             if self.client_result is not None:
-                self.blackboard_bot.result = self.client_result
+                self.blackboard_bot.result = eval(self.client_result)
                 self.client_result = None
                 new_status = py_trees.common.Status.SUCCESS
             else:
