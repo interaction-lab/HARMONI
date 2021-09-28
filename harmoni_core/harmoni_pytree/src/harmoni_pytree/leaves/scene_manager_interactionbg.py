@@ -59,9 +59,7 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
         self.logger.debug("  %s [SceneManagerInteractionBg::initialise()]" % self.name)
 
     def update(self):
-
       #TODO settare variabile counter_no_answer
-
       #scena iniziale ovvero la zero, è l'unica in cui va bot_trigger e serve l'utterance. 
       if self.scene_counter == 0: 
           self.blackboard_scene.interaction.do_trigger = True

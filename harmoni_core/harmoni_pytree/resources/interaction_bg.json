@@ -6,7 +6,17 @@
                         "gesture"   : "null",
                         "image"     : "null",
                         "sound"     : "null",
-                        "do_kid"    : "False" 
+                        "do_dialogue"    : "False" 
                     }
-                ]
+                ],
+    "terapista":   
+                    {
+                        "utterance"     : "Okay non ti preoccupare, ora chiamiamo il trapista",
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "null",
+                        "sound"         : "null",
+                        "do_dialogue"   : "False"
+                    }
+                    
 }
