@@ -2,33 +2,9 @@
     "scene" :   [
                     {
                         "utterance" : "il bimbo non parla",
-                        "face"      : "[{'start':8, 'type': 'gaze', 'id':'target', 'point': [1,5,10]}]",
-                        "gesture"   : "null",
-                        "image"     : "cucina",
-                        "sound"     : "null",
-                        "do_kid"    : "False" 
-                    },
-                    {
-                        "utterance" : "Oh no come sempre il papà lascia il cartone o le bottiglie vuote in frigo!. Il latte è finito" ,
-                        "face"      : "sorpresp",
-                        "gesture"   : "null",
-                        "image"     : "frigorifero",
-                        "sound"     : "null",
-                        "do_kid"    : "False" 
-                    },
-                    {
-                        "utterance" : "chiedi raccolta differenziata",
                         "face"      : "null",
                         "gesture"   : "null",
-                        "image"     : "cartone latte, bottiglia",
-                        "sound"     : "null",
-                        "do_kid"    : "True" 
-                    },
-                    {
-                        "utterance" : "La raccolta differenziata consiste nel...",
-                        "face"      : "null",
-                        "gesture"   : "null",
-                        "image"     : "bidoni vetro, plastica, carta",
+                        "image"     : "null",
                         "sound"     : "null",
                         "do_kid"    : "False" 
                     }

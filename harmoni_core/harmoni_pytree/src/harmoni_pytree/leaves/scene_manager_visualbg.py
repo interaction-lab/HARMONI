@@ -11,15 +11,7 @@ from harmoni_common_lib.constants import *
 
 class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
     def __init__(self, name):
-        """
-        Minimal one-time initialisation. A good rule of thumb is
-        to only include the initialisation relevant for being able
-        to insert this behaviour in a tree for offline rendering to
-        dot graphs.
-
-        Other one-time initialisation requirements should be met via
-        the setup() method.
-        """
+        
         self.name = name
         self.scene_counter = 0
 
@@ -28,11 +20,13 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
         self.blackboard_scene.register_key(PyTreeNameSpace.visual.name+"/state", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key(PyTreeNameSpace.visual.name+"/scene_counter", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key(PyTreeNameSpace.visual.name+"/max_num_scene", access=py_trees.common.Access.WRITE) #NEW
+        self.blackboard_scene.register_key(key=PyTreeNameSpace.visual.name+"/do_trigger", access=py_trees.common.Access.WRITE) #NEW
         self.blackboard_scene.register_key("utterance", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key("face_exp", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key("therapist_needed", access=py_trees.common.Access.WRITE)
         self.blackboard_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name)
-        self.blackboard_bot.register_key("result", access=py_trees.common.Access.READ)
+        self.blackboard_bot.register_key(key=PyTreeNameSpace.analyzer.name +"/"+"result", access=py_trees.common.Access.WRITE)
+        self.blackboard_bot.register_key(key=PyTreeNameSpace.trigger.name +"/"+"result", access=py_trees.common.Access.WRITE)
         self.blackboard_card_detection = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.card_detect.name)
         self.blackboard_card_detection.register_key("result", access=py_trees.common.Access.WRITE)
         """
@@ -55,12 +49,13 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
         with open(pattern_script_path, "r") as read_file:
           self.context = json.load(read_file)
 
-        self.blackboard_scene.visual.max_num_scene = len(self.context["scene"])
+        self.blackboard_scene.visual.max_num_scene = len(self.context["scene"]) #da cambiare
         self.blackboard_invalid_mainactivity.counter_no_answer = 0
         self.blackboard_scene.visual.scene_counter = self.scene_counter 
         self.blackboard_scene.utterance = None
         self.blackboard_scene.face_exp = None
         self.blackboard_scene.therapist_needed = None
+        self.blackboard_scene.visual.do_trigger = None
         self.scene_counter = 0
         self.logger.debug("  %s [SceneManagerVisualBg::setup()]" % self.name)
 
@@ -71,25 +66,27 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
         self.logger.debug("  %s [SceneManagerVisualBg::update()]" % self.name)
         self.blackboard_invalid_mainactivity.counter_no_answer = 0
         self.blackboard_scene.visual.scene_counter = self.scene_counter 
-        """
-        if intent raggiunto:
-          self.scene_counter += 1
-          setta tutte le bb con quello che sta dentro context
-        elif:
-          è la seconda volta che fai questo BG --> 
-            self.blackboard_scene.therapist_needed = True
-            fai partire intent terapista
-        """
-        #FIXME the following "if" MUST be a elif
-        self.blackboard_scene.utterance = self.context["scene"][self.scene_counter]["utterance"]
-        self.blackboard_scene.face_exp = self.context["scene"][self.scene_counter]["face"]
-        self.blackboard_card_detection.result = "null"
-        if self.scene_counter == 0:
+
+        #scena iniziale ovvero la zero, è l'unica in cui va bot_trigger e serve l'utterance. 
+        if self.scene_counter == 0: 
+            self.blackboard_scene.visual.do_trigger = True
             self.blackboard_scene.utterance = self.context["scene"][self.scene_counter]["utterance"]
-            self.blackboard_scene.face_exp = self.context["scene"][self.scene_counter]["face"]
-            self.blackboard_card_detection.result = "null"
-        #FIXME the following line MUST NOT be here
-        self.scene_counter += 1
+            #oppure
+            #self.blackboard_scene.utterance = "il bimbo non c'è"
+            self.blackboard_scene.face_exp = "null"
+            self.scene_counter += 1
+        else:
+            self.blackboard_scene.visual.do_trigger = False #deve essere usato solo bot_analyzer dopo la scena 0
+            if self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.FULFILLED :
+                self.blackboard_bot.trigger.result = self.blackboard_bot.analyzer.result["message"]
+                #raggiunte scene massime, fine. Incrementiamo scene?
+                self.blackboard_scene.visual.scene_counter = self.blackboard_scene.visual.max_num_scene
+            elif self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.FAILED:
+                self.blackboard_bot.trigger.result = self.blackboard_bot.analyzer.result["message"]
+                self.blackboard_scene.therapist_needed = True
+                #self.blackboard_scene.visual.scene_counter = self.blackboard_scene.visual.max_num_scene
+
+
         return py_trees.common.Status.SUCCESS
 
     def terminate(self, new_status):
