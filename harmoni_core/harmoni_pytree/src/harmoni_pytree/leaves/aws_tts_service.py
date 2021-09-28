@@ -71,6 +71,8 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
                                             self._feedback_callback)
         self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
         
+        self.blackboard_tts.result = "null"
+
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 
     def initialise(self):   
@@ -80,15 +82,10 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         new_state = self.service_client_tts.get_state()
         print(new_state)
         if new_state == GoalStatus.LOST:
-            #if type(self.blackboard_bot.result)
-            tmp= self.blackboard_bot.result
-            print(tmp)
-            print(type(tmp))
-
             self.logger.debug(f"Sending goal to {self.server_name}")
             self.service_client_tts.send_goal(
                 action_goal = ActionType["REQUEST"].value,
-                optional_data = tmp["message"],
+                optional_data = self.blackboard_bot.result["message"],
                 wait=False,
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
@@ -114,13 +111,15 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         
     def terminate(self, new_status):
         if new_status == py_trees.common.Status.INVALID:
-            self.logger.debug(f"Cancelling goal to {self.server_name}")
-            self.service_client_tts.cancel_goal()
-            self.client_result = None
-            #self.blackboard_tts.result = None
-            self.logger.debug(f"Goal cancelled to {self.server_name}")
-            self.service_client_tts.stop_tracking_goal()
-            self.logger.debug(f"Goal tracking stopped to {self.server_name}")
+            new_state = self.service_client_tts.get_state()
+            if new_state != GoalStatus.LOST:
+                self.logger.debug(f"Cancelling goal to {self.server_name}")
+                self.service_client_tts.cancel_goal()
+                self.client_result = None
+                #self.blackboard_tts.result = None
+                self.logger.debug(f"Goal cancelled to {self.server_name}")
+                self.service_client_tts.stop_tracking_goal()
+                self.logger.debug(f"Goal tracking stopped to {self.server_name}")
         else:
             #execute actions for the following states (SUCCESS || FAILURE)
             pass

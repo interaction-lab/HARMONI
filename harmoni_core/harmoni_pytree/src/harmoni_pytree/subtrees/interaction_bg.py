@@ -13,13 +13,10 @@ import time
 import subprocess
 import operator
 import py_trees.console as console
-from harmoni_pytree import either_custom 
 import running_or_success as rs
 
 from harmoni_common_lib.constants import *
 
-from harmoni_pytree.leaves.timer import Timer
-from harmoni_pytree.leaves.timer_reset import TimerReset
 from harmoni_pytree.leaves.aws_lex_trigger_service import AWSLexTriggerServicePytree
 from harmoni_pytree.leaves.aws_lex_analyzer_service import AWSLexAnalyzerServicePytree
 from harmoni_pytree.leaves.aws_tts_service import AWSTtsServicePytree
@@ -89,17 +86,8 @@ def post_tick_handler(snapshot_visitor, behaviour_tree):
 
 def create_root(name = "Interaction_Bg"):
     root = py_trees.composites.Sequence(name=name)
-    #TODO leva ste bb quando poi provi tutto
-    b1 = root.attach_blackboard_client(name="b1", namespace= PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.visual.name)
-    
-    b1.register_key("kid_detection", access=py_trees.common.Access.WRITE)
-    b1.kid_detection = 0
 
-    b2 = root.attach_blackboard_client(name="b2", namespace= PyTreeNameSpace.interaction.name)
-    b2.register_key("finished", access=py_trees.common.Access.WRITE)
-    b2.finished = "no"
-
-    Success = py_trees.behaviours.Success(name="Success")
+    Success1 = py_trees.behaviours.Success(name="Success")
     Success2 = py_trees.behaviours.Success(name="Success")
 
     scene_manager = SceneManagerInteractionBg("SceneManagerInteractionBg")
@@ -122,21 +110,6 @@ def create_root(name = "Interaction_Bg"):
 
     microphone=MicrophoneServicePytree("MicrophoneInteractionBg")
                                              
-    invalid_response_stt = py_trees.behaviours.SetBlackboardVariable(name="invalid_response_interaction_stt",
-                                                        variable_name=DetectorNameSpace.stt.name+"/result", 
-                                                        variable_value="null", 
-                                                        overwrite=True)
-    invalid_response_card = py_trees.behaviours.SetBlackboardVariable(name="invalid_response_interaction_card",
-                                                        variable_name=DetectorNameSpace.card_detect.name+"/result", 
-                                                        variable_value="null", 
-                                                        overwrite=True)                                               
-                                                        
-    timer_kid_detection = Timer(name="TimerKidDetectionInt",
-                                variable_name=PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.interaction.name+"/kid_detection",
-                                duration = 10)
-    timer_reset = TimerReset(name="TimerResetKidDetectionInt",
-                            variable_name=PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.interaction.name+"/kid_detection")                                               
-
     subtree_result=SubTreeResultInteractionBg("SubTreeInteraction")
 
     parall_speaker = py_trees.composites.Parallel(name="ParallelSpeaker")
@@ -148,22 +121,8 @@ def create_root(name = "Interaction_Bg"):
     parall_detect_kid = py_trees.composites.Parallel(name="ParallelDetectKid")
     parall_detect_kid.add_children([sequen_speech_kid,custom_yolo])
 
-    sequen_invalid_response = py_trees.composites.Sequence(name="SequenceInvalid")
-    sequen_invalid_response.add_children([invalid_response_stt, invalid_response_card])
-
-    eor_timer_detection = either_custom.either_or(
-        name="EitherOrTimerDetection",
-        conditions=[
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.interaction.name + "/kid_detection", 10, operator.lt),
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.interaction.name + "/kid_detection", 10, operator.ge),
-        ],
-        preemptible = False,
-        subtrees=[parall_detect_kid, sequen_invalid_response],
-        namespace="eor_timer_detection",
-    )
-
     sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid")
-    sequen_detect_kid.add_children([timer_kid_detection, eor_timer_detection, timer_reset, bot_analyzer])                                         
+    sequen_detect_kid.add_children([parall_detect_kid, bot_analyzer])                                         
 
     parall_detect_and_face = py_trees.composites.Parallel(name="ParallelDetectAndFace")
     parall_detect_and_face.add_children([sequen_detect_kid, face_exp])  
@@ -186,15 +145,13 @@ def create_root(name = "Interaction_Bg"):
                                         parall_speaker, 
                                         parall_detect_and_face])  
 
-    #Invertire poi success e seq_int_bg (era solo per provare)
-    eor_interaction_bg = either_custom.either_or(
+    eor_interaction_bg = either_or(
         name="Either_Or_Interaction_Bg",
         conditions=[
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.invalid_response.name+"/"+PyTreeNameSpace.mainactivity.name+"/counter_no_answer", 2, operator.lt),
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.invalid_response.name+"/"+PyTreeNameSpace.mainactivity.name+"/counter_no_answer", 2, operator.ge),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.mainactivity.name+"/counter_no_answer", 2, operator.lt),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.mainactivity.name+"/counter_no_answer", 2, operator.ge),
         ],
-        preemptible = False,
-        subtrees=[sequen_interaction_bg,Success],
+        subtrees=[Success1,sequen_interaction_bg],
         namespace="eor_interaction_bg",
     )
     running_or_success = rs.create_root(name="RsInteracion", condition=[
@@ -217,7 +174,7 @@ def main():
     
     py_trees.logging.level = py_trees.logging.Level.DEBUG
     root = create_root()
-    print(description(root))
+    #print(description(root))
     #uncomment the following line if you want to render the dot_tree
     #render_with_args()
 

@@ -103,7 +103,8 @@ class ImageAIYoloService(HarmoniServiceManager):
                                                                     input_image=data_tmp,
                                                                     minimum_percentage_probability=self.minimum_percentage_probability,
                                                                     extract_detected_objects=True)
-            #self.result_msg = str(self.detections[1])                                                  
+            #self.result_msg = str(self.detections[1])    
+            self.result_msg = ""                                              
             if len(self.detections[1]) != 0:
                 for eachObject in self.detections[1]:
                     self.result_msg += str(eachObject["name"]) + " with: " +str(eachObject["percentage_probability"]) + " - "

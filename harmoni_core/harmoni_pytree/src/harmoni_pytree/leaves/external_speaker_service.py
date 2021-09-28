@@ -44,16 +44,7 @@ class ExternalSpeakerServicePytree(py_trees.behaviour.Behaviour):
         self.server_state = None
         self.server_name = None
 
-        # here there is the inizialization of the blackboards
         self.blackboards = []
-        
-        """
-        #do we need a blackboard here?
-        self.blackboard_tts = self.attach_blackboard_client(name=self.name, namespace=ActuatorNameSpace.tts.name)
-        self.blackboard_tts.register_key("result_data", access=py_trees.common.Access.READ)
-        self.blackboard_tts.register_key("result_message", access=py_trees.common.Access.READ)
-        """
-    
         self.blackboard_ext_speaker = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name)
         self.blackboard_ext_speaker.register_key("sound", access=py_trees.common.Access.READ)
 
@@ -67,7 +58,6 @@ class ExternalSpeakerServicePytree(py_trees.behaviour.Behaviour):
             if(parameter ==ActuatorNameSpace.speaker.name):
                 self.mode = additional_parameters[parameter]  
         """
-       
         self.service_client_ext_speaker = HarmoniActionClient(self.name)
         self.server_name = "speaker_default"
         self.service_client_ext_speaker.setup_client(self.server_name, 
@@ -105,12 +95,14 @@ class ExternalSpeakerServicePytree(py_trees.behaviour.Behaviour):
         
 
     def terminate(self, new_status):
-        if(new_status == py_trees.common.Status.INVALID):
-            self.logger.debug(f"Cancelling goal to {self.server_name}")
-            self.service_client_ext_speaker.cancel_goal()
-            self.logger.debug(f"Goal cancelled to {self.server_name}")
-            self.service_client_ext_speaker.stop_tracking_goal()
-            self.logger.debug(f"Goal tracking stopped to {self.server_name}")
+        if new_status == py_trees.common.Status.INVALID:
+            new_state = self.service_client_ext_speaker.get_state()
+            if new_state != GoalStatus.LOST:
+                self.logger.debug(f"Cancelling goal to {self.server_name}")
+                self.service_client_ext_speaker.cancel_goal()
+                self.logger.debug(f"Goal cancelled to {self.server_name}")
+                self.service_client_ext_speaker.stop_tracking_goal()
+                self.logger.debug(f"Goal tracking stopped to {self.server_name}")
         else:
             #execute actions for the following states (SUCCESS || FAILURE)
             pass

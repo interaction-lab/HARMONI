@@ -15,7 +15,7 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
 
         self.blackboards = []
         self.blackboard_scene = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name)
-        self.blackboard_scene.register_key(key=PyTreeNameSpace.interaction.name+"/state", access=py_trees.common.Access.WRITE)
+        #self.blackboard_scene.register_key(key=PyTreeNameSpace.interaction.name+"/state", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key(key=PyTreeNameSpace.interaction.name+"/scene_counter", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key(key=PyTreeNameSpace.interaction.name+"/max_num_scene", access=py_trees.common.Access.WRITE) #NEW
         self.blackboard_scene.register_key(key=PyTreeNameSpace.interaction.name+"/do_trigger", access=py_trees.common.Access.WRITE) #NEW
@@ -44,10 +44,10 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
 
         self.blackboard_scene.interaction.max_num_scene = len(self.context["scene"])
         self.blackboard_scene.interaction.scene_counter = 0
-        self.blackboard_scene.utterance = None
-        self.blackboard_scene.face_exp = None
-        self.blackboard_scene.therapist_needed = None
-        self.blackboard_scene.interaction.do_trigger = None
+        self.blackboard_scene.utterance = "null"
+        self.blackboard_scene.face_exp = "null"
+        self.blackboard_scene.therapist_needed = False
+        self.blackboard_scene.interaction.do_trigger = "null"
 
     def initialise(self):
         self.logger.debug("  %s [SceneManagerInteractionBg::initialise()]" % self.name)

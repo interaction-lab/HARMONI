@@ -95,6 +95,7 @@ def main():
     ####################
     # Rendering
     ####################
+    """
     if args.render:
         print("**************START RENDERING**************")
         py_trees.display.render_dot_tree(root)
@@ -108,7 +109,7 @@ def main():
             console.logerror("No xdot viewer found, skipping display [hint: sudo apt install xdot]")
             print("")
         print("**************END RENDERING**************")
-        
+    """ 
     ####################
     # Tree Stewardship
     ####################
@@ -124,15 +125,15 @@ def main():
     # Tick Tock
     ####################
 
-    if args.interactive:
-        py_trees.console.read_single_keypress()
+    #if args.interactive:
+    #    py_trees.console.read_single_keypress()
     for unused_i in range(1, 10):
         try:
             behaviour_tree.tick()
-            if args.interactive:
-                py_trees.console.read_single_keypress()
-            else:
-                time.sleep(0.5)
+            #if args.interactive:
+            #    py_trees.console.read_single_keypress()
+            #else:
+            time.sleep(0.5)
         except KeyboardInterrupt:
             break
     print("\n")

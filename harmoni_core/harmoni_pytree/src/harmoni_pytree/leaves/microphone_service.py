@@ -44,13 +44,8 @@ class MicrophoneServicePytree(py_trees.behaviour.Behaviour):
         self.client_result = None
 
         self.blackboards = []
-        """
-        self.blackboard_microphone_OLD = self.attach_blackboard_client(name=self.name, namespace="harmoni_microphone")
-        self.blackboard_microphone_OLD.register_key("result_message", access=py_trees.common.Access.WRITE)
-        """
-        #TODO: usa queste bb che sono le nuove
         self.blackboard_microphone = self.attach_blackboard_client(name=self.name, namespace=SensorNameSpace.microphone.name)
-        self.blackboard_microphone.register_key("state", access=py_trees.common.Access.WRITE)
+        #self.blackboard_microphone.register_key("state", access=py_trees.common.Access.WRITE)
 
         super(MicrophoneServicePytree, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
@@ -113,15 +108,17 @@ class MicrophoneServicePytree(py_trees.behaviour.Behaviour):
 
     def terminate(self, new_status):
         if new_status == py_trees.common.Status.INVALID:
-            self.logger.debug(f"Sending goal to {self.server_name} to stop the server")
-            # Send request for each sensor service to set themselves up
-            self.service_client_microphone.send_goal(
-                action_goal=ActionType["OFF"].value,
-                wait="",
-            )
-            self.logger.debug(f"Goal sent to {self.server_name}")
-            self.service_client_microphone.stop_tracking_goal()
-            self.logger.debug(f"Goal tracking stopped to {self.server_name}")
+            new_state = self.service_client_microphone.get_state()
+            if new_state != GoalStatus.LOST:
+                self.logger.debug(f"Sending goal to {self.server_name} to stop the server")
+                # Send request for each sensor service to set themselves up
+                self.service_client_microphone.send_goal(
+                    action_goal=ActionType["OFF"].value,
+                    wait="",
+                )
+                self.logger.debug(f"Goal sent to {self.server_name}")
+                self.service_client_microphone.stop_tracking_goal()
+                self.logger.debug(f"Goal tracking stopped to {self.server_name}")
         else:
             #execute actions for the following states (SUCCESS || FAILURE)
             pass

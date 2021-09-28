@@ -35,21 +35,14 @@ import py_trees.console
 class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
 
     def __init__(self, name = "SpeechToTextServicePytree"):
-        
-        """
-        Here there is just the constructor of the
-        behaviour tree 
-        """
+    
         self.name = name
         self.service_client_stt = None
         self.client_result = None
         self.server_state = None
         self.server_name = None
-
-        # here there is the inizialization of the blackboards
+        
         self.blackboards = []
-
-        #TODO: usa queste bb che sono le nuove
         self.blackboard_microphone = self.attach_blackboard_client(name=self.name, namespace=SensorNameSpace.microphone.name)
         self.blackboard_microphone.register_key("state", access=py_trees.common.Access.READ)
         self.blackboard_stt = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.stt.name)
@@ -71,6 +64,8 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
                                             self._result_callback,
                                             self._feedback_callback)
         self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
+
+        self.blackboard_stt.result = "null"
 
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 
@@ -109,13 +104,15 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
         
     def terminate(self, new_status):
         if new_status == py_trees.common.Status.INVALID:
-            self.logger.debug(f"Cancelling goal to {self.server_name}")
-            self.service_client_stt.cancel_goal()
-            self.client_result = None
-            #self.blackboard_stt.result = None
-            self.logger.debug(f"Goal cancelled to {self.server_name}")
-            self.service_client_stt.stop_tracking_goal()
-            self.logger.debug(f"Goal tracking stopped to {self.server_name}")
+            new_state = self.service_client_stt.get_state()
+            if new_state != GoalStatus.LOST:
+                self.logger.debug(f"Cancelling goal to {self.server_name}")
+                self.service_client_stt.cancel_goal()
+                self.client_result = None
+                #self.blackboard_stt.result = None
+                self.logger.debug(f"Goal cancelled to {self.server_name}")
+                self.service_client_stt.stop_tracking_goal()
+                self.logger.debug(f"Goal tracking stopped to {self.server_name}")
         else:
             #execute actions for the following states (SUCCESS || FAILURE)
             pass

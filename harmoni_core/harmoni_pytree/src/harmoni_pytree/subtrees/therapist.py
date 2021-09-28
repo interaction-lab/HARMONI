@@ -14,7 +14,6 @@ from random import randint
 import subprocess
 import operator
 import py_trees.console as console
-import either_custom 
 
 ##############################################################################
 # Classes
@@ -76,15 +75,14 @@ def post_tick_handler(snapshot_visitor, behaviour_tree):
 
 def create_root(name= "Therapist"):
 
-    root = either_custom.either_or(
+    root = either_or(
         name=name,
         conditions=[
-            py_trees.common.ComparisonExpression("timer", 10, operator.lt),
-            py_trees.common.ComparisonExpression("timer", 10, operator.ge),
+            py_trees.common.ComparisonExpression("scene/therapist_needed", True, operator.ne),
+            py_trees.common.ComparisonExpression("scene/therapist_needed", True, operator.eq),
         ],
-        preemptible = False,
         subtrees=[py_trees.behaviours.Failure(), py_trees.behaviours.Running()],
-        namespace= name+"_namespace",
+        namespace= "therapist",
     )
 
     return root
@@ -105,6 +103,7 @@ def main():
     ####################
     # Rendering
     ####################
+    """
     if args.render:
         print("**************START RENDERING**************")
         py_trees.display.render_dot_tree(root)
@@ -118,7 +117,7 @@ def main():
             console.logerror("No xdot viewer found, skipping display [hint: sudo apt install xdot]")
             print("")
         print("**************END RENDERING**************")
-        
+    """
     ####################
     # Tree Stewardship
     ####################
@@ -134,15 +133,15 @@ def main():
     # Tick Tock
     ####################
 
-    if args.interactive:
-        py_trees.console.read_single_keypress()
+    #if args.interactive:
+    #    py_trees.console.read_single_keypress()
     for unused_i in range(1, 10):
         try:
             behaviour_tree.tick()
-            if args.interactive:
-                py_trees.console.read_single_keypress()
-            else:
-                time.sleep(0.5)
+            #if args.interactive:
+            #    py_trees.console.read_single_keypress()
+            #else:
+            time.sleep(0.5)
         except KeyboardInterrupt:
             break
     print("\n")

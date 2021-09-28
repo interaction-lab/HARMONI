@@ -41,19 +41,7 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
         self.client_result = None
         self.server_name = None
 
-        # here there is the inizialization of the blackboards
         self.blackboards = []
-        """
-        #blackboard we suppose are useful to know when to start imageai detection
-        self.blackboard_camera=self.attach_blackboard_client(name=self.name,namespace="harmoni_camera")
-        self.blackboard_camera.register_key("result_message", access=py_trees.common.Access.READ)
-        #blackboard used to comunicate with aws_lex (bot)
-        self.blackboard_yolo=self.attach_blackboard_client(name=self.name,namespace="harmoni_imageai_yolo")
-        self.blackboard_yolo.register_key("result_data",access=py_trees.common.Access.WRITE)
-        self.blackboard_yolo.register_key("result_message", access=py_trees.common.Access.WRITE)
-        """
-
-        #TODO usa le nuove blackboard
         """
         self.blackboard_camera = self.attach_blackboard_client(name=self.name, namespace=SensorNameSpace.camera.name)
         self.blackboard_camera.register_key("state", access=py_trees.common.Access.READ)
@@ -72,15 +60,13 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
             if(parameter =="ImageAIYoloServicePytree_mode"):
                 self.mode = additional_parameters[parameter] 
         """       
-        
         self.service_client_yolo = HarmoniActionClient(self.name)
-        #TODO fattelo passare sto parametro o vedi che fare
         self.server_name = "imageai_yolo_default"
         self.service_client_yolo.setup_client(self.server_name, 
                                             self._result_callback,
                                             self._feedback_callback)
         self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
-        
+        self.blackboard_face_detection.result = "person"
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 
     def initialise(self):
@@ -109,22 +95,22 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
                 #we haven't received the result correctly.
                 new_status = py_trees.common.Status.FAILURE
         else:
-            self.blackboard_face_detection.result = "null"
             new_status = py_trees.common.Status.FAILURE
 
         self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status
-
         
     def terminate(self, new_status):
         if new_status == py_trees.common.Status.INVALID:
-            self.logger.debug(f"Cancelling goal to {self.server_name}")
-            self.service_client_yolo.cancel_goal()
-            self.client_result = None
-            #self.blackboard_face_detection.result = None
-            self.logger.debug(f"Goal cancelled to {self.server_name}")
-            self.service_client_yolo.stop_tracking_goal()
-            self.logger.debug(f"Goal tracking stopped to {self.server_name}")
+            new_state = self.service_client_yolo.get_state()
+            if new_state != GoalStatus.LOST:
+                self.logger.debug(f"Cancelling goal to {self.server_name}")
+                self.service_client_yolo.cancel_goal()
+                self.client_result = None
+                #self.blackboard_face_detection.result = None
+                self.logger.debug(f"Goal cancelled to {self.server_name}")
+                self.service_client_yolo.stop_tracking_goal()
+                self.logger.debug(f"Goal tracking stopped to {self.server_name}")
         else:
             #execute actions for the following states (SUCCESS || FAILURE)
             pass

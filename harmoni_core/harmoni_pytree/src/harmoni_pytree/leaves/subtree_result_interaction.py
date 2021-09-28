@@ -26,6 +26,9 @@ class SubTreeResultInteractionBg(py_trees.behaviour.Behaviour):
     def setup(self):
 
         self.blackboard_mainactivity.counter_no_answer = 0
+        self.blackboard_scene_interaction.scene_counter = 0
+        self.blackboard_interaction.inside = False
+        self.blackboard_interaction.finished = True
 
         self.logger.debug("  %s [SubTreeResultInteractionBg::setup()]" % self.name)
 

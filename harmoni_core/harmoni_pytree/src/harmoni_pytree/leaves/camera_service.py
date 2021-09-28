@@ -41,7 +41,7 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
         # here there is the inizialization of the blackboards
         self.blackboards = []
         self.blackboard_camera = self.attach_blackboard_client(name=self.name, namespace=SensorNameSpace.camera.name)
-        self.blackboard_camera.register_key("state", access=py_trees.common.Access.WRITE)
+        #self.blackboard_camera.register_key("state", access=py_trees.common.Access.WRITE)
 
         super(CameraServicePytree, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
@@ -73,13 +73,16 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
             self.logger.debug(f"Sending goal to {self.server_name}")
             # Send request for each sensor service to set themselves up
             self.service_client_camera.send_goal(
-                action_goal=ActionType["START"].value,
+                action_goal=ActionType["ON"].value,
                 optional_data="Setup",
                 wait="",
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
         elif new_state == GoalStatus.SUCCEEDED:
+            new_status = py_trees.common.Status.SUCCESS
+        elif new_state == GoalStatus.ABORTED:
+            #FIXME dovrebbe essere .FAILURE
             new_status = py_trees.common.Status.SUCCESS
         else:
             new_status = py_trees.common.Status.FAILURE
@@ -88,6 +91,7 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
         return new_status
 
     def terminate(self, new_status):
+        """
         if new_status == py_trees.common.Status.INVALID:
             self.logger.debug(f"Cancelling goal to {self.server_name}")
             self.service_client_camera.cancel_goal()
@@ -98,6 +102,7 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
         else:
             #execute actions for the following states (SUCCESS || FAILURE)
             pass
+        """
         self.logger.debug("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))
 
     def _result_callback(self, result):

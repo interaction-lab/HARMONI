@@ -5,21 +5,24 @@
 
 import argparse
 import functools
-from py_trees.blackboard import Blackboard
-from py_trees.idioms import either_or
 import py_trees
+import rospy
 import time
 import subprocess
 import py_trees.console as console
 import os
-import session
-import reset
+from harmoni_common_lib.constants import *
+from harmoni_pytree.leaves.yolo_service import ImageAIYoloServicePytree
+from harmoni_pytree.subtrees import session as s
+from harmoni_pytree.subtrees import reset as r
+from harmoni_pytree.subtrees import on_modules as o 
 
 ##############################################################################
 # Classes
 ##############################################################################
-
-
+"""
+Root
+"""
 def description(root):
     content = "\n\n"
     content += "\n"
@@ -38,13 +41,11 @@ def description(root):
         s = content
     return s
 
-
 def epilog():
     if py_trees.console.has_colours:
         return console.cyan + "And his noodly appendage reached forth to tickle the blessed...\n" + console.reset
     else:
         return None
-
 
 def command_line_argument_parser():
     parser = argparse.ArgumentParser(description=description(create_root()),
@@ -56,10 +57,8 @@ def command_line_argument_parser():
     group.add_argument('-i', '--interactive', action='store_true', help='pause and wait for keypress at each tick')
     return parser
 
-
 def pre_tick_handler(behaviour_tree):
     print("\n--------- Run %s ---------\n" % behaviour_tree.count)
-
 
 def post_tick_handler(snapshot_visitor, behaviour_tree):
     print(
@@ -73,61 +72,50 @@ def post_tick_handler(snapshot_visitor, behaviour_tree):
 
 
 def create_root():
-    root = py_trees.composites.Selector(name="root",memory=True)
 
-    Session = session.create_root()
+    root = py_trees.composites.Selector(name="root")
+
+    yolo_service = ImageAIYoloServicePytree("FaceDetection")
+
+    session = s.create_root()
+
+    on_module = o.create_root()
+
+    parallel_onModule_detectFace_session = py_trees.composites.Parallel(name="ParallelOnModuleDetectFaceSession")
     
-    Reset = reset.create_root()
+    parallel_onModule_detectFace_session.add_children([yolo_service, on_module, session])
+    
+    reset = r.create_root()
 
-    root.add_children([Session, Reset, py_trees.behaviours.Running()])
+    root.add_children([parallel_onModule_detectFace_session, reset, py_trees.behaviours.Running()])
 
-    b1 = root.attach_blackboard_client(name="b1", namespace="microphone_bb_namespace")
-    b2 = root.attach_blackboard_client(name="b2", namespace="scene/stt_bb_namespace")
-    b3 = root.attach_blackboard_client(name="b3", namespace="bot_output_bb_namespace")
-    b4 = root.attach_blackboard_client(name="b4", namespace="tts_bb_namespace")
-    b5 = root.attach_blackboard_client(name="b5", namespace="scene/detection_card_bb_namespace")
-    b6 = root.attach_blackboard_client(name="b6", namespace="scene/detection_face_bb_namespace")
-    b7 = root.attach_blackboard_client(name="b7", namespace="scene/gesture_bb_namespace")
-    b8 = root.attach_blackboard_client(name="b8", namespace="scene/face_bb_namespace")
-    b9 = root.attach_blackboard_client(name="b9", namespace="scene/projector_bb_namespace")
-    b10 = root.attach_blackboard_client(name="b10", namespace="scene/chatbot_in_namespace")
-    b11 = root.attach_blackboard_client(name="b11", namespace="scene/external_speaker_in_namespace")
-    b12 = root.attach_blackboard_client(name="b11", namespace="scene/counter_no_answer")
+    """
+    b1 = root.attach_blackboard_client(name="b1", namespace=DetectorNameSpace.card_detect.name)
+    b1.register_key("result", access=py_trees.common.Access.WRITE)
+    b1.result = "null"
 
-    b10.register_key("result_data", access=py_trees.common.Access.WRITE)
-    b10.register_key("result_message", access=py_trees.common.Access.WRITE)
-    b8.register_key("result_data", access=py_trees.common.Access.WRITE)
-    b8.register_key("result_message", access=py_trees.common.Access.WRITE)
-    b6.register_key("result_data", access=py_trees.common.Access.WRITE)
-    b6.register_key("result_message", access=py_trees.common.Access.WRITE)
-    b1.register_key("result_data", access=py_trees.common.Access.WRITE)
-    b1.register_key("result_message", access=py_trees.common.Access.WRITE)
-
+    b2 = root.attach_blackboard_client(name="b2", namespace= PyTreeNameSpace.visual.name)
+    b2.register_key("finished", access=py_trees.common.Access.WRITE)
+    b2.finished = False
+    """
     return root
 
 ##############################################################################
 # Main
 ##############################################################################
 
-def main():
-    """
-    Entry point for the demo script.
-    """
+def render_with_args(root):
+    
     args = command_line_argument_parser().parse_args()
-    py_trees.logging.level = py_trees.logging.Level.DEBUG
-    root = create_root()
-    print(description(root))
-
     ####################
     # Rendering
     ####################
     if args.render:
         print("**************START RENDERING**************")
-        target_directory = os.path.join(os.getcwd(), "dot_folder/")
-        py_trees.display.render_dot_tree(root = root,target_directory = target_directory)
+        py_trees.display.render_dot_tree(root)
         if py_trees.utilities.which("xdot"):
             try:
-                subprocess.call(["xdot", target_directory+"%s.dot" % root.name])
+                subprocess.call(["xdot", "%s.dot" % root.name])
             except KeyboardInterrupt:
                 pass
         else:
@@ -135,10 +123,24 @@ def main():
             console.logerror("No xdot viewer found, skipping display [hint: sudo apt install xdot]")
             print("")
         print("**************END RENDERING**************")
+
+def main():
+    """
+    Entry point for the demo script.
+    """
+    py_trees.logging.level = py_trees.logging.Level.DEBUG
+    root = create_root()
+    print(description(root))
+
+    #uncomment the following line if you want to render the dot_tree
+    #render_with_args(root)
         
     ####################
     # Tree Stewardship
     ####################
+
+    rospy.init_node("root_default", log_level=rospy.INFO)
+
     behaviour_tree = py_trees.trees.BehaviourTree(root)
     behaviour_tree.add_pre_tick_handler(pre_tick_handler)
     behaviour_tree.visitors.append(py_trees.visitors.DebugVisitor())
@@ -151,15 +153,16 @@ def main():
     # Tick Tock
     ####################
 
-    if args.interactive:
-        py_trees.console.read_single_keypress()
-    for unused_i in range(1, 12):
+    #if args.interactive:
+    #    py_trees.console.read_single_keypress()
+    #while True:
+    for unused_i in range(1, 40):
         try:
             behaviour_tree.tick()
-            if args.interactive:
-                py_trees.console.read_single_keypress()
-            else:
-                time.sleep(0.5)
+            #if args.interactive:
+            #    py_trees.console.read_single_keypress()
+            #else:
+            time.sleep(2)
         except KeyboardInterrupt:
             break
     print("\n")

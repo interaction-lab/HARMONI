@@ -72,8 +72,8 @@ class AWSLexAnalyzerServicePytree(py_trees.behaviour.Behaviour):
                                             self._result_callback,
                                             self._feedback_callback)
         self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
-        self.blackboard_bot.result = "null"
         
+        self.blackboard_bot.result = "null"
         self.blackboard_mainactivity.counter_no_answer = 0
 
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
@@ -130,13 +130,15 @@ class AWSLexAnalyzerServicePytree(py_trees.behaviour.Behaviour):
 
     def terminate(self, new_status):
         if new_status == py_trees.common.Status.INVALID:
-            self.logger.debug(f"Cancelling goal to {self.server_name}")
-            self.service_client_lex.cancel_goal()
-            self.client_result = None
-            #self.blackboard_bot.result = None
-            self.logger.debug(f"Goal cancelled to {self.server_name}")
-            self.service_client_lex.stop_tracking_goal()
-            self.logger.debug(f"Goal tracking stopped to {self.server_name}")
+            new_state = self.service_client_lex.get_state()
+            if new_state != GoalStatus.LOST:
+                self.logger.debug(f"Cancelling goal to {self.server_name}")
+                self.service_client_lex.cancel_goal()
+                self.client_result = None
+                #self.blackboard_bot.result = None
+                self.logger.debug(f"Goal cancelled to {self.server_name}")
+                self.service_client_lex.stop_tracking_goal()
+                self.logger.debug(f"Goal tracking stopped to {self.server_name}")
         else:
             #execute actions for the following states (SUCCESS || FAILURE)
             pass

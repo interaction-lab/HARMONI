@@ -23,9 +23,9 @@ class SubTreeResultVisualBg(py_trees.behaviour.Behaviour):
         self.blackboard_face_detect.register_key("result", access=py_trees.common.Access.READ)
 
     def setup(self):
-
+        self.blackboard_scene_visual.scene_counter = 0
         self.blackboard_visual.finished = True
-
+        self.blackboard_visual.inside = False
         self.logger.debug("  %s [SubTreeResultVisualBg::setup()]" % self.name)
 
     def initialise(self):

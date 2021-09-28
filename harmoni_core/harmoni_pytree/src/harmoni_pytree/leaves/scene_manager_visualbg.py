@@ -16,7 +16,7 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
 
         self.blackboards = []
         self.blackboard_scene = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name)
-        self.blackboard_scene.register_key(PyTreeNameSpace.visual.name+"/state", access=py_trees.common.Access.WRITE)
+        #self.blackboard_scene.register_key(PyTreeNameSpace.visual.name+"/state", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key(PyTreeNameSpace.visual.name+"/scene_counter", access=py_trees.common.Access.WRITE)
         #self.blackboard_scene.register_key(PyTreeNameSpace.visual.name+"/max_num_scene", access=py_trees.common.Access.WRITE) #NEW
         self.blackboard_scene.register_key(key=PyTreeNameSpace.visual.name+"/do_trigger", access=py_trees.common.Access.WRITE) #NEW
@@ -26,12 +26,6 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
         self.blackboard_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name)
         self.blackboard_bot.register_key(key=PyTreeNameSpace.analyzer.name +"/"+"result", access=py_trees.common.Access.WRITE)
         self.blackboard_bot.register_key(key=PyTreeNameSpace.trigger.name +"/"+"result", access=py_trees.common.Access.WRITE)
-        #self.blackboard_card_detection = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.card_detect.name)
-        #self.blackboard_card_detection.register_key("result", access=py_trees.common.Access.WRITE)
-        """
-        self.blackboard_stt = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.stt.name)
-        self.blackboard_stt.register_key("result", access=py_trees.common.Access.READ)
-        """
         self.blackboard_mainactivity = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.mainactivity.name)
         self.blackboard_mainactivity.register_key("counter_no_answer", access=py_trees.common.Access.WRITE)
 
@@ -46,15 +40,16 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
         pck_path = rospack.get_path("harmoni_pytree")
         pattern_script_path = pck_path + f"/resources/{json_name}.json"
         with open(pattern_script_path, "r") as read_file:
-          self.context = json.load(read_file)
+            self.context = json.load(read_file)
 
-        self.blackboard_scene.visual.max_num_scene = len(self.context["scene"]) #da cambiare
+        #self.blackboard_scene.visual.max_num_scene = len(self.context["scene"]) #da cambiare
         self.blackboard_mainactivity.counter_no_answer = 0
         self.blackboard_scene.visual.scene_counter = 0 
-        self.blackboard_scene.utterance = None
-        self.blackboard_scene.face_exp = None
-        self.blackboard_scene.therapist_needed = None
-        self.blackboard_scene.visual.do_trigger = None
+        self.blackboard_scene.utterance = "null"
+        self.blackboard_scene.face_exp = "null"
+        self.blackboard_scene.therapist_needed = False
+        self.blackboard_scene.visual.do_trigger = "null"
+
         self.logger.debug("  %s [SceneManagerVisualBg::setup()]" % self.name)
 
     def initialise(self):

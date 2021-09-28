@@ -45,16 +45,13 @@ class LipSyncServicePytree(py_trees.behaviour.Behaviour):
         self.service_client_nose = None
         self.client_result = None
         
-        # here there is the inizialization of the blackboards
         self.blackboards = []
-
-        #TODO: usa queste bb che sono le nuove
         self.blackboard_tts = self.attach_blackboard_client(name=self.name, namespace=ActuatorNameSpace.tts.name)
         self.blackboard_tts.register_key("result", access=py_trees.common.Access.READ)
         
         #lips_sync
         self.blackboard_lips = self.attach_blackboard_client(name=self.name, namespace=Resources.face.value[1])
-        self.blackboard_lips.register_key("state", access=py_trees.common.Access.WRITE)
+        #self.blackboard_lips.register_key("state", access=py_trees.common.Access.WRITE)
 
         super(LipSyncServicePytree, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
@@ -111,34 +108,17 @@ class LipSyncServicePytree(py_trees.behaviour.Behaviour):
             new_status = py_trees.common.Status.FAILURE
         self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status 
-        """
-        if self.server_state == State.INIT:
-            self.logger.debug(f"Sending goal to {self.server_name}")
-            self.service_client_face.send_goal(
-                action_goal = ActionType["DO"].value,
-                optional_data = self.blackboard_tts.result,
-                wait=False,
-            )
-            self.logger.debug(f"Goal sent to {self.server_name}")
-            new_status = py_trees.common.Status.RUNNING
-        elif self.server_state == State.REQUEST:
-            new_status = py_trees.common.Status.RUNNING
-        elif self.server_state == State.SUCCESS:
-            new_status = py_trees.common.Status.SUCCESS
-        else:
-            new_status = py_trees.common.Status.FAILURE
-        self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
-        return new_status 
-        """
 
     def terminate(self, new_status):
         if new_status == py_trees.common.Status.INVALID:
-            self.logger.debug(f"Cancelling goal to {self.server_name}")
-            self.service_client_mouth.cancel_goal()
-            self.client_result = None
-            self.logger.debug(f"Goal cancelled to {self.server_name}")
-            self.service_client_mouth.stop_tracking_goal()
-            self.logger.debug(f"Goal tracking stopped to {self.server_name}")
+            new_state = self.service_client_mouth.get_state()
+            if new_state != GoalStatus.LOST:
+                self.logger.debug(f"Cancelling goal to {self.server_name}")
+                self.service_client_mouth.cancel_goal()
+                self.client_result = None
+                self.logger.debug(f"Goal cancelled to {self.server_name}")
+                self.service_client_mouth.stop_tracking_goal()
+                self.logger.debug(f"Goal tracking stopped to {self.server_name}")
         else:
             #execute actions for the following states (SUCCESS || FAILURE)
             pass

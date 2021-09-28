@@ -17,7 +17,7 @@
                         "do_dialogue"   : "False"
                     },
                     {
-                        "utterance"     : "vorrei ordinare dei fiori",
+                        "utterance"     : "oggetto carta",
                         "face"          : "[{'start': 5, 'type': 'action', 'id': 'saucy_face'}]",
                         "gesture"       : "null",
                         "image"         : "null",

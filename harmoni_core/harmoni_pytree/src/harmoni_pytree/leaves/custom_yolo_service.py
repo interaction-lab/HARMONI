@@ -35,11 +35,6 @@ import py_trees.console
 class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
 
     def __init__(self, name = "ImageAICustomServicePytree"):
-        
-        """
-        Here there is just the constructor of the
-        behaviour tree 
-        """
         self.name = name
         self.server_state = None
         self.service_client_custom = None
@@ -48,17 +43,7 @@ class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
 
         # here there is the inizialization of the blackboards
         self.blackboards = []
-        """
-        #blackboard we suppose are useful to know when to start imageai detection
-        self.blackboard_camera=self.attach_blackboard_client(name=self.name,namespace="harmoni_camera")
-        self.blackboard_camera.register_key("result_message", access=py_trees.common.Access.READ)
-        #blackboard used to comunicate with aws_lex (bot)
-        self.blackboard_custom=self.attach_blackboard_client(name=self.name,namespace="harmoni_imageai_custom")
-        self.blackboard_custom.register_key("result_data",access=py_trees.common.Access.WRITE)
-        self.blackboard_custom.register_key("result_message", access=py_trees.common.Access.WRITE)
-        """
 
-        #TODO DOVREBBERO ESSERE QUESTE LE GIUSTE
         """
         self.blackboard_camera = self.attach_blackboard_client(name=self.name, namespace=SensorNameSpace.camera.name+"/external")
         self.blackboard_camera.register_key("state", access=py_trees.common.Access.READ)
@@ -87,6 +72,8 @@ class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
                                             self._feedback_callback)
         self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
         
+        self.blackboard_card_detection.result = "null"
+
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 
     def initialise(self):
@@ -123,14 +110,16 @@ class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
 
         
     def terminate(self, new_status):
-        if(new_status == py_trees.common.Status.INVALID):
-            self.logger.debug(f"Cancelling goal to {self.server_name}")
-            self.service_client_custom.cancel_goal()
-            self.client_result = None
-            self.blackboard_card_detection.result = None
-            self.logger.debug(f"Goal cancelled to {self.server_name}")
-            self.service_client_custom.stop_tracking_goal()
-            self.logger.debug(f"Goal tracking stopped to {self.server_name}")
+        if new_status == py_trees.common.Status.INVALID:
+            new_state = self.service_client_custom.get_state()
+            if new_state != GoalStatus.LOST:
+                self.logger.debug(f"Cancelling goal to {self.server_name}")
+                self.service_client_custom.cancel_goal()
+                self.client_result = None
+                self.blackboard_card_detection.result = None
+                self.logger.debug(f"Goal cancelled to {self.server_name}")
+                self.service_client_custom.stop_tracking_goal()
+                self.logger.debug(f"Goal tracking stopped to {self.server_name}")
         else:
             #execute actions for the following states (SUCCESS || FAILURE)
             pass
@@ -158,7 +147,6 @@ def main():
     blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace=DetectorNameSpace.card_detect.name)
     blackboardProva.register_key("result", access=py_trees.common.Access.READ)
     print(blackboardProva)
-
 
     rospy.init_node("imageai_default", log_level=rospy.INFO)
 

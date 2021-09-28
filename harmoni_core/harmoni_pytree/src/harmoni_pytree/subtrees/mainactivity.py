@@ -86,17 +86,6 @@ def post_tick_handler(snapshot_visitor, behaviour_tree):
 
 def create_root():
     root = py_trees.composites.Sequence(name="mainactivity",memory=True)
-    
-    blackboard_scene_mainactivity = root.attach_blackboard_client(name="mainactivity", namespace=PyTreeNameSpace.scene.name +"/"+ PyTreeNameSpace.mainactivity.name)
-    blackboard_scene_mainactivity.register_key("max_num_scene", access=py_trees.common.Access.WRITE)
-    blackboard_scene_mainactivity.max_num_scene = 0
-    
-    blackboard_visual = root.attach_blackboard_client(name="self.name", namespace=PyTreeNameSpace.visual.name)
-    blackboard_visual.register_key("inside", access=py_trees.common.Access.WRITE)
-    blackboard_visual.inside = False
-    blackboard_interaction = root.attach_blackboard_client(name="self.name", namespace=PyTreeNameSpace.interaction.name)
-    blackboard_interaction.register_key("inside", access=py_trees.common.Access.WRITE)
-    blackboard_interaction.inside = False
 
     Success1 = py_trees.behaviours.Success(name="Success")
     Success2 = py_trees.behaviours.Success(name="Success")

@@ -44,12 +44,9 @@ class FacialExpServicePytree(py_trees.behaviour.Behaviour):
         self.service_client_eyes = None
         self.service_client_nose = None
         self.client_result = None
-        
-        # here there is the inizialization of the blackboards
+
         self.blackboards = []
 
-        #TODO: usa queste bb che sono le nuove
-        #face_exp
         self.blackboard_scene = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name)
         self.blackboard_scene.register_key("face_exp", access=py_trees.common.Access.READ)
 
@@ -117,16 +114,18 @@ class FacialExpServicePytree(py_trees.behaviour.Behaviour):
 
     def terminate(self, new_status):
         if new_status == py_trees.common.Status.INVALID:
-            self.logger.debug(f"Cancelling goal to {self.server_name}")
-            self.service_client_mouth.cancel_goal()
-            #self.service_client_eyes.cancel_goal()
-            #self.service_client_nose.cancel_goal()
-            self.client_result = None
-            self.logger.debug(f"Goal cancelled to {self.server_name}")
-            self.service_client_mouth.stop_tracking_goal()
-            #self.service_client_eyes.stop_tracking_goal()
-            #self.service_client_nose.stop_tracking_goal()
-            self.logger.debug(f"Goal tracking stopped to {self.server_name}")
+            new_state = self.service_client_mouth.get_state()
+            if new_state != GoalStatus.LOST:
+                self.logger.debug(f"Cancelling goal to {self.server_name}")
+                self.service_client_mouth.cancel_goal()
+                #self.service_client_eyes.cancel_goal()
+                #self.service_client_nose.cancel_goal()
+                self.client_result = None
+                self.logger.debug(f"Goal cancelled to {self.server_name}")
+                self.service_client_mouth.stop_tracking_goal()
+                #self.service_client_eyes.stop_tracking_goal()
+                #self.service_client_nose.stop_tracking_goal()
+                self.logger.debug(f"Goal tracking stopped to {self.server_name}")
         else:
             #execute actions for the following states (SUCCESS || FAILURE)
             pass

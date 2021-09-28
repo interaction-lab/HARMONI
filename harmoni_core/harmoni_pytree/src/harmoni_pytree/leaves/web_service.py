@@ -37,9 +37,6 @@ class WebServicePytree(py_trees.behaviour.Behaviour):
         self.client_result = None
 
         self.blackboards = []
-        #serve una blackboard a speaker?
-
-        #TODO: usa queste bb che sono le nuove
         self.blackboard_scene = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name)
         self.blackboard_scene.register_key("image", access=py_trees.common.Access.READ)
 
@@ -89,13 +86,15 @@ class WebServicePytree(py_trees.behaviour.Behaviour):
 
     def terminate(self, new_status):
         if new_status == py_trees.common.Status.INVALID:
-            self.logger.debug(f"Cancelling goal to {self.server_name}")
-            self.service_client_web.cancel_goal()
-            self.client_result = None
-            #self.blackboard_face_detection.result = None
-            self.logger.debug(f"Goal cancelled to {self.server_name}")
-            self.service_client_web.stop_tracking_goal()
-            self.logger.debug(f"Goal tracking stopped to {self.server_name}")
+            new_state = self.service_client_web.get_state()
+            if new_state != GoalStatus.LOST:
+                self.logger.debug(f"Cancelling goal to {self.server_name}")
+                self.service_client_web.cancel_goal()
+                self.client_result = None
+                #self.blackboard_face_detection.result = None
+                self.logger.debug(f"Goal cancelled to {self.server_name}")
+                self.service_client_web.stop_tracking_goal()
+                self.logger.debug(f"Goal tracking stopped to {self.server_name}")
         else:
             #execute actions for the following states (SUCCESS || FAILURE)
             pass

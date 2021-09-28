@@ -40,20 +40,12 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         self.blackboard_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name)
         self.blackboard_bot.register_key(key=PyTreeNameSpace.analyzer.name +"/"+"result", access=py_trees.common.Access.WRITE)
         self.blackboard_bot.register_key(key=PyTreeNameSpace.trigger.name +"/"+"result", access=py_trees.common.Access.WRITE)
-        self.blackboard_invalid_mainactivity = self.attach_blackboard_client(name=self.name, namespace = PyTreeNameSpace.invalid_response.name+"/"+PyTreeNameSpace.mainactivity.name)
-        self.blackboard_invalid_mainactivity.register_key(key="counter_no_answer", access=py_trees.common.Access.WRITE)
-        """
-        self.blackboard_stt = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.stt.name)
-        self.blackboard_stt.register_key("result", access=py_trees.common.Access.READ)
-        """
+        self.blackboard_mainactivity = self.attach_blackboard_client(name=self.name, namespace = PyTreeNameSpace.mainactivity.name)
+        self.blackboard_mainactivity.register_key(key="counter_no_answer", access=py_trees.common.Access.WRITE)
         self.blackboard_visual= self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.visual.name)
         self.blackboard_visual.register_key("inside", access=py_trees.common.Access.WRITE)
         self.blackboard_interaction= self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.interaction.name)
         self.blackboard_interaction.register_key("inside", access=py_trees.common.Access.WRITE)
-        """
-        self.blackboard_card_detect = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.card_detect.name)
-        self.blackboard_card_detect.register_key("result", access=py_trees.common.Access.READ)
-        """
 
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
@@ -63,21 +55,25 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         pck_path = rospack.get_path("harmoni_pytree")
         pattern_script_path = pck_path + f"/resources/{pattern_name}.json"
         with open(pattern_script_path, "r") as read_file:
-          self.context = json.load(read_file)
+            self.context = json.load(read_file)
 
         self.scene_counter = 0
         self.counter_non_ho_capito = 0
         self.blackboard_scene.mainactivity.max_num_scene = len(self.context["scene"])
-        self.blackboard_invalid_mainactivity.counter_no_answer = 0
+        self.blackboard_mainactivity.counter_no_answer = 0
         self.blackboard_scene.mainactivity.scene_counter = self.scene_counter 
-        self.blackboard_scene.utterance = None
-        self.blackboard_scene.face_exp = None
-        self.blackboard_scene.gesture = None
-        self.blackboard_scene.image = None
-        self.blackboard_scene.sound = None
-        self.blackboard_scene.therapist_needed = None
-        self.blackboard_scene.mainactivity.do_dialogue = None
-        self.blackboard_scene.mainactivity.do_trigger = None
+        self.blackboard_scene.utterance = "null"
+        self.blackboard_scene.face_exp = "null"
+        self.blackboard_scene.gesture = "null"
+        self.blackboard_scene.image = "null"
+        self.blackboard_scene.sound = "null"
+        self.blackboard_scene.therapist_needed = False
+        self.blackboard_scene.mainactivity.do_dialogue = "null"
+        self.blackboard_scene.mainactivity.do_trigger = "null"
+        self.blackboard_mainactivity.counter_no_answer = 0
+
+        self.blackboard_visual.inside = False
+        self.blackboard_interaction.inside = False
 
         self.logger.debug("  %s [SceneManagerMain::setup()]" % self.name)
 

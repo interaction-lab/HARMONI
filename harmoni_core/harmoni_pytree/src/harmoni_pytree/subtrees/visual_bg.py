@@ -88,16 +88,8 @@ def post_tick_handler(snapshot_visitor, behaviour_tree):
 
 def create_root(name = "Visual_Bg"):
     root = py_trees.composites.Sequence(name = name)
-    
-    b1 = root.attach_blackboard_client(name="b1", namespace=DetectorNameSpace.card_detect.name)
-    b1.register_key("result", access=py_trees.common.Access.WRITE)
-    b1.result = "null"
 
-    b2 = root.attach_blackboard_client(name="b2", namespace= PyTreeNameSpace.visual.name)
-    b2.register_key("finished", access=py_trees.common.Access.WRITE)
-    b2.finished = False
-
-    Success = py_trees.behaviours.Success(name="Success")
+    Success1 = py_trees.behaviours.Success(name="Success")
     Success2 = py_trees.behaviours.Success(name="Success")
     Success3 = py_trees.behaviours.Success(name="Success")
 
@@ -118,8 +110,6 @@ def create_root(name = "Visual_Bg"):
     lip_sync=LipSyncServicePytree("LipSyncVisualBg")
 
     microphone=MicrophoneServicePytree("MicrophonePytreeVisualBg")
-
-    yolo_service = ImageAIYoloServicePytree("FaceDetection")
 
     subtree_result = SubTreeResultVisualBg("SubTreeVisual")
 
@@ -163,16 +153,16 @@ def create_root(name = "Visual_Bg"):
             py_trees.common.ComparisonExpression(DetectorNameSpace.face_detect.name + "/result", "null", operator.eq),
             py_trees.common.ComparisonExpression(DetectorNameSpace.face_detect.name + "/result", "null", operator.ne),
         ],
-        subtrees=[sequen_visual, Success],
+        subtrees=[sequen_visual, Success1],
         namespace="eor_visual",
     )
 
     running_or_success = rs.create_root(name="RsVisual", condition=[
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.visual.name+"/finished", True, operator.ne),
             py_trees.common.ComparisonExpression(PyTreeNameSpace.visual.name+"/finished", True, operator.eq),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.visual.name+"/finished", True, operator.ne),
     ])
 
-    root.add_children([yolo_service, eor_visual, subtree_result, running_or_success])
+    root.add_children([eor_visual, subtree_result, running_or_success])
 
     return root
 

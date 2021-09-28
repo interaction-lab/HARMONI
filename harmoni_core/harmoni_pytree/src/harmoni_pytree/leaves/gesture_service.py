@@ -33,12 +33,6 @@ import py_trees.console
 
 class GestureServicePytree(py_trees.behaviour.Behaviour):
 
-    """
-    the boolean "mode" changes the functioning of the Behaviour:
-    true: we use the leaf as both client and server (inner module)
-    false: we use the leaf as client that makes request to the server
-    """
-
     def __init__(self, name):
         self.name = name
         self.server_state = None
