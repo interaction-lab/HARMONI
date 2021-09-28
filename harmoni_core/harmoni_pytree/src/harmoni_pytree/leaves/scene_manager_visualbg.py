@@ -67,8 +67,8 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
         #scena iniziale ovvero la zero, è l'unica in cui va bot_trigger e serve l'utterance. 
         if self.blackboard_scene.visual.scene_counter == 0: 
             self.blackboard_scene.visual.do_trigger = True
-            self.blackboard_scene.utterance = self.context["scene"][self.scene_counter]["utterance"]
-            self.blackboard_scene.face_exp = self.context["scene"][self.scene_counter]["face"]
+            self.blackboard_scene.utterance = self.context["scene"][self.blackboard_scene.visual.scene_counter]["utterance"]
+            self.blackboard_scene.face_exp = self.context["scene"][self.blackboard_scene.visual.scene_counter]["face"]
             self.blackboard_scene.visual.scene_counter += 1
 
         else:

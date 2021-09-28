@@ -1,12 +1,22 @@
 {
     "scene" :   [
                     {
-                        "utterance" : "Il bimbo non c'è",
-                        "face"      : "null",
-                        "gesture"   : "null",
-                        "image"     : "cucina",
-                        "sound"     : "null",
-                        "do_kid"    : "False" 
+                        "utterance"     : "Il bimbo non c'è",
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "null",
+                        "sound"         : "null",
+                        "do_dialogue"   : "False" 
                     }
-                ]
+                ],
+    "terapista":   
+                    {
+                        "utterance"     : "Okay non ti preoccupare, ora chiamiamo il trapista",
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "null",
+                        "sound"         : "null",
+                        "do_dialogue"   : "False"
+                    }
+                    
 }

@@ -99,15 +99,10 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
             self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
         elif new_state == GoalStatus.PENDING or new_state == GoalStatus.ACTIVE:
-            #there is no result yet
-            #FIXME resolve the following line
-            self.blackboard_face_detection.result = "??"
-            new_status = py_trees.common.Status.SUCCESS
-            #new_status = py_trees.common.Status.RUNNING
+            new_status = py_trees.common.Status.RUNNING
         elif new_state == GoalStatus.SUCCEEDED:
             if self.client_result is not None:
                 self.blackboard_face_detection.result = self.client_result
-                #self.blackboard_face_detection.result = "null"
                 self.client_result = None
                 new_status = py_trees.common.Status.SUCCESS
             else:
@@ -115,7 +110,7 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
                 new_status = py_trees.common.Status.FAILURE
         else:
             self.blackboard_face_detection.result = "null"
-            new_status = py_trees.common.Status.SUCCESS
+            new_status = py_trees.common.Status.FAILURE
 
         self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status

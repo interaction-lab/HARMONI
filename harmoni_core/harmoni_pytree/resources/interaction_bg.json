@@ -1,12 +1,12 @@
 {
     "scene" :   [
                     {
-                        "utterance" : "il bimbo non parla",
-                        "face"      : "null",
-                        "gesture"   : "null",
-                        "image"     : "null",
-                        "sound"     : "null",
-                        "do_dialogue"    : "False" 
+                        "utterance"     : "il bimbo non parla",
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "null",
+                        "sound"         : "null",
+                        "do_dialogue"   : "False" 
                     }
                 ],
     "terapista":   

@@ -6,28 +6,20 @@
     <!-- In order to launch visual_bg we need the following services from HARMONI -->
 
     <include file="$(find harmoni_camera)/launch/camera_service.launch">
-        <arg name="instance_id" value="person" />
     </include>
     <include file="$(find harmoni_imageai)/launch/yolo_service.launch">
-        <arg name="instance_id" value="defalut" />
     </include>
     <include file="$(find harmoni_face)/launch/face_service.launch">
-        <arg name="instance_id" value="default" />
     </include>
     <include file="$(find harmoni_microphone)/launch/microphone_service.launch">
-        <arg name="instance_id" value="default" />
     </include>
     <include file="$(find harmoni_speaker)/launch/speaker_service.launch">
-        <arg name="instance_id" value="default" />
     </include>
     <include file="$(find harmoni_tts)/launch/tts_service.launch">
-        <arg name="instance_id" value="default" />
     </include>
     <include file="$(find harmoni_stt)/launch/stt_google_service.launch">
-        <arg name="instance_id" value="default" />
     </include>
     <include file="$(find harmoni_bot)/launch/bot_service.launch">
-        <arg name="instance_id" value="default" />
     </include>
     <!-- end services -->
     <node pkg="harmoni_pytree" type="visual_bg.py" name="harmoni_pytree_$(arg instance_id)" output="screen"/>
