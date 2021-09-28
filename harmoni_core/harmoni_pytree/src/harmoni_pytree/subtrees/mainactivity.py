@@ -14,7 +14,6 @@ from random import randint
 import subprocess
 import operator
 import py_trees.console as console
-from harmoni_pytree import either_custom as eu
 import running_or_success as rs
 
 from harmoni_common_lib.constants import *
@@ -29,11 +28,8 @@ from harmoni_pytree.leaves.microphone_service import MicrophoneServicePytree
 from harmoni_pytree.leaves.speaker_service import SpeakerServicePytree
 #from harmoni_pytree.leaves.gesture_service import GestureServicePytree
 from harmoni_pytree.leaves.subtree_result_main import SubTreeResultMain
-from harmoni_pytree.leaves.counter_no_answer import CounterNoAnswer
 from harmoni_pytree.leaves.scene_manager_main import SceneManagerMain
 from harmoni_pytree.leaves.custom_yolo_service import ImageAICustomServicePytree
-from harmoni_pytree.leaves.timer import Timer
-from harmoni_pytree.leaves.timer_reset import TimerReset
 
 ##############################################################################
 # Classes
@@ -137,18 +133,7 @@ def create_root():
     microphone=MicrophoneServicePytree("MicrophoneMainActivity")
 
     custom_yolo = ImageAICustomServicePytree("DetectionCardMain")
-                                               
-    invalid_response_stt = py_trees.behaviours.SetBlackboardVariable(name="InvalidResponseMainStt",
-                                                        variable_name=DetectorNameSpace.stt.name+"/result", 
-                                                        variable_value="null", 
-                                                        overwrite=True)
-    invalid_response_card = py_trees.behaviours.SetBlackboardVariable(name="InvalidResponseMainCard",
-                                                        variable_name=DetectorNameSpace.card_detect.name+"/result", 
-                                                        variable_value="null", 
-                                                        overwrite=True)
-                                        
-    counter_no_answer = CounterNoAnswer(name="CounterNoAnswer",
-                                        variable_name= PyTreeNameSpace.invalid_response.name+"/"+PyTreeNameSpace.mainactivity.name+"/counter_no_answer") 
+    
     """                               
     timer_kid_detection = Timer(name="TimerKidDetectionInt",
                                 variable_name=PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.mainactivity.name+"/kid_detection",
@@ -205,9 +190,6 @@ def create_root():
 
     parall_detect_kid = py_trees.composites.Parallel(name="ParallelDetectKid")
     parall_detect_kid.add_children([sequen_speech_kid,custom_yolo])
-
-    sequence_invalid_response = py_trees.composites.Sequence(name="SequenceInvalidResponse")
-    sequence_invalid_response.add_children([invalid_response_stt, invalid_response_card])
 
     sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid")
     sequen_detect_kid.add_children([parall_detect_kid, bot_analyzer])                                        
@@ -311,7 +293,7 @@ def main():
     #if args.interactive:
     #    py_trees.console.read_single_keypress()
     #while True:
-    for unused_i in range(1, 70):
+    for unused_i in range(1, 100):
         try:
             behaviour_tree.tick()
             #if args.interactive:

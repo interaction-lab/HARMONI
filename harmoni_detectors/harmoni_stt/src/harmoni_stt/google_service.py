@@ -268,6 +268,7 @@ class STTGoogleService(HarmoniServiceManager):
 
             #TODO prova senza questo while
             # Now consume whatever other data's still buffered.
+            """
             while True:
                 try:
                     chunk = self._buff.get(block=False)
@@ -277,7 +278,7 @@ class STTGoogleService(HarmoniServiceManager):
                     data.append(chunk)
                 except queue.Empty:  
                     break
-            
+            """
 
             yield b"".join(data)
 

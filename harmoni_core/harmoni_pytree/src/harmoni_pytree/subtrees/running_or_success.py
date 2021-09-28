@@ -7,7 +7,6 @@ import argparse
 import functools
 from os import name
 from py_trees.behaviours import Success, dummy
-from py_trees.idioms import either_or
 import py_trees
 import typing
 import time
@@ -15,7 +14,6 @@ from random import randint
 import subprocess
 import operator
 import py_trees.console as console
-from harmoni_pytree import either_custom
 from py_trees import common
 
 ##############################################################################
@@ -78,10 +76,9 @@ def post_tick_handler(snapshot_visitor, behaviour_tree):
 
 def create_root(name= "RunningOrSuccess", condition = typing.List[common.ComparisonExpression]):
 
-    root = either_custom.either_or(
+    root = py_trees.idioms.either_or(
         name="Either_Or_"+name,
         conditions=condition,
-        preemptible = False,
         subtrees=[py_trees.behaviours.Success(), py_trees.behaviours.Failure()],
         namespace="running_or_success_"+name,
     )
