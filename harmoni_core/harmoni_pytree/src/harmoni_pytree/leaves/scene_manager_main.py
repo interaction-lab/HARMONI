@@ -108,27 +108,21 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
             self.blackboard_scene.sound = self.context["error_handling"]["riprendiamo"]["sound"]
             self.blackboard_scene.mainactivity.do_dialogue = self.context["error_handling"]["riprendiamo"]["do_dialogue"]=="True"
         elif self.blackboard_scene.mainactivity.do_dialogue == True:
-            if self.blackboard_bot.analyzer.result == "null": 
+            if self.blackboard_bot.analyzer.result == "null":
                 self.blackboard_scene.utterance = self.context["scene"][self.scene_counter]["utterance"]
                 self.blackboard_scene.face_exp = self.context["scene"][self.scene_counter]["face"]
                 self.blackboard_scene.gesture = self.context["scene"][self.scene_counter]["gesture"]
                 self.blackboard_scene.image = self.context["scene"][self.scene_counter]["image"]
                 self.blackboard_scene.sound = self.context["scene"][self.scene_counter]["sound"]
-                #self.blackboard_scene.mainactivity.do_dialogue = self.context["scene"][self.scene_counter]["do_dialogue"]=="True"
                 self.blackboard_scene.mainactivity.do_trigger = True
             else:
-                if self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.FULFILLED or self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.READY_FOR_FULFILLMENT: #1 prende lo stato dell'intent
-                    self.scene_counter += 1
-                    self.counter_non_ho_capito = 0
-                    #TODO prendi la risposta di lex e non questa
-                    self.blackboard_scene.therapist_needed = False
-                    self.blackboard_scene.utterance = self.context["error_handling"]["risposta_corretta"]["utterance"]
-                    self.blackboard_scene.face_exp = self.context["error_handling"]["risposta_corretta"]["face"]
-                    self.blackboard_scene.gesture = self.context["error_handling"]["risposta_corretta"]["gesture"]
-                    self.blackboard_scene.image = self.context["error_handling"]["risposta_corretta"]["image"]
-                    self.blackboard_scene.sound = self.context["error_handling"]["risposta_corretta"]["sound"]
-                    #self.blackboard_scene.mainactivity.do_dialogue = self.context["error_handling"]["risposta_corretta"]["do_dialogue"]=="True"
-                    self.blackboard_scene.mainactivity.do_trigger = False
+                if self.blackboard_bot.analyzer.result == "void_answer":
+                    self.blackboard_scene.utterance = self.context["scene"][self.scene_counter]["utterance"]
+                    self.blackboard_scene.face_exp = self.context["scene"][self.scene_counter]["face"]
+                    self.blackboard_scene.gesture = self.context["scene"][self.scene_counter]["gesture"]
+                    self.blackboard_scene.image = self.context["scene"][self.scene_counter]["image"]
+                    self.blackboard_scene.sound = self.context["scene"][self.scene_counter]["sound"]
+                    self.blackboard_scene.mainactivity.do_trigger = True
                 elif self.blackboard_bot.analyzer.result["intentName"] == "Stop": #2 prende il nome dell'intent
                     self.blackboard_scene.therapist_needed = True
                     self.blackboard_scene.utterance = self.context["error_handling"]["terapista"]["utterance"]
@@ -136,7 +130,6 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                     self.blackboard_scene.gesture = self.context["error_handling"]["terapista"]["gesture"]
                     self.blackboard_scene.image = self.context["error_handling"]["terapista"]["image"]
                     self.blackboard_scene.sound = self.context["error_handling"]["terapista"]["sound"]
-                    #self.blackboard_scene.mainactivity.do_dialogue = self.context["scene"]["terapista"]["do_dialogue"]=="True"
                     self.blackboard_scene.mainactivity.do_trigger = False
                 elif self.blackboard_bot.analyzer.result["intentName"] == "NonHoCapito": #0 prenderebbe il messaggio di risposta di lex
                     self.counter_non_ho_capito += 1
@@ -156,9 +149,19 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                         self.blackboard_scene.gesture = self.context["error_handling"]["terapista"]["gesture"]
                         self.blackboard_scene.image = self.context["error_handling"]["terapista"]["image"]
                         self.blackboard_scene.sound = self.context["error_handling"]["terapista"]["sound"]
-                        #self.blackboard_scene.mainactivity.do_dialogue = self.context["scene"]["terapista"]["do_dialogue"]=="True"
                         self.blackboard_scene.mainactivity.do_trigger = False
                         self.counter_non_ho_capito = 0
+                elif self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.FULFILLED or self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.READY_FOR_FULFILLMENT: #1 prende lo stato dell'intent
+                    self.scene_counter += 1
+                    self.counter_non_ho_capito = 0
+                    #TODO prendi la risposta di lex e non questa
+                    self.blackboard_scene.therapist_needed = False
+                    self.blackboard_scene.utterance = self.context["error_handling"]["risposta_corretta"]["utterance"]
+                    self.blackboard_scene.face_exp = self.context["error_handling"]["risposta_corretta"]["face"]
+                    self.blackboard_scene.gesture = self.context["error_handling"]["risposta_corretta"]["gesture"]
+                    self.blackboard_scene.image = self.context["error_handling"]["risposta_corretta"]["image"]
+                    self.blackboard_scene.sound = self.context["error_handling"]["risposta_corretta"]["sound"]
+                    self.blackboard_scene.mainactivity.do_trigger = False
                 elif self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.CONFIRM_INTENT:
                     #questo deve essere usato sono nell'interacion
                     pass
@@ -205,7 +208,6 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
             self.blackboard_scene.gesture = self.context["scene"][self.scene_counter]["gesture"]
             self.blackboard_scene.image = self.context["scene"][self.scene_counter]["image"]
             self.blackboard_scene.sound = self.context["scene"][self.scene_counter]["sound"]
-            #self.blackboard_scene.mainactivity.do_dialogue = self.context["scene"][self.scene_counter]["do_dialogue"]=="True"
             self.scene_counter += 1
 
         return py_trees.common.Status.SUCCESS

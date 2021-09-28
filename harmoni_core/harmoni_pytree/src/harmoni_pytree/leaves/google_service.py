@@ -108,7 +108,7 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
 
         
     def terminate(self, new_status):
-        if(new_status == py_trees.common.Status.INVALID):
+        if new_status == py_trees.common.Status.INVALID:
             self.logger.debug(f"Cancelling goal to {self.server_name}")
             self.service_client_stt.cancel_goal()
             self.client_result = None

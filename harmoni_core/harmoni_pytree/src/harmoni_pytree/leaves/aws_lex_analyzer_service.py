@@ -107,7 +107,7 @@ class AWSLexAnalyzerServicePytree(py_trees.behaviour.Behaviour):
                 new_status = py_trees.common.Status.RUNNING
             else:
                 self.blackboard_mainactivity.counter_no_answer += 1 
-                self.blackboard_bot.result = "null"
+                self.blackboard_bot.result = "void_answer"
                 new_status = py_trees.common.Status.SUCCESS
         elif new_state == GoalStatus.PENDING or new_state == GoalStatus.ACTIVE:
             #there is no result yet
