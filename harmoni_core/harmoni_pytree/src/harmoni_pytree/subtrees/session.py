@@ -15,7 +15,6 @@ import os
 from harmoni_pytree.subtrees import visual_bg as v
 from harmoni_pytree.subtrees import interaction_bg as i 
 from harmoni_pytree.subtrees import mainactivity as m 
-from harmoni_pytree.subtrees import on_modules as o 
 from harmoni_pytree.subtrees import therapist as t 
 
 ##############################################################################

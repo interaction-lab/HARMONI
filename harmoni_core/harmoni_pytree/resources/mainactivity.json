@@ -1,12 +1,12 @@
 {
     "scene" :   [
                     {
-                        "utterance"     : "ciao sono quitty",
+                        "utterance"     : "Ciao sono Quitty",
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "null",
                         "sound"         : "null",
-                        "do_dialogue"   : "False"
+                        "do_trigger"    : "False"
                     },
                     {
                         "utterance"     : "e sono bella" ,
@@ -14,7 +14,7 @@
                         "gesture"       : "null",
                         "image"         : "null",
                         "sound"         : "null",
-                        "do_dialogue"   : "False"
+                        "do_trigger"    : "False"
                     },
                     {
                         "utterance"     : "oggetto carta",
@@ -22,7 +22,7 @@
                         "gesture"       : "null",
                         "image"         : "null",
                         "sound"         : "null",
-                        "do_dialogue"   : "True"
+                        "do_trigger"    : "True"
                     },
                     {
                         "utterance"     : "La raccolta differenziata consiste nel...",
@@ -30,80 +30,67 @@
                         "gesture"       : "null",
                         "image"         : "null",
                         "sound"         : "null",
-                        "do_dialogue"   : "False"
+                        "do_trigger"    : "False"
                     }
                 ],
-    "error_handling"    :   [
-                                {   
-                                    "riprendiamo"   :   {
-                                                            "utterance"     : "Okay, riprendiamo da dove avevamo interrotto",
-                                                            "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
-                                                            "gesture"       : "null",
-                                                            "image"         : "null",
-                                                            "sound"         : "null",
-                                                            "do_dialogue"   : "False"
-                                                        }
-                                    
-                                },
-                                {
-                                    "risposta_corretta" :   {
-                                                                "utterance"     : "Bravo",
-                                                                "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
-                                                                "gesture"       : "null",
-                                                                "image"         : "null",
-                                                                "sound"         : "null",
-                                                                "do_dialogue"   : "False"
-                                                            }
-                                },
-                                {
-                                    "sei_sicuro" :   {
+    "error_handling"    :   
+                            {   
+                                "riprendiamo"   :   {
+                                                        "utterance"     : "Okay, riprendiamo da dove avevamo interrotto",
+                                                        "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
+                                                        "gesture"       : "null",
+                                                        "image"         : "null",
+                                                        "sound"         : "null",
+                                                        "do_trigger"    : "False"
+                                                    },
+                                "risposta_corretta" :   {
+                                                        "utterance"     : "Bravo",
+                                                        "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
+                                                        "gesture"       : "null",
+                                                        "image"         : "null",
+                                                        "sound"         : "null",
+                                                        "do_trigger"    : "False"
+                                                    },
+                                "sei_sicuro" :   {
                                                         "utterance"     : "Sei sicuro, dove lo butteresti?",
                                                         "face"          : "null",
                                                         "gesture"       : "null",
                                                         "image"         : "null",
                                                         "sound"         : "null",
-                                                        "do_dialogue"   : "False"
-                                                    }
-                                },
-                                {
-                                    "risposta_sbagliata_carta" :   {
-                                                                "utterance"     : "La risposta esatta era carta",
-                                                                "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
-                                                                "gesture"       : "null",
-                                                                "image"         : "null",
-                                                                "sound"         : "null",
-                                                                "do_dialogue"   : "False"
-                                                            }
-                                },
-                                {
+                                                        "do_trigger"    : "False"
+                                                    },
+                                "risposta_sbagliata_carta" :   {
+                                                        "utterance"     : "La risposta esatta era carta",
+                                                        "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
+                                                        "gesture"       : "null",
+                                                        "image"         : "null",
+                                                        "sound"         : "null",
+                                                        "do_trigger"    : "False"
+                                                    },
                                     "risposta_sbagliata_vetro" :   {
-                                                                "utterance"     : "La risposta esatta era vetro",
-                                                                "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
-                                                                "gesture"       : "null",
-                                                                "image"         : "null",
-                                                                "sound"         : "null",
-                                                                "do_dialogue"   : "False"
-                                                            }
-                                },
-                                {
-                                    "risposta_sbagliata_plastica" :   {
-                                                                "utterance"     : "La risposta esatta era plastica",
-                                                                "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
-                                                                "gesture"       : "null",
-                                                                "image"         : "null",
-                                                                "sound"         : "null",
-                                                                "do_dialogue"   : "False"
-                                                            }
-                                },
-                                {
-                                    "terapista" :   {
+                                                        "utterance"     : "La risposta esatta era vetro",
+                                                        "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
+                                                        "gesture"       : "null",
+                                                        "image"         : "null",
+                                                        "sound"         : "null",
+                                                        "do_trigger"    : "False"
+                                                    },
+                                "risposta_sbagliata_plastica" :   {
+                                                        "utterance"     : "La risposta esatta era plastica",
+                                                        "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
+                                                        "gesture"       : "null",
+                                                        "image"         : "null",
+                                                        "sound"         : "null",
+                                                        "do_trigger"    : "False"
+                                                    },
+                                "terapista" :   {
                                                         "utterance"     : "Okay non ti preoccupare, ora chiamiamo il trapista",
                                                         "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
                                                         "gesture"       : "null",
                                                         "image"         : "null",
                                                         "sound"         : "null",
-                                                        "do_dialogue"   : "False"
+                                                        "do_trigger"    : "False"
                                                     }
-                                }
-                            ]
+                            }
+                            
 }

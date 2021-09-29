@@ -174,11 +174,13 @@ def create_root():
     sequen_robot = py_trees.composites.Sequence(name="SequenceRobot")
     sequen_robot.add_children([scene_manager,Projector,parall_robot])
 
+    """
     sequen_speech_kid = py_trees.composites.Sequence(name="SequenceSpeechKid")
-    sequen_speech_kid.add_children([microphone ,stt])
+    sequen_speech_kid.add_children([microphone, stt])
+    """
 
     parall_detect_kid = py_trees.composites.Parallel(name="ParallelDetectKid")
-    parall_detect_kid.add_children([sequen_speech_kid,custom_yolo])
+    parall_detect_kid.add_children([stt ,custom_yolo])
 
     sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid")
     sequen_detect_kid.add_children([parall_detect_kid, bot_analyzer])                                        
@@ -191,8 +193,8 @@ def create_root():
     eor_kid = py_trees.idioms.either_or(
         name="EitherOrKid",
         conditions=[
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/"+ PyTreeNameSpace.mainactivity.name+ "/do_dialogue", True, operator.eq),
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/"+ PyTreeNameSpace.mainactivity.name+ "/do_dialogue", True, operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/"+ PyTreeNameSpace.mainactivity.name+ "/do_kid", True, operator.eq),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/"+ PyTreeNameSpace.mainactivity.name+ "/do_kid", True, operator.ne),
         ],
         subtrees=[sequen_detect_kid, Success2],
         namespace="eor_kid",
@@ -216,11 +218,8 @@ def create_root():
         namespace="eor_gesture",
     )
 
-    parall_face_gesture = py_trees.composites.Parallel(name="ParallelFaceGesture")
-    parall_face_gesture.add_children([eor_face,eor_gesture])
-
     parall_face_gesture_kid = py_trees.composites.Parallel(name="ParallelFaceGestureKid")
-    parall_face_gesture_kid.add_children([eor_kid, parall_face_gesture])
+    parall_face_gesture_kid.add_children([eor_kid, eor_face, eor_gesture])
 
     root.add_children([sequen_robot, parall_face_gesture_kid, subtree_result, running_or_success])
 
@@ -282,13 +281,13 @@ def main():
     #if args.interactive:
     #    py_trees.console.read_single_keypress()
     #while True:
-    for unused_i in range(1, 100):
+    for unused_i in range(1, 20):
         try:
             behaviour_tree.tick()
             #if args.interactive:
             #    py_trees.console.read_single_keypress()
             #else:
-            time.sleep(0.4)
+            time.sleep(2)
         except KeyboardInterrupt:
             break
     print("\n")

@@ -61,7 +61,7 @@ class DialogStateLex(Enum):
     CONFIRM_INTENT = "ConfirmIntent" 
     ELICIT_INTENT = "ElicitIntent"
     ELICIT_SLOT = "ElicitSlot"
-    FAILED = "Faild"
+    FAILED = "Failed"
     FULFILLED = "Fulfilled"
     READY_FOR_FULFILLMENT = "ReadyForFulfillment"
     UNKNOWN_TO_SDK_VERSION = "UnknownToSdkVersion"

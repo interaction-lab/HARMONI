@@ -96,8 +96,9 @@ class STTGoogleService(HarmoniServiceManager):
 
     def callback(self, data):
         """ Callback function subscribing to the microphone topic"""
-        # rospy.loginfo("Add data to buffer")
-        self._buff.put(data.data)
+        #rospy.loginfo("Add data to buffer")
+        if self.state == State.REQUEST:
+            self._buff.put(data.data)
         # rospy.loginfo("Items in buffer: "+ str(self._buff.qsize()))
 
         # else:
@@ -237,6 +238,8 @@ class STTGoogleService(HarmoniServiceManager):
             rospy.loginfo("Service call failed")
             self.response_received = True
             self.result_msg = ""
+        finally:
+            self._buff.queue.clear()
         return {"response": self.state, "message": self.result_msg}
 
     def wav_to_data(self, path):

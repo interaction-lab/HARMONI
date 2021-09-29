@@ -75,15 +75,15 @@ def create_root():
 
     root = py_trees.composites.Selector(name="root")
 
+    on_module = o.create_root()
+
     yolo_service = ImageAIYoloServicePytree("FaceDetection")
 
     session = s.create_root()
 
-    on_module = o.create_root()
-
     parallel_onModule_detectFace_session = py_trees.composites.Parallel(name="ParallelOnModuleDetectFaceSession")
     
-    parallel_onModule_detectFace_session.add_children([yolo_service, on_module, session])
+    parallel_onModule_detectFace_session.add_children([on_module, yolo_service, session])
     
     reset = r.create_root()
 

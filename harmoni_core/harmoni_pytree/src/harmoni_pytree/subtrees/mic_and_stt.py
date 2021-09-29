@@ -14,7 +14,6 @@ from random import randint
 import subprocess
 import operator
 import py_trees.console as console
-from harmoni_pytree import either_custom as eu
 import running_or_success as rs
 
 from harmoni_common_lib.constants import *
@@ -29,11 +28,8 @@ from harmoni_pytree.leaves.microphone_service import MicrophoneServicePytree
 from harmoni_pytree.leaves.speaker_service import SpeakerServicePytree
 #from harmoni_pytree.leaves.gesture_service import GestureServicePytree
 from harmoni_pytree.leaves.subtree_result_main import SubTreeResultMain
-from harmoni_pytree.leaves.counter_no_answer import CounterNoAnswer
 from harmoni_pytree.leaves.scene_manager_main import SceneManagerMain
 from harmoni_pytree.leaves.custom_yolo_service import ImageAICustomServicePytree
-from harmoni_pytree.leaves.timer import Timer
-from harmoni_pytree.leaves.timer_reset import TimerReset
 
 ##############################################################################
 # Classes
@@ -99,7 +95,7 @@ def create_root(name= "MicAndSTT"):
     stt=SpeechToTextServicePytree("SpeechToTextMainActivity")
 
     root = py_trees.composites.Sequence(name="MicAndSTT")
-    root.add_children([microphone ,stt])
+    root.add_children([microphone , py_trees.behaviours.SuccessEveryN(name="sn3",n=3), stt])
 
     return root
 

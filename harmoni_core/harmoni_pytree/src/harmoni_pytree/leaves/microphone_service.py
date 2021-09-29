@@ -78,35 +78,23 @@ class MicrophoneServicePytree(py_trees.behaviour.Behaviour):
             # Send request for each sensor service to set themselves up
             self.service_client_microphone.send_goal(
                 action_goal=ActionType["ON"].value,
+                optional_data="Setup",
                 wait="",
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
-        #TODO check if these states are good
-        elif new_state == GoalStatus.ACTIVE:
+        elif new_state == GoalStatus.SUCCEEDED:
             new_status = py_trees.common.Status.SUCCESS
-        elif new_state == GoalStatus.PENDING:
-            self.service_client_microphone.cancel_goal()
-            self.service_client_microphone.stop_tracking_goal()
-            self.logger.debug(f"Sending goal to {self.server_name}")
-            # Send request for each sensor service to set themselves up
-            self.service_client_microphone.send_goal(
-                action_goal=ActionType["ON"].value,
-                wait="",
-            )
-            self.logger.debug(f"Goal sent to {self.server_name}")
-            new_status = py_trees.common.Status.RUNNING
         elif new_state == GoalStatus.ABORTED:
             #FIXME dovrebbe essere .FAILURE
             new_status = py_trees.common.Status.SUCCESS
         else:
-            #FIXME dovrebbe essere .FAILURE
-            new_status = py_trees.common.Status.SUCCESS
-
+            new_status = py_trees.common.Status.FAILURE
         self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status
 
     def terminate(self, new_status):
+        """
         if new_status == py_trees.common.Status.INVALID:
             new_state = self.service_client_microphone.get_state()
             if new_state != GoalStatus.LOST:
@@ -122,6 +110,7 @@ class MicrophoneServicePytree(py_trees.behaviour.Behaviour):
         else:
             #execute actions for the following states (SUCCESS || FAILURE)
             pass
+        """
         self.logger.debug("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))
 
     def _result_callback(self, result):

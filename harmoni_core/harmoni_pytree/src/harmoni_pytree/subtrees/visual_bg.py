@@ -26,9 +26,7 @@ from harmoni_pytree.leaves.aws_tts_service import AWSTtsServicePytree
 from harmoni_pytree.leaves.facial_exp_service import FacialExpServicePytree
 from harmoni_pytree.leaves.lip_sync_service import LipSyncServicePytree
 from harmoni_pytree.leaves.google_service import SpeechToTextServicePytree
-from harmoni_pytree.leaves.microphone_service import MicrophoneServicePytree
 from harmoni_pytree.leaves.speaker_service import SpeakerServicePytree
-from harmoni_pytree.leaves.yolo_service import ImageAIYoloServicePytree
 
 ##############################################################################
 # Classes
@@ -109,18 +107,13 @@ def create_root(name = "Visual_Bg"):
 
     lip_sync=LipSyncServicePytree("LipSyncVisualBg")
 
-    microphone=MicrophoneServicePytree("MicrophonePytreeVisualBg")
-
     subtree_result = SubTreeResultVisualBg("SubTreeVisual")
 
     parall_speaker = py_trees.composites.Parallel(name="ParallelSpeaker")
     parall_speaker.add_children([speaker,lip_sync])    
 
-    sequen_speech_kid = py_trees.composites.Sequence(name="SequenceSpeechKid")
-    sequen_speech_kid.add_children([microphone ,stt])
-
     sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid")
-    sequen_detect_kid.add_children([sequen_speech_kid, bot_analyzer])                                         
+    sequen_detect_kid.add_children([stt, bot_analyzer])                                         
 
     eor_face = py_trees.idioms.either_or(
         name="EitherOrFace",

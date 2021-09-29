@@ -68,7 +68,7 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
 
         else:
             self.blackboard_scene.visual.do_trigger = False #deve essere usato solo bot_analyzer dopo la scena 0
-            if self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.FAILED:
+            if self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.FAILED.value:
                 self.blackboard_bot.trigger.result = self.blackboard_bot.analyzer.result["message"]
                 self.blackboard_scene.therapist_needed = True
             else:

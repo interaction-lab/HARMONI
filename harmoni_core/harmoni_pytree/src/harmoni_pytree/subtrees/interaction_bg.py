@@ -23,7 +23,6 @@ from harmoni_pytree.leaves.aws_tts_service import AWSTtsServicePytree
 from harmoni_pytree.leaves.facial_exp_service import FacialExpServicePytree
 from harmoni_pytree.leaves.lip_sync_service import LipSyncServicePytree
 from harmoni_pytree.leaves.google_service import SpeechToTextServicePytree
-from harmoni_pytree.leaves.microphone_service import MicrophoneServicePytree
 from harmoni_pytree.leaves.speaker_service import SpeakerServicePytree
 from harmoni_pytree.leaves.custom_yolo_service import ImageAICustomServicePytree
 from harmoni_pytree.leaves.scene_manager_interactionbg import SceneManagerInteractionBg
@@ -107,19 +106,14 @@ def create_root(name = "Interaction_Bg"):
     speaker=SpeakerServicePytree("SpeakerInteractionBg")
 
     lip_sync=LipSyncServicePytree("LipSyncInteractionBg")
-
-    microphone=MicrophoneServicePytree("MicrophoneInteractionBg")
                                              
     subtree_result=SubTreeResultInteractionBg("SubTreeInteraction")
 
     parall_speaker = py_trees.composites.Parallel(name="ParallelSpeaker")
     parall_speaker.add_children([speaker,lip_sync])  
 
-    sequen_speech_kid = py_trees.composites.Sequence(name="SequenceSpeechKid")
-    sequen_speech_kid.add_children([microphone ,stt])
-
     parall_detect_kid = py_trees.composites.Parallel(name="ParallelDetectKid")
-    parall_detect_kid.add_children([sequen_speech_kid,custom_yolo])
+    parall_detect_kid.add_children([stt, custom_yolo])
 
     sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid")
     sequen_detect_kid.add_children([parall_detect_kid, bot_analyzer])                                         
