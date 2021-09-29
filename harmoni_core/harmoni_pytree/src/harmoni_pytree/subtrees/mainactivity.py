@@ -24,7 +24,6 @@ from harmoni_pytree.leaves.aws_tts_service import AWSTtsServicePytree
 from harmoni_pytree.leaves.facial_exp_service import FacialExpServicePytree
 from harmoni_pytree.leaves.lip_sync_service import LipSyncServicePytree
 from harmoni_pytree.leaves.google_service import SpeechToTextServicePytree
-from harmoni_pytree.leaves.microphone_service import MicrophoneServicePytree
 from harmoni_pytree.leaves.speaker_service import SpeakerServicePytree
 #from harmoni_pytree.leaves.gesture_service import GestureServicePytree
 from harmoni_pytree.leaves.subtree_result_main import SubTreeResultMain
@@ -119,8 +118,6 @@ def create_root():
 
     lip_sync=LipSyncServicePytree("LipsSyncMainActivity")
 
-    microphone=MicrophoneServicePytree("MicrophoneMainActivity")
-
     custom_yolo = ImageAICustomServicePytree("DetectionCardMain")
     
     """                               
@@ -173,11 +170,6 @@ def create_root():
     
     sequen_robot = py_trees.composites.Sequence(name="SequenceRobot")
     sequen_robot.add_children([scene_manager,Projector,parall_robot])
-
-    """
-    sequen_speech_kid = py_trees.composites.Sequence(name="SequenceSpeechKid")
-    sequen_speech_kid.add_children([microphone, stt])
-    """
 
     parall_detect_kid = py_trees.composites.Parallel(name="ParallelDetectKid")
     parall_detect_kid.add_children([stt ,custom_yolo])

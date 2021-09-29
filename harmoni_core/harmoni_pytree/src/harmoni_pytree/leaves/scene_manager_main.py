@@ -194,6 +194,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                         self.blackboard_scene.image = self.context["error_handling"]["sei_sicuro"]["image"]
                         self.blackboard_scene.sound = self.context["error_handling"]["sei_sicuro"]["sound"]
                         self.blackboard_scene.mainactivity.do_trigger = self.context["error_handling"]["sei_sicuro"]["do_trigger"]=="True"
+                        self.blackboard_scene.mainactivity.do_kid = True
                     elif self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.ELICIT_INTENT.value:
                         print("dialogState == ELICIT_INTENT")
                         self.blackboard_scene.utterance = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["utterance"]

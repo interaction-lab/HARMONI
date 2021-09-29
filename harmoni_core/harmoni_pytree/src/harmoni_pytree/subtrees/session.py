@@ -91,7 +91,7 @@ def create_root(name = "Session"):
 
     interaction_bg_inverter = py_trees.decorators.Inverter(name="InteractionBgInverter",child=interaction_bg)
 
-    root.add_children([therapist, visual_bg_inverter, interaction_bg_inverter, inverter_mainactivity])
+    root.add_children([therapist, visual_bg_inverter, interaction_bg_inverter, inverter_mainactivity, py_trees.behaviours.Running(name="Idle")])
 
     return root
 
