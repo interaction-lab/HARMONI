@@ -79,7 +79,7 @@ def create_root(name= "RunningOrSuccess", condition = typing.List[common.Compari
     root = py_trees.idioms.either_or(
         name="Either_Or_"+name,
         conditions=condition,
-        subtrees=[py_trees.behaviours.Success(), py_trees.behaviours.Failure()],
+        subtrees=[py_trees.behaviours.Running(), py_trees.behaviours.Success()],
         namespace="running_or_success_"+name,
     )
 

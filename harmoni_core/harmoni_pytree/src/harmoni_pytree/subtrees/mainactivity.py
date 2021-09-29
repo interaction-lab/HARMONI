@@ -178,8 +178,8 @@ def create_root():
     sequen_detect_kid.add_children([parall_detect_kid, bot_analyzer])                                        
 
     running_or_success = rs.create_root(name="RsMainactivity", condition=[
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.mainactivity.name+"/finished", "True", operator.ne),
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.mainactivity.name+"/finished", "True", operator.eq),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.mainactivity.name+"/finished", True, operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.mainactivity.name+"/finished", True, operator.eq),
     ])
 
     eor_kid = py_trees.idioms.either_or(
@@ -213,7 +213,7 @@ def create_root():
     parall_face_gesture_kid = py_trees.composites.Parallel(name="ParallelFaceGestureKid")
     parall_face_gesture_kid.add_children([eor_kid, eor_face, eor_gesture])
 
-    root.add_children([sequen_robot, parall_face_gesture_kid, subtree_result, running_or_success])
+    root.add_children([sequen_robot, parall_face_gesture_kid, subtree_result])
 
     return root
 

@@ -149,8 +149,8 @@ def create_root(name = "Interaction_Bg"):
         namespace="eor_interaction_bg",
     )
     running_or_success = rs.create_root(name="RsInteracion", condition=[
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.interaction.name+"/finished", "True", operator.ne),
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.interaction.name+"/finished", "True", operator.eq),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.interaction.name+"/finished", True, operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.interaction.name+"/finished", True, operator.eq),
     ])
 
     root.add_children([eor_interaction_bg, subtree_result, running_or_success])

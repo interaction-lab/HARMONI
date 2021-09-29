@@ -1,7 +1,7 @@
 {
     "scene" :   [
                     {
-                        "utterance"     : "Ciao sono Quitty",
+                        "utterance"     : "Ciao Pietro",
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "null",
@@ -9,7 +9,7 @@
                         "do_trigger"    : "False"
                     },
                     {
-                        "utterance"     : "e sono bella" ,
+                        "utterance"     : "Ciao Rosalba" ,
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "null",
