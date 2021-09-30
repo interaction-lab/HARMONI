@@ -1,7 +1,7 @@
 {
     "scene" :   [
                     {
-                        "utterance"     : "Ciao sono Kitty",
+                        "utterance"     : "Ci siamo appena svegliati, andiamo a fare colazione con latte e cereali.",
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "null",
@@ -9,7 +9,7 @@
                         "do_trigger"    : "False"
                     },
                     {
-                        "utterance"     : "tu chi sei?" ,
+                        "utterance"     : "Oh no, come sempre il papà lascia il cartone e le bottiglie vuote in frigo" ,
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "null",
@@ -17,21 +17,159 @@
                         "do_trigger"    : "False"
                     },
                     {
-                        "utterance"     : "oggetto carta",
+                        "utterance"     : "E’ finito il latte, dobbiamo andare a comprarlo",
                         "face"          : "[{'start': 5, 'type': 'action', 'id': 'saucy_face'}]",
+                        "gesture"       : "null",
+                        "image"         : "null",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "Ma prima buttiamo via queste cose vuote",
+                        "face"          : "[{'start': 5, 'type': 'action', 'id': 'saucy_face'}]",
+                        "gesture"       : "null",
+                        "image"         : "null",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "Sai come si fa la raccolta differenziata?",
+                        "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "null",
                         "sound"         : "null",
                         "do_trigger"    : "True"
                     },
                     {
-                        "utterance"     : "La raccolta differenziata consiste nel...",
-                        "face"          : "[{'start': 5, 'type': 'action', 'id': 'saucy_face'}]",
+                        "utterance"     : "Ripassiamola di nuovo" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "null",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "La raccolta differenziata è l’operazione che permette di separare i rifiuti",
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "null",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "suddividendo quelli da smaltire da quelli ",
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "null",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "che invece si possono recuperare, riciclare o reimpiegare",
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "null",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "Riusare e riutilizzare i rifiuti" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "null",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "contribuisce a restituirci e conservare un ambiente naturale più ricco.",
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "null",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "Se consideriamo plastica, vetro e carta ",
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "null",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "nella carta vanno buttati …" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "null",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "nella plastica vanno buttati…",
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "null",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "nel vetro vanno buttati…",
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "null",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "Dove butteresti questo?" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "null",
+                        "sound"         : "null",
+                        "do_trigger"    : "True"
+                    },
+                    {
+                        "utterance"     : "Questo dove lo butteresti?",
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "null",
+                        "sound"         : "null",
+                        "do_trigger"    : "True"
+                    },
+                    {
+                        "utterance"     : "Dove butteresti questo?",
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "null",
+                        "sound"         : "null",
+                        "do_trigger"    : "True"
+                    },
+                    {
+                        "utterance"     : "Ora che abbiamo finito" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "null",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "possiamo andare a comprare il latte per fare colazione",
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "null",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "Guarda che nuvole scure fuori",
+                        "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "null",
                         "sound"         : "null",
                         "do_trigger"    : "False"
                     }
+
+
                 ],
     "error_handling"    :   
                             {   
