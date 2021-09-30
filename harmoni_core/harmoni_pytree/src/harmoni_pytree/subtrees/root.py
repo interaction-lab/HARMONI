@@ -162,7 +162,7 @@ def main():
             #if args.interactive:
             #    py_trees.console.read_single_keypress()
             #else:
-            time.sleep(0.4)
+            time.sleep(2)
         except KeyboardInterrupt:
             break
     print("\n")

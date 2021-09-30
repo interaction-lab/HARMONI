@@ -12,6 +12,9 @@ import time
 import subprocess
 import py_trees.console as console
 import os
+import operator
+from harmoni_common_lib.constants import *
+import running_or_failure as rf
 from harmoni_pytree.subtrees import visual_bg as v
 from harmoni_pytree.subtrees import interaction_bg as i 
 from harmoni_pytree.subtrees import mainactivity as m 
@@ -80,18 +83,30 @@ def create_root(name = "Session"):
     therapist = t.create_root()
 
     mainactivity = m.create_root()
-
     inverter_mainactivity = py_trees.decorators.Inverter(name="InverterMainActivity",child=mainactivity)
 
-    visual_bg = v.create_root()
+    rf_mainactivity = rf.create_root(name="RFMainactivity", condition=[
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.mainactivity.name+"/finished", True, operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.mainactivity.name+"/finished", True, operator.eq),
+    ])
 
+    visual_bg = v.create_root()
     visual_bg_inverter = py_trees.decorators.Inverter(name="VisualBgInverter",child=visual_bg)
 
-    interaction_bg = i.create_root()
+    rf_visual = rf.create_root(name="RFVisual", condition=[
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.visual.name+"/finished", True, operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.visual.name+"/finished", True, operator.eq),
+    ])
 
+    interaction_bg = i.create_root()
     interaction_bg_inverter = py_trees.decorators.Inverter(name="InteractionBgInverter",child=interaction_bg)
 
-    root.add_children([therapist, visual_bg_inverter, interaction_bg_inverter, inverter_mainactivity, py_trees.behaviours.Running(name="Idle")])
+    rf_interaction = rf.create_root(name="RFInteracion", condition=[
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.interaction.name+"/finished", True, operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.interaction.name+"/finished", True, operator.eq),
+    ])
+
+    root.add_children([therapist, visual_bg_inverter, rf_visual, interaction_bg_inverter, rf_interaction, inverter_mainactivity, rf_mainactivity])
 
     return root
 

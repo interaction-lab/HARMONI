@@ -69,14 +69,14 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
         else:
             self.blackboard_scene.visual.do_trigger = False #deve essere usato solo bot_analyzer dopo la scena 0
             if self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.FAILED.value:
-                self.blackboard_bot.trigger.result = self.blackboard_bot.analyzer.result["message"]
+                self.blackboard_bot.trigger.result = {"message": self.blackboard_bot.analyzer.result["message"]}
                 self.blackboard_scene.therapist_needed = True
             else:
                 if self.blackboard_scene.visual.scene_counter <= 2: 
-                    self.blackboard_bot.trigger.result = self.blackboard_bot.analyzer.result["message"]
+                    self.blackboard_bot.trigger.result = {"message": self.blackboard_bot.analyzer.result["message"]}
                     self.blackboard_scene.visual.scene_counter += 1
                 else:
-                    self.blackboard_bot.trigger.result = self.context["terapista"]["utterance"]
+                    self.blackboard_bot.trigger.result = {"message": self.context["terapista"]["utterance"]}
                     self.blackboard_scene.face_exp = self.context["terapista"]["face"]
                     self.blackboard_scene.therapist_needed = True
         

@@ -37,10 +37,11 @@ class SubTreeResultVisualBg(py_trees.behaviour.Behaviour):
             self.blackboard_visual.inside = True
             self.blackboard_visual.finished = False
         #caso in cui si è arrivato al numero massimo di scene o il bimbo c'è -->
-        elif self.blackboard_face_detect.result is not "null":
+        else:
             self.blackboard_scene_visual.scene_counter = 0
-        elif self.blackboard_visual.inside == True and self.blackboard_face_detect.result is not "null":
-            self.blackboard_visual.finished = True
+            if self.blackboard_visual.inside == True:
+                self.blackboard_visual.finished = True
+                
             
         self.logger.debug("  %s [SubTreeResultVisualBg::update()]" % self.name)
         return py_trees.common.Status.SUCCESS

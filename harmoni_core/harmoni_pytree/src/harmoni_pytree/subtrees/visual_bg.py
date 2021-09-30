@@ -13,7 +13,6 @@ from random import randint
 import subprocess
 import operator
 import py_trees.console as console
-import running_or_success as rs
 
 import rospy
 from harmoni_common_lib.constants import *
@@ -150,12 +149,7 @@ def create_root(name = "Visual_Bg"):
         namespace="eor_visual",
     )
 
-    running_or_success = rs.create_root(name="RsVisual", condition=[
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.visual.name+"/finished", True, operator.ne),
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.visual.name+"/finished", True, operator.eq),
-    ])
-
-    root.add_children([eor_visual, subtree_result, running_or_success])
+    root.add_children([eor_visual, subtree_result])
 
     return root
 

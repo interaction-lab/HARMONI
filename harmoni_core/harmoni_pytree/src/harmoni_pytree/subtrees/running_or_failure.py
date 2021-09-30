@@ -29,7 +29,7 @@ def description(root):
         banner_line = console.green + "*" * 79 + "\n" + console.reset
         s = "\n"
         s += banner_line
-        s += console.bold_white + "Running or success".center(79) + "\n" + console.reset
+        s += console.bold_white + "Running or failure".center(79) + "\n" + console.reset
         s += banner_line
         s += "\n"
         s += content
@@ -74,13 +74,13 @@ def post_tick_handler(snapshot_visitor, behaviour_tree):
     print(py_trees.display.unicode_blackboard())
 
 
-def create_root(name= "RunningOrSuccess", condition = typing.List[common.ComparisonExpression]):
+def create_root(name= "RunningOrFailure", condition = typing.List[common.ComparisonExpression]):
 
     root = py_trees.idioms.either_or(
-        name="Either_Or_"+name,
+        name=name+"(either_or)",
         conditions=condition,
-        subtrees=[py_trees.behaviours.Running(), py_trees.behaviours.Success()],
-        namespace="running_or_success_"+name,
+        subtrees=[py_trees.behaviours.Running(), py_trees.behaviours.Failure()],
+        namespace="running_or_failure_"+name,
     )
 
     return root

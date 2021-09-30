@@ -47,6 +47,7 @@ class ImageAICustomService(HarmoniServiceManager):
         self.detector.setJsonPath("/root/harmoni_catkin_ws/src/HARMONI/harmoni_detectors/harmoni_imageai/src/detection_config_card.json") 
         self.detector.setModelPath(os.path.join(self.model_path, self.model_name))
         self.detector.loadModel()
+        self.capture_frame = True
 
         self.cv_bridge = CvBridge()
         self._buff = queue.Queue()
@@ -85,7 +86,10 @@ class ImageAICustomService(HarmoniServiceManager):
     #TODO
     def callback(self, data):
         """ Callback function subscribing to the camera topic"""
-        self._buff.put(data) #prima era put(data.data)
+        if self.state == State.REQUEST:
+            if self.capture_frame:
+                self._buff.put(data) #prima era put(data.data)
+                self.capture_frame = False
     
     
     def imageai_callback(self, data):
@@ -98,22 +102,24 @@ class ImageAICustomService(HarmoniServiceManager):
         self.state = State.REQUEST
         try:
             
-            data_tmp = self.cv_bridge.imgmsg_to_cv2(self._buff.get(), desired_encoding='passthrough')
-            
-            self.detections = self.detector.detectObjectsFromImage(input_type="array", 
-                                                                output_type="array",
-                                                                input_image=data_tmp,
-                                                                minimum_percentage_probability=self.minimum_percentage_probability,
-                                                                extract_detected_objects=True)
-            #self.result_msg = str(self.detections[1])
-            if len(self.detections[1]) != 0:
-                for eachObject in self.detections[1]:
-                    self.result_msg += str(eachObject["name"]) + " with: " +str(eachObject["percentage_probability"]) + " - "
-                    print(eachObject["name"] , " : " , eachObject["percentage_probability"], " : ", eachObject["box_points"] )
-                    print("--------------------------------")
-            else:
-                print("Yolo detection --> null")
-                self.result_msg = "null"
+            for i in range(1, 10):
+                data_tmp = self.cv_bridge.imgmsg_to_cv2(self._buff.get(), desired_encoding='passthrough')
+                self.detections = self.detector.detectObjectsFromImage(input_type="array", 
+                                                                    output_type="array",
+                                                                    input_image=data_tmp,
+                                                                    minimum_percentage_probability=self.minimum_percentage_probability,
+                                                                    extract_detected_objects=True)
+                self.capture_frame = True
+                print("RISULTATO ANAISI FOTO NUMERO: ", i)
+                #self.result_msg = str(self.detections[1])
+                if len(self.detections[1]) != 0:
+                    for eachObject in self.detections[1]:
+                        self.result_msg += str(eachObject["name"]) + " with: " +str(eachObject["percentage_probability"]) + " - "
+                        print(eachObject["name"] , " : " , eachObject["percentage_probability"], " : ", eachObject["box_points"] )
+                        print("--------------------------------")
+                else:
+                    print("Yolo detection --> null")
+                    self.result_msg = "null"
             
             self.response_received = True
             self.state = State.SUCCESS
@@ -123,6 +129,8 @@ class ImageAICustomService(HarmoniServiceManager):
             self.response_received = True
             rospy.loginfo("Service call failed")
             self.result_msg = ""
+        finally: 
+            self._buff.queue.clear()
         return {"response": self.state, "message": self.result_msg}
 
     def start(self, rate=""):

@@ -14,7 +14,6 @@ from random import randint
 import subprocess
 import operator
 import py_trees.console as console
-import running_or_success as rs
 
 from harmoni_common_lib.constants import *
 
@@ -176,11 +175,6 @@ def create_root():
 
     sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid")
     sequen_detect_kid.add_children([parall_detect_kid, bot_analyzer])                                        
-
-    running_or_success = rs.create_root(name="RsMainactivity", condition=[
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.mainactivity.name+"/finished", True, operator.ne),
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.mainactivity.name+"/finished", True, operator.eq),
-    ])
 
     eor_kid = py_trees.idioms.either_or(
         name="EitherOrKid",

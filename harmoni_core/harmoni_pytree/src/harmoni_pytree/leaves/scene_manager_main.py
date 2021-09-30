@@ -177,7 +177,9 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                         print("dialogState == FAILED")
                         #siamo qui se: o sono finiti i tentativi oppure se nel confermation intent rispondi no
                         #qui devi dire la risposta corretta
+                        #FIXME vedi come prendere il tipo di rifiuto
                         oggetto = self.blackboard_scene.utterance.split(" ")[1]
+                        oggetto = "carta"
                         risposta_sbagliata = "risposta_sbagliata_"+oggetto
                         self.blackboard_scene.utterance = self.context["error_handling"][risposta_sbagliata]["utterance"]
                         self.blackboard_scene.face_exp = self.context["error_handling"][risposta_sbagliata]["face"]
