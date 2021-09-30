@@ -55,7 +55,7 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
     def update(self):
         self.logger.debug("  %s [SceneManagerInteractionBg::update()]" % self.name)
 
-        self.blackboard_scene.mainactivity.do_trigger = False
+        self.blackboard_scene.interaction.do_trigger = False
         self.blackboard_scene.therapist_needed = False
         self.blackboard_scene.face_exp = "null"
 
