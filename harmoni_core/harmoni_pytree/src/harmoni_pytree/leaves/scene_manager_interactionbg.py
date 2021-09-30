@@ -59,43 +59,58 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
         self.blackboard_scene.therapist_needed = False
         self.blackboard_scene.face_exp = "null"
 
+        print("STATE OF SCENE MANAGER INTERACTION")
+
         if self.blackboard_bot.analyzer.result == "null":
+            print("self.blackboard_bot.analyzer.result == null")
             self.blackboard_scene.interaction.do_trigger = True
             self.blackboard_scene.utterance = self.context["scene"][self.blackboard_scene.interaction.scene_counter]["utterance"]
             self.blackboard_scene.face_exp = self.context["scene"][self.blackboard_scene.interaction.scene_counter]["face"]
         else:
             if self.blackboard_bot.analyzer.result == "void_answer":
+                print("self.blackboard_bot.analyzer.result == void_answer")
                 self.blackboard_scene.therapist_needed = True
                 self.blackboard_scene.utterance = self.context["error_handling"]["terapista"]["utterance"]
                 self.blackboard_scene.face_exp = self.context["error_handling"]["terapista"]["face"]
-            elif self.blackboard_bot.analyzer.result["intentName"] == "Stop": 
-                self.blackboard_scene.therapist_needed = True
-                self.blackboard_scene.utterance = self.context["error_handling"]["terapista"]["utterance"]
-                self.blackboard_scene.face_exp = self.context["error_handling"]["terapista"]["face"]
-            elif self.blackboard_bot.analyzer.result["intentName"] == "NonHoCapito": 
-                self.blackboard_scene.therapist_needed = True
-                self.blackboard_scene.utterance = self.context["error_handling"]["terapista"]["utterance"]
-                self.blackboard_scene.face_exp = self.context["error_handling"]["terapista"]["face"]
-            elif self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.FULFILLED.value or self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.READY_FOR_FULFILLMENT.value:
-                self.blackboard_scene.utterance = self.blackboard_bot.analyzer.result["message"]
-                self.blackboard_scene.interaction.scene_counter += 1
-            elif self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.CONFIRM_INTENT.value:
-                self.blackboard_scene.utterance = self.blackboard_bot.analyzer.result["message"]
-            elif self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.FAILED.value:
-                self.blackboard_scene.utterance = self.blackboard_bot.analyzer.result["message"]
-                self.blackboard_scene.interaction.scene_counter += 1
-            elif self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.ELICIT_SLOT.value:
-                #TODO forse da cambiare con ripetere scena corrente
-                self.blackboard_scene.utterance = self.blackboard_bot.analyzer.result["message"]
-            elif self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.ELICIT_INTENT.value:
-                self.blackboard_scene.utterance = self.context["scene"][self.blackboard_scene.interaction.scene_counter]["utterance"]
-                self.blackboard_scene.interaction.do_trigger = True
             else:
-                #qui non dovremmo mai entrare in quanto abbiamo gestito tutti gli stati
-                pass
+                print("Intent name: ",self.blackboard_bot.analyzer.result["intentName"])
+                print("Dialog state: ",self.blackboard_bot.analyzer.result["dialogState"])
+                if self.blackboard_bot.analyzer.result["intentName"] == "Stop": 
+                    print("intentName == Stop")
+                    self.blackboard_scene.therapist_needed = True
+                    self.blackboard_scene.utterance = self.context["error_handling"]["terapista"]["utterance"]
+                    self.blackboard_scene.face_exp = self.context["error_handling"]["terapista"]["face"]
+                elif self.blackboard_bot.analyzer.result["intentName"] == "NonHoCapito":
+                    print("intentName == NonHoCapito") 
+                    self.blackboard_scene.therapist_needed = True
+                    self.blackboard_scene.utterance = self.context["error_handling"]["terapista"]["utterance"]
+                    self.blackboard_scene.face_exp = self.context["error_handling"]["terapista"]["face"]
+                elif self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.FULFILLED.value or self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.READY_FOR_FULFILLMENT.value:
+                    print("dialogState == FULFILLED")
+                    self.blackboard_scene.utterance = self.blackboard_bot.analyzer.result["message"]
+                    self.blackboard_scene.interaction.scene_counter += 1
+                elif self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.CONFIRM_INTENT.value:
+                    print("dialogState == CONFIRM_INTENT")
+                    self.blackboard_scene.utterance = self.blackboard_bot.analyzer.result["message"]
+                elif self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.FAILED.value:
+                    print("dialogState == FAILED")
+                    self.blackboard_scene.utterance = self.blackboard_bot.analyzer.result["message"]
+                    self.blackboard_scene.interaction.scene_counter += 1
+                elif self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.ELICIT_SLOT.value:
+                    print("dialogState == ELICIT_SLOT")
+                    #TODO forse da cambiare con ripetere scena corrente
+                    self.blackboard_scene.utterance = self.blackboard_bot.analyzer.result["message"]
+                elif self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.ELICIT_INTENT.value:
+                    print("dialogState == ELICIT_INTENT")
+                    self.blackboard_scene.utterance = self.context["scene"][self.blackboard_scene.interaction.scene_counter]["utterance"]
+                    self.blackboard_scene.interaction.do_trigger = True
+                else:
+                    #qui non dovremmo mai entrare in quanto abbiamo gestito tutti gli stati
+                    pass
             self.blackboard_bot.analyzer.result = "null"
         
         return py_trees.common.Status.SUCCESS
 
     def terminate(self, new_status):
         self.logger.debug("  %s [SceneManagerInteractionBg::terminate()][%s->%s]" % (self.name, self.status, new_status))
+
