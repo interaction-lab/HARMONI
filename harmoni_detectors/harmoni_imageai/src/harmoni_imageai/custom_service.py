@@ -98,7 +98,7 @@ class ImageAICustomService(HarmoniServiceManager):
         """ Callback function subscribing to the camera topic"""
         if self.state == State.REQUEST:
             if self.capture_frame:
-                self._buff.put(data) #prima era put(data.data)
+                self._buff.put(data)
                 self.capture_frame = False
     
     
@@ -114,7 +114,7 @@ class ImageAICustomService(HarmoniServiceManager):
             
             for element in self.custom_objects:
                 self.custom_objects[element] = 0
-            for i in range(1, 10):
+            for i in range(1, 6):
                 data_tmp = self.cv_bridge.imgmsg_to_cv2(self._buff.get(), desired_encoding='passthrough')
                 self.detections = self.detector.detectObjectsFromImage(input_type="array", 
                                                                     output_type="array",
@@ -130,7 +130,7 @@ class ImageAICustomService(HarmoniServiceManager):
                         print(eachObject["name"] , " : " , eachObject["percentage_probability"], " : ", eachObject["box_points"] )
                         print("--------------------------------")
                 else:
-                    print("Yolo detection --> null")
+                    print("YoloCustom detection --> null")
                     
             self.result_msg = max(self.custom_objects, key=self.custom_objects.get)
             

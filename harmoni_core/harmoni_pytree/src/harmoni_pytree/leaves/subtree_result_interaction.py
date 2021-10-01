@@ -20,14 +20,12 @@ class SubTreeResultInteractionBg(py_trees.behaviour.Behaviour):
         self.blackboard_mainactivity = self.attach_blackboard_client(name=self.name, namespace= PyTreeNameSpace.mainactivity.name)
         self.blackboard_mainactivity.register_key("counter_no_answer", access=py_trees.common.Access.WRITE)
         self.blackboard_interaction = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.interaction.name)
-        self.blackboard_interaction.register_key("inside", access=py_trees.common.Access.WRITE)
         self.blackboard_interaction.register_key("finished", access=py_trees.common.Access.WRITE) #NEW
 
     def setup(self):
 
         self.blackboard_mainactivity.counter_no_answer = 0
         self.blackboard_scene_interaction.scene_counter = 0
-        self.blackboard_interaction.inside = False
         self.blackboard_interaction.finished = True
 
         self.logger.debug("  %s [SubTreeResultInteractionBg::setup()]" % self.name)
@@ -39,7 +37,6 @@ class SubTreeResultInteractionBg(py_trees.behaviour.Behaviour):
         #se si è entrati almeno una volta in interaction_bg
         if self.blackboard_mainactivity.counter_no_answer >= 2:
             self.blackboard_mainactivity.counter_no_answer = 0
-            self.blackboard_interaction.inside = True
             self.blackboard_interaction.finished = False
         #caso in cui si è arrivato al numero massimo di scene -->
         if self.blackboard_scene_interaction.scene_counter == self.blackboard_scene_interaction.max_num_scene:

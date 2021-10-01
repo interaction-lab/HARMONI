@@ -22,6 +22,8 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
         self.blackboard_scene.register_key("utterance", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key("face_exp", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key("therapist_needed", access=py_trees.common.Access.WRITE)
+        self.blackboard_interaction = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.interaction.name)
+        self.blackboard_interaction.register_key("inside", access=py_trees.common.Access.WRITE)
         self.blackboard_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name)
         self.blackboard_bot.register_key(key=PyTreeNameSpace.analyzer.name +"/"+"result", access=py_trees.common.Access.WRITE)
         self.blackboard_bot.register_key(key=PyTreeNameSpace.trigger.name +"/"+"result", access=py_trees.common.Access.WRITE)
@@ -47,6 +49,7 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
         self.blackboard_scene.utterance = "null"
         self.blackboard_scene.face_exp = "null"
         self.blackboard_scene.therapist_needed = False
+        self.blackboard_interaction.inside = False
         self.blackboard_scene.interaction.do_trigger = "null"
 
     def initialise(self):
@@ -57,6 +60,7 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
 
         self.blackboard_scene.interaction.do_trigger = False
         self.blackboard_scene.therapist_needed = False
+        self.blackboard_interaction.inside = True
         self.blackboard_scene.face_exp = "null"
 
         print("STATE OF SCENE MANAGER INTERACTION")

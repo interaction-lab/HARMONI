@@ -77,17 +77,25 @@ def create_root():
 
     on_module = o.create_root()
 
+    on_module_inverter = py_trees.decorators.Inverter(name="OnModuleInverter",child=on_module)
+
     yolo_service = ImageAIYoloServicePytree("FaceDetection")
+
+    yolo_service_inverter = py_trees.decorators.Inverter(name="YoloInverter",child=yolo_service)
 
     session = s.create_root()
 
+    ad_libitum = py_trees.composites.Selector(name="AdLibitum")
+
+    ad_libitum.add_children([on_module_inverter, yolo_service_inverter, py_trees.behaviours.Running("Idle")])
+
     parallel_onModule_detectFace_session = py_trees.composites.Parallel(name="ParallelOnModuleDetectFaceSession")
     
-    parallel_onModule_detectFace_session.add_children([on_module, yolo_service, session])
+    parallel_onModule_detectFace_session.add_children([ad_libitum, session])
     
     reset = r.create_root()
 
-    root.add_children([parallel_onModule_detectFace_session, reset, py_trees.behaviours.Running()])
+    root.add_children([parallel_onModule_detectFace_session, reset, py_trees.behaviours.Running("Idle")])
 
     """
     b1 = root.attach_blackboard_client(name="b1", namespace=DetectorNameSpace.card_detect.name)
@@ -156,7 +164,7 @@ def main():
     #if args.interactive:
     #    py_trees.console.read_single_keypress()
     #while True:
-    for unused_i in range(1, 70):
+    for unused_i in range(1, 100):
         try:
             behaviour_tree.tick()
             #if args.interactive:

@@ -16,6 +16,7 @@ import py_trees.console as console
 
 from harmoni_common_lib.constants import *
 
+from harmoni_pytree.leaves.buttons import Buttons
 from harmoni_pytree.leaves.aws_lex_trigger_service import AWSLexTriggerServicePytree
 from harmoni_pytree.leaves.aws_lex_analyzer_service import AWSLexAnalyzerServicePytree
 from harmoni_pytree.leaves.aws_tts_service import AWSTtsServicePytree
@@ -97,6 +98,8 @@ def create_root(name = "Interaction_Bg"):
     tts = AWSTtsServicePytree("AwsTtsInteractionBg")
 
     stt = SpeechToTextServicePytree("SpeechToTextInteractionBg")
+
+    buttons = Buttons(name="ButtonsInteraction")
        
     custom_yolo = ImageAICustomServicePytree("DetectionCardInteraction")
 
@@ -112,7 +115,7 @@ def create_root(name = "Interaction_Bg"):
     parall_speaker.add_children([speaker,lip_sync])  
 
     parall_detect_kid = py_trees.composites.Parallel(name="ParallelDetectKid")
-    parall_detect_kid.add_children([stt, custom_yolo])
+    parall_detect_kid.add_children([stt, custom_yolo, buttons])
 
     sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid")
     sequen_detect_kid.add_children([parall_detect_kid, bot_analyzer])                                         

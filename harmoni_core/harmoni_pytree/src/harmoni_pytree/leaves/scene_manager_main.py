@@ -22,6 +22,8 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         """
         super(SceneManagerMain, self).__init__(name)
 
+        self.do_trigger_old = False
+
         self.blackboards = []
         self.blackboard_scene = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name)
         #self.blackboard_scene.register_key(PyTreeNameSpace.mainactivity.name+"/state", access=py_trees.common.Access.WRITE)
@@ -80,6 +82,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
     def update(self):
         self.logger.debug("  %s [SceneManagerMain::update()]" % self.name)
 
+        self.do_trigger_old = self.blackboard_scene.mainactivity.do_trigger
         self.blackboard_scene.mainactivity.do_trigger = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["do_trigger"]=="True"
         self.blackboard_scene.mainactivity.do_kid = False
         self.blackboard_scene.therapist_needed = False
@@ -89,25 +92,25 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         if self.blackboard_visual.inside == True:
             print("self.blackboard_visual.inside")
             self.blackboard_visual.inside = False
-            if not self.blackboard_scene.mainactivity.do_trigger:
+            if not self.do_trigger_old:
                 self.blackboard_scene.mainactivity.scene_counter -= 1
-            self.blackboard_scene.utterance = self.context["error_handling"]["riprendiamo"]["utterance"]
-            self.blackboard_scene.face_exp = self.context["error_handling"]["riprendiamo"]["face"]
-            self.blackboard_scene.gesture = self.context["error_handling"]["riprendiamo"]["gesture"]
-            self.blackboard_scene.image = self.context["error_handling"]["riprendiamo"]["image"]
-            self.blackboard_scene.sound = self.context["error_handling"]["riprendiamo"]["sound"]
-            self.blackboard_scene.mainactivity.do_kid = self.context["error_handling"]["riprendiamo"]["do_kid"]=="True"
+            self.blackboard_scene.utterance = self.context["error_handling"]["riprendiamo_visual"]["utterance"]
+            self.blackboard_scene.face_exp = self.context["error_handling"]["riprendiamo_visual"]["face"]
+            self.blackboard_scene.gesture = self.context["error_handling"]["riprendiamo_visual"]["gesture"]
+            self.blackboard_scene.image = self.context["error_handling"]["riprendiamo_visual"]["image"]
+            self.blackboard_scene.sound = self.context["error_handling"]["riprendiamo_visual"]["sound"]
+            self.blackboard_scene.mainactivity.do_trigger = self.context["error_handling"]["riprendiamo_visual"]["do_trigger"]=="True"
         elif self.blackboard_interaction.inside == True:
             print("self.blackboard_interaction.inside")
             self.blackboard_interaction.inside = False
-            if not self.blackboard_scene.mainactivity.do_trigger:
+            if not self.do_trigger_old:
                 self.blackboard_scene.mainactivity.scene_counter -= 1
-            self.blackboard_scene.utterance = self.context["error_handling"]["riprendiamo"]["utterance"]
-            self.blackboard_scene.face_exp = self.context["error_handling"]["riprendiamo"]["face"]
-            self.blackboard_scene.gesture = self.context["error_handling"]["riprendiamo"]["gesture"]
-            self.blackboard_scene.image = self.context["error_handling"]["riprendiamo"]["image"]
-            self.blackboard_scene.sound = self.context["error_handling"]["riprendiamo"]["sound"]
-            self.blackboard_scene.mainactivity.do_kid = self.context["error_handling"]["riprendiamo"]["do_kid"]=="True"
+            self.blackboard_scene.utterance = self.context["error_handling"]["riprendiamo_interacion"]["utterance"]
+            self.blackboard_scene.face_exp = self.context["error_handling"]["riprendiamo_interacion"]["face"]
+            self.blackboard_scene.gesture = self.context["error_handling"]["riprendiamo_interacion"]["gesture"]
+            self.blackboard_scene.image = self.context["error_handling"]["riprendiamo_interacion"]["image"]
+            self.blackboard_scene.sound = self.context["error_handling"]["riprendiamo_interacion"]["sound"]
+            self.blackboard_scene.mainactivity.do_trigger = self.context["error_handling"]["riprendiamo_interacion"]["do_trigger"]=="True"
         elif self.blackboard_scene.mainactivity.do_trigger == True:
             print("self.blackboard_scene.mainactivity.do_trigger == True")
             if self.blackboard_bot.analyzer.result == "null":
@@ -217,6 +220,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
             self.blackboard_scene.gesture = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["gesture"]
             self.blackboard_scene.image = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["image"]
             self.blackboard_scene.sound = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["sound"]
+            self.blackboard_scene.mainactivity.do_trigger = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["do_trigger"]=="True"
             self.blackboard_scene.mainactivity.scene_counter += 1
             self.counter_non_ho_capito = 0
         self.blackboard_bot.trigger.result = {"message": self.blackboard_scene.utterance}

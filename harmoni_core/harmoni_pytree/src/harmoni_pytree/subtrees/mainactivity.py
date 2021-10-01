@@ -17,6 +17,7 @@ import py_trees.console as console
 
 from harmoni_common_lib.constants import *
 
+from harmoni_pytree.leaves.buttons import Buttons
 from harmoni_pytree.leaves.aws_lex_trigger_service import AWSLexTriggerServicePytree
 from harmoni_pytree.leaves.aws_lex_analyzer_service import AWSLexAnalyzerServicePytree
 from harmoni_pytree.leaves.aws_tts_service import AWSTtsServicePytree
@@ -109,6 +110,8 @@ def create_root():
 
     tts = AWSTtsServicePytree("AwsTtsMainActivity")
 
+    buttons = Buttons(name="ButtonsMainActivity")
+
     stt=SpeechToTextServicePytree("SpeechToTextMainActivity")
 
     face_exp=FacialExpServicePytree("FacialExpMainActivity")
@@ -119,13 +122,6 @@ def create_root():
 
     custom_yolo = ImageAICustomServicePytree("DetectionCardMain")
     
-    """                               
-    timer_kid_detection = Timer(name="TimerKidDetectionInt",
-                                variable_name=PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.mainactivity.name+"/kid_detection",
-                                duration = 10)
-    timer_reset = TimerReset(name="TimerResetKidDetectionInt",
-                            variable_name=PyTreeNameSpace.timer.name+"/"+PyTreeNameSpace.mainactivity.name+"/kid_detection")                                               
-    """
     subtree_result = SubTreeResultMain("SubTreeResultMain")
 
     parall_speaker = py_trees.composites.Parallel(name="ParallelSpeaker")
@@ -171,7 +167,7 @@ def create_root():
     sequen_robot.add_children([scene_manager,Projector,parall_robot])
 
     parall_detect_kid = py_trees.composites.Parallel(name="ParallelDetectKid")
-    parall_detect_kid.add_children([stt ,custom_yolo])
+    parall_detect_kid.add_children([stt ,custom_yolo, buttons])
 
     sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid")
     sequen_detect_kid.add_children([parall_detect_kid, bot_analyzer])                                        

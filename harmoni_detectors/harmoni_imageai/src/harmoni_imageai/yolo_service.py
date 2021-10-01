@@ -47,6 +47,7 @@ class ImageAIYoloService(HarmoniServiceManager):
         self.detector.loadModel()
         #custom_objects refers to the objects we want to detect
         self.custom_objects = self.detector.CustomObjects(person=True) 
+        self.capture_frame = True
 
         self.cv_bridge = CvBridge()
 
@@ -83,7 +84,10 @@ class ImageAIYoloService(HarmoniServiceManager):
 
     def callback(self, data):
         """ Callback function subscribing to the camera topic"""
-        self._buff.put(data)
+        if self.state == State.REQUEST:
+            if self.capture_frame:
+                self._buff.put(data)
+                self.capture_frame = False
 
 
     def imageai_callback(self, data):
@@ -103,6 +107,7 @@ class ImageAIYoloService(HarmoniServiceManager):
                                                                     input_image=data_tmp,
                                                                     minimum_percentage_probability=self.minimum_percentage_probability,
                                                                     extract_detected_objects=True)
+            self.capture_frame = True
             #self.result_msg = str(self.detections[1])    
             self.result_msg = ""                                              
             if len(self.detections[1]) != 0:
@@ -111,7 +116,7 @@ class ImageAIYoloService(HarmoniServiceManager):
                     print(eachObject["name"] , " : " , eachObject["percentage_probability"], " : ", eachObject["box_points"] )
                     print("--------------------------------")
             else:
-                print("YoloCustom detection --> null")
+                print("Yolo detection --> null")
                 self.result_msg = "null"
             
             self.response_received = True

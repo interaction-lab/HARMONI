@@ -1,7 +1,7 @@
 {
     "scene" :   [
                     {
-                        "utterance"     : "Ci siamo appena svegliati, andiamo a fare colazione con latte e cereali.",
+                        "utterance"     : "frase 1",
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "null",
@@ -9,7 +9,7 @@
                         "do_trigger"    : "False"
                     },
                     {
-                        "utterance"     : "Oh no, come sempre il papà lascia il cartone e le bottiglie vuote in frigo" ,
+                        "utterance"     : "frase 2" ,
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "null",
@@ -18,7 +18,7 @@
                     },
                     {
                         "utterance"     : "E’ finito il latte, dobbiamo andare a comprarlo",
-                        "face"          : "[{'start': 5, 'type': 'action', 'id': 'saucy_face'}]",
+                        "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "null",
                         "sound"         : "null",
@@ -26,14 +26,14 @@
                     },
                     {
                         "utterance"     : "Ma prima buttiamo via queste cose vuote",
-                        "face"          : "[{'start': 5, 'type': 'action', 'id': 'saucy_face'}]",
+                        "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "null",
                         "sound"         : "null",
                         "do_trigger"    : "False"
                     },
                     {
-                        "utterance"     : "Sai come si fa la raccolta differenziata?",
+                        "utterance"     : "domanda raccolta",
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "null",
@@ -49,7 +49,7 @@
                         "do_trigger"    : "False"
                     },
                     {
-                        "utterance"     : "La raccolta differenziata è l’operazione che permette di separare i rifiuti",
+                        "utterance"     : "frase 3",
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "null",
@@ -65,7 +65,7 @@
                         "do_trigger"    : "False"
                     },
                     {
-                        "utterance"     : "che invece si possono recuperare, riciclare o reimpiegare",
+                        "utterance"     : "frase 4",
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "null",
@@ -81,7 +81,7 @@
                         "do_trigger"    : "False"
                     },
                     {
-                        "utterance"     : "contribuisce a restituirci e conservare un ambiente naturale più ricco.",
+                        "utterance"     : "frase 5",
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "null",
@@ -153,7 +153,7 @@
                         "do_trigger"    : "False"
                     },
                     {
-                        "utterance"     : "possiamo andare a comprare il latte per fare colazione",
+                        "utterance"     : "frase 6",
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "null",
@@ -173,8 +173,16 @@
                 ],
     "error_handling"    :   
                             {   
-                                "riprendiamo"   :   {
+                                "riprendiamo_interacion"   :   {
                                                         "utterance"     : "Okay, riprendiamo da dove avevamo interrotto",
+                                                        "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
+                                                        "gesture"       : "null",
+                                                        "image"         : "null",
+                                                        "sound"         : "null",
+                                                        "do_trigger"    : "False"
+                                                    },
+                                "riprendiamo_visual"   :   {
+                                                        "utterance"     : "Ah eccoti! Riprendiamo da dove avevamo interrotto",
                                                         "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
                                                         "gesture"       : "null",
                                                         "image"         : "null",
@@ -205,7 +213,7 @@
                                                         "sound"         : "null",
                                                         "do_trigger"    : "False"
                                                     },
-                                    "risposta_sbagliata_vetro" :   {
+                                "risposta_sbagliata_vetro" :   {
                                                         "utterance"     : "La risposta esatta era vetro",
                                                         "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
                                                         "gesture"       : "null",

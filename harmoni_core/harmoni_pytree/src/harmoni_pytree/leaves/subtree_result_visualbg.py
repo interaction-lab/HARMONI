@@ -17,7 +17,6 @@ class SubTreeResultVisualBg(py_trees.behaviour.Behaviour):
         self.blackboard_scene_visual.register_key("scene_counter", access=py_trees.common.Access.WRITE)
         #self.blackboard_scene_visual.register_key("max_num_scene", access=py_trees.common.Access.READ) #NEW
         self.blackboard_visual = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.visual.name)
-        self.blackboard_visual.register_key("inside", access=py_trees.common.Access.WRITE)
         self.blackboard_visual.register_key("finished", access=py_trees.common.Access.WRITE) #NEW
         self.blackboard_face_detect = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.face_detect.name)
         self.blackboard_face_detect.register_key("result", access=py_trees.common.Access.READ)
@@ -25,7 +24,6 @@ class SubTreeResultVisualBg(py_trees.behaviour.Behaviour):
     def setup(self):
         self.blackboard_scene_visual.scene_counter = 0
         self.blackboard_visual.finished = True
-        self.blackboard_visual.inside = False
         self.logger.debug("  %s [SubTreeResultVisualBg::setup()]" % self.name)
 
     def initialise(self):
@@ -34,13 +32,11 @@ class SubTreeResultVisualBg(py_trees.behaviour.Behaviour):
     def update(self):
         #se si è entrati almeno una volta in visual_bg
         if self.blackboard_face_detect.result == "null":
-            self.blackboard_visual.inside = True
             self.blackboard_visual.finished = False
         #caso in cui si è arrivato al numero massimo di scene o il bimbo c'è -->
         else:
             self.blackboard_scene_visual.scene_counter = 0
-            if self.blackboard_visual.inside == True:
-                self.blackboard_visual.finished = True
+            self.blackboard_visual.finished = True
                 
             
         self.logger.debug("  %s [SubTreeResultVisualBg::update()]" % self.name)
