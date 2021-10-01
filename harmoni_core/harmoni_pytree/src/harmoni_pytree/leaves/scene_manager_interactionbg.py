@@ -19,16 +19,16 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
         self.blackboard_scene.register_key(key=PyTreeNameSpace.interaction.name+"/scene_counter", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key(key=PyTreeNameSpace.interaction.name+"/max_num_scene", access=py_trees.common.Access.WRITE) #NEW
         self.blackboard_scene.register_key(key=PyTreeNameSpace.interaction.name+"/do_trigger", access=py_trees.common.Access.WRITE) #NEW
+        self.blackboard_scene.register_key(key=PyTreeNameSpace.interaction.name+"/do_kid", access=py_trees.common.Access.WRITE) #NEW
         self.blackboard_scene.register_key("utterance", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key("face_exp", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key("therapist_needed", access=py_trees.common.Access.WRITE)
         self.blackboard_interaction = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.interaction.name)
         self.blackboard_interaction.register_key("inside", access=py_trees.common.Access.WRITE)
+        self.blackboard_interaction.register_key("finished", access=py_trees.common.Access.WRITE) #NEW
         self.blackboard_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name)
         self.blackboard_bot.register_key(key=PyTreeNameSpace.analyzer.name +"/"+"result", access=py_trees.common.Access.WRITE)
         self.blackboard_bot.register_key(key=PyTreeNameSpace.trigger.name +"/"+"result", access=py_trees.common.Access.WRITE)
-        self.blackboard_visual= self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.visual.name)
-        self.blackboard_visual.register_key(key="inside", access=py_trees.common.Access.READ)
 
         super(SceneManagerInteractionBg, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
@@ -44,13 +44,14 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
         with open(pattern_script_path, "r") as read_file:
             self.context = json.load(read_file)
 
-        self.blackboard_scene.interaction.max_num_scene = len(self.context["scene"])
+        self.blackboard_scene.interaction.max_num_scene = len(self.context["scene"])+1
         self.blackboard_scene.interaction.scene_counter = 0
         self.blackboard_scene.utterance = "null"
         self.blackboard_scene.face_exp = "null"
         self.blackboard_scene.therapist_needed = False
         self.blackboard_interaction.inside = False
         self.blackboard_scene.interaction.do_trigger = "null"
+        self.blackboard_scene.interaction.do_kid = True
 
     def initialise(self):
         self.logger.debug("  %s [SceneManagerInteractionBg::initialise()]" % self.name)
@@ -60,16 +61,19 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
 
         self.blackboard_scene.interaction.do_trigger = False
         self.blackboard_scene.therapist_needed = False
+        self.blackboard_interaction.finished = False
+        self.blackboard_scene.interaction.do_kid = True
         self.blackboard_interaction.inside = True
         self.blackboard_scene.face_exp = "null"
 
         print("STATE OF SCENE MANAGER INTERACTION")
 
-        if self.blackboard_bot.analyzer.result == "null":
-            print("self.blackboard_bot.analyzer.result == null")
+        if self.blackboard_scene.interaction.scene_counter == 0:
+            print("self.blackboard_scene.interaction.scene_counter == 0")
             self.blackboard_scene.interaction.do_trigger = True
             self.blackboard_scene.utterance = self.context["scene"][self.blackboard_scene.interaction.scene_counter]["utterance"]
             self.blackboard_scene.face_exp = self.context["scene"][self.blackboard_scene.interaction.scene_counter]["face"]
+            self.blackboard_scene.interaction.scene_counter += 1
         else:
             if self.blackboard_bot.analyzer.result == "void_answer":
                 print("self.blackboard_bot.analyzer.result == void_answer")
@@ -92,26 +96,38 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
                 elif self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.FULFILLED.value or self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.READY_FOR_FULFILLMENT.value:
                     print("dialogState == FULFILLED")
                     self.blackboard_scene.utterance = self.blackboard_bot.analyzer.result["message"]
+                    self.blackboard_bot.trigger.result = {"message": self.blackboard_scene.utterance}
+                    self.blackboard_scene.interaction.do_kid = False
                     self.blackboard_scene.interaction.scene_counter += 1
                 elif self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.CONFIRM_INTENT.value:
                     print("dialogState == CONFIRM_INTENT")
                     self.blackboard_scene.utterance = self.blackboard_bot.analyzer.result["message"]
+                    self.blackboard_bot.trigger.result = {"message": self.blackboard_scene.utterance}
                 elif self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.FAILED.value:
                     print("dialogState == FAILED")
                     self.blackboard_scene.utterance = self.blackboard_bot.analyzer.result["message"]
+                    self.blackboard_bot.trigger.result = {"message": self.blackboard_scene.utterance}
+                    self.blackboard_scene.interaction.do_kid = False
                     self.blackboard_scene.interaction.scene_counter += 1
                 elif self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.ELICIT_SLOT.value:
                     print("dialogState == ELICIT_SLOT")
                     #TODO forse da cambiare con ripetere scena corrente
                     self.blackboard_scene.utterance = self.blackboard_bot.analyzer.result["message"]
+                    self.blackboard_bot.trigger.result = {"message": self.blackboard_scene.utterance}
                 elif self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.ELICIT_INTENT.value:
                     print("dialogState == ELICIT_INTENT")
-                    self.blackboard_scene.utterance = self.context["scene"][self.blackboard_scene.interaction.scene_counter]["utterance"]
+                    self.blackboard_scene.utterance = self.context["scene"][0]["utterance"]
                     self.blackboard_scene.interaction.do_trigger = True
                 else:
                     #qui non dovremmo mai entrare in quanto abbiamo gestito tutti gli stati
-                    pass
+                    raise
             self.blackboard_bot.analyzer.result = "null"
+
+        print("Ricapitolazione")
+        print("do_trigger: ",self.blackboard_scene.interaction.do_trigger)
+        print("self.blackboard_scene.utterance: ",self.blackboard_scene.utterance)
+        print("self.blackboard_bot.trigger.result: ",self.blackboard_bot.trigger.result)
+        print("terapist: ",self.blackboard_scene.therapist_needed)
         
         return py_trees.common.Status.SUCCESS
 

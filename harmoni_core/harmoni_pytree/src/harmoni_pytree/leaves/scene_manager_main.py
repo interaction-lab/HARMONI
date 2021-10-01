@@ -174,7 +174,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                         self.blackboard_scene.mainactivity.do_trigger = self.context["error_handling"]["risposta_corretta"]["do_trigger"]=="True"
                     elif self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.CONFIRM_INTENT.value:
                         print("dialogState == CONFIRM_INTENT")
-                        #questo teoricamente serve solo per interaction
+                        #TODO
                         raise
                     elif self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.FAILED.value:
                         print("dialogState == FAILED")

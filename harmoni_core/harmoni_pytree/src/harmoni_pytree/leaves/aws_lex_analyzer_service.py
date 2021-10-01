@@ -86,7 +86,6 @@ class AWSLexAnalyzerServicePytree(py_trees.behaviour.Behaviour):
         print(new_state)
         if new_state == GoalStatus.LOST:
             if self.blackboard_card_detect.result != "null":
-                self.blackboard_mainactivity.counter_no_answer = 0
                 self.logger.debug(f"Sending goal to {self.server_name}")
                 self.service_client_lex.send_goal(
                     action_goal = ActionType["REQUEST"].value,
@@ -96,7 +95,6 @@ class AWSLexAnalyzerServicePytree(py_trees.behaviour.Behaviour):
                 self.logger.debug(f"Goal sent to {self.server_name}")
                 new_status = py_trees.common.Status.RUNNING
             elif self.blackboard_stt.result != "null":
-                self.blackboard_mainactivity.counter_no_answer = 0
                 self.logger.debug(f"Sending goal to {self.server_name}")
                 self.service_client_lex.send_goal(
                     action_goal = ActionType["REQUEST"].value,

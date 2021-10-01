@@ -68,7 +68,7 @@ def post_tick_handler(snapshot_visitor, behaviour_tree):
             previously_visited=snapshot_visitor.previously_visited
         )
     )
-    print(py_trees.display.unicode_blackboard())
+    #print(py_trees.display.unicode_blackboard())
 
 
 def create_root():
@@ -97,15 +97,6 @@ def create_root():
 
     root.add_children([parallel_onModule_detectFace_session, reset, py_trees.behaviours.Running("Idle")])
 
-    """
-    b1 = root.attach_blackboard_client(name="b1", namespace=DetectorNameSpace.card_detect.name)
-    b1.register_key("result", access=py_trees.common.Access.WRITE)
-    b1.result = "null"
-
-    b2 = root.attach_blackboard_client(name="b2", namespace= PyTreeNameSpace.visual.name)
-    b2.register_key("finished", access=py_trees.common.Access.WRITE)
-    b2.finished = False
-    """
     return root
 
 ##############################################################################
@@ -151,7 +142,7 @@ def main():
 
     behaviour_tree = py_trees.trees.BehaviourTree(root)
     behaviour_tree.add_pre_tick_handler(pre_tick_handler)
-    behaviour_tree.visitors.append(py_trees.visitors.DebugVisitor())
+    #behaviour_tree.visitors.append(py_trees.visitors.DebugVisitor())
     snapshot_visitor = py_trees.visitors.SnapshotVisitor()
     behaviour_tree.add_post_tick_handler(functools.partial(post_tick_handler, snapshot_visitor))
     behaviour_tree.visitors.append(snapshot_visitor)
@@ -161,15 +152,10 @@ def main():
     # Tick Tock
     ####################
 
-    #if args.interactive:
-    #    py_trees.console.read_single_keypress()
     #while True:
-    for unused_i in range(1, 100):
+    for unused_i in range(1, 50):
         try:
             behaviour_tree.tick()
-            #if args.interactive:
-            #    py_trees.console.read_single_keypress()
-            #else:
             time.sleep(2)
         except KeyboardInterrupt:
             break

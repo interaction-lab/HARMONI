@@ -1,38 +1,6 @@
 {
     "scene" :   [
                     {
-                        "utterance"     : "frase 1",
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "null",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
-                        "utterance"     : "frase 2" ,
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "null",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
-                        "utterance"     : "E’ finito il latte, dobbiamo andare a comprarlo",
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "null",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
-                        "utterance"     : "Ma prima buttiamo via queste cose vuote",
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "null",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
                         "utterance"     : "domanda raccolta",
                         "face"          : "null",
                         "gesture"       : "null",

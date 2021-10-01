@@ -88,6 +88,8 @@ def create_root(name = "Interaction_Bg"):
 
     Success1 = py_trees.behaviours.Success(name="Success")
     Success2 = py_trees.behaviours.Success(name="Success")
+    Success3 = py_trees.behaviours.Success(name="Success")
+    Success4 = py_trees.behaviours.Success(name="Success")
 
     scene_manager = SceneManagerInteractionBg("SceneManagerInteractionBg")
 
@@ -120,16 +122,36 @@ def create_root(name = "Interaction_Bg"):
     sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid")
     sequen_detect_kid.add_children([parall_detect_kid, bot_analyzer])                                         
 
+    eor_face = py_trees.idioms.either_or(
+        name="EitherOrFace",
+        conditions=[
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/face_exp", "null", operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/face_exp", "null", operator.eq),
+        ],
+        subtrees=[face_exp, Success3],
+        namespace="eor_face",
+    )
+
+    eor_kid = py_trees.idioms.either_or(
+        name="EitherOrKid",
+        conditions=[
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/"+ PyTreeNameSpace.interaction.name+ "/do_kid", True, operator.eq),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/"+ PyTreeNameSpace.interaction.name+ "/do_kid", True, operator.ne),
+        ],
+        subtrees=[sequen_detect_kid, Success4],
+        namespace="eor_kid",
+    )
+
     parall_detect_and_face = py_trees.composites.Parallel(name="ParallelDetectAndFace")
-    parall_detect_and_face.add_children([sequen_detect_kid, face_exp])  
+    parall_detect_and_face.add_children([eor_kid, eor_face])  
 
     sequen_interaction_bg = py_trees.composites.Sequence(name="SequenceInteractionBg")
 
     eor_bot_trigger = py_trees.idioms.either_or(
         name="EitherOrBotTrigger",
         conditions=[
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/" + PyTreeNameSpace.interaction.name + "/scene_counter", 1, operator.ne),
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/" + PyTreeNameSpace.interaction.name + "/scene_counter", 1, operator.eq),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/" + PyTreeNameSpace.interaction.name + "/do_trigger", True, operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/" + PyTreeNameSpace.interaction.name + "/do_trigger", True, operator.eq),
         ],
         subtrees=[Success2, bot_trigger],
         namespace="eor_bot_trigger",

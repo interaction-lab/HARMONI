@@ -6,7 +6,7 @@
                         "gesture"       : "null",
                         "image"         : "null",
                         "sound"         : "null",
-                        "do_trigger"    : "False" 
+                        "do_trigger"    : "True" 
                     }
                 ],
     "error_handling"    :   

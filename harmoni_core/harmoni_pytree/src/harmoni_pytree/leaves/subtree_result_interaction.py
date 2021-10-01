@@ -34,11 +34,7 @@ class SubTreeResultInteractionBg(py_trees.behaviour.Behaviour):
         self.logger.debug("  %s [SubTreeResultInteractionBg::initialise()]" % self.name)
 
     def update(self):
-        #se si è entrati almeno una volta in interaction_bg
-        if self.blackboard_mainactivity.counter_no_answer >= 2:
-            self.blackboard_mainactivity.counter_no_answer = 0
-            self.blackboard_interaction.finished = False
-        #caso in cui si è arrivato al numero massimo di scene -->
+
         if self.blackboard_scene_interaction.scene_counter == self.blackboard_scene_interaction.max_num_scene:
             self.blackboard_scene_interaction.scene_counter = 0
             self.blackboard_interaction.finished = True

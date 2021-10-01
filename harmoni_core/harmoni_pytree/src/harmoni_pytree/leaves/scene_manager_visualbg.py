@@ -24,6 +24,7 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
         self.blackboard_scene.register_key("therapist_needed", access=py_trees.common.Access.WRITE)
         self.blackboard_visual = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.visual.name)
         self.blackboard_visual.register_key("inside", access=py_trees.common.Access.WRITE)
+        self.blackboard_visual.register_key("finished", access=py_trees.common.Access.WRITE)
         self.blackboard_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name)
         self.blackboard_bot.register_key(key=PyTreeNameSpace.analyzer.name +"/"+"result", access=py_trees.common.Access.WRITE)
         self.blackboard_bot.register_key(key=PyTreeNameSpace.trigger.name +"/"+"result", access=py_trees.common.Access.WRITE)
@@ -60,10 +61,11 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
     def update(self):
         self.logger.debug("  %s [SceneManagerVisualBg::update()]" % self.name)
         self.blackboard_mainactivity.counter_no_answer = 0
+        self.blackboard_visual.finished = False
         self.blackboard_visual.inside = True
 
         #scena iniziale ovvero la zero, è l'unica in cui va bot_trigger e serve l'utterance. 
-        if self.blackboard_scene.visual.scene_counter == 0: 
+        if self.blackboard_scene.visual.scene_counter == 0:
             self.blackboard_scene.visual.do_trigger = True
             self.blackboard_scene.utterance = self.context["scene"][self.blackboard_scene.visual.scene_counter]["utterance"]
             self.blackboard_scene.face_exp = self.context["scene"][self.blackboard_scene.visual.scene_counter]["face"]
