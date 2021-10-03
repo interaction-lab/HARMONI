@@ -47,7 +47,7 @@ class ImageAICustomService(HarmoniServiceManager):
         self.detector.setJsonPath("/root/harmoni_catkin_ws/src/HARMONI/harmoni_detectors/harmoni_imageai/src/detection_config_card.json") 
         self.detector.setModelPath(os.path.join(self.model_path, self.model_name))
         self.detector.loadModel()
-        self.capture_frame = True
+        self.capture_frame = False
         self.custom_objects = {
                                 "carta" : 0,
                                 "no" : 0,
@@ -110,6 +110,7 @@ class ImageAICustomService(HarmoniServiceManager):
     def request(self, data):
         rospy.loginfo("Start the %s request" % self.name)
         self.state = State.REQUEST
+        self.capture_frame = True
         try:
             
             for element in self.custom_objects:

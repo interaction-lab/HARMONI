@@ -47,7 +47,7 @@ class ImageAIYoloService(HarmoniServiceManager):
         self.detector.loadModel()
         #custom_objects refers to the objects we want to detect
         self.custom_objects = self.detector.CustomObjects(person=True) 
-        self.capture_frame = True
+        self.capture_frame = False
 
         self.cv_bridge = CvBridge()
 
@@ -98,6 +98,7 @@ class ImageAIYoloService(HarmoniServiceManager):
     def request(self, data):
         rospy.loginfo("Start the %s request" % self.name)
         self.state = State.REQUEST
+        self.capture_frame = True
         try:
             #detect objects coming from camera stream
             data_tmp = self.cv_bridge.imgmsg_to_cv2(self._buff.get(), desired_encoding='passthrough')

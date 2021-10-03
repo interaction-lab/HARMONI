@@ -116,7 +116,7 @@ class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
                 self.logger.debug(f"Cancelling goal to {self.server_name}")
                 self.service_client_custom.cancel_goal()
                 self.client_result = None
-                self.blackboard_card_detection.result = None
+                self.blackboard_card_detection.result = "null"
                 self.logger.debug(f"Goal cancelled to {self.server_name}")
                 self.service_client_custom.stop_tracking_goal()
                 self.logger.debug(f"Goal tracking stopped to {self.server_name}")

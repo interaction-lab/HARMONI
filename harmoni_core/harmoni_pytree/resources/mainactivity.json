@@ -9,70 +9,6 @@
                         "do_trigger"    : "True"
                     },
                     {
-                        "utterance"     : "Ripassiamola di nuovo" ,
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "null",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
-                        "utterance"     : "frase 3",
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "null",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
-                        "utterance"     : "suddividendo quelli da smaltire da quelli ",
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "null",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
-                        "utterance"     : "frase 4",
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "null",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
-                        "utterance"     : "Riusare e riutilizzare i rifiuti" ,
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "null",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
-                        "utterance"     : "frase 5",
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "null",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
-                        "utterance"     : "Se consideriamo plastica, vetro e carta ",
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "null",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
-                        "utterance"     : "nella carta vanno buttati …" ,
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "null",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
                         "utterance"     : "nella plastica vanno buttati…",
                         "face"          : "null",
                         "gesture"       : "null",
@@ -81,15 +17,7 @@
                         "do_trigger"    : "False"
                     },
                     {
-                        "utterance"     : "nel vetro vanno buttati…",
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "null",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
-                        "utterance"     : "Dove butteresti questo?" ,
+                        "utterance"     : "oggetto carta",
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "null",
@@ -97,7 +25,7 @@
                         "do_trigger"    : "True"
                     },
                     {
-                        "utterance"     : "Questo dove lo butteresti?",
+                        "utterance"     : "oggetto vetro",
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "null",
@@ -105,38 +33,13 @@
                         "do_trigger"    : "True"
                     },
                     {
-                        "utterance"     : "Dove butteresti questo?",
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "null",
-                        "sound"         : "null",
-                        "do_trigger"    : "True"
-                    },
-                    {
-                        "utterance"     : "Ora che abbiamo finito" ,
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "null",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
-                        "utterance"     : "frase 6",
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "null",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
-                        "utterance"     : "Guarda che nuvole scure fuori",
+                        "utterance"     : "Ora abbiamo finito, ciao!" ,
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "null",
                         "sound"         : "null",
                         "do_trigger"    : "False"
                     }
-
 
                 ],
     "error_handling"    :   
@@ -158,7 +61,7 @@
                                                         "do_trigger"    : "False"
                                                     },
                                 "risposta_corretta" :   {
-                                                        "utterance"     : "Bravo",
+                                                        "utterance"     : "Giusto, ma non usarmi",
                                                         "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
                                                         "gesture"       : "null",
                                                         "image"         : "null",

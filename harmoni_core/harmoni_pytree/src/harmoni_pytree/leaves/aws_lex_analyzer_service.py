@@ -86,7 +86,7 @@ class AWSLexAnalyzerServicePytree(py_trees.behaviour.Behaviour):
         print(new_state)
         if new_state == GoalStatus.LOST:
             if self.blackboard_card_detect.result != "null":
-                self.logger.debug(f"Sending goal to {self.server_name}")
+                print("card retect contiene: ", self.blackboard_card_detect.result)
                 self.service_client_lex.send_goal(
                     action_goal = ActionType["REQUEST"].value,
                     optional_data=self.blackboard_card_detect.result,

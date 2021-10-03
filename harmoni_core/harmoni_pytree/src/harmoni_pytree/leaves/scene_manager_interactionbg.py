@@ -105,6 +105,7 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
                     self.blackboard_bot.trigger.result = {"message": self.blackboard_scene.utterance}
                 elif self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.FAILED.value:
                     print("dialogState == FAILED")
+                    self.blackboard_scene.therapist_needed = True
                     self.blackboard_scene.utterance = self.blackboard_bot.analyzer.result["message"]
                     self.blackboard_bot.trigger.result = {"message": self.blackboard_scene.utterance}
                     self.blackboard_scene.interaction.do_kid = False

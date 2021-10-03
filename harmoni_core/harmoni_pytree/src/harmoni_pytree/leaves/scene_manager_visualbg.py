@@ -64,22 +64,33 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
         self.blackboard_visual.finished = False
         self.blackboard_visual.inside = True
 
+        print("STATE OF SCENE MANAGER INTERACTION")
+
         #scena iniziale ovvero la zero, è l'unica in cui va bot_trigger e serve l'utterance. 
         if self.blackboard_scene.visual.scene_counter == 0:
+            print("self.blackboard_scene.visual.scene_counter == 0")
             self.blackboard_scene.visual.do_trigger = True
             self.blackboard_scene.utterance = self.context["scene"][self.blackboard_scene.visual.scene_counter]["utterance"]
             self.blackboard_scene.face_exp = self.context["scene"][self.blackboard_scene.visual.scene_counter]["face"]
             self.blackboard_scene.visual.scene_counter += 1
         else:
             self.blackboard_scene.visual.do_trigger = False #deve essere usato solo bot_analyzer dopo la scena 0
-            if self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.FAILED.value:
+            if self.blackboard_bot.analyzer.result == "void_answer":
+                print("self.blackboard_bot.analyzer.result == void_answer")
+                self.blackboard_scene.therapist_needed = True
+                self.blackboard_scene.utterance = self.context["terapista"]["utterance"]
+                self.blackboard_scene.face_exp = self.context["terapista"]["face"]
+            elif self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.FAILED.value:
+                print("dialogState == FAILED")
                 self.blackboard_bot.trigger.result = {"message": self.blackboard_bot.analyzer.result["message"]}
                 self.blackboard_scene.therapist_needed = True
             else:
-                if self.blackboard_scene.visual.scene_counter <= 2: 
+                if self.blackboard_scene.visual.scene_counter <= 2:
+                    print("self.blackboard_scene.visual.scene_counter <= 2") 
                     self.blackboard_bot.trigger.result = {"message": self.blackboard_bot.analyzer.result["message"]}
                     self.blackboard_scene.visual.scene_counter += 1
                 else:
+                    print("self.blackboard_scene.visual.scene_counter > 2") 
                     self.blackboard_bot.trigger.result = {"message": self.context["terapista"]["utterance"]}
                     self.blackboard_scene.face_exp = self.context["terapista"]["face"]
                     self.blackboard_scene.therapist_needed = True
