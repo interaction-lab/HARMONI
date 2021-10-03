@@ -34,18 +34,6 @@ class AWSLexAnalyzerServicePytree(py_trees.behaviour.Behaviour):
         self.client_result = None
 
         self.blackboards = []
-        """
-        self.blackboard_output_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name+"output")
-        self.blackboard_output_bot.register_key("result_data", access=py_trees.common.Access.WRITE)
-        self.blackboard_output_bot.register_key("result_message", access=py_trees.common.Access.WRITE)
-        self.blackboard_input_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name)
-        self.blackboard_input_bot.register_key("result_data", access=py_trees.common.Access.READ)
-        self.blackboard_input_bot.register_key("result_message", access=py_trees.common.Access.READ)
-        """
-
-        #TODO: usa queste bb che sono le nuove
-        #TODO creare due foglie per il bot uno che si occupa del trigger e viene messo in EOR con scene dove useremo solo
-        #json e il secondo bot che invece usiamo come analyzer. 
         
         self.blackboard_stt = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.stt.name)
         self.blackboard_stt.register_key("result", access=py_trees.common.Access.READ)

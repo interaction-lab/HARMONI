@@ -80,20 +80,38 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
                 self.blackboard_scene.therapist_needed = True
                 self.blackboard_scene.utterance = self.context["terapista"]["utterance"]
                 self.blackboard_scene.face_exp = self.context["terapista"]["face"]
-            elif self.blackboard_bot.analyzer.result["dialogState"] == DialogStateLex.FAILED.value:
-                print("dialogState == FAILED")
-                self.blackboard_bot.trigger.result = {"message": self.blackboard_bot.analyzer.result["message"]}
-                self.blackboard_scene.therapist_needed = True
             else:
-                if self.blackboard_scene.visual.scene_counter <= 2:
-                    print("self.blackboard_scene.visual.scene_counter <= 2") 
-                    self.blackboard_bot.trigger.result = {"message": self.blackboard_bot.analyzer.result["message"]}
-                    self.blackboard_scene.visual.scene_counter += 1
-                else:
-                    print("self.blackboard_scene.visual.scene_counter > 2") 
-                    self.blackboard_bot.trigger.result = {"message": self.context["terapista"]["utterance"]}
-                    self.blackboard_scene.face_exp = self.context["terapista"]["face"]
+                dialogState = self.blackboard_bot.analyzer.result["ResponseMetadata"]["HTTPHeaders"]["x-amz-lex-dialog-state"]
+                message = self.blackboard_bot.analyzer.result["ResponseMetadata"]["HTTPHeaders"]["x-amz-lex-message"]
+                if dialogState == DialogStateLex.FAILED.value:
+                    print("x-amz-lex-dialog-state == FAILED")
+                    self.blackboard_bot.trigger.result =    {"ResponseMetadata":{
+                                                        "HTTPHeaders":{
+                                                            "x-amz-lex-message":   message
+                                                        }
+                                                    }
+                                                }
                     self.blackboard_scene.therapist_needed = True
+                else:
+                    if self.blackboard_scene.visual.scene_counter <= 2:
+                        print("self.blackboard_scene.visual.scene_counter <= 2") 
+                        self.blackboard_bot.trigger.result =    {"ResponseMetadata":{
+                                                        "HTTPHeaders":{
+                                                            "x-amz-lex-message":   message
+                                                        }
+                                                    }
+                                                }
+                        self.blackboard_scene.visual.scene_counter += 1
+                    else:
+                        print("self.blackboard_scene.visual.scene_counter > 2") 
+                        self.blackboard_bot.trigger.result =    {"ResponseMetadata":{
+                                                        "HTTPHeaders":{
+                                                            "x-amz-lex-message":  self.context["terapista"]["utterance"]
+                                                        }
+                                                    }
+                                                }
+                        self.blackboard_scene.face_exp = self.context["terapista"]["face"]
+                        self.blackboard_scene.therapist_needed = True
         
         return py_trees.common.Status.SUCCESS
 

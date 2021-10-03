@@ -159,6 +159,8 @@ class STTGoogleService(HarmoniServiceManager):
                     self.text_pub.publish(self.stt_response)
                     self.response_received = True
                     return
+                else:
+                    self.stt_response = result.alternatives[0].transcript
 
     def transcribe_file_request(self, data):
         """ Transcribes a single audio file """
@@ -202,6 +204,7 @@ class STTGoogleService(HarmoniServiceManager):
     def request(self, data):
         rospy.loginfo("Start the %s request" % self.name)
         self.state = State.REQUEST
+        self.stt_response = "null"
         self.response_received = False
         try:
             # Transcribes data coming from microphone 
@@ -219,9 +222,10 @@ class STTGoogleService(HarmoniServiceManager):
 
             if self.max_duration < self.elapsed_time:
                 print("Timeout!")
+                print("STT response text: "+ self.stt_response)
                 self.response_received = True
-                self.stt_response = "null"
                 self.state = State.SUCCESS
+                
             else:
                 self.listen_print_untill_result_is_final(responses)
 
@@ -271,7 +275,7 @@ class STTGoogleService(HarmoniServiceManager):
 
             #TODO prova senza questo while
             # Now consume whatever other data's still buffered.
-            """
+            
             while True:
                 try:
                     chunk = self._buff.get(block=False)
@@ -281,7 +285,6 @@ class STTGoogleService(HarmoniServiceManager):
                     data.append(chunk)
                 except queue.Empty:  
                     break
-            """
 
             yield b"".join(data)
 

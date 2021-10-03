@@ -66,6 +66,15 @@ class DialogStateLex(Enum):
     READY_FOR_FULFILLMENT = "ReadyForFulfillment"
     UNKNOWN_TO_SDK_VERSION = "UnknownToSdkVersion"
 
+class IntentName(Enum):
+    INTERACTION = "Background_noInterazione"
+    VISUAL = "Background_visivo"
+    CARTA = "Carta"
+    RACCOLTA = "ConfirmRaccolta"
+    PLASTICA = "Plastica"
+    STOP = "Stop"
+    VETRO = "Vetro"
+    NOCAPITO = "NonHoCapito"
 
 class Resources(Enum):
     face = ["eyes", "mouth", "nose"]

@@ -68,7 +68,7 @@ def post_tick_handler(snapshot_visitor, behaviour_tree):
             previously_visited=snapshot_visitor.previously_visited
         )
     )
-    #print(py_trees.display.unicode_blackboard())
+    print(py_trees.display.unicode_blackboard())
 
 
 def create_root():

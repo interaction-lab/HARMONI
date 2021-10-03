@@ -61,7 +61,7 @@
                                                         "do_trigger"    : "False"
                                                     },
                                 "risposta_corretta" :   {
-                                                        "utterance"     : "Giusto, ma non usarmi",
+                                                        "utterance"     : "Risposta esatta, ma non usarmi",
                                                         "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
                                                         "gesture"       : "null",
                                                         "image"         : "null",
@@ -94,6 +94,14 @@
                                                     },
                                 "risposta_sbagliata_plastica" :   {
                                                         "utterance"     : "La risposta esatta era plastica",
+                                                        "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
+                                                        "gesture"       : "null",
+                                                        "image"         : "null",
+                                                        "sound"         : "null",
+                                                        "do_trigger"    : "False"
+                                                    },
+                                "risposta_sbagliata" :   {
+                                                        "utterance"     : "Risposta sbagliata, ma non usarmi",
                                                         "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
                                                         "gesture"       : "null",
                                                         "image"         : "null",

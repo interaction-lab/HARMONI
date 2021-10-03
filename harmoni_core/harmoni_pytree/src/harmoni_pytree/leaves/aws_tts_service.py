@@ -39,16 +39,6 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
 
         # here there is the inizialization of the blackboards
         self.blackboards = []
-        """
-        self.blackboard_tts_OLD = self.attach_blackboard_client(name=self.name, namespace=ActuatorNameSpace.tts.name)
-        self.blackboard_tts_OLD.register_key("result_data", access=py_trees.common.Access.WRITE)
-        self.blackboard_tts_OLD.register_key("result_message", access=py_trees.common.Access.WRITE)
-        self.blackboard_output_bot=self.attach_blackboard_client(name=self.name,namespace=DialogueNameSpace.bot.name+"output")
-        self.blackboard_output_bot.register_key("result_data", access=py_trees.common.Access.READ)
-        self.blackboard_output_bot.register_key("result_message", access=py_trees.common.Access.READ)
-        """
-
-        #TODO: usa queste bb che sono le nuove
         self.blackboard_tts = self.attach_blackboard_client(name=self.name, namespace=ActuatorNameSpace.tts.name)
         self.blackboard_tts.register_key("result", access=py_trees.common.Access.WRITE)
         self.blackboard_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name +"/"+PyTreeNameSpace.trigger.name)
@@ -85,7 +75,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
             self.logger.debug(f"Sending goal to {self.server_name}")
             self.service_client_tts.send_goal(
                 action_goal = ActionType["REQUEST"].value,
-                optional_data = self.blackboard_bot.result["message"],
+                optional_data = self.blackboard_bot.result["ResponseMetadata"]["HTTPHeaders"]["x-amz-lex-message"],
                 wait=False,
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
