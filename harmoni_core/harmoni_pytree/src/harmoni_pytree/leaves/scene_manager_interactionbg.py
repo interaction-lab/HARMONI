@@ -22,7 +22,7 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
         self.blackboard_scene.register_key(key=PyTreeNameSpace.interaction.name+"/do_kid", access=py_trees.common.Access.WRITE) #NEW
         self.blackboard_scene.register_key("utterance", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key("face_exp", access=py_trees.common.Access.WRITE)
-        self.blackboard_scene.register_key("therapist_needed", access=py_trees.common.Access.WRITE)
+        self.blackboard_scene.register_key("call_therapist", access=py_trees.common.Access.WRITE)
         self.blackboard_interaction = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.interaction.name)
         self.blackboard_interaction.register_key("inside", access=py_trees.common.Access.WRITE)
         self.blackboard_interaction.register_key("finished", access=py_trees.common.Access.WRITE) #NEW
@@ -48,7 +48,7 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
         self.blackboard_scene.interaction.scene_counter = 0
         self.blackboard_scene.utterance = "null"
         self.blackboard_scene.face_exp = "null"
-        self.blackboard_scene.therapist_needed = False
+        self.blackboard_scene.call_therapist = False
         self.blackboard_interaction.inside = False
         self.blackboard_scene.interaction.do_trigger = "null"
         self.blackboard_scene.interaction.do_kid = True
@@ -60,7 +60,7 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
         self.logger.debug("  %s [SceneManagerInteractionBg::update()]" % self.name)
 
         self.blackboard_scene.interaction.do_trigger = False
-        self.blackboard_scene.therapist_needed = False
+        self.blackboard_scene.call_therapist = False
         self.blackboard_interaction.finished = False
         self.blackboard_scene.interaction.do_kid = True
         self.blackboard_interaction.inside = True
@@ -77,7 +77,7 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
         else:
             if self.blackboard_bot.analyzer.result == "void_answer":
                 print("self.blackboard_bot.analyzer.result == void_answer")
-                self.blackboard_scene.therapist_needed = True
+                self.blackboard_scene.call_therapist = True
                 self.blackboard_scene.utterance = self.context["error_handling"]["terapista"]["utterance"]
                 self.blackboard_scene.face_exp = self.context["error_handling"]["terapista"]["face"]
             else:
@@ -88,12 +88,12 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
                 print("Dialog state: ", dialogState)
                 if intentName == "Stop": 
                     print("x-amz-lex-intent-name == Stop")
-                    self.blackboard_scene.therapist_needed = True
+                    self.blackboard_scene.call_therapist = True
                     self.blackboard_scene.utterance = self.context["error_handling"]["terapista"]["utterance"]
                     self.blackboard_scene.face_exp = self.context["error_handling"]["terapista"]["face"]
                 elif intentName == "NonHoCapito":
                     print("x-amz-lex-intent-name == NonHoCapito") 
-                    self.blackboard_scene.therapist_needed = True
+                    self.blackboard_scene.call_therapist = True
                     self.blackboard_scene.utterance = self.context["error_handling"]["terapista"]["utterance"]
                     self.blackboard_scene.face_exp = self.context["error_handling"]["terapista"]["face"]
                 elif dialogState == DialogStateLex.FULFILLED.value or dialogState == DialogStateLex.READY_FOR_FULFILLMENT.value:
@@ -118,7 +118,7 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
                                                 }
                 elif dialogState == DialogStateLex.FAILED.value:
                     print("x-amz-lex-dialog-state == FAILED")
-                    self.blackboard_scene.therapist_needed = True
+                    self.blackboard_scene.call_therapist = True
                     self.blackboard_scene.utterance = message
                     self.blackboard_bot.trigger.result =    {"ResponseMetadata":{
                                                         "HTTPHeaders":{
@@ -151,7 +151,7 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
         print("do_trigger: ",self.blackboard_scene.interaction.do_trigger)
         print("self.blackboard_scene.utterance: ",self.blackboard_scene.utterance)
         print("self.blackboard_bot.trigger.result: ",self.blackboard_bot.trigger.result)
-        print("terapist: ",self.blackboard_scene.therapist_needed)
+        print("terapist: ",self.blackboard_scene.call_therapist)
         
         return py_trees.common.Status.SUCCESS
 

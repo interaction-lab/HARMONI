@@ -34,7 +34,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         self.blackboard_scene.register_key(key="gesture", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key(key="image", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key(key="sound", access=py_trees.common.Access.WRITE)
-        self.blackboard_scene.register_key(key="therapist_needed", access=py_trees.common.Access.WRITE)
+        self.blackboard_scene.register_key(key="call_therapist", access=py_trees.common.Access.WRITE)
         self.blackboard_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name)
         self.blackboard_bot.register_key(key=PyTreeNameSpace.analyzer.name +"/"+"result", access=py_trees.common.Access.WRITE)
         self.blackboard_bot.register_key(key=PyTreeNameSpace.trigger.name +"/"+"result", access=py_trees.common.Access.WRITE)
@@ -64,7 +64,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         self.blackboard_scene.gesture = "null"
         self.blackboard_scene.image = "null"
         self.blackboard_scene.sound = "null"
-        self.blackboard_scene.therapist_needed = False
+        self.blackboard_scene.call_therapist = False
         self.blackboard_scene.mainactivity.do_kid = "null"
         self.blackboard_scene.mainactivity.do_trigger = "null"
         self.blackboard_mainactivity.counter_no_answer = 0
@@ -81,7 +81,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         self.logger.debug("  %s [SceneManagerMain::update()]" % self.name)
 
         self.blackboard_scene.mainactivity.do_kid = False
-        self.blackboard_scene.therapist_needed = False
+        self.blackboard_scene.call_therapist = False
 
         print("STATE OF SCENE MANAGER MAIN")
 
@@ -101,13 +101,22 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
             print("self.blackboard_interaction.inside")
             self.blackboard_interaction.inside = False
             if not self.blackboard_scene.mainactivity.do_trigger:
+                #qui non dovresti mai poter entrare
+                print("Non dovremmo mai entrare qui! siamo nel scene-manager-main!!!!!!-----------------------")
                 self.blackboard_scene.mainactivity.scene_counter -= 1
-            self.blackboard_scene.utterance = self.context["error_handling"]["riprendiamo_interacion"]["utterance"]
-            self.blackboard_scene.face_exp = self.context["error_handling"]["riprendiamo_interacion"]["face"]
-            self.blackboard_scene.gesture = self.context["error_handling"]["riprendiamo_interacion"]["gesture"]
-            self.blackboard_scene.image = self.context["error_handling"]["riprendiamo_interacion"]["image"]
-            self.blackboard_scene.sound = self.context["error_handling"]["riprendiamo_interacion"]["sound"]
-            self.blackboard_scene.mainactivity.do_trigger = self.context["error_handling"]["riprendiamo_interacion"]["do_trigger"]=="True"
+                self.blackboard_scene.utterance = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["utterance"]
+                self.blackboard_scene.face_exp = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["face"]
+                self.blackboard_scene.gesture = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["gesture"]
+                self.blackboard_scene.image = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["image"]
+                self.blackboard_scene.sound = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["sound"]
+                self.blackboard_scene.mainactivity.scene_counter += 1
+            else:
+                self.blackboard_scene.utterance = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["utterance"]
+                self.blackboard_scene.face_exp = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["face"]
+                self.blackboard_scene.gesture = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["gesture"]
+                self.blackboard_scene.image = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["image"]
+                self.blackboard_scene.sound = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["sound"]
+                self.blackboard_scene.mainactivity.do_kid = True
             self.blackboard_mainactivity.counter_no_answer = 0
             self.blackboard_bot.analyzer.result = "null"
         else:
@@ -123,113 +132,122 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                     self.blackboard_scene.sound = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["sound"]
                     self.blackboard_scene.mainactivity.do_kid = True
                     self.counter_non_ho_capito = 0
+                elif self.blackboard_bot.analyzer.result == "void_answer":
+                    print("self.blackboard_bot.analyzer.result == void_answer")
+                    #ripeti l'ultima scena
+                    self.blackboard_scene.utterance = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["utterance"]
+                    self.blackboard_scene.face_exp = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["face"]
+                    self.blackboard_scene.gesture = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["gesture"]
+                    self.blackboard_scene.image = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["image"]
+                    self.blackboard_scene.sound = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["sound"]
+                    self.blackboard_scene.mainactivity.do_kid = True
                 else:
-                    if self.blackboard_bot.analyzer.result == "void_answer":
-                        print("self.blackboard_bot.analyzer.result == void_answer")
-                        #ripeti l'ultima scena
-                        self.blackboard_scene.utterance = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["utterance"]
-                        self.blackboard_scene.face_exp = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["face"]
-                        self.blackboard_scene.gesture = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["gesture"]
-                        self.blackboard_scene.image = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["image"]
-                        self.blackboard_scene.sound = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["sound"]
-                        self.blackboard_scene.mainactivity.do_kid = True
-                    else:
-                        intentName = self.blackboard_bot.analyzer.result["ResponseMetadata"]["HTTPHeaders"]["x-amz-lex-intent-name"]
-                        dialogState = self.blackboard_bot.analyzer.result["ResponseMetadata"]["HTTPHeaders"]["x-amz-lex-dialog-state"]
-                        message = self.blackboard_bot.analyzer.result["ResponseMetadata"]["HTTPHeaders"]["x-amz-lex-message"]
-                        print("Intent name: ",intentName)
-                        print("Dialog state: ",dialogState)
-                        if intentName == IntentName.STOP.value:
-                            print("x-amz-lex-intent-name == Stop")
-                            self.blackboard_scene.therapist_needed = True
+                    intentName = self.blackboard_bot.analyzer.result["ResponseMetadata"]["HTTPHeaders"]["x-amz-lex-intent-name"]
+                    message = self.blackboard_bot.analyzer.result["ResponseMetadata"]["HTTPHeaders"]["x-amz-lex-message"]
+                    dialogState = self.blackboard_bot.analyzer.result["ResponseMetadata"]["HTTPHeaders"]["x-amz-lex-dialog-state"]
+                    print("Dialog state: ",dialogState)
+                    print("intentName: ", intentName)
+                    if intentName == IntentName.STOP.value:
+                        print("x-amz-lex-intent-name == Stop")
+                        self.blackboard_scene.call_therapist = True
+                        self.blackboard_scene.utterance = self.context["error_handling"]["stop"]["utterance"]
+                        self.blackboard_scene.face_exp = self.context["error_handling"]["stop"]["face"]
+                        self.blackboard_scene.gesture = self.context["error_handling"]["stop"]["gesture"]
+                        self.blackboard_scene.image = self.context["error_handling"]["stop"]["image"]
+                        self.blackboard_scene.sound = self.context["error_handling"]["stop"]["sound"]
+                        self.blackboard_scene.mainactivity.do_trigger = self.context["error_handling"]["stop"]["do_trigger"]=="True"
+                    elif intentName == IntentName.NOCAPITO.value:
+                        print("x-amz-lex-intent-name == NonHoCapito")
+                        self.counter_non_ho_capito += 1
+                        if self.counter_non_ho_capito < 2:
+                            self.blackboard_scene.utterance = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["utterance"]
+                            self.blackboard_scene.face_exp = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["face"]
+                            self.blackboard_scene.gesture = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["gesture"]
+                            self.blackboard_scene.image = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["image"]
+                            self.blackboard_scene.sound = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["sound"]
+                            self.blackboard_scene.mainactivity.do_kid = True
+                        else:
+                            self.blackboard_scene.call_therapist = True
                             self.blackboard_scene.utterance = self.context["error_handling"]["terapista"]["utterance"]
                             self.blackboard_scene.face_exp = self.context["error_handling"]["terapista"]["face"]
                             self.blackboard_scene.gesture = self.context["error_handling"]["terapista"]["gesture"]
                             self.blackboard_scene.image = self.context["error_handling"]["terapista"]["image"]
                             self.blackboard_scene.sound = self.context["error_handling"]["terapista"]["sound"]
                             self.blackboard_scene.mainactivity.do_trigger = self.context["error_handling"]["terapista"]["do_trigger"]=="True"
-                        elif intentName == IntentName.NOCAPITO.value:
-                            print("x-amz-lex-intent-name == NonHoCapito")
-                            self.counter_non_ho_capito += 1
-                            if self.counter_non_ho_capito < 2:
-                                self.blackboard_scene.utterance = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["utterance"]
-                                self.blackboard_scene.face_exp = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["face"]
-                                self.blackboard_scene.gesture = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["gesture"]
-                                self.blackboard_scene.image = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["image"]
-                                self.blackboard_scene.sound = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["sound"]
-                                self.blackboard_scene.mainactivity.do_kid = True
-                            else:
-                                self.blackboard_scene.therapist_needed = True
-                                self.blackboard_scene.utterance = self.context["error_handling"]["terapista"]["utterance"]
-                                self.blackboard_scene.face_exp = self.context["error_handling"]["terapista"]["face"]
-                                self.blackboard_scene.gesture = self.context["error_handling"]["terapista"]["gesture"]
-                                self.blackboard_scene.image = self.context["error_handling"]["terapista"]["image"]
-                                self.blackboard_scene.sound = self.context["error_handling"]["terapista"]["sound"]
-                                self.blackboard_scene.mainactivity.do_trigger = self.context["error_handling"]["terapista"]["do_trigger"]=="True"
-                        elif dialogState == DialogStateLex.FULFILLED.value or dialogState == DialogStateLex.READY_FOR_FULFILLMENT.value:
-                            print("x-amz-lex-dialog-statete == FULFILLED")
-                            self.blackboard_scene.mainactivity.scene_counter += 1
+                    elif dialogState == DialogStateLex.FULFILLED.value or dialogState == DialogStateLex.READY_FOR_FULFILLMENT.value:
+                        print("x-amz-lex-dialog-statete == FULFILLED")
+                        self.blackboard_scene.mainactivity.scene_counter += 1
+                        self.blackboard_scene.utterance = message
+                        self.blackboard_scene.face_exp = self.context["error_handling"]["risposta_corretta"]["face"]
+                        self.blackboard_scene.gesture = self.context["error_handling"]["risposta_corretta"]["gesture"]
+                        self.blackboard_scene.image = self.context["error_handling"]["risposta_corretta"]["image"]
+                        self.blackboard_scene.sound = self.context["error_handling"]["risposta_corretta"]["sound"]
+                        self.blackboard_scene.mainactivity.do_trigger = self.context["error_handling"]["risposta_corretta"]["do_trigger"]=="True"
+                    elif dialogState == DialogStateLex.CONFIRM_INTENT.value:
+                        print("x-amz-lex-dialog-statete == CONFIRM_INTENT")
+                        #qui nel mai activity non dovremmo mai esserci, quindi cerchiamo di resettare la scena corrente
+                        self.blackboard_scene.utterance = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["utterance"]
+                        self.blackboard_scene.face_exp = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["face"]
+                        self.blackboard_scene.gesture = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["gesture"]
+                        self.blackboard_scene.image = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["image"]
+                        self.blackboard_scene.sound = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["sound"]
+                        self.blackboard_scene.mainactivity.do_trigger = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["do_trigger"]=="True"
+                        self.blackboard_scene.mainactivity.do_kid = True
+                    elif dialogState == DialogStateLex.FAILED.value:
+                        print("x-amz-lex-dialog-statete == FAILED")
+                        #siamo qui se: o sono finiti i tentativi oppure se nel confermation intent rispondi no
+                        #qui devi dire la risposta corretta
+                        self.blackboard_scene.mainactivity.scene_counter += 1
+                        if intentName == IntentName.CARTA.value or intentName == IntentName.PLASTICA.value or intentName == IntentName.VETRO.value:
+                            oggetto = str(intentName).lower()
+                            risposta_sbagliata = "risposta_sbagliata_"+oggetto
+                            self.blackboard_scene.utterance = self.context["error_handling"][risposta_sbagliata]["utterance"]
+                            self.blackboard_scene.face_exp = self.context["error_handling"][risposta_sbagliata]["face"]
+                            self.blackboard_scene.gesture = self.context["error_handling"][risposta_sbagliata]["gesture"]
+                            self.blackboard_scene.image = self.context["error_handling"][risposta_sbagliata]["image"]
+                            self.blackboard_scene.sound = self.context["error_handling"][risposta_sbagliata]["sound"]
+                            self.blackboard_scene.mainactivity.do_trigger = self.context["error_handling"][risposta_sbagliata]["do_trigger"]=="True"
+                        else:
                             self.blackboard_scene.utterance = message
-                            self.blackboard_scene.face_exp = self.context["error_handling"]["risposta_corretta"]["face"]
-                            self.blackboard_scene.gesture = self.context["error_handling"]["risposta_corretta"]["gesture"]
-                            self.blackboard_scene.image = self.context["error_handling"]["risposta_corretta"]["image"]
-                            self.blackboard_scene.sound = self.context["error_handling"]["risposta_corretta"]["sound"]
-                            self.blackboard_scene.mainactivity.do_trigger = self.context["error_handling"]["risposta_corretta"]["do_trigger"]=="True"
-                        elif dialogState == DialogStateLex.CONFIRM_INTENT.value:
-                            print("x-amz-lex-dialog-statete == CONFIRM_INTENT")
-                            #qui nel mai activity non dovremmo mai esserci, quindi cerchiamo di resettare la scena corrente
-                            self.blackboard_scene.utterance = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["utterance"]
-                            self.blackboard_scene.face_exp = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["face"]
-                            self.blackboard_scene.gesture = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["gesture"]
-                            self.blackboard_scene.image = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["image"]
-                            self.blackboard_scene.sound = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["sound"]
-                            self.blackboard_scene.mainactivity.do_trigger = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["do_trigger"]=="True"
-                            self.blackboard_scene.mainactivity.do_kid = True
-                        elif dialogState == DialogStateLex.FAILED.value:
-                            print("x-amz-lex-dialog-statete == FAILED")
-                            #siamo qui se: o sono finiti i tentativi oppure se nel confermation intent rispondi no
-                            #qui devi dire la risposta corretta
-                            self.blackboard_scene.mainactivity.scene_counter += 1
-                            if intentName == IntentName.CARTA.value or intentName == IntentName.PLASTICA.value or intentName == IntentName.VETRO.value:
-                                oggetto = intentName.split[1]
-                                risposta_sbagliata = "risposta_sbagliata_"+oggetto
-                                self.blackboard_scene.utterance = self.context["error_handling"][risposta_sbagliata]["utterance"]
-                                self.blackboard_scene.face_exp = self.context["error_handling"][risposta_sbagliata]["face"]
-                                self.blackboard_scene.gesture = self.context["error_handling"][risposta_sbagliata]["gesture"]
-                                self.blackboard_scene.image = self.context["error_handling"][risposta_sbagliata]["image"]
-                                self.blackboard_scene.sound = self.context["error_handling"][risposta_sbagliata]["sound"]
-                                self.blackboard_scene.mainactivity.do_trigger = self.context["error_handling"][risposta_sbagliata]["do_trigger"]=="True"
-                            else:
-                                self.blackboard_scene.utterance = message
-                                self.blackboard_scene.face_exp = self.context["error_handling"]["risposta_sbagliata"]["face"]
-                                self.blackboard_scene.gesture = self.context["error_handling"]["risposta_sbagliata"]["gesture"]
-                                self.blackboard_scene.image = self.context["error_handling"]["risposta_sbagliata"]["image"]
-                                self.blackboard_scene.sound = self.context["error_handling"]["risposta_sbagliata"]["sound"]
-                                self.blackboard_scene.mainactivity.do_trigger = self.context["error_handling"]["risposta_sbagliata"]["do_trigger"]=="True"
-                        elif dialogState == DialogStateLex.ELICIT_SLOT.value:
-                            print("x-amz-lex-dialog-statete == ELICIT_SLOT")
+                            self.blackboard_scene.face_exp = self.context["error_handling"]["risposta_sbagliata"]["face"]
+                            self.blackboard_scene.gesture = self.context["error_handling"]["risposta_sbagliata"]["gesture"]
+                            self.blackboard_scene.image = self.context["error_handling"]["risposta_sbagliata"]["image"]
+                            self.blackboard_scene.sound = self.context["error_handling"]["risposta_sbagliata"]["sound"]
+                            self.blackboard_scene.mainactivity.do_trigger = self.context["error_handling"]["risposta_sbagliata"]["do_trigger"]=="True"
+                    elif dialogState == DialogStateLex.ELICIT_SLOT.value:
+                        print("x-amz-lex-dialog-statete == ELICIT_SLOT")
+                        if intentName == IntentName.CARTA.value or intentName == IntentName.PLASTICA.value or intentName == IntentName.VETRO.value:
+                            oggetto = str(intentName).lower()
+                            self.blackboard_scene.utterance = "confirm " + oggetto
+                            self.blackboard_scene.face_exp = self.context["error_handling"]["sei_sicuro"]["face"]
+                            self.blackboard_scene.gesture = self.context["error_handling"]["sei_sicuro"]["gesture"]
+                            self.blackboard_scene.image = self.context["error_handling"]["sei_sicuro"]["image"]
+                            self.blackboard_scene.sound = self.context["error_handling"]["sei_sicuro"]["sound"]
+                            self.blackboard_scene.mainactivity.do_trigger = True
+                        else:
                             self.blackboard_scene.utterance = self.context["error_handling"]["sei_sicuro"]["utterance"]
                             self.blackboard_scene.face_exp = self.context["error_handling"]["sei_sicuro"]["face"]
                             self.blackboard_scene.gesture = self.context["error_handling"]["sei_sicuro"]["gesture"]
                             self.blackboard_scene.image = self.context["error_handling"]["sei_sicuro"]["image"]
                             self.blackboard_scene.sound = self.context["error_handling"]["sei_sicuro"]["sound"]
                             self.blackboard_scene.mainactivity.do_trigger = self.context["error_handling"]["sei_sicuro"]["do_trigger"]=="True"
-                            self.blackboard_scene.mainactivity.do_kid = True
-                        elif dialogState == DialogStateLex.ELICIT_INTENT.value:
-                            print("x-amz-lex-dialog-statete == ELICIT_INTENT")
-                            self.blackboard_scene.utterance = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["utterance"]
-                            self.blackboard_scene.face_exp = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["face"]
-                            self.blackboard_scene.gesture = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["gesture"]
-                            self.blackboard_scene.image = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["image"]
-                            self.blackboard_scene.sound = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["sound"]
-                            self.blackboard_scene.mainactivity.do_trigger = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["do_trigger"]=="True"
-                            self.blackboard_scene.mainactivity.do_kid = True
-                        else:
-                            print("ELSE")
-                            #non dovremmo mai essere in questa parte di codice
-                            raise
+                        self.blackboard_scene.mainactivity.do_kid = True
+                    elif dialogState == DialogStateLex.ELICIT_INTENT.value:
+                        print("x-amz-lex-dialog-statete == ELICIT_INTENT")
+                        self.blackboard_scene.utterance = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["utterance"]
+                        self.blackboard_scene.face_exp = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["face"]
+                        self.blackboard_scene.gesture = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["gesture"]
+                        self.blackboard_scene.image = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["image"]
+                        self.blackboard_scene.sound = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["sound"]
+                        self.blackboard_scene.mainactivity.do_trigger = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["do_trigger"]=="True"
+                        self.blackboard_scene.mainactivity.do_kid = True
+                    else:
+                        print("ELSE")
+                        #non dovremmo mai essere in questa parte di codice
+                        raise
                 self.blackboard_bot.analyzer.result = "null"
             else:
+                print("ultimo else")
                 self.blackboard_scene.utterance = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["utterance"]
                 self.blackboard_scene.face_exp = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["face"]
                 self.blackboard_scene.gesture = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["gesture"]
@@ -238,12 +256,20 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                 self.blackboard_scene.mainactivity.do_trigger = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["do_trigger"]=="True"
                 self.blackboard_scene.mainactivity.scene_counter += 1
                 self.counter_non_ho_capito = 0
+
         self.blackboard_bot.trigger.result =    {"ResponseMetadata":{
                                                         "HTTPHeaders":{
                                                             "x-amz-lex-message": self.blackboard_scene.utterance
                                                         }
                                                     }
                                                 }
+
+        print("Ricapitolazione")
+        print("do_trigger: ",self.blackboard_scene.mainactivity.do_trigger)
+        print("self.blackboard_scene.utterance: ",self.blackboard_scene.utterance)
+        print("self.blackboard_bot.trigger.result: ",self.blackboard_bot.trigger.result)
+        print("terapist: ",self.blackboard_scene.call_therapist)
+
         return py_trees.common.Status.SUCCESS
 
     def terminate(self, new_status):

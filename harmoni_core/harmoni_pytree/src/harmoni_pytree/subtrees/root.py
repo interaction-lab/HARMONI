@@ -152,15 +152,28 @@ def main():
     # Tick Tock
     ####################
 
-    #while True:
-    for unused_i in range(1, 50):
+    """
+    def print_tree(tree):
+        print(py_trees.display.unicode_tree(root=tree.root, show_status=True))
+
+    try:
+        behaviour_tree.tick_tock(
+            period_ms=500,
+            number_of_iterations=py_trees.trees.CONTINUOUS_TICK_TOCK,
+            pre_tick_handler=None,
+            post_tick_handler=print_tree
+        )
+    except KeyboardInterrupt:
+        behaviour_tree.interrupt()
+    """
+    for unused_i in range(1, 200):
         try:
             behaviour_tree.tick()
             time.sleep(2)
         except KeyboardInterrupt:
-            break
+           behaviour_tree.interrupt()
     print("\n")
-
+    
 
 if __name__ == "__main__":
     main()

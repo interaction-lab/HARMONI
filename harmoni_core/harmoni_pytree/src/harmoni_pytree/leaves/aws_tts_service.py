@@ -73,6 +73,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         print(new_state)
         if new_state == GoalStatus.LOST:
             self.logger.debug(f"Sending goal to {self.server_name}")
+            print("-tts service pytree- self.blackboard_bot.result = ", self.blackboard_bot.result)
             self.service_client_tts.send_goal(
                 action_goal = ActionType["REQUEST"].value,
                 optional_data = self.blackboard_bot.result["ResponseMetadata"]["HTTPHeaders"]["x-amz-lex-message"],

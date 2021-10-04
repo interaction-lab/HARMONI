@@ -115,6 +115,14 @@
                                                         "image"         : "null",
                                                         "sound"         : "null",
                                                         "do_trigger"    : "False"
+                                                    },
+                                "stop" :   {
+                                                        "utterance"     : "Vabene facciamo una pausa e chiamiamo il terapista",
+                                                        "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
+                                                        "gesture"       : "null",
+                                                        "image"         : "null",
+                                                        "sound"         : "null",
+                                                        "do_trigger"    : "False"
                                                     }
                             }
                             
