@@ -85,19 +85,12 @@ class WebServicePytree(py_trees.behaviour.Behaviour):
         return new_status
 
     def terminate(self, new_status):
-        if new_status == py_trees.common.Status.INVALID:
-            new_state = self.service_client_web.get_state()
-            if new_state != GoalStatus.LOST:
-                self.logger.debug(f"Cancelling goal to {self.server_name}")
-                self.service_client_web.cancel_goal()
-                self.client_result = None
-                #self.blackboard_face_detection.result = None
-                self.logger.debug(f"Goal cancelled to {self.server_name}")
-                self.service_client_web.stop_tracking_goal()
-                self.logger.debug(f"Goal tracking stopped to {self.server_name}")
-        else:
-            #execute actions for the following states (SUCCESS || FAILURE)
-            pass
+        self.logger.debug(f"Cancelling goal to {self.server_name}")
+        self.service_client_web.cancel_goal()
+        self.client_result = None
+        self.logger.debug(f"Goal cancelled to {self.server_name}")
+        self.service_client_web.stop_tracking_goal()
+        self.logger.debug(f"Goal tracking stopped to {self.server_name}")
         self.logger.debug("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))
 
     def _result_callback(self, result):
