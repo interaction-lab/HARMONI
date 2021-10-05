@@ -98,12 +98,15 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
         return new_status
         
     def terminate(self, new_status):
-        self.logger.debug(f"Cancelling goal to {self.server_name}")
-        self.service_client_yolo.cancel_goal()
-        self.client_result = None
-        self.logger.debug(f"Goal cancelled to {self.server_name}")
-        self.service_client_yolo.stop_tracking_goal()
-        self.logger.debug(f"Goal tracking stopped to {self.server_name}")
+        new_state = self.service_client_web.get_state()
+        print(new_state)
+        if new_state != GoalStatus.SUCCEEDED:
+            self.logger.debug(f"Cancelling goal to {self.server_name}")
+            self.service_client_yolo.cancel_goal()
+            self.client_result = None
+            self.logger.debug(f"Goal cancelled to {self.server_name}")
+            self.service_client_yolo.stop_tracking_goal()
+            self.logger.debug(f"Goal tracking stopped to {self.server_name}")
         self.logger.debug("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))
 
     def _result_callback(self, result):

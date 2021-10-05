@@ -69,7 +69,7 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
     def update(self):
         new_state = self.service_client_camera.get_state()
         print(new_state)
-        if new_state == GoalStatus.LOST or new_state != GoalStatus.SUCCEEDED:
+        if new_state == GoalStatus.LOST:
             self.logger.debug(f"Sending goal to {self.server_name}")
             # Send request for each sensor service to set themselves up
             self.service_client_camera.send_goal(
@@ -92,7 +92,9 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
 
     def terminate(self, new_status):
         """
+        new_state = self.service_client_camera.get_state()
         if new_status == py_trees.common.Status.INVALID:
+            if new_state != GoalStatus.SUCCEEDED:
             self.logger.debug(f"Cancelling goal to {self.server_name}")
             self.service_client_camera.cancel_goal()
             self.client_result = None

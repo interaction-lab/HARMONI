@@ -88,7 +88,7 @@ class WebServicePytree(py_trees.behaviour.Behaviour):
 
     def terminate(self, new_status):
         """
-         or new_state != GoalStatus.SUCCEEDED:
+         and new_state != GoalStatus.SUCCEEDED:
         self.logger.debug(f"Cancelling goal to {self.server_name}")
         self.service_client_web.cancel_goal()
         self.client_result = None

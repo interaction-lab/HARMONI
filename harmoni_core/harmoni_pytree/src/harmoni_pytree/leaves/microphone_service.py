@@ -73,7 +73,7 @@ class MicrophoneServicePytree(py_trees.behaviour.Behaviour):
     def update(self):
         new_state = self.service_client_microphone.get_state()
         print(new_state)
-        if new_state == GoalStatus.LOST or new_state != GoalStatus.SUCCEEDED:
+        if new_state == GoalStatus.LOST:
             self.logger.debug(f"Sending goal to {self.server_name}")
             # Send request for each sensor service to set themselves up
             self.service_client_microphone.send_goal(
@@ -97,7 +97,7 @@ class MicrophoneServicePytree(py_trees.behaviour.Behaviour):
         """
         if new_status == py_trees.common.Status.INVALID:
             new_state = self.service_client_microphone.get_state()
-            if new_state != GoalStatus.LOST:
+            if new_state != GoalStatus.LOST and new_state != GoalStatus.SUCCEEDED:
                 self.logger.debug(f"Sending goal to {self.server_name} to stop the server")
                 # Send request for each sensor service to set themselves up
                 self.service_client_microphone.send_goal(
