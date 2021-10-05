@@ -21,6 +21,7 @@ from harmoni_pytree.leaves.buttons import Buttons
 from harmoni_pytree.leaves.aws_lex_trigger_service import AWSLexTriggerServicePytree
 from harmoni_pytree.leaves.aws_lex_analyzer_service import AWSLexAnalyzerServicePytree
 from harmoni_pytree.leaves.aws_tts_service import AWSTtsServicePytree
+from harmoni_pytree.leaves.web_service import WebServicePytree
 from harmoni_pytree.leaves.facial_exp_service import FacialExpServicePytree
 from harmoni_pytree.leaves.lip_sync_service import LipSyncServicePytree
 from harmoni_pytree.leaves.google_service import SpeechToTextServicePytree
@@ -100,7 +101,7 @@ def create_root():
     gesture = py_trees.behaviours.Success(name="GestureMainActivity")
     
     #TODO sostituirlo/capire se si può usare web_service.
-    Projector = py_trees.behaviours.Success(name="Projector")
+    projector = WebServicePytree(name="ProjectorMainActivity")
 
     ext_speaker=SpeakerServicePytree("ExternalSpeakerMainActivity")
 
@@ -164,7 +165,7 @@ def create_root():
     parall_robot.add_children([eor_external_speaker, eor_speaker])
     
     sequen_robot = py_trees.composites.Sequence(name="SequenceRobot")
-    sequen_robot.add_children([scene_manager,Projector,parall_robot])
+    sequen_robot.add_children([scene_manager,projector,parall_robot])
 
     parall_detect_kid = py_trees.composites.Parallel(name="ParallelDetectKid")
     parall_detect_kid.add_children([stt ,custom_yolo, buttons])

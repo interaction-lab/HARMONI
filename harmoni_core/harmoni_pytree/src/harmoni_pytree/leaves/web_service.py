@@ -3,14 +3,13 @@
 # Common Imports
 import rospy, rospkg, roslib
 
-from harmoni_common_lib.constants import State, ActuatorNameSpace
 from harmoni_common_lib.action_client import HarmoniActionClient
 from actionlib_msgs.msg import GoalStatus
 import harmoni_common_lib.helper_functions as hf
 
 # Specific Imports
 from harmoni_web.web_service import WebService
-from harmoni_common_lib.constants import ActuatorNameSpace, ActionType, State
+from harmoni_common_lib.constants import *
 from contextlib import closing
 from collections import deque 
 import soundfile as sf
