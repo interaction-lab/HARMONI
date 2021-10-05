@@ -34,6 +34,7 @@ class WebServicePytree(py_trees.behaviour.Behaviour):
         self.server_state = None
         self.server_name = None
         self.client_result = None
+        self.send_request = True
 
         self.blackboards = []
         self.blackboard_scene = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name)
@@ -88,7 +89,7 @@ class WebServicePytree(py_trees.behaviour.Behaviour):
 
     def terminate(self, new_status):
         """
-         and new_state != GoalStatus.SUCCEEDED:
+         and new_state != GoalStatus.PREEMPTED:
         self.logger.debug(f"Cancelling goal to {self.server_name}")
         self.service_client_web.cancel_goal()
         self.client_result = None

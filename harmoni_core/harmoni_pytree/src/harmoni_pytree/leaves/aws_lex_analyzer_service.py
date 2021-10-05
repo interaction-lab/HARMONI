@@ -32,6 +32,7 @@ class AWSLexAnalyzerServicePytree(py_trees.behaviour.Behaviour):
         self.server_state = None
         self.service_client_lex = None
         self.client_result = None
+        self.send_request = True
 
         self.blackboards = []
         
@@ -70,18 +71,17 @@ class AWSLexAnalyzerServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
 
     def update(self):
-        new_state = self.service_client_lex.get_state()
-        print(new_state)
-        if new_state == GoalStatus.LOST:
+        if self.send_request:
+            self.send_request = False
             if self.blackboard_card_detect.result != "null":
-                print("-lex analyzer pytree- card detect contiene: ", self.blackboard_card_detect.result)
+                self.logger.debug(f"Sending  again goal to {self.server_name}")
                 self.service_client_lex.send_goal(
                     action_goal = ActionType["REQUEST"].value,
                     optional_data=self.blackboard_card_detect.result,
                     wait=False,
                 )
                 self.logger.debug(f"Goal sent to {self.server_name}")
-                new_status = py_trees.common.Status.RUNNING
+                return py_trees.common.Status.RUNNING
             elif self.blackboard_stt.result != "null":
                 self.logger.debug(f"Sending goal to {self.server_name}")
                 self.service_client_lex.send_goal(
@@ -90,13 +90,16 @@ class AWSLexAnalyzerServicePytree(py_trees.behaviour.Behaviour):
                     wait=False,
                 )
                 self.logger.debug(f"Goal sent to {self.server_name}")
-                new_status = py_trees.common.Status.RUNNING
+                return py_trees.common.Status.RUNNING
             else:
                 self.blackboard_mainactivity.counter_no_answer += 1 
                 self.blackboard_bot.result = "void_answer"
-                new_status = py_trees.common.Status.SUCCESS
+                return py_trees.common.Status.SUCCESS
+        new_state = self.service_client_lex.get_state()
+        print(new_state)
+        if new_state == GoalStatus.LOST:
+            new_status = py_trees.common.Status.FAILURE
         elif new_state == GoalStatus.PENDING or new_state == GoalStatus.ACTIVE:
-            #there is no result yet
             new_status = py_trees.common.Status.RUNNING
         elif new_state == GoalStatus.SUCCEEDED:
             if self.client_result is not None:
@@ -104,9 +107,8 @@ class AWSLexAnalyzerServicePytree(py_trees.behaviour.Behaviour):
                 self.client_result = None
                 new_status = py_trees.common.Status.SUCCESS
             else:
-                #we haven't received the result correctly.
-                new_status = py_trees.common.Status.FAILURE
-        else: 
+                raise
+        else:
             new_status = py_trees.common.Status.FAILURE
 
         self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
@@ -115,19 +117,10 @@ class AWSLexAnalyzerServicePytree(py_trees.behaviour.Behaviour):
         
 
     def terminate(self, new_status):
-        if new_status == py_trees.common.Status.INVALID:
-            new_state = self.service_client_lex.get_state()
-            if new_state != GoalStatus.LOST and new_state != GoalStatus.SUCCEEDED:
-                self.logger.debug(f"Cancelling goal to {self.server_name}")
-                self.service_client_lex.cancel_goal()
-                self.client_result = None
-                #self.blackboard_bot.result = None
-                self.logger.debug(f"Goal cancelled to {self.server_name}")
-                self.service_client_lex.stop_tracking_goal()
-                self.logger.debug(f"Goal tracking stopped to {self.server_name}")
-        else:
-            #execute actions for the following states (SUCCESS || FAILURE)
-            pass
+        new_state = self.service_client_lex.get_state()
+        print("terminate :",new_state)
+        if new_state == GoalStatus.SUCCEEDED :
+            self.send_request = True
         self.logger.debug("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))
 
     def _result_callback(self, result):

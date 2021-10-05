@@ -44,6 +44,7 @@ class FacialExpServicePytree(py_trees.behaviour.Behaviour):
         self.service_client_eyes = None
         self.service_client_nose = None
         self.client_result = None
+        self.send_request = True
 
         self.blackboards = []
 
@@ -79,9 +80,9 @@ class FacialExpServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
 
     def update(self):
-        new_state = self.service_client_mouth.get_state()
-        print(new_state)
-        if new_state == GoalStatus.LOST:
+
+        if self.send_request:
+            self.send_request = False
             self.data = self.blackboard_scene.face_exp
             self.logger.debug(f"Sending goal to {self.server_name}")
             self.service_client_mouth.send_goal(
@@ -89,46 +90,27 @@ class FacialExpServicePytree(py_trees.behaviour.Behaviour):
                 optional_data=self.data,
                 wait=True,
             )
-            """
-            self.service_client_eyes.send_goal(
-                action_goal=ActionType.DO.value,
-                optional_data=self.data,
-                wait=True,
-            )
-            self.service_client_nose.send_goal(
-                action_goal=ActionType.DO.value,
-                optional_data=self.data,
-                wait=True,
-            )
-            """
             self.logger.debug(f"Goal sent to {self.server_name}")
-            new_status = py_trees.common.Status.RUNNING
+            return py_trees.common.Status.RUNNING
+        new_state = self.service_client_mouth.get_state()
+        print(new_state)
+        if new_state == GoalStatus.LOST:
+            new_status = py_trees.common.Status.FAILURE
         elif new_state == GoalStatus.PENDING or new_state == GoalStatus.ACTIVE:
             new_status = py_trees.common.Status.RUNNING
         elif new_state == GoalStatus.SUCCEEDED:
             new_status = py_trees.common.Status.SUCCESS
         else:
             new_status = py_trees.common.Status.FAILURE
+
         self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status 
 
     def terminate(self, new_status):
-        if new_status == py_trees.common.Status.INVALID:
-            new_state = self.service_client_mouth.get_state()
-            if new_state != GoalStatus.LOST and new_state != GoalStatus.SUCCEEDED:
-                self.logger.debug(f"Cancelling goal to {self.server_name}")
-                self.service_client_mouth.cancel_goal()
-                #self.service_client_eyes.cancel_goal()
-                #self.service_client_nose.cancel_goal()
-                self.client_result = None
-                self.logger.debug(f"Goal cancelled to {self.server_name}")
-                self.service_client_mouth.stop_tracking_goal()
-                #self.service_client_eyes.stop_tracking_goal()
-                #self.service_client_nose.stop_tracking_goal()
-                self.logger.debug(f"Goal tracking stopped to {self.server_name}")
-        else:
-            #execute actions for the following states (SUCCESS || FAILURE)
-            pass
+        new_state = self.service_client_mouth.get_state()
+        print("terminate :",new_state)
+        if new_state == GoalStatus.SUCCEEDED :
+            self.send_request = True
         self.logger.debug("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))
 
     def _result_callback(self, result):

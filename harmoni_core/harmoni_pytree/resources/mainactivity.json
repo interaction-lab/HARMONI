@@ -17,7 +17,7 @@
                         "do_trigger"    : "False"
                     },
                     {
-                        "utterance"     : "oggetto carta",
+                        "utterance"     : "oggetto vetro",
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "null",
@@ -25,7 +25,15 @@
                         "do_trigger"    : "True"
                     },
                     {
-                        "utterance"     : "oggetto vetro",
+                        "utterance"     : "oggetto plastica",
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "null",
+                        "sound"         : "null",
+                        "do_trigger"    : "True"
+                    },
+                    {
+                        "utterance"     : "chiedi dell'ombrello",
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "null",
@@ -117,7 +125,7 @@
                                                         "do_trigger"    : "False"
                                                     },
                                 "terapista" :   {
-                                                        "utterance"     : "Okay non ti preoccupare, ora chiamiamo il trapista",
+                                                        "utterance"     : "Okay non ti preoccupare, ora chiamiamo il terapista",
                                                         "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
                                                         "gesture"       : "null",
                                                         "image"         : "null",
@@ -126,6 +134,14 @@
                                                     },
                                 "stop" :   {
                                                         "utterance"     : "Vabene facciamo una pausa e chiamiamo il terapista",
+                                                        "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
+                                                        "gesture"       : "null",
+                                                        "image"         : "null",
+                                                        "sound"         : "null",
+                                                        "do_trigger"    : "False"
+                                                    },
+                                "no_capito" :   {
+                                                        "utterance"     : "RIpetiamo, ma non usarmi",
                                                         "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
                                                         "gesture"       : "null",
                                                         "image"         : "null",

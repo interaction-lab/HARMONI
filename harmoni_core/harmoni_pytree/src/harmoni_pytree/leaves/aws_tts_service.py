@@ -36,6 +36,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         self.server_state = None
         self.service_client_tts = None
         self.client_result = None
+        self.send_request = True
 
         # here there is the inizialization of the blackboards
         self.blackboards = []
@@ -69,11 +70,9 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
 
     def update(self):
-        new_state = self.service_client_tts.get_state()
-        print(new_state)
-        if new_state == GoalStatus.LOST:
+        if self.send_request:
+            self.send_request = False
             self.logger.debug(f"Sending goal to {self.server_name}")
-            print("-tts service pytree- self.blackboard_bot.result = ", self.blackboard_bot.result)
             self.service_client_tts.send_goal(
                 action_goal = ActionType["REQUEST"].value,
                 optional_data = self.blackboard_bot.result["message"],
@@ -81,6 +80,10 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
+        new_state = self.service_client_tts.get_state()
+        print(new_state)
+        if new_state == GoalStatus.LOST:
+            new_status = py_trees.common.Status.FAILURE
         elif new_state == GoalStatus.PENDING or new_state == GoalStatus.ACTIVE:
             new_status = py_trees.common.Status.RUNNING
         elif new_state == GoalStatus.SUCCEEDED:
@@ -91,8 +94,7 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
                 self.client_result = None
                 new_status = py_trees.common.Status.SUCCESS
             else:
-                #we haven't received the result correctly.
-                new_status = py_trees.common.Status.FAILURE
+                raise
         else:
             new_status = py_trees.common.Status.FAILURE
         
@@ -101,19 +103,10 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
 
         
     def terminate(self, new_status):
-        if new_status == py_trees.common.Status.INVALID:
-            new_state = self.service_client_tts.get_state()
-            if new_state != GoalStatus.LOST and new_state != GoalStatus.SUCCEEDED:
-                self.logger.debug(f"Cancelling goal to {self.server_name}")
-                self.service_client_tts.cancel_goal()
-                self.client_result = None
-                #self.blackboard_tts.result = None
-                self.logger.debug(f"Goal cancelled to {self.server_name}")
-                self.service_client_tts.stop_tracking_goal()
-                self.logger.debug(f"Goal tracking stopped to {self.server_name}")
-        else:
-            #execute actions for the following states (SUCCESS || FAILURE)
-            pass
+        new_state = self.service_client_tts.get_state()
+        print("terminate :",new_state)
+        if new_state == GoalStatus.SUCCEEDED :
+            self.send_request = True
         self.logger.debug("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))
 
     def _result_callback(self, result):

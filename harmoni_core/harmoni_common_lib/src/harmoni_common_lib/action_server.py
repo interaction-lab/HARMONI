@@ -190,6 +190,7 @@ class HarmoniActionServer(object):
             result = self.get_default_result()
         with self.action_server.lock, self.lock:
             rospy.logdebug("Setting the current goal as canceled")
+            rospy.logdebug(self.name)
             self.current_goal.set_canceled(result, text)
 
     # @brief Allows users to register a callback to be invoked when a new goal is available

@@ -112,7 +112,6 @@ class ImageAICustomService(HarmoniServiceManager):
         self.state = State.REQUEST
         self.capture_frame = True
         try:
-            
             for element in self.custom_objects:
                 self.custom_objects[element] = 0
             for i in range(1, 6):

@@ -43,6 +43,7 @@ class ExternalSpeakerServicePytree(py_trees.behaviour.Behaviour):
         self.client_result = None
         self.server_state = None
         self.server_name = None
+        self.send_request = True
 
         self.blackboards = []
         self.blackboard_ext_speaker = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name)
@@ -72,9 +73,7 @@ class ExternalSpeakerServicePytree(py_trees.behaviour.Behaviour):
     
     
     def update(self):
-        new_state = self.service_client_ext_speaker.get_state()
-        print(new_state)
-        if new_state == GoalStatus.LOST:
+        if self.send_request:
             self.logger.debug(f"Sending goal to {self.server_name}")
             self.service_client_ext_speaker.send_goal(
                 action_goal = ActionType["DO"].value,
@@ -82,30 +81,27 @@ class ExternalSpeakerServicePytree(py_trees.behaviour.Behaviour):
                 wait=False,
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
-            new_status = py_trees.common.Status.RUNNING
+            return py_trees.common.Status.RUNNING
+        new_state = self.service_client_ext_speaker.get_state()
+        print(new_state)
+        if new_state == GoalStatus.LOST:
+            new_status = py_trees.common.Status.FAILURE
         elif new_state == GoalStatus.PENDING or new_state == GoalStatus.ACTIVE:
             new_status = py_trees.common.Status.RUNNING
         elif new_state == GoalStatus.SUCCEEDED:
             new_status = py_trees.common.Status.SUCCESS
-        else: 
+        else:
             new_status = py_trees.common.Status.FAILURE
-        
+
         self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status
         
 
     def terminate(self, new_status):
-        if new_status == py_trees.common.Status.INVALID:
-            new_state = self.service_client_ext_speaker.get_state()
-            if new_state != GoalStatus.LOST and new_state != GoalStatus.SUCCEEDED:
-                self.logger.debug(f"Cancelling goal to {self.server_name}")
-                self.service_client_ext_speaker.cancel_goal()
-                self.logger.debug(f"Goal cancelled to {self.server_name}")
-                self.service_client_ext_speaker.stop_tracking_goal()
-                self.logger.debug(f"Goal tracking stopped to {self.server_name}")
-        else:
-            #execute actions for the following states (SUCCESS || FAILURE)
-            pass
+        new_state = self.service_client_ext_speaker.get_state()
+        print("terminate :",new_state)
+        if new_state == GoalStatus.SUCCEEDED :
+            self.send_request = True
         self.logger.debug("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))
 
     def _result_callback(self, result):

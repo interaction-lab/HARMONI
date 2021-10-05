@@ -37,6 +37,7 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
         self.server_state = None
         self.service_client_camera = None
         self.client_result = None 
+        self.send_request = True
 
         # here there is the inizialization of the blackboards
         self.blackboards = []
@@ -67,9 +68,8 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
 
     def update(self):
-        new_state = self.service_client_camera.get_state()
-        print(new_state)
-        if new_state == GoalStatus.LOST:
+        if self.send_request:
+            self.send_request = False
             self.logger.debug(f"Sending goal to {self.server_name}")
             # Send request for each sensor service to set themselves up
             self.service_client_camera.send_goal(
@@ -78,11 +78,15 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
                 wait="",
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
-            new_status = py_trees.common.Status.RUNNING
-        elif new_state == GoalStatus.SUCCEEDED:
-            new_status = py_trees.common.Status.SUCCESS
+            return py_trees.common.Status.RUNNING
+        new_state = self.service_client_camera.get_state()
+        print(new_state)
+        if new_state == GoalStatus.LOST:
+            new_status = py_trees.common.Status.FAILURE
         elif new_state == GoalStatus.ABORTED:
             #FIXME dovrebbe essere .FAILURE
+            new_status = py_trees.common.Status.SUCCESS
+        elif new_state == GoalStatus.SUCCEEDED:
             new_status = py_trees.common.Status.SUCCESS
         else:
             new_status = py_trees.common.Status.FAILURE
@@ -93,17 +97,9 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
     def terminate(self, new_status):
         """
         new_state = self.service_client_camera.get_state()
-        if new_status == py_trees.common.Status.INVALID:
-            if new_state != GoalStatus.SUCCEEDED:
-            self.logger.debug(f"Cancelling goal to {self.server_name}")
-            self.service_client_camera.cancel_goal()
-            self.client_result = None
-            self.logger.debug(f"Goal cancelled to {self.server_name}")
-            self.service_client_camera.stop_tracking_goal()
-            self.logger.debug(f"Goal tracking stopped to {self.server_name}")
-        else:
-            #execute actions for the following states (SUCCESS || FAILURE)
-            pass
+        print("terminate :",new_state)
+        if new_state == GoalStatus.SUCCEEDED :
+            self.send_request = True
         """
         self.logger.debug("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))
 
