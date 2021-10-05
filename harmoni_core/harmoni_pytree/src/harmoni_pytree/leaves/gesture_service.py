@@ -97,6 +97,7 @@ class GestureServicePytree(py_trees.behaviour.Behaviour):
     def terminate(self, new_status):
         """
         if new_status == py_trees.common.Status.INVALID:
+             or new_state != GoalStatus.SUCCEEDED:
             self.logger.debug(f"Sending goal to {self.server_name} to stop the service")
             # Send request for each sensor service to set themselves up
             self.service_client_gesture.send_goal(

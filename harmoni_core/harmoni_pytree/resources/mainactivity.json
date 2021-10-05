@@ -33,6 +33,14 @@
                         "do_trigger"    : "True"
                     },
                     {
+                        "utterance"     : "ombrello" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "null",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
                         "utterance"     : "Ora abbiamo finito, ciao!" ,
                         "face"          : "null",
                         "gesture"       : "null",

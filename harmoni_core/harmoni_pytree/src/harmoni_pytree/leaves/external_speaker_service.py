@@ -97,7 +97,7 @@ class ExternalSpeakerServicePytree(py_trees.behaviour.Behaviour):
     def terminate(self, new_status):
         if new_status == py_trees.common.Status.INVALID:
             new_state = self.service_client_ext_speaker.get_state()
-            if new_state != GoalStatus.LOST:
+            if new_state != GoalStatus.LOST or new_state != GoalStatus.SUCCEEDED:
                 self.logger.debug(f"Cancelling goal to {self.server_name}")
                 self.service_client_ext_speaker.cancel_goal()
                 self.logger.debug(f"Goal cancelled to {self.server_name}")

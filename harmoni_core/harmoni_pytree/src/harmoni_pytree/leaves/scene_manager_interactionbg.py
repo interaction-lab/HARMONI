@@ -81,77 +81,59 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
                 self.blackboard_scene.utterance = self.context["error_handling"]["terapista"]["utterance"]
                 self.blackboard_scene.face_exp = self.context["error_handling"]["terapista"]["face"]
             else:
-                intentName = self.blackboard_bot.analyzer.result["ResponseMetadata"]["HTTPHeaders"]["x-amz-lex-intent-name"]
-                dialogState = self.blackboard_bot.analyzer.result["ResponseMetadata"]["HTTPHeaders"]["x-amz-lex-dialog-state"]
-                message = self.blackboard_bot.analyzer.result["ResponseMetadata"]["HTTPHeaders"]["x-amz-lex-message"]
+                intentName = self.blackboard_bot.analyzer.result["intentName"]
+                dialogState = self.blackboard_bot.analyzer.result["dialogState"]
+                message = self.blackboard_bot.analyzer.result["message"]
                 print("Intent name: ", intentName)
                 print("Dialog state: ", dialogState)
                 if intentName == "Stop": 
-                    print("x-amz-lex-intent-name == Stop")
+                    print("intentName == Stop")
                     self.blackboard_scene.call_therapist = True
                     self.blackboard_scene.utterance = self.context["error_handling"]["terapista"]["utterance"]
                     self.blackboard_scene.face_exp = self.context["error_handling"]["terapista"]["face"]
                 elif intentName == "NonHoCapito":
-                    print("x-amz-lex-intent-name == NonHoCapito") 
+                    print("intentName == NonHoCapito") 
                     self.blackboard_scene.call_therapist = True
                     self.blackboard_scene.utterance = self.context["error_handling"]["terapista"]["utterance"]
                     self.blackboard_scene.face_exp = self.context["error_handling"]["terapista"]["face"]
                 elif dialogState == DialogStateLex.FULFILLED.value or dialogState == DialogStateLex.READY_FOR_FULFILLMENT.value:
-                    print("x-amz-lex-dialog-state == FULFILLED")
+                    print("dialogState == FULFILLED")
                     self.blackboard_scene.utterance = message
-                    self.blackboard_bot.trigger.result =    {"ResponseMetadata":{
-                                                        "HTTPHeaders":{
-                                                            "x-amz-lex-message":   self.blackboard_scene.utterance
-                                                        }
-                                                    }
-                                                }
+                    self.blackboard_bot.trigger.result =    {
+                                                                "message":   self.blackboard_scene.utterance
+                                                            }
                     self.blackboard_scene.interaction.do_kid = False
                     self.blackboard_scene.interaction.scene_counter += 1
                 elif dialogState == DialogStateLex.CONFIRM_INTENT.value:
-                    print("x-amz-lex-dialog-state == CONFIRM_INTENT")
+                    print("dialogState == CONFIRM_INTENT")
                     self.blackboard_scene.utterance = message
-                    self.blackboard_bot.trigger.result =    {"ResponseMetadata":{
-                                                        "HTTPHeaders":{
-                                                            "x-amz-lex-message":   self.blackboard_scene.utterance
-                                                        }
-                                                    }
-                                                }
+                    self.blackboard_bot.trigger.result =    {
+                                                                "message":   self.blackboard_scene.utterance
+                                                            }
                 elif dialogState == DialogStateLex.FAILED.value:
-                    print("x-amz-lex-dialog-state == FAILED")
+                    print("dialogState == FAILED")
                     self.blackboard_scene.call_therapist = True
                     self.blackboard_scene.utterance = message
-                    self.blackboard_bot.trigger.result =    {"ResponseMetadata":{
-                                                        "HTTPHeaders":{
-                                                            "x-amz-lex-message":   self.blackboard_scene.utterance
-                                                        }
-                                                    }
-                                                }
+                    self.blackboard_bot.trigger.result =    {
+                                                                "message":   self.blackboard_scene.utterance
+                                                            }
                     self.blackboard_scene.interaction.do_kid = False
                     self.blackboard_scene.interaction.scene_counter += 1
                 elif dialogState == DialogStateLex.ELICIT_SLOT.value:
-                    print("x-amz-lex-dialog-state == ELICIT_SLOT")
+                    print("dialogState == ELICIT_SLOT")
                     #TODO forse da cambiare con ripetere scena corrente
                     self.blackboard_scene.utterance = message
-                    self.blackboard_bot.trigger.result =    {"ResponseMetadata":{
-                                                        "HTTPHeaders":{
-                                                            "x-amz-lex-message":   self.blackboard_scene.utterance
-                                                        }
-                                                    }
-                                                }
+                    self.blackboard_bot.trigger.result =    {   
+                                                                "message":   self.blackboard_scene.utterance
+                                                            }
                 elif dialogState == DialogStateLex.ELICIT_INTENT.value:
-                    print("x-amz-lex-dialog-state == ELICIT_INTENT")
+                    print("dialogState == ELICIT_INTENT")
                     self.blackboard_scene.utterance = self.context["scene"][0]["utterance"]
                     self.blackboard_scene.interaction.do_trigger = True
                 else:
                     #qui non dovremmo mai entrare in quanto abbiamo gestito tutti gli stati
                     raise
             self.blackboard_bot.analyzer.result = "null"
-
-        print("Ricapitolazione")
-        print("do_trigger: ",self.blackboard_scene.interaction.do_trigger)
-        print("self.blackboard_scene.utterance: ",self.blackboard_scene.utterance)
-        print("self.blackboard_bot.trigger.result: ",self.blackboard_bot.trigger.result)
-        print("terapist: ",self.blackboard_scene.call_therapist)
         
         return py_trees.common.Status.SUCCESS
 

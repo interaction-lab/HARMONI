@@ -77,7 +77,7 @@ class SpeakerServicePytree(py_trees.behaviour.Behaviour):
     def update(self):
         new_state = self.service_client_speaker.get_state()
         print(new_state)
-        if new_state == GoalStatus.LOST:
+        if new_state == GoalStatus.LOST or new_state != GoalStatus.SUCCEEDED:
             self.logger.debug(f"Sending goal to {self.server_name}")
             self.service_client_speaker.send_goal(
                 action_goal = ActionType["DO"].value,

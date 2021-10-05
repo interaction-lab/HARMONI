@@ -74,6 +74,7 @@ class IntentName(Enum):
     PLASTICA = "Plastica"
     STOP = "Stop"
     VETRO = "Vetro"
+    OMBRELLO = "Ombrello"
     NOCAPITO = "NonHoCapito"
 
 class Resources(Enum):

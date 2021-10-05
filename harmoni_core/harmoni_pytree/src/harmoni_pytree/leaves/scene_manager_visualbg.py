@@ -85,43 +85,32 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
             if self.blackboard_bot.analyzer.result == "void_answer":
                 print("self.blackboard_bot.analyzer.result == void_answer")
                 self.blackboard_scene.call_therapist = True
-                self.blackboard_bot.trigger.result =    {"ResponseMetadata":{
-                                                        "HTTPHeaders":{
-                                                            "x-amz-lex-message":   self.context["terapista"]["utterance"]
+                self.blackboard_bot.trigger.result =    {
+                                                            "message":   self.context["terapista"]["utterance"]
                                                         }
-                                                    }
-                                                }
                 self.blackboard_scene.face_exp = self.context["terapista"]["face"]
             else:
-                dialogState = self.blackboard_bot.analyzer.result["ResponseMetadata"]["HTTPHeaders"]["x-amz-lex-dialog-state"]
-                message = self.blackboard_bot.analyzer.result["ResponseMetadata"]["HTTPHeaders"]["x-amz-lex-message"]
+                dialogState = self.blackboard_bot.analyzer.result["dialogState"]
+                message = self.blackboard_bot.analyzer.result["message"]
                 if dialogState == DialogStateLex.FAILED.value:
-                    print("x-amz-lex-dialog-state == FAILED")
-                    self.blackboard_bot.trigger.result =    {"ResponseMetadata":{
-                                                        "HTTPHeaders":{
-                                                            "x-amz-lex-message":   message
-                                                        }
-                                                    }
-                                                }
+                    print("dialogState == FAILED")
+                    self.blackboard_bot.trigger.result =    {
+                                                                "message":   message
+                                                            }
+
                     self.blackboard_scene.call_therapist = True
                 else:
                     if self.blackboard_scene.visual.scene_counter <= 2:
                         print("self.blackboard_scene.visual.scene_counter <= 2") 
-                        self.blackboard_bot.trigger.result =    {"ResponseMetadata":{
-                                                        "HTTPHeaders":{
-                                                            "x-amz-lex-message":   message
-                                                        }
-                                                    }
-                                                }
+                        self.blackboard_bot.trigger.result =    {
+                                                                    "message":   message
+                                                                }
                         self.blackboard_scene.visual.scene_counter += 1
                     else:
                         print("self.blackboard_scene.visual.scene_counter > 2") 
-                        self.blackboard_bot.trigger.result =    {"ResponseMetadata":{
-                                                        "HTTPHeaders":{
-                                                            "x-amz-lex-message":  self.context["terapista"]["utterance"]
-                                                        }
-                                                    }
-                                                }
+                        self.blackboard_bot.trigger.result =    {
+                                                                    "message":  self.context["terapista"]["utterance"]
+                                                                }
                         self.blackboard_scene.face_exp = self.context["terapista"]["face"]
                         self.blackboard_scene.call_therapist = True
         

@@ -75,7 +75,7 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
     def update(self):
         new_state = self.service_client_yolo.get_state()
         print(new_state)
-        if new_state == GoalStatus.LOST:
+        if new_state == GoalStatus.LOST or new_state != GoalStatus.SUCCEEDED:
             self.logger.debug(f"Sending goal to {self.server_name}")
             self.service_client_yolo.send_goal(
                 action_goal = ActionType["REQUEST"].value,
