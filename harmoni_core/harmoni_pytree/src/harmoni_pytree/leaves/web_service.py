@@ -50,24 +50,22 @@ class WebServicePytree(py_trees.behaviour.Behaviour):
             if(parameter =="WebServicePytree_mode"):
                 self.mode = additional_parameters[parameter]        
         """
-        """
+        
         self.service_client_web = HarmoniActionClient(self.name)
         self.server_name = "web_default"
         self.service_client_web.setup_client(self.server_name,
                                             self._result_callback,
                                             self._feedback_callback)
         self.logger.debug("Behavior %s interface action clients have been set up!" % (self.server_name))
-        """
+        
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 
     def initialise(self): 
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
 
     def update(self):
-        """
-        new_state = self.service_client_web.get_state()
-        print(new_state)
-        if new_state == GoalStatus.LOST:
+        if self.send_request:
+            self.send_request = False
             self.logger.debug(f"Sending goal to {self.server_name}")
             self.service_client_web.send_goal(
                 action_goal = ActionType["DO"].value,
@@ -76,27 +74,28 @@ class WebServicePytree(py_trees.behaviour.Behaviour):
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
-        elif new_state == GoalStatus.PENDING or new_state == GoalStatus.ACTIVE:
-            new_status = py_trees.common.Status.RUNNING
-        elif new_state == GoalStatus.SUCCEEDED:
-            new_status = py_trees.common.Status.SUCCESS
         else:
-            new_status = py_trees.common.Status.FAILURE
-        """
-        new_status = py_trees.common.Status.SUCCESS
+            new_state = self.service_client_web.get_state()
+            print(new_state)
+            if new_state == GoalStatus.LOST:
+                new_status = py_trees.common.Status.FAILURE
+            elif new_state == GoalStatus.PENDING or new_state == GoalStatus.ACTIVE:
+                new_status = py_trees.common.Status.RUNNING
+            elif new_state == GoalStatus.SUCCEEDED:
+                new_status = py_trees.common.Status.SUCCESS
+            else:
+                new_status = py_trees.common.Status.FAILURE
+
         self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status
 
     def terminate(self, new_status):
-        """
-         and new_state != GoalStatus.PREEMPTED:
-        self.logger.debug(f"Cancelling goal to {self.server_name}")
-        self.service_client_web.cancel_goal()
-        self.client_result = None
-        self.logger.debug(f"Goal cancelled to {self.server_name}")
-        self.service_client_web.stop_tracking_goal()
-        self.logger.debug(f"Goal tracking stopped to {self.server_name}")
-        """
+        
+        new_state = self.service_client_web.get_state()
+        print("terminate :",new_state)
+        if new_state == GoalStatus.SUCCEEDED :
+            self.send_request = True
+        
         self.logger.debug("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))
 
     def _result_callback(self, result):
@@ -114,5 +113,39 @@ class WebServicePytree(py_trees.behaviour.Behaviour):
         self.server_state = feedback["state"]
         return
 
+
 def main():
+    #command_line_argument_parser().parse_args()
+
+    py_trees.logging.level = py_trees.logging.Level.DEBUG
+    
+    #rospy init node mi fa diventare un nodo ros
     rospy.init_node("web_default" , log_level=rospy.INFO)
+
+    blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace=PyTreeNameSpace.scene.name)
+    blackboardProva.register_key("image", access=py_trees.common.Access.WRITE)
+    print(blackboardProva)
+
+    blackboardProva.image = "[{'component_id':'img_only', 'set_content':'https://www.google.it/images/branding/googlelogo/2x/googlelogo_color_160x56dp.png'},{'component_id':'raccolta_container', 'set_content': ''}]"
+
+    #blackboardProva.image = "{'component_id':'raccolta_container', 'set_content': ''}"
+
+
+    yoloPyTree = WebServicePytree("WebServicePytreeTest")
+
+    additional_parameters = dict([
+        ("WebServicePytree_mode",False)])
+
+    yoloPyTree.setup(**additional_parameters)
+    try:
+        for unused_i in range(0, 3):
+            yoloPyTree.tick_once()
+            time.sleep(2)
+            print(blackboardProva)
+        print("\n")
+    except KeyboardInterrupt:
+        print("Exception occurred")
+        pass
+
+if __name__ == "__main__":
+    main()

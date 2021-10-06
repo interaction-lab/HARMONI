@@ -1,0 +1,9 @@
+<launch>
+   
+	<arg name="instance_id" default="default"/>
+	<param name="instance_id" value="$(arg instance_id)"/>
+    <include file="$(find harmoni_web)/launch/web_service.launch"></include>
+    <rosparam file="$(find harmoni_pytree)/config/configuration.yaml" subst_value="True"/>
+    <node pkg="harmoni_pytree" type="web_service.py" name="harmoni_pytree_$(arg instance_id)" output="screen"/>
+
+</launch>

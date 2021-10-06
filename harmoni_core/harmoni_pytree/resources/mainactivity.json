@@ -4,7 +4,7 @@
                         "utterance"     : "domanda raccolta",
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "{'component_id':'test_container', 'set_content': 'screen_demo.png'}",
+                        "image"         : "{'component_id':'raccolta_container', 'set_content': ''}",
                         "sound"         : "null",
                         "do_trigger"    : "True"
                     },

@@ -363,7 +363,24 @@
                         }
                     ]
                 }
-        ]
-    }
+            ]
+        },
+        {
+            "component": "container",
+            "id": "raccolta_container",
+            "children": [
+                {
+                    "component": "row",
+                    "id": "row_only",
+                    "children": [
+                        {
+                            "component": "img",
+                            "children": "",
+                            "id": "img_only"
+                        }
+                    ]
+                }
+            ]
+        }
     ]
 }
