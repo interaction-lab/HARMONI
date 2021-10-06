@@ -34,7 +34,7 @@ class WebServicePytree(py_trees.behaviour.Behaviour):
         self.server_state = None
         self.server_name = None
         self.client_result = None
-        self.send_request = True
+        self.old_image = None
 
         self.blackboards = []
         self.blackboard_scene = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name)
@@ -64,8 +64,7 @@ class WebServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
 
     def update(self):
-        if self.send_request:
-            self.send_request = False
+        if self.old_image != self.blackboard_scene.image:
             self.logger.debug(f"Sending goal to {self.server_name}")
             self.service_client_web.send_goal(
                 action_goal = ActionType["DO"].value,
@@ -73,29 +72,12 @@ class WebServicePytree(py_trees.behaviour.Behaviour):
                 wait=False,
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
-            new_status = py_trees.common.Status.RUNNING
-        else:
-            new_state = self.service_client_web.get_state()
-            print(new_state)
-            if new_state == GoalStatus.LOST:
-                new_status = py_trees.common.Status.FAILURE
-            elif new_state == GoalStatus.PENDING or new_state == GoalStatus.ACTIVE:
-                new_status = py_trees.common.Status.RUNNING
-            elif new_state == GoalStatus.SUCCEEDED:
-                new_status = py_trees.common.Status.SUCCESS
-            else:
-                new_status = py_trees.common.Status.FAILURE
-
+            self.old_image = self.blackboard_scene.image
+        new_status =  py_trees.common.Status.SUCCESS
         self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status
 
     def terminate(self, new_status):
-        
-        new_state = self.service_client_web.get_state()
-        print("terminate :",new_state)
-        if new_state == GoalStatus.SUCCEEDED :
-            self.send_request = True
-        
         self.logger.debug("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))
 
     def _result_callback(self, result):
@@ -128,9 +110,6 @@ def main():
 
     blackboardProva.image = "[{'component_id':'img_only', 'set_content':'https://www.google.it/images/branding/googlelogo/2x/googlelogo_color_160x56dp.png'},{'component_id':'raccolta_container', 'set_content': ''}]"
 
-    #blackboardProva.image = "{'component_id':'raccolta_container', 'set_content': ''}"
-
-
     yoloPyTree = WebServicePytree("WebServicePytreeTest")
 
     additional_parameters = dict([
@@ -138,10 +117,14 @@ def main():
 
     yoloPyTree.setup(**additional_parameters)
     try:
-        for unused_i in range(0, 3):
+        for unused_i in range(0, 16):
             yoloPyTree.tick_once()
-            time.sleep(2)
+            if unused_i%2:
+                blackboardProva.image = "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land.jpeg?alt=media&token=79c113ec-4e61-49c1-bbdf-b865a946247e'},{'component_id':'raccolta_container', 'set_content': ''}]"
+            else:
+                blackboardProva.image = "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land2.jpeg?alt=media&token=a3437794-a763-4b47-9052-485fd5c61ae5'},{'component_id':'raccolta_container', 'set_content': ''}]"
             print(blackboardProva)
+            time.sleep(2)
         print("\n")
     except KeyboardInterrupt:
         print("Exception occurred")

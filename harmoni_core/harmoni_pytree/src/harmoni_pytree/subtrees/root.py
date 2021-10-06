@@ -169,7 +169,7 @@ def main():
     for unused_i in range(1, 200):
         try:
             behaviour_tree.tick()
-            time.sleep(0.5)
+            time.sleep(0.4)
         except KeyboardInterrupt:
             behaviour_tree.interrupt()
     print("\n")

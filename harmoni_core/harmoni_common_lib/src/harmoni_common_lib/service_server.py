@@ -138,8 +138,8 @@ class HarmoniServiceServer(HarmoniActionServer, object):
             t.start()
 
             while not self.service_manager.actuation_completed:
-                if self.get_preemption_status():
-                    preempted = True
+                #if self.get_preemption_status():
+                #    preempted = True
                 pr.sleep()
 
             # Once an action has completed or been preempted, we need to let
@@ -179,8 +179,8 @@ class HarmoniServiceServer(HarmoniActionServer, object):
             t.start()
 
             while not self.service_manager.response_received:
-                if self.get_preemption_status():
-                    preempted = True
+                #if self.get_preemption_status():
+                #    preempted = True
                 pr.sleep()
 
             if not hasattr(self.service_manager, "result_msg"):

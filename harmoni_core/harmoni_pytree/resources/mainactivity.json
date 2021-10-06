@@ -4,7 +4,7 @@
                         "utterance"     : "domanda raccolta",
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "{'component_id':'raccolta_container', 'set_content': ''}",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land.jpeg?alt=media&token=79c113ec-4e61-49c1-bbdf-b865a946247e'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "True"
                     },
@@ -12,7 +12,7 @@
                         "utterance"     : "nella plastica vanno buttati…",
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land2.jpeg?alt=media&token=a3437794-a763-4b47-9052-485fd5c61ae5'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "False"
                     },
@@ -20,7 +20,7 @@
                         "utterance"     : "oggetto vetro",
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land.jpeg?alt=media&token=79c113ec-4e61-49c1-bbdf-b865a946247e'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "True"
                     },
@@ -28,7 +28,7 @@
                         "utterance"     : "oggetto plastica",
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land2.jpeg?alt=media&token=a3437794-a763-4b47-9052-485fd5c61ae5'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "True"
                     },
@@ -36,7 +36,7 @@
                         "utterance"     : "chiedi dell'ombrello",
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land.jpeg?alt=media&token=79c113ec-4e61-49c1-bbdf-b865a946247e'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "True"
                     },
@@ -44,7 +44,7 @@
                         "utterance"     : "ombrello" ,
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land4.jpg?alt=media&token=4315c235-87d6-400e-a3ee-6e9e044087dc'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "False"
                     },
@@ -52,7 +52,7 @@
                         "utterance"     : "Ora abbiamo finito, ciao!" ,
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land.jpeg?alt=media&token=79c113ec-4e61-49c1-bbdf-b865a946247e'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "False"
                     }
@@ -64,7 +64,7 @@
                                                         "utterance"     : "Okay, riprendiamo da dove avevamo interrotto",
                                                         "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
                                                         "gesture"       : "null",
-                                                        "image"         : "null",
+                                                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land2.jpeg?alt=media&token=a3437794-a763-4b47-9052-485fd5c61ae5'},{'component_id':'raccolta_container', 'set_content': ''}]",
                                                         "sound"         : "null",
                                                         "do_trigger"    : "False"
                                                     },
@@ -72,7 +72,7 @@
                                                         "utterance"     : "Ah eccoti! Riprendiamo da dove avevamo interrotto",
                                                         "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
                                                         "gesture"       : "null",
-                                                        "image"         : "null",
+                                                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land2.jpeg?alt=media&token=a3437794-a763-4b47-9052-485fd5c61ae5'},{'component_id':'raccolta_container', 'set_content': ''}]",
                                                         "sound"         : "null",
                                                         "do_trigger"    : "False"
                                                     },
@@ -80,7 +80,7 @@
                                                         "utterance"     : "Risposta esatta, ma non usarmi",
                                                         "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
                                                         "gesture"       : "null",
-                                                        "image"         : "null",
+                                                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land4.jpg?alt=media&token=4315c235-87d6-400e-a3ee-6e9e044087dc'},{'component_id':'raccolta_container', 'set_content': ''}]",
                                                         "sound"         : "null",
                                                         "do_trigger"    : "False"
                                                     },
@@ -88,7 +88,7 @@
                                                         "utterance"     : "Sei sicuro, dove lo butteresti?",
                                                         "face"          : "null",
                                                         "gesture"       : "null",
-                                                        "image"         : "null",
+                                                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land4.jpg?alt=media&token=4315c235-87d6-400e-a3ee-6e9e044087dc'},{'component_id':'raccolta_container', 'set_content': ''}]",
                                                         "sound"         : "null",
                                                         "do_trigger"    : "False"
                                                     },
@@ -96,7 +96,7 @@
                                                         "utterance"     : "La risposta esatta era carta",
                                                         "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
                                                         "gesture"       : "null",
-                                                        "image"         : "null",
+                                                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land3.png?alt=media&token=94e0e89d-4e41-4b1f-961f-9bd8ad064c7c'},{'component_id':'raccolta_container', 'set_content': ''}]",
                                                         "sound"         : "null",
                                                         "do_trigger"    : "False"
                                                     },
@@ -104,7 +104,7 @@
                                                         "utterance"     : "La risposta esatta era vetro",
                                                         "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
                                                         "gesture"       : "null",
-                                                        "image"         : "null",
+                                                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land3.png?alt=media&token=94e0e89d-4e41-4b1f-961f-9bd8ad064c7c'},{'component_id':'raccolta_container', 'set_content': ''}]",
                                                         "sound"         : "null",
                                                         "do_trigger"    : "False"
                                                     },
@@ -112,7 +112,7 @@
                                                         "utterance"     : "La risposta esatta era plastica",
                                                         "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
                                                         "gesture"       : "null",
-                                                        "image"         : "null",
+                                                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land3.png?alt=media&token=94e0e89d-4e41-4b1f-961f-9bd8ad064c7c'},{'component_id':'raccolta_container', 'set_content': ''}]",
                                                         "sound"         : "null",
                                                         "do_trigger"    : "False"
                                                     },
@@ -120,7 +120,7 @@
                                                         "utterance"     : "Risposta sbagliata, ma non usarmi",
                                                         "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
                                                         "gesture"       : "null",
-                                                        "image"         : "null",
+                                                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land3.png?alt=media&token=94e0e89d-4e41-4b1f-961f-9bd8ad064c7c'},{'component_id':'raccolta_container', 'set_content': ''}]",
                                                         "sound"         : "null",
                                                         "do_trigger"    : "False"
                                                     },
@@ -128,7 +128,7 @@
                                                         "utterance"     : "Okay non ti preoccupare, ora chiamiamo il terapista",
                                                         "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
                                                         "gesture"       : "null",
-                                                        "image"         : "null",
+                                                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land2.jpeg?alt=media&token=a3437794-a763-4b47-9052-485fd5c61ae5'},{'component_id':'raccolta_container', 'set_content': ''}]",
                                                         "sound"         : "null",
                                                         "do_trigger"    : "False"
                                                     },
@@ -136,7 +136,7 @@
                                                         "utterance"     : "Vabene facciamo una pausa e chiamiamo il terapista",
                                                         "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
                                                         "gesture"       : "null",
-                                                        "image"         : "null",
+                                                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land.jpeg?alt=media&token=79c113ec-4e61-49c1-bbdf-b865a946247e'},{'component_id':'raccolta_container', 'set_content': ''}]",
                                                         "sound"         : "null",
                                                         "do_trigger"    : "False"
                                                     },
@@ -144,7 +144,7 @@
                                                         "utterance"     : "RIpetiamo, ma non usarmi",
                                                         "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
                                                         "gesture"       : "null",
-                                                        "image"         : "null",
+                                                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land2.jpeg?alt=media&token=a3437794-a763-4b47-9052-485fd5c61ae5'},{'component_id':'raccolta_container', 'set_content': ''}]",
                                                         "sound"         : "null",
                                                         "do_trigger"    : "False"
                                                     }
