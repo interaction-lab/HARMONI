@@ -20,7 +20,7 @@
                                                         "do_trigger"    : "False"
                                                     },
                                 "terapista" :   {
-                                                        "utterance"     : "Okay non ti preoccupare, ora chiamiamo il trapista",
+                                                        "utterance"     : "Okay non ti preoccupare, ora chiamiamo il terapista",
                                                         "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
                                                         "gesture"       : "null",
                                                         "image"         : "null",

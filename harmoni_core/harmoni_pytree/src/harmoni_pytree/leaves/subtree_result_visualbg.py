@@ -17,13 +17,14 @@ class SubTreeResultVisualBg(py_trees.behaviour.Behaviour):
         self.blackboard_scene_visual.register_key("scene_counter", access=py_trees.common.Access.WRITE)
         #self.blackboard_scene_visual.register_key("max_num_scene", access=py_trees.common.Access.READ) #NEW
         self.blackboard_visual = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.visual.name)
-        self.blackboard_visual.register_key("finished", access=py_trees.common.Access.WRITE) #NEW
+        self.blackboard_visual.register_key(key="finished", access=py_trees.common.Access.WRITE) #NEW
+        self.blackboard_visual.register_key(key="call_therapist", access=py_trees.common.Access.READ)
         self.blackboard_face_detect = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.face_detect.name)
         self.blackboard_face_detect.register_key("result", access=py_trees.common.Access.READ)
 
         self.blackboard_scene = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name)
         self.blackboard_scene.register_key(key="therapist_needed", access=py_trees.common.Access.WRITE)
-        self.blackboard_scene.register_key(key="call_therapist", access=py_trees.common.Access.READ)
+        
 
     def setup(self):
         self.blackboard_scene_visual.scene_counter = 0
@@ -43,8 +44,8 @@ class SubTreeResultVisualBg(py_trees.behaviour.Behaviour):
             self.blackboard_scene_visual.scene_counter = 0
             self.blackboard_visual.finished = True
 
-        if self.blackboard_scene.call_therapist:
-           self.blackboard_scene.therapist_needed = True        
+        if self.blackboard_visual.call_therapist:
+            self.blackboard_scene.therapist_needed = True        
             
         self.logger.debug("  %s [SubTreeResultVisualBg::update()]" % self.name)
         return py_trees.common.Status.SUCCESS

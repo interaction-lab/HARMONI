@@ -21,10 +21,10 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
         self.blackboard_scene.register_key(key=PyTreeNameSpace.visual.name+"/do_trigger", access=py_trees.common.Access.WRITE) #NEW
         self.blackboard_scene.register_key(key="utterance", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key(key="face_exp", access=py_trees.common.Access.WRITE)
-        self.blackboard_scene.register_key(key="call_therapist", access=py_trees.common.Access.WRITE)
         self.blackboard_visual = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.visual.name)
         self.blackboard_visual.register_key(key="inside", access=py_trees.common.Access.WRITE)
         self.blackboard_visual.register_key(key="finished", access=py_trees.common.Access.WRITE)
+        self.blackboard_visual.register_key(key="call_therapist", access=py_trees.common.Access.WRITE)
         self.blackboard_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name)
         self.blackboard_bot.register_key(key=PyTreeNameSpace.analyzer.name +"/"+"result", access=py_trees.common.Access.WRITE)
         self.blackboard_bot.register_key(key=PyTreeNameSpace.trigger.name +"/"+"result", access=py_trees.common.Access.WRITE)
@@ -52,7 +52,7 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
         self.blackboard_scene.visual.scene_counter = 0 
         self.blackboard_scene.utterance = "null"
         self.blackboard_scene.face_exp = "null"
-        self.blackboard_scene.call_therapist = False
+        self.blackboard_visual.call_therapist = False
         self.blackboard_visual.inside = False
         self.blackboard_scene.visual.do_trigger = "null"
 
@@ -84,7 +84,7 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
             self.blackboard_scene.visual.do_trigger = False #deve essere usato solo bot_analyzer dopo la scena 0
             if self.blackboard_bot.analyzer.result == "void_answer":
                 print("self.blackboard_bot.analyzer.result == void_answer")
-                self.blackboard_scene.call_therapist = True
+                self.blackboard_visual.call_therapist = True
                 self.blackboard_bot.trigger.result =    {
                                                             "message":   self.context["terapista"]["utterance"]
                                                         }
@@ -98,7 +98,7 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
                                                                 "message":   message
                                                             }
 
-                    self.blackboard_scene.call_therapist = True
+                    self.blackboard_visual.call_therapist = True
                 else:
                     if self.blackboard_scene.visual.scene_counter <= 2:
                         print("self.blackboard_scene.visual.scene_counter <= 2") 
@@ -112,7 +112,7 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
                                                                     "message":  self.context["terapista"]["utterance"]
                                                                 }
                         self.blackboard_scene.face_exp = self.context["terapista"]["face"]
-                        self.blackboard_scene.call_therapist = True
+                        self.blackboard_visual.call_therapist = True
         
         return py_trees.common.Status.SUCCESS
 

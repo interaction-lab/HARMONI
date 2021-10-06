@@ -14,10 +14,11 @@ class SubTreeResultMain(py_trees.behaviour.Behaviour):
         self.blackboard_scene_mainactivity.register_key("max_num_scene", access=py_trees.common.Access.READ) #NEW
         self.blackboard_scene_mainactivity.register_key("scene_counter", access=py_trees.common.Access.READ)
         self.blackboard_mainactivity = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.mainactivity.name)
-        self.blackboard_mainactivity.register_key("finished", access=py_trees.common.Access.WRITE) #NEW
+        self.blackboard_mainactivity.register_key(key="finished", access=py_trees.common.Access.WRITE) #NEW
+        self.blackboard_mainactivity.register_key(key="call_therapist", access=py_trees.common.Access.READ)
         self.blackboard_scene = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name)
         self.blackboard_scene.register_key(key="therapist_needed", access=py_trees.common.Access.WRITE)
-        self.blackboard_scene.register_key(key="call_therapist", access=py_trees.common.Access.READ)
+        
 
     def setup(self):
         self.blackboard_scene.therapist_needed = False
@@ -31,8 +32,8 @@ class SubTreeResultMain(py_trees.behaviour.Behaviour):
         self.logger.debug("  %s [SubTreeResultMain::update()]" % self.name)
         if self.blackboard_scene_mainactivity.max_num_scene == self.blackboard_scene_mainactivity.scene_counter:
             self.blackboard_mainactivity.finished = True
-        if self.blackboard_scene.call_therapist:
-           self.blackboard_scene.therapist_needed = True
+        if self.blackboard_mainactivity.call_therapist:
+            self.blackboard_scene.therapist_needed = True
         return py_trees.common.Status.SUCCESS
 
     def terminate(self, new_status):

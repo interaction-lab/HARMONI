@@ -90,7 +90,7 @@ class AWSLexTriggerServicePytree(py_trees.behaviour.Behaviour):
                     self.client_result = None
                     new_status = py_trees.common.Status.SUCCESS
                 else:
-                    raise
+                    new_status = py_trees.common.Status.RUNNING
             else:
                 new_status = py_trees.common.Status.FAILURE
                 raise

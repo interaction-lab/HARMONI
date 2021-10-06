@@ -95,7 +95,6 @@ class ExternalSpeakerServicePytree(py_trees.behaviour.Behaviour):
 
         self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status
-        
 
     def terminate(self, new_status):
         new_state = self.service_client_ext_speaker.get_state()

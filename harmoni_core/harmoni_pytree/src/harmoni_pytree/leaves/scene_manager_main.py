@@ -34,12 +34,12 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         self.blackboard_scene.register_key(key="gesture", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key(key="image", access=py_trees.common.Access.WRITE)
         self.blackboard_scene.register_key(key="sound", access=py_trees.common.Access.WRITE)
-        self.blackboard_scene.register_key(key="call_therapist", access=py_trees.common.Access.WRITE)
         self.blackboard_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name)
         self.blackboard_bot.register_key(key=PyTreeNameSpace.analyzer.name +"/"+"result", access=py_trees.common.Access.WRITE)
         self.blackboard_bot.register_key(key=PyTreeNameSpace.trigger.name +"/"+"result", access=py_trees.common.Access.WRITE)
         self.blackboard_mainactivity = self.attach_blackboard_client(name=self.name, namespace = PyTreeNameSpace.mainactivity.name)
         self.blackboard_mainactivity.register_key(key="counter_no_answer", access=py_trees.common.Access.WRITE)
+        self.blackboard_mainactivity.register_key(key="call_therapist", access=py_trees.common.Access.WRITE)
         self.blackboard_visual= self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.visual.name)
         self.blackboard_visual.register_key("inside", access=py_trees.common.Access.WRITE)
         self.blackboard_interaction= self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.interaction.name)
@@ -64,7 +64,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         self.blackboard_scene.gesture = "null"
         self.blackboard_scene.image = "null"
         self.blackboard_scene.sound = "null"
-        self.blackboard_scene.call_therapist = False
+        self.blackboard_mainactivity.call_therapist = False
         self.blackboard_scene.mainactivity.do_kid = False
         self.blackboard_scene.mainactivity.do_trigger = False
 
@@ -79,7 +79,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
     def update(self):
         self.logger.debug("  %s [SceneManagerMain::update()]" % self.name)
 
-        self.blackboard_scene.call_therapist = False
+        self.blackboard_mainactivity.call_therapist = False
         print("STATE OF SCENE MANAGER MAIN")
 
         if self.blackboard_visual.inside == True:
@@ -144,7 +144,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                             print("message = ", message)
                             self.blackboard_scene.utterance = message
                             if intentName == IntentName.STOP.value:
-                                self.blackboard_scene.call_therapist = True
+                                self.blackboard_mainactivity.call_therapist = True
                                 self.blackboard_scene.face_exp = self.context["error_handling"]["stop"]["face"]
                                 self.blackboard_scene.gesture = self.context["error_handling"]["stop"]["gesture"]
                                 self.blackboard_scene.image = self.context["error_handling"]["stop"]["image"]
@@ -216,7 +216,6 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                                 self.blackboard_scene.mainactivity.do_kid = self.blackboard_scene.mainactivity.do_trigger
                         elif dialogState == DialogStateLex.ELICIT_INTENT.value:
                             print("-scene_counter_mainactivity- qui non dovremmo esserci")
-                            raise
                             self.blackboard_scene.utterance = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["utterance"]
                             self.blackboard_scene.face_exp = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["face"]
                             self.blackboard_scene.gesture = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["gesture"]
@@ -225,7 +224,6 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                             self.blackboard_scene.mainactivity.do_kid = self.blackboard_scene.mainactivity.do_trigger
                         elif dialogState == DialogStateLex.CONFIRM_INTENT.value:
                             print("-scene_counter_mainactivity- qui non dovremmo esserci")
-                            raise
                             self.blackboard_scene.utterance = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["utterance"]
                             self.blackboard_scene.face_exp = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["face"]
                             self.blackboard_scene.gesture = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["gesture"]

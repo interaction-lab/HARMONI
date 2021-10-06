@@ -21,12 +21,11 @@ class SubTreeResultInteractionBg(py_trees.behaviour.Behaviour):
         self.blackboard_mainactivity.register_key("counter_no_answer", access=py_trees.common.Access.WRITE)
         self.blackboard_interaction = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.interaction.name)
         self.blackboard_interaction.register_key("finished", access=py_trees.common.Access.WRITE) #NEW
-        self.blackboard_therapist = self.attach_blackboard_client(name=self.name) 
-        self.blackboard_interaction.register_key("call_therapist", access=py_trees.common.Access.WRITE)
+        self.blackboard_interaction.register_key(key="call_therapist", access=py_trees.common.Access.READ)
 
         self.blackboard_scene = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name)
         self.blackboard_scene.register_key(key="therapist_needed", access=py_trees.common.Access.WRITE)
-        self.blackboard_scene.register_key(key="call_therapist", access=py_trees.common.Access.READ)
+        
 
     def setup(self):
         self.blackboard_scene.therapist_needed = False
@@ -44,8 +43,8 @@ class SubTreeResultInteractionBg(py_trees.behaviour.Behaviour):
         if self.blackboard_scene_interaction.scene_counter == self.blackboard_scene_interaction.max_num_scene:
             self.blackboard_scene_interaction.scene_counter = 0
             self.blackboard_interaction.finished = True
-        if self.blackboard_scene.call_therapist:
-           self.blackboard_scene.therapist_needed = True
+        if self.blackboard_interaction.call_therapist:
+            self.blackboard_scene.therapist_needed = True
         self.logger.debug("  %s [SubTreeResultInteractionBg::update()]" % self.name)
         return py_trees.common.Status.SUCCESS
 
