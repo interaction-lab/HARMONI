@@ -1,5 +1,5 @@
 {
-    "scene" :   [
+    "scene" :   [   
                     {
                         "utterance"     : "domanda raccolta",
                         "face"          : "null",
@@ -17,18 +17,26 @@
                         "do_trigger"    : "False"
                     },
                     {
-                        "utterance"     : "oggetto vetro",
+                        "utterance"     : "oggetto bicchiere",
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land.jpeg?alt=media&token=79c113ec-4e61-49c1-bbdf-b865a946247e'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/bicchiere.jpeg?alt=media&token=38d8ce3a-9f76-452e-9cca-a54a042493a0'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "True"
                     },
                     {
-                        "utterance"     : "oggetto plastica",
+                        "utterance"     : "oggetto lattina",
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land2.jpeg?alt=media&token=a3437794-a763-4b47-9052-485fd5c61ae5'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/lattina.jpg?alt=media&token=8a7a7508-e777-40de-9dd3-71d7a830afb3'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "sound"         : "null",
+                        "do_trigger"    : "True"
+                    },
+                    {
+                        "utterance"     : "oggetto tetrapak",
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/carta.jpeg?alt=media&token=4d55fbf5-0255-4d32-bf42-8b0178111ee8'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "True"
                     },

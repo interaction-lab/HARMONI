@@ -75,7 +75,7 @@ def post_tick_handler(snapshot_visitor, behaviour_tree):
 
 def create_root(name= "Reset"):
 
-    root = py_trees.behaviours.Periodic(name = name, n = 2)
+    root = py_trees.behaviours.Count(name='Count', fail_until=0, running_until=2, success_until=0, reset=True)
 
     return root
 

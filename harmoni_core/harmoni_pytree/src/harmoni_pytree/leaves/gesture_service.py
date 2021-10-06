@@ -38,6 +38,7 @@ class GestureServicePytree(py_trees.behaviour.Behaviour):
         self.server_state = None
         self.service_client_gesture = None
         self.client_result = None
+        self.send_request = True
 
         # here there is the inizialization of the blackboards
         self.blackboards = []
@@ -76,7 +77,8 @@ class GestureServicePytree(py_trees.behaviour.Behaviour):
     def update(self):
         new_state = self.service_client_gesture.get_state()
         print(new_state)
-        if new_state == GoalStatus.LOST:
+        if self.send_request:
+            self.send_request = False
             self.logger.debug(f"Sending goal to {self.server_name}")
             self.service_client_gesture.send_goal(
                 action_goal = ActionType["DO"].value,
@@ -85,31 +87,31 @@ class GestureServicePytree(py_trees.behaviour.Behaviour):
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
-        elif new_state == GoalStatus.PENDING or new_state == GoalStatus.ACTIVE:
-            new_status = py_trees.common.Status.RUNNING
-        elif new_state == GoalStatus.SUCCEEDED:
-            new_status = py_trees.common.Status.SUCCESS
         else:
-            new_status = py_trees.common.Status.FAILURE
+            if new_state == GoalStatus.ACTIVE:
+                new_status = py_trees.common.Status.RUNNING
+            elif new_state == GoalStatus.SUCCEEDED:
+                new_status = py_trees.common.Status.SUCCESS
+            else:
+                new_status = py_trees.common.Status.FAILURE
+                raise
         self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status
 
     def terminate(self, new_status):
         """
-        if new_status == py_trees.common.Status.INVALID:
-             and new_state != GoalStatus.PREEMPTED:
-            self.logger.debug(f"Sending goal to {self.server_name} to stop the service")
-            # Send request for each sensor service to set themselves up
-            self.service_client_gesture.send_goal(
-                action_goal=ActionType["OFF"].value,
-                optional_data="",
-                wait=False,
-            )
-            self.logger.debug(f"Goal sent to {self.server_name}")
+        new_state = self.service_client_gesture.get_state()
+        print("terminate : ",new_state)
+        if new_state == GoalStatus.SUCCEEDED or new_state == GoalStatus.ABORTED or new_state == GoalStatus.LOST:
+            self.send_request = True
+        if new_state == GoalStatus.PENDING:
+            self.send_request = True
+            self.logger.debug(f"Cancelling goal to {self.server_name}")
+            self.service_client_gesture.cancel_all_goals()
             self.client_result = None
-        else:
-            #execute actions for the following states (SUCCESS || FAILURE)
-            pass
+            self.logger.debug(f"Goal cancelled to {self.server_name}")
+            self.service_client_gesture.stop_tracking_goal()
+            self.logger.debug(f"Goal tracking stopped to {self.server_name}")
         """
         self.logger.debug("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))
 

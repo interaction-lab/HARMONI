@@ -40,6 +40,7 @@ class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
         self.service_client_custom = None
         self.client_result = None
         self.server_name = None
+        self.send_request = True
 
         # here there is the inizialization of the blackboards
         self.blackboards = []
@@ -80,9 +81,8 @@ class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.initialise()" % (self.__class__.__name__))
 
     def update(self):
-        new_state = self.service_client_custom.get_state()
-        print(new_state)
-        if new_state == GoalStatus.LOST:
+        if self.send_request:
+            self.send_request = False
             self.logger.debug(f"Sending goal to {self.server_name}")
             self.service_client_custom.send_goal(
                 action_goal = ActionType["REQUEST"].value,
@@ -91,38 +91,40 @@ class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
             new_status = py_trees.common.Status.RUNNING
-        elif new_state == GoalStatus.PENDING or new_state == GoalStatus.ACTIVE:
-            #there is no result yet
-            new_status = py_trees.common.Status.RUNNING
-        elif new_state == GoalStatus.SUCCEEDED:
-            if self.client_result is not None:
-                self.blackboard_card_detection.result = self.client_result
-                self.client_result = None
-                new_status = py_trees.common.Status.SUCCESS
+        else:
+            new_state = self.service_client_custom.get_state()
+            print(new_state)
+            if new_state == GoalStatus.ACTIVE:
+                new_status = py_trees.common.Status.RUNNING
+            elif new_state == GoalStatus.SUCCEEDED:
+                if self.client_result is not None:
+                    self.blackboard_card_detection.result = self.client_result
+                    self.client_result = None
+                    new_status = py_trees.common.Status.SUCCESS
+                else:
+                    raise
             else:
-                #we haven't received the result correctly.
                 new_status = py_trees.common.Status.FAILURE
-        else: 
-            new_status = py_trees.common.Status.FAILURE
-        
+                raise
+
+
         self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status
 
         
     def terminate(self, new_status):
-        if new_status == py_trees.common.Status.INVALID:
-            new_state = self.service_client_custom.get_state()
-            if new_state != GoalStatus.LOST:
-                self.logger.debug(f"Cancelling goal to {self.server_name}")
-                self.service_client_custom.cancel_goal()
-                self.client_result = None
-                self.blackboard_card_detection.result = "null"
-                self.logger.debug(f"Goal cancelled to {self.server_name}")
-                self.service_client_custom.stop_tracking_goal()
-                self.logger.debug(f"Goal tracking stopped to {self.server_name}")
-        else:
-            #execute actions for the following states (SUCCESS || FAILURE)
-            pass
+        new_state = self.service_client_custom.get_state()
+        print("terminate : ",new_state)
+        if new_state == GoalStatus.SUCCEEDED or new_state == GoalStatus.ABORTED or new_state == GoalStatus.LOST:
+            self.send_request = True
+        if new_state == GoalStatus.PENDING:
+            self.send_request = True
+            self.logger.debug(f"Cancelling goal to {self.server_name}")
+            self.service_client_custom.cancel_all_goals()
+            self.client_result = None
+            self.logger.debug(f"Goal cancelled to {self.server_name}")
+            self.service_client_custom.stop_tracking_goal()
+            self.logger.debug(f"Goal tracking stopped to {self.server_name}")
         self.logger.debug("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))
 
     def _result_callback(self, result):

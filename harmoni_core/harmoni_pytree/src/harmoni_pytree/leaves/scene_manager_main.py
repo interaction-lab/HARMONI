@@ -58,7 +58,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         self.counter_non_ho_capito = 0
         self.blackboard_scene.mainactivity.max_num_scene = len(self.context["scene"])
         self.blackboard_mainactivity.counter_no_answer = 0
-        self.blackboard_scene.mainactivity.scene_counter = 0 
+        self.blackboard_scene.mainactivity.scene_counter = 0
         self.blackboard_scene.utterance = "null"
         self.blackboard_scene.face_exp = "null"
         self.blackboard_scene.gesture = "null"
@@ -192,7 +192,14 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                             print("intentName = ", intentName)
                             print("message = ", message)
                             if intentName == IntentName.CARTA.value or intentName == IntentName.PLASTICA.value or intentName == IntentName.VETRO.value:
-                                oggetto = str(intentName).lower()
+                                #FIXME cambia il nome degli intent in tetrapak lattina etc
+                                #oggetto = str(intentName).lower()
+                                if intentName == IntentName.CARTA.value:
+                                    oggetto = "tetrapak"
+                                elif intentName == IntentName.PLASTICA.value:
+                                    oggetto = "lattina"
+                                elif intentName == IntentName.VETRO.value:
+                                    oggetto = "bicchiere"
                                 self.blackboard_scene.utterance = "confirm " + oggetto
                                 self.blackboard_scene.face_exp = self.context["error_handling"]["sei_sicuro"]["face"]
                                 self.blackboard_scene.gesture = self.context["error_handling"]["sei_sicuro"]["gesture"]
@@ -209,6 +216,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                                 self.blackboard_scene.mainactivity.do_kid = self.blackboard_scene.mainactivity.do_trigger
                         elif dialogState == DialogStateLex.ELICIT_INTENT.value:
                             print("-scene_counter_mainactivity- qui non dovremmo esserci")
+                            raise
                             self.blackboard_scene.utterance = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["utterance"]
                             self.blackboard_scene.face_exp = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["face"]
                             self.blackboard_scene.gesture = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["gesture"]
@@ -217,6 +225,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                             self.blackboard_scene.mainactivity.do_kid = self.blackboard_scene.mainactivity.do_trigger
                         elif dialogState == DialogStateLex.CONFIRM_INTENT.value:
                             print("-scene_counter_mainactivity- qui non dovremmo esserci")
+                            raise
                             self.blackboard_scene.utterance = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["utterance"]
                             self.blackboard_scene.face_exp = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["face"]
                             self.blackboard_scene.gesture = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["gesture"]

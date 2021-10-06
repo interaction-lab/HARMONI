@@ -83,32 +83,39 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
                 wait=False,
             )
             self.logger.debug(f"Goal sent to {self.server_name}")
-            return py_trees.common.Status.RUNNING
-        new_state = self.service_client_yolo.get_state()
-        print(new_state)
-        if new_state == GoalStatus.LOST:
-            new_status = py_trees.common.Status.FAILURE
-        elif new_state == GoalStatus.PENDING or new_state == GoalStatus.ACTIVE:
             new_status = py_trees.common.Status.RUNNING
-        elif new_state == GoalStatus.SUCCEEDED:
-            if self.client_result is not None:
-                self.blackboard_face_detection.result = self.client_result
-                self.client_result = None
-                new_status = py_trees.common.Status.SUCCESS
-            else:
-                raise
         else:
-            new_status = py_trees.common.Status.FAILURE
+            new_state = self.service_client_yolo.get_state()
+            print(new_state)
+            if new_state == GoalStatus.ACTIVE:
+                new_status = py_trees.common.Status.RUNNING
+            elif new_state == GoalStatus.SUCCEEDED:
+                if self.client_result is not None:
+                    self.blackboard_face_detection.result = self.client_result
+                    self.client_result = None
+                    new_status = py_trees.common.Status.SUCCESS
+                else:
+                    raise
+            else:
+                new_status = py_trees.common.Status.FAILURE
+                raise
 
         self.logger.debug("%s.update()[%s]--->[%s]" % (self.__class__.__name__, self.status, new_status))
         return new_status
         
     def terminate(self, new_status):
         new_state = self.service_client_yolo.get_state()
-        print("terminate :",new_state)
-        if new_state == GoalStatus.SUCCEEDED :
+        print("terminate : ",new_state)
+        if new_state == GoalStatus.SUCCEEDED or new_state == GoalStatus.ABORTED or new_state == GoalStatus.LOST:
             self.send_request = True
-
+        if new_state == GoalStatus.PENDING:
+            self.send_request = True
+            self.logger.debug(f"Cancelling goal to {self.server_name}")
+            self.service_client_service_client_yolotts.cancel_all_goals()
+            self.client_result = None
+            self.logger.debug(f"Goal cancelled to {self.server_name}")
+            self.service_client_yolo.stop_tracking_goal()
+            self.logger.debug(f"Goal tracking stopped to {self.server_name}")
         self.logger.debug("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))
 
     def _result_callback(self, result):
