@@ -14,7 +14,7 @@ from random import randint
 import subprocess
 import operator
 import py_trees.console as console
-import running_or_failures as rf
+import running_or_failure as rf
 
 from harmoni_common_lib.constants import *
 
