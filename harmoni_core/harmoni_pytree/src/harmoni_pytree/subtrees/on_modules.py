@@ -10,6 +10,6 @@ def create_root():
     #external_camera = CameraServicePytree(name="ExternalCamera")
     root = py_trees.composites.Parallel("Parallel_On_Modules")
     #root.add_children([camera, microphone])
-    root.add_child([microphone])
+    root.add_child(microphone)
 
     return root
