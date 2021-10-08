@@ -40,6 +40,7 @@ class ImageAIYoloService(HarmoniServiceManager):
         self.temp_path = "/root/harmoni_catkin_ws/src/HARMONI/harmoni_detectors/harmoni_imageai/temp_data/"
         self.service_id = hf.get_child_id(self.name)
         self.result_msg = ""
+        self.state = None
 
         self.detector = ObjectDetection()
         self.detector.setModelTypeAsYOLOv3()
@@ -48,7 +49,7 @@ class ImageAIYoloService(HarmoniServiceManager):
         #custom_objects refers to the objects we want to detect
         self.custom_objects = self.detector.CustomObjects(person=True) 
         self.capture_frame = False
-
+        
         self.cv_bridge = CvBridge()
 
         self._buff = queue.Queue()

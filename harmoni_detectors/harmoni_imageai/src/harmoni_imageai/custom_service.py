@@ -41,6 +41,7 @@ class ImageAICustomService(HarmoniServiceManager):
         self.model_path = "/root/harmoni_catkin_ws/src/HARMONI/harmoni_detectors/harmoni_imageai/src/"
         self.service_id = hf.get_child_id(self.name)
         self.result_msg = ""
+        self.state = None
 
         self.detector = CustomObjectDetection()
         self.detector.setModelTypeAsYOLOv3()
@@ -99,7 +100,6 @@ class ImageAICustomService(HarmoniServiceManager):
         self.state = State.START
         return
 
-    #TODO
     def callback(self, data):
         """ Callback function subscribing to the camera topic"""
         if self.state == State.REQUEST:

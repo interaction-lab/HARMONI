@@ -8,7 +8,7 @@ body {
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
     text-align: center;
     font-size: 2vmin;
-    background-color: green;
+    background-color: white;
 }
 
 .container{
@@ -33,8 +33,10 @@ div{
 img{
     margin: auto;
     text-align: center;
+    background-size: cover;
     vertical-align: auto;
     width: 100%;
+    height: 100%;
 }
 
 
