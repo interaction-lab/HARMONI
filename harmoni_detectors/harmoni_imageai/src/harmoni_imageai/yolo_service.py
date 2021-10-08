@@ -60,6 +60,12 @@ class ImageAIYoloService(HarmoniServiceManager):
             Image,
             self.callback,
         )
+        
+        self.channel_qt = rospy.Subscriber(
+            "/camera/color/image_raw",
+            Image,
+            self.callback,
+        )
 
         self.text_pub = rospy.Publisher(
             DetectorNameSpace.imageai_yolo.value + self.service_id, String, queue_size=10
