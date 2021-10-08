@@ -151,10 +151,10 @@ def main():
     ####################
     # Tick Tock
     ####################
-    """
+    
     try:
         behaviour_tree.tick_tock(
-            period_ms=400,
+            period_ms=2000,
             number_of_iterations=py_trees.trees.CONTINUOUS_TICK_TOCK,
         )
     except KeyboardInterrupt:
@@ -167,6 +167,7 @@ def main():
         except KeyboardInterrupt:
             behaviour_tree.interrupt()
     print("\n")
+    """
     
     
 
