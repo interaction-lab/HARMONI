@@ -54,6 +54,8 @@ class AWSTtsService(HarmoniServiceManager):
             "S": "POSTALVEOLAR",
             "r": "POSTALVEOLAR",
             "k": "VELAR_GLOTTAL",
+            "J": "PALATAL_NASAL",
+            "L": "PALATAL_LATERAL_APPROXIMANT",
             "i": "CLOSE_FRONT_VOWEL",
             "u": "CLOSE_BACK_VOWEL",
             "@": "MID_CENTRAL_VOWEL",
