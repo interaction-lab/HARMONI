@@ -48,7 +48,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self):
-        pattern_name = "mainactivity1"
+        pattern_name = "mainactivity"
         rospack = rospkg.RosPack()
         pck_path = rospack.get_path("harmoni_pytree")
         pattern_script_path = pck_path + f"/resources/{pattern_name}.json"
@@ -67,7 +67,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         self.blackboard_mainactivity.call_therapist = False
         self.blackboard_scene.mainactivity.do_kid = False
         self.blackboard_scene.mainactivity.do_trigger = False
-
+        self.error_message = "Mi dispiace, proviamo a chiedere aiuto al terapista"
         self.blackboard_visual.inside = False
         self.blackboard_interaction.inside = False
 
@@ -161,8 +161,8 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                                 self.blackboard_scene.mainactivity.do_kid = False
                             else:
                                 if intentName == IntentName.OMBRELLO.value:
-                                    self.context["scene"][self.blackboard_scene.mainactivity.max_num_scene-2]["utterance"] = "Menomale che abbiamo portato l'ombrello"
-                                    self.context["scene"][self.blackboard_scene.mainactivity.max_num_scene-2]["face"] = "[{'start':10, 'type': 'gaze', 'id':'target', 'point': [1,5,10]}]"
+                                    self.context["scene"][22]["utterance"] = "Fortunatamente abbiamo portato l'ombrello"
+                                    self.context["scene"][22]["face"] = "[{'start':10, 'type': 'gaze', 'id':'target', 'point': [1,5,10]}]"
                                 self.blackboard_scene.mainactivity.scene_counter += 1
                                 self.blackboard_scene.face_exp = self.context["error_handling"]["risposta_corretta"]["face"]
                                 self.blackboard_scene.gesture = self.context["error_handling"]["risposta_corretta"]["gesture"]
@@ -176,8 +176,11 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                             print("intentName = ", intentName)
                             print("message = ", message)
                             if intentName == IntentName.OMBRELLO.value:
-                                self.context["scene"][self.blackboard_scene.mainactivity.max_num_scene-2]["utterance"] = "Peccato che non abbiamo portato l'ombrello"
-                                self.context["scene"][self.blackboard_scene.mainactivity.max_num_scene-2]["face"] = "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]"
+                                self.context["scene"][22]["utterance"] = "Peccato che non abbiamo portato l'ombrello"
+                                self.context["scene"][22]["face"] = "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]"
+                            if message == self.error_message:
+                                print("call_terapist = True")
+                                self.blackboard_mainactivity.call_therapist = True
                             self.blackboard_scene.mainactivity.scene_counter += 1
                             self.blackboard_scene.utterance = message
                             self.blackboard_scene.face_exp = self.context["error_handling"]["risposta_sbagliata"]["face"]

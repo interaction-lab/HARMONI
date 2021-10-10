@@ -1,14 +1,6 @@
 {
     "scene" :   [   
                     {
-                        "utterance"     : "mago",
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land3.png?alt=media&token=94e0e89d-4e41-4b1f-961f-9bd8ad064c7c'},{'component_id':'raccolta_container', 'set_content': ''}]",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
                         "utterance"     : "domanda raccolta",
                         "face"          : "null",
                         "gesture"       : "null",

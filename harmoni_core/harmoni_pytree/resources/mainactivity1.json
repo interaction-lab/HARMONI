@@ -257,7 +257,7 @@
                         "do_trigger"    : "True"
                     },
                     {
-                        "utterance"     : "oggetto plastica" ,
+                        "utterance"     : "oggetto lattina" ,
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/plastica3.jpg?alt=media&token=b07c6333-3aac-4933-886d-f01ba9a72b57'},{'component_id':'raccolta_container', 'set_content': ''}]",
@@ -273,7 +273,7 @@
                         "do_trigger"    : "True"
                     },
                     {
-                        "utterance"     : "oggetto plastica" ,
+                        "utterance"     : "oggetto lattina" ,
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/plastica5.jpg?alt=media&token=ddf4355a-e3bd-4011-80b6-230e324075d2'},{'component_id':'raccolta_container', 'set_content': ''}]",

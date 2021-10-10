@@ -94,13 +94,13 @@ def create_root():
     Success5 = py_trees.behaviours.Success(name="Success")
     Success6 = py_trees.behaviours.Success(name="Success")
     Success7 = py_trees.behaviours.Success(name="Success")
+    Success8 = py_trees.behaviours.Success(name="Success")
 
     scene_manager = SceneManagerMain("SceneManagerMain")
 
     #gesture=GestureServicePytree("GestureMainActivity")                                                 
     gesture = py_trees.behaviours.Success(name="GestureMainActivity")
     
-    #TODO sostituirlo/capire se si può usare web_service.
     projector = WebServicePytree(name="ProjectorMainActivity")
 
     ext_speaker=SpeakerServicePytree("ExternalSpeakerMainActivity")
@@ -127,6 +127,16 @@ def create_root():
 
     parall_speaker = py_trees.composites.Parallel(name="ParallelSpeaker")
     parall_speaker.add_children([speaker,lip_sync]) 
+
+    eor_projector = py_trees.idioms.either_or(
+        name="EitherOrProjector",
+        conditions=[
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/image", "null", operator.eq),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/image", "null", operator.ne),
+        ],
+        subtrees=[projector, Success8],
+        namespace="eor_projector",
+    )
 
     eor_trigger = py_trees.idioms.either_or(
         name="EitherOrTrigger",
@@ -165,10 +175,11 @@ def create_root():
     parall_robot.add_children([eor_external_speaker, eor_speaker])
     
     sequen_robot = py_trees.composites.Sequence(name="SequenceRobot")
-    sequen_robot.add_children([scene_manager,projector,parall_robot])
+    sequen_robot.add_children([scene_manager, eor_projector, parall_robot])
 
     parall_detect_kid = py_trees.composites.Parallel(name="ParallelDetectKid")
-    parall_detect_kid.add_children([stt ,custom_yolo, buttons])
+    parall_detect_kid.add_children([stt ,custom_yolo])
+    #parall_detect_kid.add_children([stt ,custom_yolo, buttons])
 
     sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid")
     sequen_detect_kid.add_children([parall_detect_kid, bot_analyzer])                                        

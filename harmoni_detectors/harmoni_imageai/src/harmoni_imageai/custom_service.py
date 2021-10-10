@@ -49,7 +49,7 @@ class ImageAICustomService(HarmoniServiceManager):
         self.detector.setModelPath(os.path.join(self.model_path, self.model_name))
         self.detector.loadModel()
         self.capture_frame = False
-        self.custom_objects = {
+        self.custom_objects_probability = {
                                 "carta" : 0,
                                 "no" : 0,
                                 "nocapito" : 0,
@@ -118,8 +118,9 @@ class ImageAICustomService(HarmoniServiceManager):
         self.state = State.REQUEST
         self.capture_frame = True
         try:
-            for element in self.custom_objects:
-                self.custom_objects[element] = 0
+            for element in self.custom_objects_probability:
+                self.custom_objects_probability[element] = 0
+            
             for i in range(1, 6):
                 data_tmp = self.cv_bridge.imgmsg_to_cv2(self._buff.get(), desired_encoding='passthrough')
                 self.detections = self.detector.detectObjectsFromImage(input_type="array", 
@@ -132,21 +133,23 @@ class ImageAICustomService(HarmoniServiceManager):
                 #self.result_msg = str(self.detections[1])
                 if len(self.detections[1]) != 0:
                     for eachObject in self.detections[1]:
-                        self.custom_objects[eachObject["name"]] += 1
+                        self.custom_objects_probability[eachObject["name"]] = eachObject["percentage_probability"]
                         print(eachObject["name"] , " : " , eachObject["percentage_probability"], " : ", eachObject["box_points"] )
                         print("--------------------------------")
+
+                    self.result_msg = max(self.custom_objects_probability, key=self.custom_objects_probability.get)
                 else:
                     print("YoloCustom detection --> null")
-                    
-            self.result_msg = max(self.custom_objects, key=self.custom_objects.get)
+                    self.result_msg = "null"
+            
+                if self.result_msg != "null":
+                    break
             
             print("The winner is: ")
-            if self.custom_objects[self.result_msg] == 0:
-                self.result_msg = "null"
+            if self.result_msg == "null":
                 print("No one, the child didn't show anything =(")
             else:
-                print(self.result_msg + "!!! Seen " + str(self.custom_objects[self.result_msg]) + " times, congrats!!" )
-
+                print(self.result_msg)
             self.response_received = True
             self.state = State.SUCCESS
 
