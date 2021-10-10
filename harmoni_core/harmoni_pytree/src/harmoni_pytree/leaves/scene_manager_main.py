@@ -48,7 +48,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self):
-        pattern_name = "mainactivity"
+        pattern_name = "mainactivity1"
         rospack = rospkg.RosPack()
         pck_path = rospack.get_path("harmoni_pytree")
         pattern_script_path = pck_path + f"/resources/{pattern_name}.json"
@@ -58,7 +58,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         self.counter_non_ho_capito = 0
         self.blackboard_scene.mainactivity.max_num_scene = len(self.context["scene"])
         self.blackboard_mainactivity.counter_no_answer = 0
-        self.blackboard_scene.mainactivity.scene_counter = 0
+        self.blackboard_scene.mainactivity.scene_counter = 14
         self.blackboard_scene.utterance = "null"
         self.blackboard_scene.face_exp = "null"
         self.blackboard_scene.gesture = "null"
@@ -241,7 +241,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                 self.blackboard_scene.gesture = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["gesture"]
                 self.blackboard_scene.image = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["image"]
                 self.blackboard_scene.sound = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["sound"]
-                
+                self.blackboard_mainactivity.counter_no_answer = 0
                 self.blackboard_scene.mainactivity.scene_counter += 1
 
         self.blackboard_bot.trigger.result =    {

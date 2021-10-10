@@ -2,7 +2,7 @@
     "scene" :   [
                     {
                         "utterance"     : "il bimbo non parla",
-                        "face"          : "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]",
+                        "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "null",
                         "sound"         : "null",

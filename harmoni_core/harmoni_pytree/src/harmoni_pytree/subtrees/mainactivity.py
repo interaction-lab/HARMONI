@@ -131,8 +131,8 @@ def create_root():
     eor_projector = py_trees.idioms.either_or(
         name="EitherOrProjector",
         conditions=[
-            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/image", "null", operator.eq),
             py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/image", "null", operator.ne),
+            py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/image", "null", operator.eq),
         ],
         subtrees=[projector, Success8],
         namespace="eor_projector",
@@ -157,7 +157,7 @@ def create_root():
             py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/utterance", "null", operator.ne),
             py_trees.common.ComparisonExpression(PyTreeNameSpace.scene.name + "/utterance", "null", operator.eq),
         ],
-        subtrees=[sequen_speaker, Success1],
+        subtrees=[sequen_speaker, py_trees.timers.Timer(name="SuccessAfter2", duration= 2.0)],
         namespace="eor_speaker",
     )
     
