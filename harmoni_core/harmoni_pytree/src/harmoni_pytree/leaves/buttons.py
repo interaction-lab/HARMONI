@@ -43,17 +43,23 @@ class Buttons(py_trees.behaviour.Behaviour):
                 self.blackboard_buttons.result = "null"
                 new_status = py_trees.common.Status.SUCCESS
             else:
+                self.read_serial = []
                 self.read_serial = self.wemos.readlines()
                 print("@@@@@@@@@@@@@@@@@@")
                 print(self.read_serial)
                 if len(self.read_serial) != 0:
                     if self.read_serial[0] == "b'pressb2\r\n":
+                        print("si")
                         self.blackboard_buttons.result = "si"
                         new_status = py_trees.common.Status.SUCCESS
+                        raise
                     elif self.read_serial[0] == "b'pressb1\r\n":
+                        print("no")
                         self.blackboard_buttons.result = "no"
                         new_status = py_trees.common.Status.SUCCESS
+                        raise
                     else:
+                        print("errore")
                         self.blackboard_buttons.result = "null"
                         new_status = py_trees.common.Status.SUCCESS
                 else:
