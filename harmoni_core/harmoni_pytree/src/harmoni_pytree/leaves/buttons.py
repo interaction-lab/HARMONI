@@ -52,12 +52,10 @@ class Buttons(py_trees.behaviour.Behaviour):
                         print("si")
                         self.blackboard_buttons.result = "si"
                         new_status = py_trees.common.Status.SUCCESS
-                        raise
                     elif self.read_serial[0] == "b'pressb1\r\n":
                         print("no")
                         self.blackboard_buttons.result = "no"
                         new_status = py_trees.common.Status.SUCCESS
-                        raise
                     else:
                         print("errore")
                         self.blackboard_buttons.result = "null"
@@ -71,3 +69,31 @@ class Buttons(py_trees.behaviour.Behaviour):
     def terminate(self, new_status):
         self.start_time = None
         self.logger.debug("  %s [Foo::terminate().terminate()][%s->%s]" % (self.name, self.status, new_status))
+
+def main():
+    #command_line_argument_parser().parse_args()
+
+    py_trees.logging.level = py_trees.logging.Level.DEBUG
+    
+    #rospy init node mi fa diventare un nodo ros
+    rospy.init_node("buttons_default", log_level=rospy.INFO)
+
+    blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace=PyTreeNameSpace.buttons.name)
+    blackboardProva.register_key("result", access=py_trees.common.Access.READ)
+    print(blackboardProva)
+
+    buttons = ImageAIYoloServicePytree("ButtonsPytreeTest")
+
+    buttons.setup(**additional_parameters)
+    try:
+        for unused_i in range(0, 50):
+            buttons.tick_once()
+            time.sleep(1)
+            print(blackboardProva)
+        print("\n")
+    except KeyboardInterrupt:
+        print("Exception occurred")
+        pass
+
+if __name__ == "__main__":
+    main()
