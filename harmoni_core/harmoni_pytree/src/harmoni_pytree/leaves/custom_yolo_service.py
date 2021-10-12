@@ -125,7 +125,7 @@ class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
     def terminate(self, new_status):
         new_state = self.service_client_custom.get_state()
         print("terminate : ",new_state)
-        if new_status == new_status = py_trees.common.Status.INVALID:
+        if new_status == py_trees.common.Status.INVALID:
             if new_state == GoalStatus.SUCCEEDED:
                 self.send_request = True
             elif new_state == GoalStatus.ACTIVE:
