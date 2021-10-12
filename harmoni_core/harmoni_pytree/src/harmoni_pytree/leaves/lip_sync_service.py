@@ -125,8 +125,8 @@ class LipSyncServicePytree(py_trees.behaviour.Behaviour):
             self.service_client_mouth.cancel_all_goals()
             self.client_result = None
             self.logger.debug(f"Goal cancelled to {self.server_name}")
-            self.service_client_mouth.stop_tracking_goal()
-            self.logger.debug(f"Goal tracking stopped to {self.server_name}")
+            #self.service_client_mouth.stop_tracking_goal()
+            #self.logger.debug(f"Goal tracking stopped to {self.server_name}")
         self.logger.debug("%s.terminate()[%s->%s]" % (self.__class__.__name__, self.status, new_status))
 
     def _result_callback(self, result):
