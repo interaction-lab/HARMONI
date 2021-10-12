@@ -1,0 +1,8 @@
+<launch>
+   
+	<arg name="instance_id" default="default"/>
+	<param name="instance_id" value="$(arg instance_id)"/>
+    <rosparam file="$(find harmoni_pytree)/config/configuration.yaml" subst_value="True"/>
+    <node pkg="harmoni_pytree" type="buttons.py" name="harmoni_pytree_$(arg instance_id)" output="screen"/>
+
+</launch>
