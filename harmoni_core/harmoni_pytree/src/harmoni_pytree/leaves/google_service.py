@@ -118,7 +118,7 @@ class SpeechToTextServicePytree(py_trees.behaviour.Behaviour):
         new_state = self.service_client_stt.get_state()
         print("terminate : ",new_state)
         if new_status == new_status = py_trees.common.Status.INVALID:
-            if new_state == GoalStatus.ACTIVE:
+            if new_state == GoalStatus.ACTIVE or new_state == GoalStatus.SUCCEEDED:
                 self.send_request = True
         if new_state == GoalStatus.SUCCEEDED or new_state == GoalStatus.ABORTED or new_state == GoalStatus.LOST:
             self.send_request = True
