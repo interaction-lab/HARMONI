@@ -90,5 +90,6 @@ class PyTreeNameSpace(Enum):
     invalid_response = "invalid_response"
     analyzer = "analyzer"
     trigger = "trigger"
+    buttons = "buttons"
 
 
