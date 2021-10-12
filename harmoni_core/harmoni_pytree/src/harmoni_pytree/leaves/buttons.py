@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from harmoni_common_lib.constants import *
+import rospy
 import py_trees
 import random
 import serial
@@ -48,11 +49,13 @@ class Buttons(py_trees.behaviour.Behaviour):
                 print("@@@@@@@@@@@@@@@@@@")
                 print(self.read_serial)
                 if len(self.read_serial) != 0:
-                    if self.read_serial[0] == "b'pressb2\r\n":
+                    self.read_serial = str(self.read_serial[0])
+                    print(self.read_serial)
+                    if self.read_serial == "b'pressb2\\r\\n'":
                         print("si")
                         self.blackboard_buttons.result = "si"
                         new_status = py_trees.common.Status.SUCCESS
-                    elif self.read_serial[0] == "b'pressb1\r\n":
+                    elif self.read_serial == "b'pressb1\\r\\n'":
                         print("no")
                         self.blackboard_buttons.result = "no"
                         new_status = py_trees.common.Status.SUCCESS
@@ -82,9 +85,9 @@ def main():
     blackboardProva.register_key("result", access=py_trees.common.Access.READ)
     print(blackboardProva)
 
-    buttons = ImageAIYoloServicePytree("ButtonsPytreeTest")
+    buttons = Buttons("ButtonsPytreeTest")
 
-    buttons.setup(**additional_parameters)
+    buttons.setup()
     try:
         for unused_i in range(0, 50):
             buttons.tick_once()
