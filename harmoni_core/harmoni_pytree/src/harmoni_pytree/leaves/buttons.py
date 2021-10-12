@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from harmoni_common_lib.constants import *
 import py_trees
 import random
 import serial
@@ -8,8 +9,9 @@ import time
 
 class Buttons(py_trees.behaviour.Behaviour):
     def __init__(self, name):
+        self.name = name
         self.blackboards = []
-        self.blackboard_buttons = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.buttons.name)
+        self.blackboard_buttons = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.buttons.name)
         self.blackboard_buttons.register_key("result", access=py_trees.common.Access.WRITE)
 
         super(Buttons, self).__init__(name)
