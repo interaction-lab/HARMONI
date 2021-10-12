@@ -128,10 +128,6 @@ class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
         if new_status == py_trees.common.Status.INVALID:
             if new_state == GoalStatus.ACTIVE:
                 self.send_request = True
-                self.logger.debug(f"Cancelling goal to {self.server_name}")
-                self.service_client_stt.cancel_goal()
-                self.client_result = None
-                self.logger.debug(f"Goal cancelled to {self.server_name}")
         if new_state == GoalStatus.SUCCEEDED or new_state == GoalStatus.ABORTED or new_state == GoalStatus.LOST:
             self.send_request = True
         if new_state == GoalStatus.PENDING:
