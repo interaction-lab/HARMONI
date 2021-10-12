@@ -101,7 +101,7 @@ class AWSLexAnalyzerServicePytree(py_trees.behaviour.Behaviour):
                     wait=False,
                 )
                 self.logger.debug(f"Goal sent to {self.server_name}")
-                new
+                new_status = py_trees.common.Status.RUNNING
             else:
                 self.blackboard_mainactivity.counter_no_answer += 1 
                 self.blackboard_bot.result = "void_answer"
