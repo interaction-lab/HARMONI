@@ -35,8 +35,8 @@ class Buttons(py_trees.behaviour.Behaviour):
             print("Timer started at: ", self.start_time)
             new_status = py_trees.common.Status.RUNNING
         else:
-            elapsed_time = time.time() - self.start_time
-            print("elapsed: ",elapsed_time)
+            self.elapsed_time = time.time() - self.start_time
+            print("elapsed button: ",self.elapsed_time)
             if self.max_duration < self.elapsed_time:
                 print("Timeout!")
                 self.start_time = None
