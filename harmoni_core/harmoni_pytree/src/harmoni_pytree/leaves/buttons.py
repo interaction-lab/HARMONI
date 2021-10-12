@@ -20,7 +20,7 @@ class Buttons(py_trees.behaviour.Behaviour):
     def setup(self):
         self.wemos = serial.Serial("/dev/ttyUSB0",timeout=1)
         self.blackboard_buttons.result = "null"
-        self.read_serial = None
+        self.read_serial = []
         self.start_time = None
         self.max_duration = 6
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
@@ -36,9 +36,9 @@ class Buttons(py_trees.behaviour.Behaviour):
             new_status = py_trees.common.Status.RUNNING
         else:
             self.elapsed_time = time.time() - self.start_time
-            print("elapsed button: ",self.elapsed_time)
+            print("elapsed buttons: ",self.elapsed_time)
             if self.max_duration < self.elapsed_time:
-                print("Timeout!")
+                print("Timeout buttons!")
                 self.start_time = None
                 self.blackboard_buttons.result = "null"
                 new_status = py_trees.common.Status.SUCCESS
@@ -46,7 +46,7 @@ class Buttons(py_trees.behaviour.Behaviour):
                 self.read_serial = self.wemos.readlines()
                 print("@@@@@@@@@@@@@@@@@@")
                 print(self.read_serial)
-                if self.read_serial != None:
+                if len(self.read_serial) != 0:
                     if self.read_serial[0] == "b'pressb2\r\n":
                         self.blackboard_buttons.result = "si"
                         new_status = py_trees.common.Status.SUCCESS
