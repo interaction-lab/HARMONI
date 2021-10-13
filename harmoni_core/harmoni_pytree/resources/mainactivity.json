@@ -17,7 +17,7 @@
                         "do_trigger"    : "False"
                     },
                     {
-                        "utterance"     : "<phoneme>nella plastica vanno buttati…</phoneme>",
+                        "utterance"     : "<speak>nella plastica vanno buttati…</speak>",
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land2.jpeg?alt=media&token=a3437794-a763-4b47-9052-485fd5c61ae5'},{'component_id':'raccolta_container', 'set_content': ''}]",
