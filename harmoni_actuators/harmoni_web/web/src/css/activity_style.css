@@ -10,7 +10,7 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    background-color: beige;
+    background-color: green;
     }
 
 .container{
@@ -33,8 +33,12 @@ div{
 }
 
 img{
-    display:block;
-    object-fit: cover;
+    margin: auto;
+    text-align: center;
+    background-size: cover;
+    vertical-align: auto;
+    width: 100%;
+    height: 100%;
 }
 
 
