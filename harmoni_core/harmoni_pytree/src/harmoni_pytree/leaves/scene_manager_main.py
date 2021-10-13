@@ -48,7 +48,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self):
-        pattern_name = "mainactivity"
+        pattern_name = "demo"
         rospack = rospkg.RosPack()
         pck_path = rospack.get_path("harmoni_pytree")
         pattern_script_path = pck_path + f"/resources/{pattern_name}.json"

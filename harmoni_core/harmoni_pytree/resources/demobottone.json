@@ -1,10 +1,10 @@
 {
     "scene" :   [   
                     {
-                        "utterance"     : "domanda raccolta",
+                        "utterance"     : "oggetto tetrapak bottone" ,
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/raccolta_bambini.jpg?alt=media&token=1a8ef1a4-8d16-486c-8498-136fbcc668f3'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/latte_da_buttare.jpg?alt=media&token=a2565d0f-2e6d-482a-80c4-525304379dec'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "True"
                     }

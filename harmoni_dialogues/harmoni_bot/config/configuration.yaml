@@ -7,8 +7,8 @@ bot:
     region_name: "eu-west-2"
   default_param:
     user_id: "corradopacelli"
-    bot_name: "ActivityBot"
-    bot_alias: "bot"
+    bot_name: "DemoBot"
+    bot_alias: "demobot"
     region_name: "eu-west-2"
 
 google:
