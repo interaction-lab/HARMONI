@@ -1,0 +1,103 @@
+{
+    "scene" :   [   
+                    {
+                        "utterance"     : "oggetto tetrapak" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/latte_da_buttare.jpg?alt=media&token=a2565d0f-2e6d-482a-80c4-525304379dec'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "sound"         : "null",
+                        "do_trigger"    : "True"
+                    }
+                ],
+    "error_handling"    :   
+                            {   
+                                "riprendiamo_interacion"   :   {
+                                                        "utterance"     : "Okay, riprendiamo da dove avevamo interrotto",
+                                                        "face"          : "null",
+                                                        "gesture"       : "null",
+                                                        "image"         : "null",
+                                                        "sound"         : "null",
+                                                        "do_trigger"    : "False"
+                                                    },
+                                "riprendiamo_visual"   :   {
+                                                        "utterance"     : "Ah eccoti! Riprendiamo da dove avevamo interrotto",
+                                                        "face"          : "null",
+                                                        "gesture"       : "null",
+                                                        "image"         : "null",
+                                                        "sound"         : "null",
+                                                        "do_trigger"    : "False"
+                                                    },
+                                "risposta_corretta" :   {
+                                                        "utterance"     : "Risposta esatta, ma non usarmi",
+                                                        "face"          : "null",
+                                                        "gesture"       : "null",
+                                                        "image"         : "null",
+                                                        "sound"         : "null",
+                                                        "do_trigger"    : "False"
+                                                    },
+                                "sei_sicuro" :   {
+                                                        "utterance"     : "Sei sicuro, dove lo butteresti?",
+                                                        "face"          : "null",
+                                                        "gesture"       : "null",
+                                                        "image"         : "null",
+                                                        "sound"         : "null",
+                                                        "do_trigger"    : "False"
+                                                    },
+                                "risposta_sbagliata_carta" :   {
+                                                        "utterance"     : "La risposta esatta era carta",
+                                                        "face"          : "null",
+                                                        "gesture"       : "null",
+                                                        "image"         : "null",
+                                                        "sound"         : "null",
+                                                        "do_trigger"    : "False"
+                                                    },
+                                "risposta_sbagliata_vetro" :   {
+                                                        "utterance"     : "La risposta esatta era vetro",
+                                                        "face"          : "null",
+                                                        "gesture"       : "null",
+                                                        "image"         : "null",
+                                                        "sound"         : "null",
+                                                        "do_trigger"    : "False"
+                                                    },
+                                "risposta_sbagliata_plastica" :   {
+                                                        "utterance"     : "La risposta esatta era plastica",
+                                                        "face"          : "null",
+                                                        "gesture"       : "null",
+                                                        "image"         : "null",
+                                                        "sound"         : "null",
+                                                        "do_trigger"    : "False"
+                                                    },
+                                "risposta_sbagliata" :   {
+                                                        "utterance"     : "Risposta sbagliata, ma non usarmi",
+                                                        "face"          : "null",
+                                                        "gesture"       : "null",
+                                                        "image"         : "null",
+                                                        "sound"         : "null",
+                                                        "do_trigger"    : "False"
+                                                    },
+                                "terapista" :   {
+                                                        "utterance"     : "Okay non ti preoccupare, ora chiamiamo il terapista",
+                                                        "face"          : "null",
+                                                        "gesture"       : "null",
+                                                        "image"         : "null",
+                                                        "sound"         : "null",
+                                                        "do_trigger"    : "False"
+                                                    },
+                                "stop" :   {
+                                                        "utterance"     : "Vabene facciamo una pausa e chiamiamo il terapista",
+                                                        "face"          : "null",
+                                                        "gesture"       : "null",
+                                                        "image"         : "null",
+                                                        "sound"         : "null",
+                                                        "do_trigger"    : "False"
+                                                    },
+                                "no_capito" :   {
+                                                        "utterance"     : "Ripetiamo, ma non usarmi",
+                                                        "face"          : "null",
+                                                        "gesture"       : "null",
+                                                        "image"         : "null",
+                                                        "sound"         : "null",
+                                                        "do_trigger"    : "False"
+                                                    }
+                            }                  
+}
