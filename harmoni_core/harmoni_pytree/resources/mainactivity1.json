@@ -105,7 +105,7 @@
                         "do_trigger"    : "True"
                     },
                     {
-                        "utterance"     : "Ora che abbiamo finito, possiamo andare a comprare il latte per fare colazione" ,
+                        "utterance"     : "Ora che abbiamo finito andiamo a comprare il latte per fare colazione" ,
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/cucina10.jpg?alt=media&token=31f541a5-9fdf-40fe-a1c4-251582d33d80'},{'component_id':'raccolta_container', 'set_content': ''}]",

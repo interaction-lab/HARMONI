@@ -58,7 +58,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         self.counter_non_ho_capito = 0
         self.blackboard_scene.mainactivity.max_num_scene = len(self.context["scene"])
         self.blackboard_mainactivity.counter_no_answer = 0
-        self.blackboard_scene.mainactivity.scene_counter = 0
+        self.blackboard_scene.mainactivity.scene_counter = 2
         self.blackboard_scene.utterance = "null"
         self.blackboard_scene.face_exp = "null"
         self.blackboard_scene.gesture = "null"
@@ -176,8 +176,8 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                             print("intentName = ", intentName)
                             print("message = ", message)
                             if intentName == IntentName.OMBRELLO.value:
-                                self.context["scene"][21]["utterance"] = "Peccato che non abbiamo portato l'ombrello"
-                                self.context["scene"][21]["face"] = "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]"
+                                self.context["scene"][20]["utterance"] = "Peccato che non abbiamo portato l'ombrello"
+                                self.context["scene"][20]["face"] = "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]"
                             if message == self.error_message:
                                 print("call_terapist = True")
                                 self.blackboard_mainactivity.call_therapist = True
