@@ -48,7 +48,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self):
-        pattern_name = "demo"
+        pattern_name = "mainactivity1"
         rospack = rospkg.RosPack()
         pck_path = rospack.get_path("harmoni_pytree")
         pattern_script_path = pck_path + f"/resources/{pattern_name}.json"
@@ -176,8 +176,8 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                             print("intentName = ", intentName)
                             print("message = ", message)
                             if intentName == IntentName.OMBRELLO.value:
-                                self.context["scene"][22]["utterance"] = "Peccato che non abbiamo portato l'ombrello"
-                                self.context["scene"][22]["face"] = "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]"
+                                self.context["scene"][21]["utterance"] = "Peccato che non abbiamo portato l'ombrello"
+                                self.context["scene"][21]["face"] = "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]"
                             if message == self.error_message:
                                 print("call_terapist = True")
                                 self.blackboard_mainactivity.call_therapist = True

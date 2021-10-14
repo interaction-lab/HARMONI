@@ -18,9 +18,6 @@ import running_or_failure as rf
 from harmoni_pytree.subtrees import visual_bg as v
 from harmoni_pytree.subtrees import interaction_bg as i 
 from harmoni_pytree.subtrees import mainactivity as m 
-from harmoni_pytree.subtrees import demospeaker as s
-from harmoni_pytree.subtrees import demobutton as b
-from harmoni_pytree.subtrees import democard as c
 from harmoni_pytree.subtrees import therapist as t 
 
 ##############################################################################
@@ -85,10 +82,7 @@ def create_root(name = "Session"):
 
     therapist = t.create_root()
 
-    #mainactivity = m.create_root()
-    #mainactivity = c.create_root()
-    #mainactivity = s.create_root()
-    mainactivity = b.create_root()
+    mainactivity = m.create_root()
     inverter_mainactivity = py_trees.decorators.Inverter(name="InverterMainActivity",child=mainactivity)
 
     rf_mainactivity = rf.create_root(name="RFMainactivity", condition=[
