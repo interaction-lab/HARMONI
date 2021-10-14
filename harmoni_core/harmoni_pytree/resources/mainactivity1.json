@@ -33,7 +33,7 @@
                         "do_trigger"    : "True"
                     },
                     {
-                        "utterance"     : "La raccolta differenziata è la divisione dei rifiuti <break time='3s'/> serve per tenere l'ambiente più pulito ricilando",
+                        "utterance"     : "La raccolta differenziata è la divisione dei rifiuti <break time='1s'/> serve per tenere l'ambiente più pulito ricilando",
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "null",
