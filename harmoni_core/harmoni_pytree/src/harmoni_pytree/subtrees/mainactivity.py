@@ -177,7 +177,8 @@ def create_root():
     sequen_robot = py_trees.composites.Sequence(name="SequenceRobot")
     sequen_robot.add_children([scene_manager, eor_projector, parall_robot])
 
-    parall_detect_kid = py_trees.composites.Parallel(name="ParallelDetectKid", policy=py_trees.common.ParallelPolicy.SuccessOnOne())
+    #, policy=py_trees.common.ParallelPolicy.SuccessOnOne()
+    parall_detect_kid = py_trees.composites.Parallel(name="ParallelDetectKid")
     parall_detect_kid.add_children([stt ,custom_yolo, buttons])
 
     sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid")
