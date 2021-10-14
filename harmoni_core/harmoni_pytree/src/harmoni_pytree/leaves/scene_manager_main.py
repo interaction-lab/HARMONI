@@ -58,7 +58,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         self.counter_non_ho_capito = 0
         self.blackboard_scene.mainactivity.max_num_scene = len(self.context["scene"])
         self.blackboard_mainactivity.counter_no_answer = 0
-        self.blackboard_scene.mainactivity.scene_counter = 2
+        self.blackboard_scene.mainactivity.scene_counter = 27
         self.blackboard_scene.utterance = "null"
         self.blackboard_scene.face_exp = "null"
         self.blackboard_scene.gesture = "null"
