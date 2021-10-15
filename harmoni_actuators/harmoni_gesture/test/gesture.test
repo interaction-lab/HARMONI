@@ -1,6 +1,6 @@
 <launch>
     <arg name="robot_joints" default="qt_robot/joints/state_rad"/>
-	<arg name="simulated_joints" default="simulated_joints"/>
+	<!--<arg name="simulated_joints" default="simulated_joints"/>-->
     <rosparam file="$(find harmoni_gesture)/config/configuration.yaml" subst_value="True"/>
     <param name="instance_id" value="qt"/>
     <param name="/qt/default_param/path" value ="$(find harmoni_gesture)/data"/>
