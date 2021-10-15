@@ -143,16 +143,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                             print("intentName = ", intentName)
                             print("message = ", message)
                             self.blackboard_scene.utterance = message
-                            if intentName == IntentName.STOP.value:
-                                self.blackboard_mainactivity.call_therapist = True
-                                self.blackboard_scene.face_exp = self.context["error_handling"]["stop"]["face"]
-                                self.blackboard_scene.gesture = self.context["error_handling"]["stop"]["gesture"]
-                                self.blackboard_scene.image = self.context["error_handling"]["stop"]["image"]
-                                self.blackboard_scene.sound = self.context["error_handling"]["stop"]["sound"]
-                                self.blackboard_scene.sound = self.context["error_handling"]["stop"]["sound"]
-                                self.blackboard_scene.mainactivity.do_trigger = self.context["error_handling"]["stop"]["do_trigger"]=="True"
-                                self.blackboard_scene.mainactivity.do_kid = self.blackboard_scene.mainactivity.do_trigger
-                            elif intentName == IntentName.NOCAPITO.value: 
+                            if intentName == IntentName.NOCAPITO.value: 
                                 self.blackboard_scene.face_exp = self.context["error_handling"]["no_capito"]["face"]
                                 self.blackboard_scene.gesture = self.context["error_handling"]["no_capito"]["gesture"]
                                 self.blackboard_scene.image = self.context["error_handling"]["no_capito"]["image"]
@@ -226,13 +217,23 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                             self.blackboard_scene.sound = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["sound"]
                             self.blackboard_scene.mainactivity.do_kid = self.blackboard_scene.mainactivity.do_trigger
                         elif dialogState == DialogStateLex.CONFIRM_INTENT.value:
-                            print("-scene_counter_mainactivity- qui non dovremmo esserci")
-                            self.blackboard_scene.utterance = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["utterance"]
-                            self.blackboard_scene.face_exp = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["face"]
-                            self.blackboard_scene.gesture = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["gesture"]
-                            self.blackboard_scene.image = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["image"]
-                            self.blackboard_scene.sound = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["sound"]
-                            self.blackboard_scene.mainactivity.do_kid = self.blackboard_scene.mainactivity.do_trigger
+                            if intentName == IntentName.STOP.value:
+                                self.blackboard_mainactivity.call_therapist = True
+                                self.blackboard_scene.face_exp = self.context["error_handling"]["stop"]["face"]
+                                self.blackboard_scene.gesture = self.context["error_handling"]["stop"]["gesture"]
+                                self.blackboard_scene.image = self.context["error_handling"]["stop"]["image"]
+                                self.blackboard_scene.sound = self.context["error_handling"]["stop"]["sound"]
+                                self.blackboard_scene.sound = self.context["error_handling"]["stop"]["sound"]
+                                self.blackboard_scene.mainactivity.do_trigger = self.context["error_handling"]["stop"]["do_trigger"]=="True"
+                                self.blackboard_scene.mainactivity.do_kid = self.blackboard_scene.mainactivity.do_trigger
+                            else:
+                                print("-scene_counter_mainactivity- qui non dovremmo esserci")
+                                self.blackboard_scene.utterance = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["utterance"]
+                                self.blackboard_scene.face_exp = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["face"]
+                                self.blackboard_scene.gesture = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["gesture"]
+                                self.blackboard_scene.image = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["image"]
+                                self.blackboard_scene.sound = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["sound"]
+                                self.blackboard_scene.mainactivity.do_kid = self.blackboard_scene.mainactivity.do_trigger
             else:
                 #gestione di una scena che non prevede l'interazione con il bambino
                 print("mainactivity/do_trigger = false")
