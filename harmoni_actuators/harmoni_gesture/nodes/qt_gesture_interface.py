@@ -39,8 +39,8 @@ class GestureInterface(HarmoniServiceManager):
         self.joint_sub_topic = param["robot_joint_topic"]
         self.joint_pub_topic = param["robot_joint_radians_topic"]
         self.gesture_topic = param["robot_gesture_topic"]
-        #self.service_id = hf.get_child_id(self.name)
-        self.service_id = "qt"
+        self.service_id = hf.get_child_id(self.name)
+
         """ Setup the gesture """
         self.gesture_service = rospy.Publisher(self.gesture_topic, String, queue_size=1)
         self.gesture_sub = rospy.Subscriber(
@@ -153,7 +153,8 @@ class GestureInterface(HarmoniServiceManager):
 def main():
     service_name = ActuatorNameSpace.gesture.name
     instance_id = rospy.get_param("/instance_id")
-    service_id = f"{service_name}_{instance_id}"
+    #service_id = f"{service_name}_{instance_id}"
+    service_id = "qt"
 
     try:
         rospy.init_node(service_name + "_qt")
