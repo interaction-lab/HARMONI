@@ -121,7 +121,7 @@ class ImageAICustomService(HarmoniServiceManager):
             for element in self.custom_objects_probability:
                 self.custom_objects_probability[element] = 0
             
-            for i in range(1, 7):
+            for i in range(1, 5):
                 data_tmp = self.cv_bridge.imgmsg_to_cv2(self._buff.get(), desired_encoding='passthrough')
                 self.detections = self.detector.detectObjectsFromImage(input_type="array", 
                                                                     output_type="array",

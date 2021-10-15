@@ -23,7 +23,7 @@ class Buttons(py_trees.behaviour.Behaviour):
         self.blackboard_buttons.result = "null"
         self.read_serial = []
         self.start_time = None
-        self.max_duration = 6
+        self.max_duration = 4
         self.logger.debug("%s.setup()" % (self.__class__.__name__))
 
     def initialise(self):
