@@ -20,7 +20,7 @@
                         "utterance"     : "domanda raccolta",
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/rifiuti.jpg?alt=media&token=4234c6f6-91c1-415e-8ffd-1f8b776c778c},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/rifiuti.jpg?alt=media&token=4234c6f6-91c1-415e-8ffd-1f8b776c778c'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "True"
                     },
