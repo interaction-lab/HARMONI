@@ -12,9 +12,9 @@
         <remap from="joint_states" to="$(arg simulated_joints)"/>
     </node> -->
     <!-- <arg name="rvizconfig" default="$(find urdf_tutorial)/rviz/urdf.rviz" />
-    <arg name="model" default="$(find harmoni_gesture)/urdf/qt.urdf"/> -->
+    <arg name="model" default="$(find harmoni_gesture)/urdf/qt.urdf"/>
     <param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)" />
-		<node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+		<node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" /> -->
 	<param name="test_gesture_input" value="{'gesture':'QT/bye', 'timing': 0.5}"/>
     <test test-name="test_gesture" pkg="harmoni_gesture" type="rostest_gesture.py" />
 </launch>
