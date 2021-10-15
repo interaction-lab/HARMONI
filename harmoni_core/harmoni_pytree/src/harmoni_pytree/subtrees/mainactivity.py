@@ -180,9 +180,10 @@ def create_root():
     sequen_robot = py_trees.composites.Sequence(name="SequenceRobot")
     sequen_robot.add_children([scene_manager, eor_projector, parall_robot])
 
-    inverter_parall_detect_kid = py_trees.decorators.Inverter(name="ParallelDetectKidInverter",child=parall_detect_kid)
     parall_detect_kid = py_trees.composites.Parallel(name="ParallelDetectKid")
     parall_detect_kid.add_children([stt ,custom_yolo, buttons])
+
+    inverter_parall_detect_kid = py_trees.decorators.Inverter(name="ParallelDetectKidInverter",child=parall_detect_kid)
 
     eor_null_card = py_trees.idioms.either_or(
         name="EitherOrNullCard",
