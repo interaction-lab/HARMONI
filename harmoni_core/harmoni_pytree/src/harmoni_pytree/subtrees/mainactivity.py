@@ -185,25 +185,6 @@ def create_root():
 
     inverter_parall_detect_kid = py_trees.decorators.Inverter(name="ParallelDetectKidInverter",child=parall_detect_kid)
 
-    eor_null_card = py_trees.idioms.either_or(
-        name="EitherOrNullCard",
-        conditions=[
-            py_trees.common.ComparisonExpression(DetectorNameSpace.card_detect.name+ "/result", "null", operator.eq),
-            py_trees.common.ComparisonExpression(DetectorNameSpace.card_detect.name+ "/result", "null", operator.ne),
-        ],
-        subtrees=[eor_null_speech,Success9],
-        namespace="eor_null_card",
-    )
-    eor_null_speech = py_trees.idioms.either_or(
-        name="EitherOrNullSpeech",
-        conditions=[
-            py_trees.common.ComparisonExpression(DetectorNameSpace.stt.name+ "/result", "null", operator.eq),
-            py_trees.common.ComparisonExpression(DetectorNameSpace.stt.name+ "/result", "null", operator.ne),
-        ],
-        subtrees=[eor_null_button,Success10],
-        namespace="eor_null_speech",
-    )
-
     periodic_success = py_trees.decorators.FailureIsRunning(child=py_trees.behaviours.SuccessEveryN(name="SuccessEveryN",n=3),name="FIsRSEN") 
 
     eor_null_button = py_trees.idioms.either_or(
@@ -214,6 +195,24 @@ def create_root():
         ],
         subtrees=[periodic_success,Success11],
         namespace="eor_null_button",
+    )
+    eor_null_speech = py_trees.idioms.either_or(
+        name="EitherOrNullSpeech",
+        conditions=[
+            py_trees.common.ComparisonExpression(DetectorNameSpace.stt.name+ "/result", "null", operator.eq),
+            py_trees.common.ComparisonExpression(DetectorNameSpace.stt.name+ "/result", "null", operator.ne),
+        ],
+        subtrees=[eor_null_button,Success10],
+        namespace="eor_null_speech",
+    )
+    eor_null_card = py_trees.idioms.either_or(
+        name="EitherOrNullCard",
+        conditions=[
+            py_trees.common.ComparisonExpression(DetectorNameSpace.card_detect.name+ "/result", "null", operator.eq),
+            py_trees.common.ComparisonExpression(DetectorNameSpace.card_detect.name+ "/result", "null", operator.ne),
+        ],
+        subtrees=[eor_null_speech,Success9],
+        namespace="eor_null_card",
     )
 
     selector_detect_kid = py_trees.composites.Sequence(name="SelectorDetectKid")
