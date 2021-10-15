@@ -1,15 +1,7 @@
 {
     "scene" :   [   
                     {
-                        "utterance"     : "E' mattina, ci siamo appena svegliati. Andiamo a fare colazione insieme.",
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/cucina.jpg?alt=media&token=fa5bf3bd-c93a-42c4-b6b4-3abac95bcb50'},{'component_id':'raccolta_container', 'set_content': ''}]",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
-                        "utterance"     : "E’ finito il latte, dobbiamo andare a comprarlo.",
+                        "utterance"     : "Ciao, sono Quitty e oggi parliamo della raccolta differenziata!",
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "null",
@@ -17,7 +9,7 @@
                         "do_trigger"    : "False"
                     },
                     {
-                        "utterance"     : "ma prima buttiamo via le varie cose",
+                        "utterance"     : "ma prima di tutto volevo chiederti",
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "null",
@@ -104,115 +96,12 @@
                         "sound"         : "null",
                         "do_trigger"    : "True"
                     },
+                    
                     {
-                        "utterance"     : "Ora che abbiamo finito andiamo a comprare il latte per fare colazione" ,
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/cucina.jpg?alt=media&token=fa5bf3bd-c93a-42c4-b6b4-3abac95bcb50'},{'component_id':'raccolta_container', 'set_content': ''}]",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
-                        "utterance"     : "Guarda che nuvole scure fuori" ,
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/cielo_nuvoloso.jpg?alt=media&token=bb832192-47cc-4131-af44-0a7f154bdcab'},{'component_id':'raccolta_container', 'set_content': ''}]",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
-                        "utterance"     : "chiedi dell'ombrello" ,
+                        "utterance"     : "PAUSA" ,
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "null",
-                        "sound"         : "null",
-                        "do_trigger"    : "True"
-                    },
-                    {
-                        "utterance"     : "null" ,
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/cielo%20nuvoloso-2.jpg?alt=media&token=3916946c-1c73-4fd8-9246-af2ee80c82b6'},{'component_id':'raccolta_container', 'set_content': ''}]",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
-                        "utterance"     : "Oh no, sta piovendo!" ,
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/pioggia1.jpg?alt=media&token=ba5a1a44-1c00-48ea-9195-86bd44322f0d'},{'component_id':'raccolta_container', 'set_content': ''}]",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
-                        "utterance"     : "ombrello setta frase" ,
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "null",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
-                        "utterance"     : "null" ,
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://console.firebase.google.com/project/harmonithesis/storage/harmonithesis.appspot.com/files'},{'component_id':'raccolta_container', 'set_content': ''}]",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
-                        "utterance"     : "Andiamo subito dentro il supermercato" ,
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/supermercato.png?alt=media&token=d8636ff5-fde2-4dc7-a0e1-8b723138e9da'},{'component_id':'raccolta_container', 'set_content': ''}]",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
-                        "utterance"     : "compriamo quello che serve e torniamo a casa " ,
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/carrello.jpg?alt=media&token=08cc85ac-f786-4aae-bdf0-d23b2a2a40cb'},{'component_id':'raccolta_container', 'set_content': ''}]",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
-                        "utterance"     : "Finalmente possiamo andare a casa a mangiare!" ,
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/supermercato.png?alt=media&token=d8636ff5-fde2-4dc7-a0e1-8b723138e9da'},{'component_id':'raccolta_container', 'set_content': ''}]",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
-                        "utterance"     : "null" ,
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://console.firebase.google.com/project/harmonithesis/storage/harmonithesis.appspot.com/files'},{'component_id':'raccolta_container', 'set_content': ''}]",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
-                        "utterance"     : "null" ,
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://console.firebase.google.com/project/harmonithesis/storage/harmonithesis.appspot.com/files'},{'component_id':'raccolta_container', 'set_content': ''}]",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
-                        "utterance"     : "Abbiamo fatto una vera e propria colazione da campione." ,
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/colazione3.jpg?alt=media&token=ec4fe513-b53c-4d67-b515-fc1e544d809b'},{'component_id':'raccolta_container', 'set_content': ''}]",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
-                        "utterance"     : "ora dobbiamo solo sparecchiare" ,
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/colazione4.jpg?alt=media&token=6dc3d447-1aa1-435f-bfe0-dae9184e6013'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "False"
                     },
@@ -274,14 +163,6 @@
                     },
                     {
                         "utterance"     : "Oggi abbiamo imparato come separare vetro, carta e plastica" ,
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "null",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
-                        "utterance"     : "Abbiamo anche capito che quando il cielo è molto scuro si dovrebbe portare l’ombrello." ,
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "null",
