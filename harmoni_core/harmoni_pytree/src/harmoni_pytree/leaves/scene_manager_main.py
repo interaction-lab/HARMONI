@@ -217,6 +217,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                             self.blackboard_scene.sound = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["sound"]
                             self.blackboard_scene.mainactivity.do_kid = self.blackboard_scene.mainactivity.do_trigger
                         elif dialogState == DialogStateLex.CONFIRM_INTENT.value:
+                            intentName = self.blackboard_bot.analyzer.result["intentName"]
                             if intentName == IntentName.STOP.value:
                                 self.blackboard_mainactivity.call_therapist = True
                                 self.blackboard_scene.face_exp = self.context["error_handling"]["stop"]["face"]
