@@ -215,7 +215,7 @@ def create_root():
         namespace="eor_null_card",
     )
 
-    selector_detect_kid = py_trees.composites.Sequence(name="SelectorDetectKid")
+    selector_detect_kid = py_trees.composites.Selector(name="SelectorDetectKid")
     selector_detect_kid.add_children([inverter_parall_detect_kid, eor_null_card])
 
     sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid")
@@ -312,7 +312,7 @@ def main():
     #if args.interactive:
     #    py_trees.console.read_single_keypress()
     #while True:
-    for unused_i in range(1, 20):
+    for unused_i in range(1, 50):
         try:
             behaviour_tree.tick()
             #if args.interactive:
