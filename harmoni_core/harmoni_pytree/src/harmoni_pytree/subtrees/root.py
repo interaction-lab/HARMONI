@@ -154,7 +154,7 @@ def main():
     
     try:
         behaviour_tree.tick_tock(
-            period_ms=400,
+            period_ms=500,
             number_of_iterations=py_trees.trees.CONTINUOUS_TICK_TOCK,
         )
     except KeyboardInterrupt:
