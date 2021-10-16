@@ -1,66 +1,298 @@
 {
     "scene" :   [   
                     {
+                        "utterance"     : "E' mattina, ci siamo appena svegliati. Andiamo a fare colazione insieme.",
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/cucina.jpg?alt=media&token=fa5bf3bd-c93a-42c4-b6b4-3abac95bcb50'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "E’ finito il latte, dobbiamo andare a comprarlo.",
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "null",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "ma prima buttiamo via le varie cose",
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "null",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
                         "utterance"     : "domanda raccolta",
                         "face"          : "null",
-                        "gesture"       : "{'gesture':'QT/bye', 'timing': 0.5}",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land.jpeg?alt=media&token=79c113ec-4e61-49c1-bbdf-b865a946247e'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "gesture"       : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/rifiuti.jpg?alt=media&token=4234c6f6-91c1-415e-8ffd-1f8b776c778c'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "True"
                     },
                     {
-                        "utterance"     : "nella plastica vanno buttati…",
+                        "utterance"     : "La raccolta differenziata è la divisione dei rifiuti <break time='1s'/> serve per tenere l'ambiente più pulito riciclando",
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land2.jpeg?alt=media&token=a3437794-a763-4b47-9052-485fd5c61ae5'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "image"         : "null",
                         "sound"         : "null",
                         "do_trigger"    : "False"
                     },
                     {
-                        "utterance"     : "oggetto bicchiere",
+                        "utterance"     : "se consideriamo plastica, carta e vetro",
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/bicchiere.jpeg?alt=media&token=38d8ce3a-9f76-452e-9cca-a54a042493a0'},{'component_id':'raccolta_container', 'set_content': ''}]",
-                        "sound"         : "null",
-                        "do_trigger"    : "True"
-                    },
-                    {
-                        "utterance"     : "oggetto lattina",
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/lattina.jpg?alt=media&token=8a7a7508-e777-40de-9dd3-71d7a830afb3'},{'component_id':'raccolta_container', 'set_content': ''}]",
-                        "sound"         : "null",
-                        "do_trigger"    : "True"
-                    },
-                    {
-                        "utterance"     : "oggetto tetrapak",
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/carta.jpeg?alt=media&token=4d55fbf5-0255-4d32-bf42-8b0178111ee8'},{'component_id':'raccolta_container', 'set_content': ''}]",
-                        "sound"         : "null",
-                        "do_trigger"    : "True"
-                    },
-                    {
-                        "utterance"     : "chiedi dell'ombrello",
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land.jpeg?alt=media&token=79c113ec-4e61-49c1-bbdf-b865a946247e'},{'component_id':'raccolta_container', 'set_content': ''}]",
-                        "sound"         : "null",
-                        "do_trigger"    : "True"
-                    },
-                    {
-                        "utterance"     : "ombrello" ,
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land4.jpg?alt=media&token=4315c235-87d6-400e-a3ee-6e9e044087dc'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "image"         : "null",
                         "sound"         : "null",
                         "do_trigger"    : "False"
                     },
                     {
-                        "utterance"     : "Ora abbiamo finito, ciao!" ,
+                        "utterance"     : "nel bidone della plastica vanno buttati le bottiglie di plastica, i vasetti dello yogurt, le confezioni di merendine e così via" ,
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land.jpeg?alt=media&token=79c113ec-4e61-49c1-bbdf-b865a946247e'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/rifiuti_plastica.jpg?alt=media&token=5d409a2f-06cb-4787-b607-ed628441530c'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "nel bidone della carta vanno buttati i giornali, i fogli, le confezioni del latte e dei succhi di frutta e così via." ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/rifiuti_carta.jpg?alt=media&token=8d497141-bb72-49fe-bb34-fce868f1c22f'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "nel bidone del vetro vanno buttati le bottiglie, i bicchieri, i barattoli e i vasi di vetro. Prima di buttarli si dovrebbero pulire." ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/rifiuti_vetro.jpg?alt=media&token=d08e3452-0e0c-4e9b-8d97-5005976ea46e'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "Adesso ti faccio delle domande per vedere se hai capito",
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/Domande.jpg?alt=media&token=7740ab70-e808-414a-8396-530f668ad02f'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "oggetto tetrapak" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/carta2.jpg?alt=media&token=50b48b55-dce0-43fe-bc44-dee4a2a97099'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "sound"         : "null",
+                        "do_trigger"    : "True"
+                    },
+                    {
+                        "utterance"     : "oggetto lattina" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/plastica1.jpg?alt=media&token=aac16410-ffd6-4e59-a635-52e4e07f3ad9'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "sound"         : "null",
+                        "do_trigger"    : "True"
+                    },
+                    {
+                        "utterance"     : "oggetto bicchiere" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/vetro1.jpg?alt=media&token=a30faf41-211f-498c-bd04-b211ece11d7c'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "sound"         : "null",
+                        "do_trigger"    : "True"
+                    },
+                    {
+                        "utterance"     : "Ora che abbiamo finito andiamo a comprare il latte per fare colazione" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/cucina.jpg?alt=media&token=fa5bf3bd-c93a-42c4-b6b4-3abac95bcb50'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "Guarda che nuvole scure fuori" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/cielo_nuvoloso.jpg?alt=media&token=bb832192-47cc-4131-af44-0a7f154bdcab'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "chiedi dell'ombrello" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "null",
+                        "sound"         : "null",
+                        "do_trigger"    : "True"
+                    },
+                    {
+                        "utterance"     : "null" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/cielo%20nuvoloso-2.jpg?alt=media&token=3916946c-1c73-4fd8-9246-af2ee80c82b6'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "Oh no, sta piovendo!" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/pioggia1.jpg?alt=media&token=ba5a1a44-1c00-48ea-9195-86bd44322f0d'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "ombrello setta frase" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "null",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "null" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://console.firebase.google.com/project/harmonithesis/storage/harmonithesis.appspot.com/files'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "Andiamo subito dentro il supermercato" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/supermercato.png?alt=media&token=d8636ff5-fde2-4dc7-a0e1-8b723138e9da'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "compriamo quello che serve e torniamo a casa " ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/carrello.jpg?alt=media&token=08cc85ac-f786-4aae-bdf0-d23b2a2a40cb'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "Finalmente possiamo andare a casa a mangiare!" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/supermercato.png?alt=media&token=d8636ff5-fde2-4dc7-a0e1-8b723138e9da'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "null" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://console.firebase.google.com/project/harmonithesis/storage/harmonithesis.appspot.com/files'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "null" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://console.firebase.google.com/project/harmonithesis/storage/harmonithesis.appspot.com/files'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "Abbiamo fatto una vera e propria colazione da campione." ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/colazione3.jpg?alt=media&token=ec4fe513-b53c-4d67-b515-fc1e544d809b'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "ora dobbiamo solo sparecchiare" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/colazione4.jpg?alt=media&token=6dc3d447-1aa1-435f-bfe0-dae9184e6013'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "oggetto lattina" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/plastica2.jpg?alt=media&token=6b8bb006-428c-4490-9433-39b7040702b8'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "sound"         : "null",
+                        "do_trigger"    : "True"
+                    },
+                    {
+                        "utterance"     : "oggetto tetrapak" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/carta3.jpg?alt=media&token=155a0ff9-2f98-4a04-a61d-b8b2b2817f85'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "sound"         : "null",
+                        "do_trigger"    : "True"
+                    },
+                    {
+                        "utterance"     : "oggetto bicchiere" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/vetro2.jpg?alt=media&token=638cc00e-a80f-4bb4-9aa3-b314439dee27'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "sound"         : "null",
+                        "do_trigger"    : "True"
+                    },
+                    {
+                        "utterance"     : "oggetto lattina" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/plastica3.jpg?alt=media&token=8ef7e67c-2750-416c-9d64-456f391a87cb'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "sound"         : "null",
+                        "do_trigger"    : "True"
+                    },
+                    {
+                        "utterance"     : "oggetto bicchiere" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/vetro3.jpg?alt=media&token=8f7828b8-c55e-4069-8b29-a8af2540b17f'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "sound"         : "null",
+                        "do_trigger"    : "True"
+                    },
+                    {
+                        "utterance"     : "oggetto tetrapak" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/carta.jpg?alt=media&token=e3fe49d5-8c6f-4bbd-b14d-dcbcbee6362b'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "sound"         : "null",
+                        "do_trigger"    : "True"
+                    },
+                    {
+                        "utterance"     : "Abbiamo finito e sei stato bravissimo!" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/cucina.jpg?alt=media&token=fa5bf3bd-c93a-42c4-b6b4-3abac95bcb50'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "Oggi abbiamo imparato come separare vetro, carta e plastica" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "null",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "Abbiamo anche capito che quando il cielo è molto scuro si dovrebbe portare l’ombrello." ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "null",
+                        "sound"         : "null",
+                        "do_trigger"    : "False"
+                    },
+                    {
+                        "utterance"     : "Spero tu ti sia divertito, io mi sono divertito molto con te!" ,
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/bolledisapone.jpg?alt=media&token=72e6cdb0-df0e-4ca0-b393-1277133ae6b6'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "False"
                     }
@@ -72,7 +304,7 @@
                                                         "utterance"     : "Okay, riprendiamo da dove avevamo interrotto",
                                                         "face"          : "null",
                                                         "gesture"       : "null",
-                                                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land2.jpeg?alt=media&token=a3437794-a763-4b47-9052-485fd5c61ae5'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                                                        "image"         : "null",
                                                         "sound"         : "null",
                                                         "do_trigger"    : "False"
                                                     },
@@ -80,7 +312,7 @@
                                                         "utterance"     : "Ah eccoti! Riprendiamo da dove avevamo interrotto",
                                                         "face"          : "null",
                                                         "gesture"       : "null",
-                                                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land2.jpeg?alt=media&token=a3437794-a763-4b47-9052-485fd5c61ae5'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                                                        "image"         : "null",
                                                         "sound"         : "null",
                                                         "do_trigger"    : "False"
                                                     },
@@ -88,7 +320,7 @@
                                                         "utterance"     : "Risposta esatta, ma non usarmi",
                                                         "face"          : "null",
                                                         "gesture"       : "null",
-                                                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land4.jpg?alt=media&token=4315c235-87d6-400e-a3ee-6e9e044087dc'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                                                        "image"         : "null",
                                                         "sound"         : "null",
                                                         "do_trigger"    : "False"
                                                     },
@@ -96,7 +328,7 @@
                                                         "utterance"     : "Sei sicuro, dove lo butteresti?",
                                                         "face"          : "null",
                                                         "gesture"       : "null",
-                                                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land4.jpg?alt=media&token=4315c235-87d6-400e-a3ee-6e9e044087dc'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                                                        "image"         : "null",
                                                         "sound"         : "null",
                                                         "do_trigger"    : "False"
                                                     },
@@ -104,7 +336,7 @@
                                                         "utterance"     : "La risposta esatta era carta",
                                                         "face"          : "null",
                                                         "gesture"       : "null",
-                                                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land3.png?alt=media&token=94e0e89d-4e41-4b1f-961f-9bd8ad064c7c'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                                                        "image"         : "null",
                                                         "sound"         : "null",
                                                         "do_trigger"    : "False"
                                                     },
@@ -112,7 +344,7 @@
                                                         "utterance"     : "La risposta esatta era vetro",
                                                         "face"          : "null",
                                                         "gesture"       : "null",
-                                                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land3.png?alt=media&token=94e0e89d-4e41-4b1f-961f-9bd8ad064c7c'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                                                        "image"         : "null",
                                                         "sound"         : "null",
                                                         "do_trigger"    : "False"
                                                     },
@@ -120,7 +352,7 @@
                                                         "utterance"     : "La risposta esatta era plastica",
                                                         "face"          : "null",
                                                         "gesture"       : "null",
-                                                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land3.png?alt=media&token=94e0e89d-4e41-4b1f-961f-9bd8ad064c7c'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                                                        "image"         : "null",
                                                         "sound"         : "null",
                                                         "do_trigger"    : "False"
                                                     },
@@ -128,7 +360,7 @@
                                                         "utterance"     : "Risposta sbagliata, ma non usarmi",
                                                         "face"          : "null",
                                                         "gesture"       : "null",
-                                                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land3.png?alt=media&token=94e0e89d-4e41-4b1f-961f-9bd8ad064c7c'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                                                        "image"         : "null",
                                                         "sound"         : "null",
                                                         "do_trigger"    : "False"
                                                     },
@@ -136,7 +368,7 @@
                                                         "utterance"     : "Okay non ti preoccupare, ora chiamiamo il terapista",
                                                         "face"          : "null",
                                                         "gesture"       : "null",
-                                                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land2.jpeg?alt=media&token=a3437794-a763-4b47-9052-485fd5c61ae5'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                                                        "image"         : "null",
                                                         "sound"         : "null",
                                                         "do_trigger"    : "False"
                                                     },
@@ -144,18 +376,17 @@
                                                         "utterance"     : "Vabene facciamo una pausa e chiamiamo il terapista",
                                                         "face"          : "null",
                                                         "gesture"       : "null",
-                                                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land.jpeg?alt=media&token=79c113ec-4e61-49c1-bbdf-b865a946247e'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                                                        "image"         : "null",
                                                         "sound"         : "null",
                                                         "do_trigger"    : "False"
                                                     },
                                 "no_capito" :   {
-                                                        "utterance"     : "RIpetiamo, ma non usarmi",
+                                                        "utterance"     : "Ripetiamo, ma non usarmi",
                                                         "face"          : "null",
                                                         "gesture"       : "null",
-                                                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/land2.jpeg?alt=media&token=a3437794-a763-4b47-9052-485fd5c61ae5'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                                                        "image"         : "null",
                                                         "sound"         : "null",
                                                         "do_trigger"    : "False"
                                                     }
-                            }
-                            
+                            }                  
 }
