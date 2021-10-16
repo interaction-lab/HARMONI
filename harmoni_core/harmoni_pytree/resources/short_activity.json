@@ -1,10 +1,10 @@
 {
     "scene" :   [   
                     {
-                        "utterance"     : "Ciao, sono Quitty e oggi parliamo della raccolta differenziata!",
+                        "utterance"     : "Ciao, sono Kitty e oggi parliamo della raccolta differenziata!",
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/rifiuti.jpg?alt=media&token=4234c6f6-91c1-415e-8ffd-1f8b776c778c'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "False"
                     },
@@ -20,12 +20,12 @@
                         "utterance"     : "domanda raccolta",
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/rifiuti.jpg?alt=media&token=4234c6f6-91c1-415e-8ffd-1f8b776c778c'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "image"         : "null",
                         "sound"         : "null",
                         "do_trigger"    : "True"
                     },
                     {
-                        "utterance"     : "La raccolta differenziata è la divisione dei rifiuti <break time='1s'/> serve per tenere l'ambiente più pulito ricilando",
+                        "utterance"     : "La raccolta differenziata è la divisione dei rifiuti <break time='1s'/> serve per tenere l'ambiente più pulito riciclando",
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "null",
@@ -44,7 +44,7 @@
                         "utterance"     : "nel bidone della plastica vanno buttati le bottiglie di plastica, i vasetti dello yogurt,le confezioni di merendine e così via" ,
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/rifiuti_plastica.jpg?alt=media&token=5d409a2f-06cb-4787-b607-ed628441530c'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/oggetti_plastica.jpeg?alt=media&token=83fcea48-38ea-44a8-9a95-f24ba6b6b39e'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "False"
                     },
@@ -52,7 +52,7 @@
                         "utterance"     : "nel bidone della carta vanno buttati i giornali, i fogli, le confezioni del latte e dei succhi di frutta e così via." ,
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/rifiuti_carta.jpg?alt=media&token=8d497141-bb72-49fe-bb34-fce868f1c22f'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/oggetti_carta.jpeg?alt=media&token=75318a24-c9d1-42e5-b009-a84e4c681f2f'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "False"
                     },
@@ -60,7 +60,7 @@
                         "utterance"     : "nel bidone del vetro vanno buttati le bottiglie, i bicchieri, i barattoli e i vasi di vetro. Prima di buttarli si dovrebbero pulire." ,
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/rifiuti_vetro.jpg?alt=media&token=d08e3452-0e0c-4e9b-8d97-5005976ea46e'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/oggetti_vetro.jpeg?alt=media&token=8e5225ae-f12b-4c04-915c-4055db33cf63'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "False"
                     },
@@ -92,7 +92,7 @@
                         "utterance"     : "oggetto bicchiere" ,
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/vetro1.jpg?alt=media&token=a30faf41-211f-498c-bd04-b211ece11d7c'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/sugo.jpeg?alt=media&token=e821001c-b988-43f3-832a-c0d0a6f82328'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "True"
                     },
@@ -121,29 +121,31 @@
                         "do_trigger"    : "True"
                     },
                     {
-                        "utterance"     : "Abbiamo finito e sei stato bravissimo!" ,
+                        "utterance"     : "oggetto lattina" ,
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/cucina.jpg?alt=media&token=fa5bf3bd-c93a-42c4-b6b4-3abac95bcb50'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/plastica3.jpg?alt=media&token=8ef7e67c-2750-416c-9d64-456f391a87cb'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
-                        "do_trigger"    : "False"
+                        "do_trigger"    : "True"
                     },
                     {
-                        "utterance"     : "Oggi abbiamo imparato come separare vetro, carta e plastica" ,
+                        "utterance"     : "oggetto bicchiere" ,
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/bottiglietta-vetro.jpeg?alt=media&token=cb3447e0-086e-4c51-bdaf-cdb747aa96fe'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
-                        "do_trigger"    : "False"
+                        "do_trigger"    : "True"
                     },
                     {
-                        "utterance"     : "Spero tu ti sia divertito, io mi sono divertito molto con te!" ,
+                        "utterance"     : "oggetto tetrapak" ,
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/bolledisapone.jpg?alt=media&token=72e6cdb0-df0e-4ca0-b393-1277133ae6b6'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/patatine.jpeg?alt=media&token=b1951f54-25a4-423b-a460-6a4b46caa190'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
-                        "do_trigger"    : "False"
+                        "do_trigger"    : "True"
                     }
+                    
+                    
 
                 ],
     "error_handling"    :   

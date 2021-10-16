@@ -52,7 +52,7 @@
                         "utterance"     : "nel bidone della plastica vanno buttati le bottiglie di plastica, i vasetti dello yogurt, le confezioni di merendine e così via" ,
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/rifiuti_plastica.jpg?alt=media&token=5d409a2f-06cb-4787-b607-ed628441530c'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/oggetti_plastica.jpeg?alt=media&token=83fcea48-38ea-44a8-9a95-f24ba6b6b39e'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "False"
                     },
@@ -60,7 +60,7 @@
                         "utterance"     : "nel bidone della carta vanno buttati i giornali, i fogli, le confezioni del latte e dei succhi di frutta e così via." ,
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/rifiuti_carta.jpg?alt=media&token=8d497141-bb72-49fe-bb34-fce868f1c22f'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/oggetti_carta.jpeg?alt=media&token=75318a24-c9d1-42e5-b009-a84e4c681f2f'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "False"
                     },
@@ -68,7 +68,7 @@
                         "utterance"     : "nel bidone del vetro vanno buttati le bottiglie, i bicchieri, i barattoli e i vasi di vetro. Prima di buttarli si dovrebbero pulire." ,
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/rifiuti_vetro.jpg?alt=media&token=d08e3452-0e0c-4e9b-8d97-5005976ea46e'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/oggetti_vetro.jpeg?alt=media&token=8e5225ae-f12b-4c04-915c-4055db33cf63'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "False"
                     },
@@ -100,7 +100,7 @@
                         "utterance"     : "oggetto bicchiere" ,
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/vetro1.jpg?alt=media&token=a30faf41-211f-498c-bd04-b211ece11d7c'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/sugo.jpeg?alt=media&token=e821001c-b988-43f3-832a-c0d0a6f82328'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "True"
                     },
@@ -156,7 +156,7 @@
                         "utterance"     : "null" ,
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://console.firebase.google.com/project/harmonithesis/storage/harmonithesis.appspot.com/files'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/pioggia4.jpg?alt=media&token=208fdfd9-44bf-430d-af5a-6d303d3e4c6f'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "False"
                     },
@@ -188,7 +188,7 @@
                         "utterance"     : "null" ,
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://console.firebase.google.com/project/harmonithesis/storage/harmonithesis.appspot.com/files'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/pioggia5.jpg?alt=media&token=e92c1f08-6680-4e88-95d5-2288b9ce16c5'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "False"
                     },
@@ -196,7 +196,7 @@
                         "utterance"     : "null" ,
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://console.firebase.google.com/project/harmonithesis/storage/harmonithesis.appspot.com/files'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/pioggia1.jpg?alt=media&token=ba5a1a44-1c00-48ea-9195-86bd44322f0d'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "False"
                     },
@@ -204,7 +204,7 @@
                         "utterance"     : "Abbiamo fatto una vera e propria colazione da campione." ,
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/colazione3.jpg?alt=media&token=ec4fe513-b53c-4d67-b515-fc1e544d809b'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/colazione2.jpeg?alt=media&token=28b0d33b-28a1-45d0-842a-67ab085e5457'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "False"
                     },
@@ -212,7 +212,7 @@
                         "utterance"     : "ora dobbiamo solo sparecchiare" ,
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/colazione4.jpg?alt=media&token=6dc3d447-1aa1-435f-bfe0-dae9184e6013'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "image"         : "null",
                         "sound"         : "null",
                         "do_trigger"    : "False"
                     },
@@ -252,7 +252,7 @@
                         "utterance"     : "oggetto bicchiere" ,
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/vetro3.jpg?alt=media&token=8f7828b8-c55e-4069-8b29-a8af2540b17f'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/bottiglietta-vetro.jpeg?alt=media&token=cb3447e0-086e-4c51-bdaf-cdb747aa96fe'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "True"
                     },
@@ -260,7 +260,7 @@
                         "utterance"     : "oggetto tetrapak" ,
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/carta.jpg?alt=media&token=e3fe49d5-8c6f-4bbd-b14d-dcbcbee6362b'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/patatine.jpeg?alt=media&token=b1951f54-25a4-423b-a460-6a4b46caa190'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "True"
                     },
@@ -276,7 +276,7 @@
                         "utterance"     : "Oggi abbiamo imparato come separare vetro, carta e plastica" ,
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/rifiuti.jpg?alt=media&token=4234c6f6-91c1-415e-8ffd-1f8b776c778c'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "False"
                     },
@@ -284,7 +284,7 @@
                         "utterance"     : "Abbiamo anche capito che quando il cielo è molto scuro si dovrebbe portare l’ombrello." ,
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "null",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/cielo_nuvoloso.jpg?alt=media&token=bb832192-47cc-4131-af44-0a7f154bdcab'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "False"
                     },
