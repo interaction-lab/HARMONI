@@ -57,7 +57,7 @@ class SpeakerService(HarmoniServiceManager):
             if type(data) == str:
                 if ".wav" in data:
                     data = self.file_path_to_audio_data(data)
-                    duration = data["duration"]-0.7
+                    duration = data["duration"]-0.5
                 else:
                     data = ast.literal_eval(data)
             data = data["audio_data"]
