@@ -73,7 +73,7 @@
                         "do_trigger"    : "False"
                     },
                     {
-                        "utterance"     : "Adesso ti faccio delle domande per vedere se hai capito",
+                        "utterance"     : "Adesso ti mostro qualche oggetto e ti faccio delle domande per vedere se hai capito",
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/Domande.jpg?alt=media&token=7740ab70-e808-414a-8396-530f668ad02f'},{'component_id':'raccolta_container', 'set_content': ''}]",
