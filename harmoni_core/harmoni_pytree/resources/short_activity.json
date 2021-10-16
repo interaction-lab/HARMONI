@@ -121,28 +121,28 @@
                         "do_trigger"    : "True"
                     },
                     {
-                        "utterance"     : "oggetto lattina" ,
+                        "utterance"     : "Abbiamo finito e sei stato bravissimo!" ,
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/plastica3.jpg?alt=media&token=8ef7e67c-2750-416c-9d64-456f391a87cb'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/bolledisapone.jpg?alt=media&token=72e6cdb0-df0e-4ca0-b393-1277133ae6b6'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
-                        "do_trigger"    : "True"
+                        "do_trigger"    : "False"
                     },
                     {
-                        "utterance"     : "oggetto bicchiere" ,
+                        "utterance"     : "Oggi abbiamo imparato come separare vetro, carta e plastica" ,
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/bottiglietta-vetro.jpeg?alt=media&token=cb3447e0-086e-4c51-bdaf-cdb747aa96fe'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "image"         : "null",
                         "sound"         : "null",
-                        "do_trigger"    : "True"
+                        "do_trigger"    : "False"
                     },
                     {
-                        "utterance"     : "oggetto tetrapak" ,
+                        "utterance"     : "Spero tu ti sia divertito, io mi sono divertito molto con te!" ,
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/patatine.jpeg?alt=media&token=b1951f54-25a4-423b-a460-6a4b46caa190'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "image"         : "null",
                         "sound"         : "null",
-                        "do_trigger"    : "True"
+                        "do_trigger"    : "False"
                     }
                     
                     
