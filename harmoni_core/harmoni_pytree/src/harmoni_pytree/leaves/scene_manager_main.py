@@ -178,9 +178,6 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                             if intentName == IntentName.OMBRELLO.value:
                                 self.context["scene"][18]["utterance"] = "Peccato che non abbiamo portato l'ombrello"
                                 #self.context["scene"][18]["face"] = "[{'start': 5, 'type': 'action', 'id': 'happy_face'}]"
-                            if message == self.error_message:
-                                print("call_terapist = True")
-                                self.blackboard_mainactivity.call_therapist = True
                             self.blackboard_scene.mainactivity.scene_counter += 1
                             self.blackboard_scene.utterance = message
                             self.blackboard_scene.face_exp = self.context["error_handling"]["risposta_sbagliata"]["face"]
