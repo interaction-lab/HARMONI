@@ -4,7 +4,7 @@
                         "utterance"     : "E' mattina, ci siamo appena svegliati. Andiamo a fare colazione insieme.",
                         "face"          : "null",
                         "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'images/bitter.jpeg'},{'component_id':'raccolta_container', 'set_content': ''}]",
+                        "image"         : "[{'component_id':'img_only', 'set_content':'/root//harmoni_catkin_ws/src/HARMONI/harmoni_core/harmoni_pytree/resources/images/bitter.jpeg'},{'component_id':'raccolta_container', 'set_content': ''}]",
                         "sound"         : "null",
                         "do_trigger"    : "False"
                     },
