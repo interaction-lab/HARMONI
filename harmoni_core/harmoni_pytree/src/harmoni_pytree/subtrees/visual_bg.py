@@ -89,6 +89,7 @@ def create_root(name = "Visual_Bg"):
     Success1 = py_trees.behaviours.Success(name="Success")
     Success2 = py_trees.behaviours.Success(name="Success")
     Success3 = py_trees.behaviours.Success(name="Success")
+    Success4 = py_trees.behaviours.Success(name="Success")
 
     scene_manager = SceneManagerVisualBg("SceneManagerVisual")
     
@@ -111,8 +112,25 @@ def create_root(name = "Visual_Bg"):
     parall_speaker = py_trees.composites.Parallel(name="ParallelSpeaker")
     parall_speaker.add_children([speaker,lip_sync])    
 
+    inverter_stt = py_trees.decorators.Inverter(name="SttInverter",child=stt)
+
+    periodic_success = py_trees.decorators.FailureIsRunning(child=py_trees.behaviours.SuccessEveryN(name="SuccessEveryN",n=3),name="FIsRSEN") 
+
+    eor_null_speech = py_trees.idioms.either_or(
+        name="EitherOrNullSpeech",
+        conditions=[
+            py_trees.common.ComparisonExpression(DetectorNameSpace.stt.name+ "/result", "null", operator.eq),
+            py_trees.common.ComparisonExpression(DetectorNameSpace.stt.name+ "/result", "null", operator.ne),
+        ],
+        subtrees=[periodic_success,Success4],
+        namespace="eor_null_speech",
+    )
+
+    selector_stt = py_trees.composites.Selector(name="SelectorDetectKid")
+    selector_stt.add_children([inverter_stt, eor_null_speech])
+
     sequen_detect_kid = py_trees.composites.Sequence(name="SequenceDetectKid")
-    sequen_detect_kid.add_children([stt, bot_analyzer])                                         
+    sequen_detect_kid.add_children([selector_stt, bot_analyzer])                                         
 
     eor_face = py_trees.idioms.either_or(
         name="EitherOrFace",

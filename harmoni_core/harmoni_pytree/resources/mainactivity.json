@@ -129,7 +129,7 @@
                         "do_trigger"    : "True"
                     },
                     {
-                        "utterance"     : "null" ,
+                        "utterance"     : "<break time='2s'/>" ,
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/cielo%20nuvoloso-2.jpg?alt=media&token=3916946c-1c73-4fd8-9246-af2ee80c82b6'},{'component_id':'raccolta_container', 'set_content': ''}]",
@@ -153,7 +153,7 @@
                         "do_trigger"    : "False"
                     },
                     {
-                        "utterance"     : "null" ,
+                        "utterance"     : "<break time='2s'/>",
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/pioggia4.jpg?alt=media&token=208fdfd9-44bf-430d-af5a-6d303d3e4c6f'},{'component_id':'raccolta_container', 'set_content': ''}]",
@@ -185,7 +185,7 @@
                         "do_trigger"    : "False"
                     },
                     {
-                        "utterance"     : "null" ,
+                        "utterance"     : "<break time='2s'/>" ,
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/pioggia5.jpg?alt=media&token=e92c1f08-6680-4e88-95d5-2288b9ce16c5'},{'component_id':'raccolta_container', 'set_content': ''}]",
@@ -193,7 +193,7 @@
                         "do_trigger"    : "False"
                     },
                     {
-                        "utterance"     : "null" ,
+                        "utterance"     : "<break time='2s'/>" ,
                         "face"          : "null",
                         "gesture"       : "null",
                         "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/pioggia1.jpg?alt=media&token=ba5a1a44-1c00-48ea-9195-86bd44322f0d'},{'component_id':'raccolta_container', 'set_content': ''}]",
