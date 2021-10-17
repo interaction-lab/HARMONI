@@ -160,7 +160,9 @@ class STTGoogleService(HarmoniServiceManager):
                     self.response_received = True
                     return
                 else:
+                    self.response_received = True
                     self.stt_response = result.alternatives[0].transcript
+                    return
 
     def transcribe_file_request(self, data):
         """ Transcribes a single audio file """
@@ -225,7 +227,6 @@ class STTGoogleService(HarmoniServiceManager):
                 print("STT response text: "+ self.stt_response)
                 self.response_received = True
                 self.state = State.SUCCESS
-                
             else:
                 self.listen_print_untill_result_is_final(responses)
 
