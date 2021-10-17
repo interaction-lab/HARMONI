@@ -6,7 +6,7 @@
 
     <include file="$(find harmoni_stt)/launch/stt_google_service.launch"></include>
 
-    <!-- <include file="$(find harmoni_microphone)/launch/microphone_service.launch"></include> -->
+    <include file="$(find harmoni_microphone)/launch/microphone_service.launch"></include>
 
     <!-- end services -->
 
