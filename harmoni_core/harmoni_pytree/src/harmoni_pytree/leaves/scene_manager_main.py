@@ -161,8 +161,8 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                                 self.blackboard_scene.mainactivity.do_kid = False
                             else:
                                 if intentName == IntentName.OMBRELLO.value:
-                                    self.context["scene"][22]["utterance"] = "Fortunatamente abbiamo portato l'ombrello"
-                                    self.context["scene"][22]["face"] = "[{'start':10, 'type': 'gaze', 'id':'target', 'point': [1,5,10]}]"
+                                    self.context["scene"][19]["utterance"] = "Fortunatamente abbiamo portato l'ombrello"
+                                    #self.context["scene"][19]["face"] = "[{'start':10, 'type': 'gaze', 'id':'target', 'point': [1,5,10]}]"
                                 self.blackboard_scene.mainactivity.scene_counter += 1
                                 self.blackboard_scene.face_exp = self.context["error_handling"]["risposta_corretta"]["face"]
                                 self.blackboard_scene.gesture = self.context["error_handling"]["risposta_corretta"]["gesture"]

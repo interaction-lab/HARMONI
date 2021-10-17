@@ -7,5 +7,5 @@ imageai_custom_yolo:
     frame_detection_interval: 5 #the object detection will be updated after 5 frames (the number has to be between 5-20) 
     output_file_name: "temp_custom_output"
     log_progress: True
-    minimum_percentage_probability: 90 #minimum percentage for recognizing objects
+    minimum_percentage_probability: 95 #minimum percentage for recognizing objects
     return_detected_frame: False #if true, allows you to obtain the detected video frame as a Numpy array
