@@ -9,14 +9,6 @@
                         "do_trigger"    : "False"
                     },
                     {
-                        "utterance"     : "ma prima di tutto volevo chiederti",
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "null",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
                         "utterance"     : "domanda raccolta",
                         "face"          : "null",
                         "gesture"       : "null",
