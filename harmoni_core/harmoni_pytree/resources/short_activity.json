@@ -25,38 +25,6 @@
                         "do_trigger"    : "False"
                     },
                     {
-                        "utterance"     : "se consideriamo plastica, carta e vetro",
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "null",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
-                        "utterance"     : "nel bidone della plastica vanno buttati le bottiglie di plastica, i vasetti dello yogurt,le confezioni di merendine e così via" ,
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/oggetti_plastica.jpeg?alt=media&token=83fcea48-38ea-44a8-9a95-f24ba6b6b39e'},{'component_id':'raccolta_container', 'set_content': ''}]",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
-                        "utterance"     : "nel bidone della carta vanno buttati i giornali, i fogli, le confezioni del latte e dei succhi di frutta e così via." ,
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/oggetti_carta.jpeg?alt=media&token=75318a24-c9d1-42e5-b009-a84e4c681f2f'},{'component_id':'raccolta_container', 'set_content': ''}]",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
-                        "utterance"     : "nel bidone del vetro vanno buttati le bottiglie, i bicchieri, i barattoli e i vasi di vetro. Prima di buttarli si dovrebbero pulire." ,
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/oggetti_vetro.jpeg?alt=media&token=8e5225ae-f12b-4c04-915c-4055db33cf63'},{'component_id':'raccolta_container', 'set_content': ''}]",
-                        "sound"         : "null",
-                        "do_trigger"    : "False"
-                    },
-                    {
                         "utterance"     : "Adesso ti mostro qualche oggetto e ti faccio delle domande per vedere se hai capito",
                         "face"          : "null",
                         "gesture"       : "null",
