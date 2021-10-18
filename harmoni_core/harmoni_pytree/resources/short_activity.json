@@ -57,30 +57,6 @@
                         "do_trigger"    : "True"
                     },
                     {
-                        "utterance"     : "oggetto lattina" ,
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/plastica2.jpg?alt=media&token=6b8bb006-428c-4490-9433-39b7040702b8'},{'component_id':'raccolta_container', 'set_content': ''}]",
-                        "sound"         : "null",
-                        "do_trigger"    : "True"
-                    },
-                    {
-                        "utterance"     : "oggetto tetrapak" ,
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/carta3.jpg?alt=media&token=155a0ff9-2f98-4a04-a61d-b8b2b2817f85'},{'component_id':'raccolta_container', 'set_content': ''}]",
-                        "sound"         : "null",
-                        "do_trigger"    : "True"
-                    },
-                    {
-                        "utterance"     : "oggetto bicchiere" ,
-                        "face"          : "null",
-                        "gesture"       : "null",
-                        "image"         : "[{'component_id':'img_only', 'set_content':'https://firebasestorage.googleapis.com/v0/b/harmonithesis.appspot.com/o/vetro2.jpg?alt=media&token=638cc00e-a80f-4bb4-9aa3-b314439dee27'},{'component_id':'raccolta_container', 'set_content': ''}]",
-                        "sound"         : "null",
-                        "do_trigger"    : "True"
-                    },
-                    {
                         "utterance"     : "Abbiamo finito e sei stato bravissimo!" ,
                         "face"          : "null",
                         "gesture"       : "null",
