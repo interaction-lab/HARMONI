@@ -5,7 +5,7 @@ stt:
     audio_channel: 1
     subscriber_id: "default"
     credential_path: "$(env HOME)/.gcp/private-keys.json" #path where private keys are mounted
-    max_duration: 4
+    max_duration: 8
   ita_param:
     language_id: "it-IT"
     sample_rate: 16000 #44100 for wav audio file
