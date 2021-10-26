@@ -95,7 +95,7 @@ def create_root(name= "MicAndSTT"):
     stt=SpeechToTextServicePytree("SpeechToTextMainActivity")
 
     root = py_trees.composites.Sequence(name="MicAndSTT")
-    root.add_children([microphone , py_trees.behaviours.SuccessEveryN(name="sn3",n=3), stt])
+    root.add_children([microphone, stt])
 
     return root
 
