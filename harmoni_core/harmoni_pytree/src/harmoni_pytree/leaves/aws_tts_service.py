@@ -141,4 +141,35 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         return
 
 def main():
+    #command_line_argument_parser().parse_args()
+
+    py_trees.logging.level = py_trees.logging.Level.DEBUG
+    
+    blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace=DialogueNameSpace.bot.name +"/"+PyTreeNameSpace.trigger.name)
+    blackboardProva.register_key("result", access=py_trees.common.Access.WRITE)
+    blackboardProva.result = {
+                                "message": "Ciao sono Kitty"
+                            }
+    blackboardProva2 = py_trees.blackboard.Client(name="blackboardProva2", namespace=ActuatorNameSpace.tts.name)
+    blackboardProva2.register_key("result", access=py_trees.common.Access.READ)                        
+    print(blackboardProva)
+    print(blackboardProva2)
+
+    #rospy init node mi fa diventare un nodo ros
     rospy.init_node("tts_default", log_level=rospy.INFO)
+    
+    ttsPyTree = AWSTtsServicePytree("AWSTtsServicePytreeTest")
+    ttsPyTree.setup()
+    try:
+        for unused_i in range(0, 10):
+            ttsPyTree.tick_once()
+            time.sleep(0.5)
+            print(blackboardProva)
+            print(blackboardProva2)
+        print("\n")
+    except KeyboardInterrupt:
+        print("Exception occurred")
+        pass
+
+if __name__ == "__main__":
+    main()

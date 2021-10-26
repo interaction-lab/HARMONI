@@ -47,13 +47,6 @@ class AWSLexTriggerServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self,**additional_parameters):
-        """
-        for parameter in additional_parameters:
-            print(parameter, additional_parameters[parameter])  
-            if(parameter ==DialogueNameSpace.bot.name):
-                self.mode = additional_parameters[parameter]        
-        """
-
         self.service_client_lex = HarmoniActionClient(self.name)
         self.server_name = "bot_default"
         self.service_client_lex.setup_client(self.server_name, 
@@ -140,4 +133,33 @@ class AWSLexTriggerServicePytree(py_trees.behaviour.Behaviour):
         self.server_state = feedback["state"]
         return
 
+def main():
+    #command_line_argument_parser().parse_args()
 
+    py_trees.logging.level = py_trees.logging.Level.DEBUG
+    blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace=PyTreeNameSpace.scene.name)
+    blackboardProva.register_key("utterance", access=py_trees.common.Access.WRITE)
+    blackboardProva.utterance = "domanda raccolta"
+    blackboardProva2 = py_trees.blackboard.Client(name="blackboardProva2", namespace=DialogueNameSpace.bot.name+"/"+PyTreeNameSpace.trigger.name)
+    blackboardProva2.register_key("result", access=py_trees.common.Access.READ)                        
+    print(blackboardProva)
+    print(blackboardProva2)
+
+    #rospy init node mi fa diventare un nodo ros
+    rospy.init_node("bot_default", log_level=rospy.INFO)
+    
+    awslexPyTree = AWSLexTriggerServicePytree("AWSLexTriggerServicePytreeTest")
+    awslexPyTree.setup()
+    try:
+        for unused_i in range(0, 10):
+            awslexPyTree.tick_once()
+            time.sleep(0.5)
+            print(blackboardProva)
+            print(blackboardProva2)
+        print("\n")
+    except KeyboardInterrupt:
+        print("Exception occurred")
+        pass
+
+if __name__ == "__main__":
+    main()

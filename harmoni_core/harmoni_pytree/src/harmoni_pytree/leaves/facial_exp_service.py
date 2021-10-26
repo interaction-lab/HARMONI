@@ -142,7 +142,7 @@ def main():
     blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace=PyTreeNameSpace.scene.name)
     blackboardProva.register_key("face_exp", access=py_trees.common.Access.WRITE)
 
-    blackboardProva.face_exp = "[{'start':8, 'type': 'gaze', 'id':'target', 'point': [1,5,10]}]"
+    blackboardProva.face_exp = "[{'start': 1, 'type': 'viseme', 'id': 'POSTALVEOLAR'}]"
     """
     [{'start':10, 'type': 'gaze', 'id':'target', 'point': [1,5,10]}]
     [{'start': 1, 'type': 'au', 'id': 'au13', 'pose': 1}]
@@ -151,7 +151,6 @@ def main():
     [{'start': 8, 'type': 'viseme', 'id': 'POSTALVEOLAR'}]
     """
    
-
     print(blackboardProva)
 
     rospy.init_node("face_default", log_level=rospy.INFO)

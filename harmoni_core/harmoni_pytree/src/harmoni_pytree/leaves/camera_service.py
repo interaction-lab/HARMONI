@@ -146,7 +146,7 @@ def main():
 
     cameraPyTree.setup(**additional_parameters)
     try:
-        for unused_i in range(0, 3):
+        for unused_i in range(0, 10):
             cameraPyTree.tick_once()
             time.sleep(0.5)
             print(blackboardProva)
@@ -155,4 +155,5 @@ def main():
         print("Exception occurred")
         pass
     
-
+if __name__ == "__main__":
+    main()

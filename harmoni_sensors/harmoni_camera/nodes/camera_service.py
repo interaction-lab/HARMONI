@@ -154,7 +154,8 @@ def main():
         print("**********************************************************************************************")
         print(service_id)
 
-        #s.start()
+        #TODO: comment it out and create a test for ImageAI
+        s.start()
 
         service_server.start_sending_feedback()
         rospy.spin()

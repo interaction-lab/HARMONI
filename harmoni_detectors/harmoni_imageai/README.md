@@ -48,7 +48,7 @@ roslaunch harmoni_imageai yolo_service.launch
 Camera will open and one frame will be captured and put as input of the yolov3 model. Once the output of the imageai service arrives another frame will be captured and again used as input for yolov3 model and so on.
 
 **Custom yolo**  
-Run the following commands in order to run camera service and custom yolo service in two different terminals:
+Run the following command in order to run camera service and custom yolo service in two different terminals:
 
 ```  bash
 roslaunch harmoni_sensors camera_service.launch

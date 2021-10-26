@@ -56,13 +56,6 @@ class SpeakerServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self,**additional_parameters):
-        """
-        for parameter in additional_parameters:
-            print(parameter, additional_parameters[parameter])  
-            if(parameter ==ActuatorNameSpace.speaker.name):
-                self.mode = additional_parameters[parameter]  
-        """
-       
         self.service_client_speaker = HarmoniActionClient(self.name)
         self.server_name = "speaker_default"
         self.service_client_speaker.setup_client(self.server_name, 
@@ -93,7 +86,6 @@ class SpeakerServicePytree(py_trees.behaviour.Behaviour):
                 new_status = py_trees.common.Status.RUNNING
             elif new_state == GoalStatus.SUCCEEDED:
                 new_status = py_trees.common.Status.SUCCESS
-                self.blackboard_tts.result = "annullata da speaker riga circa 100"
             else:
                 new_status = py_trees.common.Status.FAILURE
                 raise
@@ -130,4 +122,29 @@ class SpeakerServicePytree(py_trees.behaviour.Behaviour):
         return
 
 def main():
-    rospy.init_node("speaker_default" , log_level=rospy.INFO)
+    #command_line_argument_parser().parse_args()
+
+    py_trees.logging.level = py_trees.logging.Level.DEBUG
+    
+    blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace=ActuatorNameSpace.tts.name)
+    blackboardProva.register_key("result", access=py_trees.common.Access.WRITE)
+    blackboardProva.result = "/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/temp_data/tts.wav"
+    print(blackboardProva)
+
+    #rospy init node mi fa diventare un nodo ros
+    rospy.init_node("speaker_default", log_level=rospy.INFO)
+    
+    speakerPyTree = SpeakerServicePytree("SpeakerServicePytreeTest")
+    speakerPyTree.setup()
+    try:
+        for unused_i in range(0, 10):
+            speakerPyTree.tick_once()
+            time.sleep(0.5)
+            print(blackboardProva)
+        print("\n")
+    except KeyboardInterrupt:
+        print("Exception occurred")
+        pass
+
+if __name__ == "__main__":
+    main()
