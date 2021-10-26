@@ -2,7 +2,7 @@
 
 PyTree is one among the several ways to implement behaviour trees.  
 A tree in pytree is made of two elements: nodes and leaves.
-Nodes can be of different nature but in general they belong to the family of compositors (sequence, parallel, selector). The management of these elements it’s not something that users have to do, everything has already been done by the creators of pytree. 
+Nodes can be of different nature but in general they belong to the family of composites (sequence, parallel, selector). The management of these elements it’s not something that users have to do, everything has already been done by the creators of pytree. 
 Leaves come from a single element called “behaviour” and these are the components that users can create. Even if pytree made some basic behaviours available for us (you can find some of them [here](https://py-trees.readthedocs.io/en/devel/modules.html#module-py_trees.behaviours)), developers are required to create their own behaviours ([skeleton of behaviour](https://py-trees.readthedocs.io/en/devel/behaviours.html#skeleton)). We provide some leaves that represent the pytree version of clients of HARMONI.
 
 ## Setup
@@ -44,9 +44,9 @@ py_trees.display.unicode_tree(
             visited=snapshot_visitor.visited)
 ```
 You can also decide to manually tick the tree by running `behaviour_tree.tick()` instead of `tick_tock()` function. 
-PyTree offers a lot of components and useful tools that developers can use in their trees but here we will mention **compositors** and **blackboards**. We recommend reading the documentation for understand all the concepts:   [https://py-trees.readthedocs.io/en/devel/behaviours.html](https://py-trees.readthedocs.io/en/devel/behaviours.html)
+PyTree offers a lot of components and useful tools that developers can use in their trees but here we will mention **composites** and **blackboards**. We recommend reading the documentation for understand all the concepts:   [https://py-trees.readthedocs.io/en/devel/behaviours.html](https://py-trees.readthedocs.io/en/devel/behaviours.html)
 
-#### Compositors
+#### composites
 
 Composites are responsible for directing the path traced through the tree on a given tick (execution). They are the factories (Sequences and Parallels) and decision makers (Selectors) of a behaviour tree.
 Composite behaviours typically manage children and apply some logic to the way they execute and return a result, but generally don’t do anything themselves. Perform the checks or actions you need to do in the non-composite behaviours.
