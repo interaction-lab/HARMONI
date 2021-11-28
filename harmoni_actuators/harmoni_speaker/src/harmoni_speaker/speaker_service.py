@@ -19,6 +19,7 @@ import ast
 import wave
 import os
 
+AUDIO_DELAY = 0.5 # this constant is used to make shorter the duration in which the service is sleeping.  
 
 class SpeakerService(HarmoniServiceManager):
     """Takes sound and publishes it to the default audio topic for the audio_play package
@@ -57,7 +58,7 @@ class SpeakerService(HarmoniServiceManager):
             if type(data) == str:
                 if ".wav" in data:
                     data = self.file_path_to_audio_data(data)
-                    duration = data["duration"]-0.5
+                    duration = data["duration"] - AUDIO_DELAY
                 else:
                     data = ast.literal_eval(data)
             data = data["audio_data"]

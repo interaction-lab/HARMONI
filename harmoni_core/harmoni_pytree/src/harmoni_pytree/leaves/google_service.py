@@ -157,7 +157,6 @@ def main():
     blackboardProva.register_key("result", access=py_trees.common.Access.READ)
     print(blackboardProva)
 
-    #rospy init node mi fa diventare un nodo ros
     rospy.init_node("stt_default", log_level=rospy.INFO)
     
     sttPyTree = SpeechToTextServicePytree("GoogleSSTPytreeTest")

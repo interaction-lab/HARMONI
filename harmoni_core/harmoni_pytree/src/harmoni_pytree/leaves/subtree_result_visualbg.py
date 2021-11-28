@@ -36,10 +36,8 @@ class SubTreeResultVisualBg(py_trees.behaviour.Behaviour):
         self.logger.debug("  %s [SubTreeResultVisualBg::initialise()]" % self.name)
 
     def update(self):
-        #se si è entrati almeno una volta in visual_bg
         if self.blackboard_face_detect.result == "null":
             self.blackboard_visual.finished = False
-        #caso in cui si è arrivato al numero massimo di scene o il bimbo c'è -->
         else:
             self.blackboard_scene_visual.scene_counter = 0
             self.blackboard_visual.finished = True

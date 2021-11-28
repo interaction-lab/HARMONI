@@ -48,13 +48,6 @@ class CameraServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self,**additional_parameters):
-        """
-        for parameter in additional_parameters:
-            print(parameter, additional_parameters[parameter])  
-            if(parameter =="CameraServicePytree_mode"):
-                self.mode = additional_parameters[parameter]     
-        """
-        
         self.service_client_camera = HarmoniActionClient(self.name)
         self.server_name = "camera_default"
         self.service_client_camera.setup_client(self.server_name, 

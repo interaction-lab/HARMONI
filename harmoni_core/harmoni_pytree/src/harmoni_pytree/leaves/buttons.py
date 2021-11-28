@@ -78,7 +78,6 @@ def main():
 
     py_trees.logging.level = py_trees.logging.Level.DEBUG
     
-    #rospy init node mi fa diventare un nodo ros
     rospy.init_node("buttons_default", log_level=rospy.INFO)
 
     blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace=PyTreeNameSpace.buttons.name)

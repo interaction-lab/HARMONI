@@ -113,14 +113,12 @@ class SceneManagerInteractionBg(py_trees.behaviour.Behaviour):
                     self.blackboard_scene.interaction.scene_counter += 1
                 elif dialogState == DialogStateLex.ELICIT_SLOT.value:
                     print("dialogState == ELICIT_SLOT")
-                    #TODO forse da cambiare con ripetere scena corrente
                     self.blackboard_scene.utterance = message
                 elif dialogState == DialogStateLex.ELICIT_INTENT.value:
                     print("dialogState == ELICIT_INTENT")
                     self.blackboard_scene.utterance = self.context["scene"][0]["utterance"]
                     self.blackboard_scene.interaction.do_trigger = True
                 else:
-                    #qui non dovremmo mai entrare in quanto abbiamo gestito tutti gli stati
                     raise
             self.blackboard_bot.analyzer.result = "null"
 

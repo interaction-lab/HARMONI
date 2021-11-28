@@ -47,7 +47,6 @@ class SpeakerServicePytree(py_trees.behaviour.Behaviour):
 
         self.blackboards = []
         self.blackboard_tts = self.attach_blackboard_client(name=self.name, namespace=ActuatorNameSpace.tts.name)
-        #FIXME l'access dovrebbe essere READ però per evitare che in console escono mille cose ogni tick l'ho messa in scrittura, riga circa 100 per info
         self.blackboard_tts.register_key("result", access=py_trees.common.Access.WRITE)
         self.blackboard_speaker = self.attach_blackboard_client(name=self.name, namespace=ActuatorNameSpace.speaker.name)
         #self.blackboard_speaker.register_key("state", access=py_trees.common.Access.WRITE)
@@ -131,7 +130,6 @@ def main():
     blackboardProva.result = "/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/temp_data/tts.wav"
     print(blackboardProva)
 
-    #rospy init node mi fa diventare un nodo ros
     rospy.init_node("speaker_default", log_level=rospy.INFO)
     
     speakerPyTree = SpeakerServicePytree("SpeakerServicePytreeTest")

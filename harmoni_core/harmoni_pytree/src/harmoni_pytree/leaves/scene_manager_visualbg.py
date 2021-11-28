@@ -73,7 +73,6 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
 
         print("STATE OF SCENE MANAGER VISAUL")
 
-        #scena iniziale ovvero la zero, è l'unica in cui va bot_trigger e serve l'utterance. 
         if self.blackboard_scene.visual.scene_counter == 0:
             print("self.blackboard_scene.visual.scene_counter == 0")
             self.blackboard_scene.visual.do_trigger = True
@@ -81,7 +80,7 @@ class SceneManagerVisualBg(py_trees.behaviour.Behaviour):
             self.blackboard_scene.face_exp = self.context["scene"][self.blackboard_scene.visual.scene_counter]["face"]
             self.blackboard_scene.visual.scene_counter += 1
         else:
-            self.blackboard_scene.visual.do_trigger = False #deve essere usato solo bot_analyzer dopo la scena 0
+            self.blackboard_scene.visual.do_trigger = False
             if self.blackboard_bot.analyzer.result == "void_answer":
                 print("self.blackboard_bot.analyzer.result == void_answer")
                 self.blackboard_visual.call_therapist = True

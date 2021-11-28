@@ -11,15 +11,6 @@ import rospkg
 
 class SceneManagerMain(py_trees.behaviour.Behaviour):
     def __init__(self, name):
-        """
-        Minimal one-time initialisation. A good rule of thumb is
-        to only include the initialisation relevant for being able
-        to insert this behaviour in a tree for offline rendering to
-        dot graphs.
-
-        Other one-time initialisation requirements should be met via
-        the setup() method.
-        """
         super(SceneManagerMain, self).__init__(name)
 
         self.blackboards = []
@@ -83,7 +74,6 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         print("STATE OF SCENE MANAGER MAIN")
 
         if self.blackboard_visual.inside == True:
-            #gestione dell'esecuzione del bg visual
             print("visual/inside: true")
             self.blackboard_visual.inside = False
             if not self.blackboard_scene.mainactivity.do_kid:
@@ -96,7 +86,6 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
             self.blackboard_scene.mainactivity.do_trigger = self.context["error_handling"]["riprendiamo_visual"]["do_trigger"]=="True"
             self.blackboard_scene.mainactivity.do_kid = self.blackboard_scene.mainactivity.do_trigger 
         elif self.blackboard_interaction.inside == True:
-            #gestione dell'esecuzione del bg interaction 
             print("interaction/inside: true")
             self.blackboard_interaction.inside = False
             self.blackboard_mainactivity.counter_no_answer = 0
@@ -111,9 +100,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
             self.blackboard_scene.mainactivity.do_trigger = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["do_trigger"]=="True"
             if self.blackboard_scene.mainactivity.do_trigger == True:
                 print("mainactivity/do_trigger = true")
-                #gestione di una scena che prevede l'interazione con il bambino
                 if self.blackboard_bot.analyzer.result == "null":
-                    #prima volta che si esegue la scena
                     print("analyzer/result == null")
                     self.blackboard_scene.utterance = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["utterance"]
                     self.blackboard_scene.face_exp = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["face"]
@@ -123,9 +110,7 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                     self.blackboard_scene.mainactivity.do_kid = True
                     self.counter_non_ho_capito = 0
                 else:
-                    #non è la prima volta che siamo in questa scena
                     if self.blackboard_bot.analyzer.result == "void_answer":
-                        #il bambino non ha risposto e dobbiamo ripetere l'ultima scena
                         print("analyzer/result == void_answer")
                         self.blackboard_scene.utterance = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["utterance"]
                         self.blackboard_scene.face_exp = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["face"]
@@ -134,7 +119,6 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                         self.blackboard_scene.sound = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["sound"]
                         self.blackboard_scene.mainactivity.do_kid = True
                     else:
-                        #il bambino ci ha dato una risposta
                         dialogState = self.blackboard_bot.analyzer.result["dialogState"]
                         print("dialogState = ", dialogState)
                         if dialogState == DialogStateLex.FULFILLED.value or dialogState == DialogStateLex.READY_FOR_FULFILLMENT.value:
@@ -192,8 +176,6 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                             print("intentName = ", intentName)
                             print("message = ", message)
                             if intentName == IntentName.CARTA.value or intentName == IntentName.PLASTICA.value or intentName == IntentName.VETRO.value:
-                                #FIXME cambia il nome degli intent in tetrapak lattina etc
-                                #oggetto = str(intentName).lower()
                                 if intentName == IntentName.CARTA.value:
                                     oggetto = "tetrapak"
                                 elif intentName == IntentName.PLASTICA.value:
@@ -231,7 +213,6 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
                             self.blackboard_scene.sound = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["sound"]
                             self.blackboard_scene.mainactivity.do_kid = self.blackboard_scene.mainactivity.do_trigger
             else:
-                #gestione di una scena che non prevede l'interazione con il bambino
                 print("mainactivity/do_trigger = false")
                 self.blackboard_scene.utterance = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["utterance"]
                 self.blackboard_scene.face_exp = self.context["scene"][self.blackboard_scene.mainactivity.scene_counter]["face"]
@@ -252,9 +233,6 @@ class SceneManagerMain(py_trees.behaviour.Behaviour):
         self.logger.debug("  %s [SceneManagerMain::terminate().terminate()][%s->%s]" % (self.name, self.status, new_status))
 
 def main():
-    """
-    Entry point for the demo script.
-    """
 
     py_trees.logging.level = py_trees.logging.Level.DEBUG
 

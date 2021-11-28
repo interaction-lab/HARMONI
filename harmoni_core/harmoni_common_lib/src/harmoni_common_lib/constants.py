@@ -66,16 +66,17 @@ class DialogStateLex(Enum):
     READY_FOR_FULFILLMENT = "ReadyForFulfillment"
     UNKNOWN_TO_SDK_VERSION = "UnknownToSdkVersion"
 
+#these class is used to store the names of the intent of the bot in amazon lex
 class IntentName(Enum):
-    INTERACTION = "Background_noInterazione"
-    VISUAL = "Background_visivo"
-    CARTA = "Carta"
-    RACCOLTA = "ConfirmRaccolta"
-    PLASTICA = "Plastica"
-    STOP = "Stop"
-    VETRO = "Vetro"
-    OMBRELLO = "Ombrello"
-    NOCAPITO = "NonHoCapito"
+    INTERACTION = "Background_noInterazione"    # no interaction background
+    VISUAL = "Background_visivo"                # visual background
+    CARTA = "Carta"                             # paper
+    RACCOLTA = "ConfirmRaccolta"                # confirm recycling
+    PLASTICA = "Plastica"                       # plastic
+    STOP = "Stop"                               # stop
+    VETRO = "Vetro"                             # glass
+    OMBRELLO = "Ombrello"                       # umbrella
+    NOCAPITO = "NonHoCapito"                    # I can't undestand
 
 class Resources(Enum):
     face = ["eyes", "mouth", "nose"]

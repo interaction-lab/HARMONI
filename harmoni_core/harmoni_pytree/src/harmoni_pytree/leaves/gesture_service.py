@@ -42,7 +42,6 @@ class GestureServicePytree(py_trees.behaviour.Behaviour):
 
         # here there is the inizialization of the blackboards
         self.blackboards = []
-        #TODO: usa queste bb che sono le nuove
         self.blackboard_scene = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name)
         self.blackboard_scene.register_key("gesture", access=py_trees.common.Access.READ)
 
@@ -50,20 +49,12 @@ class GestureServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self,**additional_parameters):
-        """
-        for parameter in additional_parameters:
-            print(parameter, additional_parameters[parameter])  
-            if(parameter == ActuatorNameSpace.gesture.name):
-                self.mode = additional_parameters[parameter]        
-        """
 
         #self.qt_gesture_service = GestureInterface(service_name, params)
-
         #self.gesture_service = GestureService(service_name,params)
         #TODO the first parameter in setup_client must be "equals" in all the leaves
         self.service_client_gesture = HarmoniActionClient(self.name)
         self.client_result = deque()
-        #TODO aggiusta sto nome
         self.server_name = service_name + "_" + instance_id
         self.service_client_gesture.setup_client(self.server_name, 
                                             self._result_callback,

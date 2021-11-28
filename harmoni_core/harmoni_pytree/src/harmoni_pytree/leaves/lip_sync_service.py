@@ -49,8 +49,6 @@ class LipSyncServicePytree(py_trees.behaviour.Behaviour):
         self.blackboards = []
         self.blackboard_tts = self.attach_blackboard_client(name=self.name, namespace=ActuatorNameSpace.tts.name)
         self.blackboard_tts.register_key("result", access=py_trees.common.Access.READ)
-        
-        #lips_sync
         self.blackboard_lips = self.attach_blackboard_client(name=self.name, namespace=Resources.face.value[1])
         #self.blackboard_lips.register_key("state", access=py_trees.common.Access.WRITE)
 

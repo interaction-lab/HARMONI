@@ -43,10 +43,6 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
         self.send_request = True
 
         self.blackboards = []
-        """
-        self.blackboard_camera = self.attach_blackboard_client(name=self.name, namespace=SensorNameSpace.camera.name)
-        self.blackboard_camera.register_key("state", access=py_trees.common.Access.READ)
-        """
         self.blackboard_face_detection = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.face_detect.name)
         #self.blackboard_face_detection.register_key("state", access=py_trees.common.Access.WRITE)
         self.blackboard_face_detection.register_key("result", access=py_trees.common.Access.WRITE)
@@ -54,13 +50,7 @@ class ImageAIYoloServicePytree(py_trees.behaviour.Behaviour):
         super(ImageAIYoloServicePytree, self).__init__(name)
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
-    def setup(self,**additional_parameters):
-        """
-        for parameter in additional_parameters:
-            print(parameter, additional_parameters[parameter])  
-            if(parameter =="ImageAIYoloServicePytree_mode"):
-                self.mode = additional_parameters[parameter] 
-        """       
+    def setup(self,**additional_parameters):       
         self.service_client_yolo = HarmoniActionClient(self.name)
         self.server_name = "imageai_yolo_default"
         self.service_client_yolo.setup_client(self.server_name, 

@@ -42,13 +42,7 @@ class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
         self.server_name = None
         self.send_request = True
 
-        # here there is the inizialization of the blackboards
         self.blackboards = []
-
-        """
-        self.blackboard_camera = self.attach_blackboard_client(name=self.name, namespace=SensorNameSpace.camera.name+"/external")
-        self.blackboard_camera.register_key("state", access=py_trees.common.Access.READ)
-        """
         self.blackboard_card_detection = self.attach_blackboard_client(name=self.name, namespace=DetectorNameSpace.card_detect.name)
         #self.blackboard_card_detection.register_key("state", access=py_trees.common.Access.WRITE)
         self.blackboard_card_detection.register_key("result", access=py_trees.common.Access.WRITE)
@@ -58,15 +52,7 @@ class ImageAICustomServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self,**additional_parameters):
-        """
-        for parameter in additional_parameters:
-            print(parameter, additional_parameters[parameter])  
-            if(parameter =="ImageAICustomServicePytree_mode"):
-                self.mode = additional_parameters[parameter]    
-        """
-
         self.service_client_custom = HarmoniActionClient(self.name)
-        #TODO fattelo passare sto parametro o vedi che fare
         self.server_name = "imageai_custom_yolo_default"
         self.service_client_custom.setup_client(self.server_name, 
                                             self._result_callback,

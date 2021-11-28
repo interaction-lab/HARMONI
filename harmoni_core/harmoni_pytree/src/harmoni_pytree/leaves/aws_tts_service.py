@@ -49,12 +49,6 @@ class AWSTtsServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self,**additional_parameters):
-        """
-        for parameter in additional_parameters:
-            print(parameter, additional_parameters[parameter])  
-            if(parameter ==ActuatorNameSpace.tts.name):
-                self.mode = additional_parameters[parameter] 
-        """
         self.service_client_tts = HarmoniActionClient(self.name)
         self.server_name = "tts_default"
         self.service_client_tts.setup_client(self.server_name, 
@@ -155,7 +149,6 @@ def main():
     print(blackboardProva)
     print(blackboardProva2)
 
-    #rospy init node mi fa diventare un nodo ros
     rospy.init_node("tts_default", log_level=rospy.INFO)
     
     ttsPyTree = AWSTtsServicePytree("AWSTtsServicePytreeTest")

@@ -44,12 +44,6 @@ class WebServicePytree(py_trees.behaviour.Behaviour):
         self.logger.debug("%s.__init__()" % (self.__class__.__name__))
 
     def setup(self,**additional_parameters):
-        """
-        for parameter in additional_parameters:
-            print(parameter, additional_parameters[parameter])  
-            if(parameter =="WebServicePytree_mode"):
-                self.mode = additional_parameters[parameter]        
-        """
         
         self.service_client_web = HarmoniActionClient(self.name)
         self.server_name = "web_default"
@@ -135,7 +129,6 @@ def main():
 
     py_trees.logging.level = py_trees.logging.Level.DEBUG
     
-    #rospy init node mi fa diventare un nodo ros
     rospy.init_node("web_default" , log_level=rospy.INFO)
 
     blackboardProva = py_trees.blackboard.Client(name="blackboardProva", namespace=PyTreeNameSpace.scene.name)

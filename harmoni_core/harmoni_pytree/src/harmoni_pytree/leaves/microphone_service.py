@@ -90,7 +90,6 @@ class MicrophoneServicePytree(py_trees.behaviour.Behaviour):
                 new_status = py_trees.common.Status.FAILURE
                 raise
             elif new_state == GoalStatus.ABORTED:
-                #FIXME dovrebbe essere .FAILURE
                 new_status = py_trees.common.Status.SUCCESS
             elif new_state == GoalStatus.SUCCEEDED:
                 new_status = py_trees.common.Status.SUCCESS

@@ -35,9 +35,6 @@ class AWSLexTriggerServicePytree(py_trees.behaviour.Behaviour):
         self.send_request = True
 
         self.blackboards = []
-        #TODO: usa queste bb che sono le nuove
-        #TODO creare due foglie per il bot uno che si occupa del trigger e viene messo in EOR con scene dove useremo solo
-        #json e il secondo bot che invece usiamo come analyzer. 
         self.blackboard_scene = self.attach_blackboard_client(name=self.name, namespace=PyTreeNameSpace.scene.name)
         self.blackboard_scene.register_key("utterance", access=py_trees.common.Access.READ)
         self.blackboard_bot = self.attach_blackboard_client(name=self.name, namespace=DialogueNameSpace.bot.name+"/"+PyTreeNameSpace.trigger.name)
@@ -145,7 +142,6 @@ def main():
     print(blackboardProva)
     print(blackboardProva2)
 
-    #rospy init node mi fa diventare un nodo ros
     rospy.init_node("bot_default", log_level=rospy.INFO)
     
     awslexPyTree = AWSLexTriggerServicePytree("AWSLexTriggerServicePytreeTest")
