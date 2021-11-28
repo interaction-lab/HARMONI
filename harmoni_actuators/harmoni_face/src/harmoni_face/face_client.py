@@ -44,7 +44,6 @@ class Face():
             queue_size=1,
         )
         rospy.loginfo("Checking that face is connected to ROS websocket")
-        print(self.name + "/is_connected")
         rospy.wait_for_service(self.name + "/is_connected")
         rospy.loginfo("Done, face is connected to ROS websocket")
         self.connected=True

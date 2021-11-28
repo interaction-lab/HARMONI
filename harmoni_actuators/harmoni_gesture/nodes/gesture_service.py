@@ -46,6 +46,7 @@ class GestureService(HarmoniServiceManager):
         )
         self.state = State.INIT
         self.setup_gesture()
+
         return
 
     def _gesture_done_callback(self, data):
@@ -218,7 +219,6 @@ class GestureService(HarmoniServiceManager):
                 }
                 self.gesture_pub.publish(str(data))
         return True
-
 
 def main():
     service_name = ActuatorNameSpace.gesture.name

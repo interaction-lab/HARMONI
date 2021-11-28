@@ -7,7 +7,7 @@
 	<include ns="bridge_face" file="$(find rosbridge_server)/launch/rosbridge_websocket.launch">
 		<arg name="port" value="9000"/>
 	</include>
-    <node pkg="harmoni_face" type="face_service.py" name="harmoni_face_default" output="screen"/>eyes
+    <node pkg="harmoni_face" type="face_service.py" name="harmoni_face_default" output="screen"/>
 	<param name="test_face_input" value="[{'start':10,  'type': 'gaze', 'id':'target', 'point': [1,5 ,10]},{'start': 1,   'type': 'au', 'id': 'au13', 'pose': 1}, {'start': 2,   'type': 'action', 'id': 'breath_face'}, {'start': 5,   'type': 'action', 'id': 'saucy_face'}, {'start': 8, 'type': 'viseme', 'id': 'POSTALVEOLAR'}]"/>
     <test test-name="test_face" pkg="harmoni_face" type="rostest_face.py" />
 </launch>

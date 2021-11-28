@@ -274,12 +274,10 @@ class MouthService(HarmoniServiceManager):
             rospy.loginfo("The validated visemes are %s" % viseme_set)
         return viseme_bool, viseme_set
 
-
-
 def main():
     """Set names, collect params, and give service to server"""
     service_name = ActuatorNameSpace.face.name
-    instance_id = rospy.get_param("/instance_id")
+    instance_id = rospy.get_param("/instance_id") #default
     service_id_mouth = f"{service_name}_mouth_{instance_id}"
     service_id_eyes = f"{service_name}_eyes_{instance_id}"
     service_id_nose = f"{service_name}_nose_{instance_id}"
@@ -296,9 +294,17 @@ def main():
         service_server_eyes = HarmoniServiceServer(service_id_eyes, s_eyes)
         service_server_mouth = HarmoniServiceServer(service_id_mouth, s_mouth)
         service_server_nose = HarmoniServiceServer(service_id_nose, s_nose)
+
+        print(service_name)
+        print("****************************************************************************")
+        print(service_id_eyes)
+        print(service_id_mouth)
+        print(service_id_nose)
+        
         service_server_eyes.start_sending_feedback()
         service_server_mouth.start_sending_feedback()
         service_server_nose.start_sending_feedback()
+
         rospy.spin()
     except rospy.ROSInterruptException:
         pass

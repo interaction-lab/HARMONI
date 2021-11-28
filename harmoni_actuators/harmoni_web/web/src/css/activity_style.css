@@ -1,0 +1,56 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    text-align: center;
+    font-size: 2vmin;
+    background-color: white;
+}
+
+.container{
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    display: flex;
+}
+
+button{
+    margin: auto;
+    text-align: center;
+}
+
+div{
+    margin: auto;
+    text-align: center;
+    
+}
+
+img{
+
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+}
+
+
+img:hover {
+    opacity: 0.5;
+  }
+
+.row, .col{
+    margin: auto;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    display: contents;
+}
+
+.title{
+    margin: auto;
+    font-size: 3vmin;
+    text-align: center;
+}

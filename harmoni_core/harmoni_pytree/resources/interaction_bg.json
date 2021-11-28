@@ -1,0 +1,31 @@
+{
+    "scene" :   [
+                    {
+                        "utterance"     : "il bimbo non parla",
+                        "face"          : "null",
+                        "gesture"       : "null",
+                        "image"         : "null",
+                        "sound"         : "null",
+                        "do_trigger"    : "True" 
+                    }
+                ],
+    "error_handling"    :   
+                            {   
+                                "riprendiamo"   :   {
+                                                        "utterance"     : "Okay, riprendiamo da dove avevamo interrotto",
+                                                        "face"          : "null",
+                                                        "gesture"       : "null",
+                                                        "image"         : "null",
+                                                        "sound"         : "null",
+                                                        "do_trigger"    : "False"
+                                                    },
+                                "terapista" :   {
+                                                        "utterance"     : "Okay non ti preoccupare, ora chiamiamo il terapista",
+                                                        "face"          : "null",
+                                                        "gesture"       : "null",
+                                                        "image"         : "null",
+                                                        "sound"         : "null",
+                                                        "do_trigger"    : "False"
+                                                    }
+                            }
+}

@@ -1,0 +1,9 @@
+<!-- This is an example launch file for how a ROS application could use a node -->
+<launch>
+
+	<arg name="instance_id" default="default"/>
+	<param name="instance_id" value="$(arg instance_id)"/>
+    <rosparam file="$(find harmoni_imageai)/config/yolo_configuration.yaml" subst_value="True"/>
+    <node pkg="harmoni_imageai" type="yolo_service.py" name="harmoni_imageai_yolo_$(arg instance_id)" output="screen"/>
+
+</launch>

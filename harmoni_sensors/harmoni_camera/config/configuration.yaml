@@ -6,3 +6,9 @@ camera:
     video_format: "bgr8"
     fps: 30
     test_outdir: "$(find harmoni_camera)/temp_data/test_example.png"
+  person_param:
+    input_device_index: 0
+    show: True
+    video_format: "bgr8"
+    fps: 30
+    test_outdir: "$(find harmoni_camera)/temp_data/test_example.png"

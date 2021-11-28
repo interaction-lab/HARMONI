@@ -86,7 +86,9 @@ class HarmoniServiceServer(HarmoniActionServer, object):
         """Used to signal a cancel/pause to the currently running service so
         that a new goal can be received.
         """
-        self.service_manager.pause()
+        self.service_manager.stop()
+
+
 
     def _execute_goal_received_callback(self, goal):
         """Turns action goals into calls to the service manager. Is passed to the

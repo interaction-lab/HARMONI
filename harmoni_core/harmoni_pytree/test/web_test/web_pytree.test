@@ -1,0 +1,8 @@
+<launch>
+    <param name="instance_id" value="default"/>
+    <include file="$(find harmoni_web)/launch/web_service.launch">
+    </include>
+    <node pkg="harmoni_pytree" type="web_service_pytree.py" name="harmoni_web_default_pytree" output="screen"/>
+	<param name="test_web_input" value="{'component_id':'test_container', 'set_content': ''}"/>
+    <test test-name="test_web" pkg="harmoni_pytree" type="rostest_web_pytree.py" />
+</launch>

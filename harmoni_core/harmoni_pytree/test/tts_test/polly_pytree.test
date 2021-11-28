@@ -1,0 +1,11 @@
+<!-- This is an example launch file for how a ROS application could use a node -->
+<launch>
+	<rosparam file="$(find harmoni_tts)/config/configuration.yaml" subst_value="True"/>
+    <param name="instance_id" value="default"/>
+    <include file="$(find harmoni_tts)/launch/tts_service.launch">
+    </include>
+    <node pkg="harmoni_pytree" type="aws_tts_service_pytree.py" name="harmoni_tts_polly_default_pytree" output="screen"/>
+
+	<param name="test_polly_input" value="{'message':'Vorrei ordinare dei fiori'}"/>
+    <test test-name="test_polly" pkg="harmoni_pytree" type="rostest_polly_pytree.py" />
+</launch>

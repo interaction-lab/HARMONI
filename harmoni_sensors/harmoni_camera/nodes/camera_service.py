@@ -150,6 +150,13 @@ def main():
 
         service_server = HarmoniServiceServer(service_id, s)
 
+        print(service_name)
+        print("**********************************************************************************************")
+        print(service_id)
+
+        #TODO: comment it out and create a test for ImageAI
+        s.start()
+
         service_server.start_sending_feedback()
         rospy.spin()
     except rospy.ROSInterruptException:

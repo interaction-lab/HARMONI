@@ -1,0 +1,10 @@
+<launch>
+    <rosparam file="$(find harmoni_tts)/config/configuration.yaml" subst_value="True"/>
+    <param name="instance_id" value="default"/>
+    <!-- This is an integrative test that requires the speaker interaction -->
+    <include file="$(find harmoni_speaker)/launch/speaker_service.launch"></include>
+    <include file="$(find harmoni_tts)/launch/tts_service.launch"></include>
+    <include file="$(find harmoni_bot)/launch/bot_service.launch"></include>
+    <include file="$(find harmoni_face)/launch/face_service.launch"></include>
+    <test test-name="test_pytree" pkg="harmoni_pytree" type="test_pytree.py" time-limit="120.00"/>
+</launch>

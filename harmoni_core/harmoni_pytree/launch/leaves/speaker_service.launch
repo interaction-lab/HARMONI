@@ -1,0 +1,15 @@
+<launch>
+   
+	<arg name="instance_id" default="default"/>
+	<param name="instance_id" value="$(arg instance_id)"/>
+    <rosparam file="$(find harmoni_pytree)/config/configuration.yaml" subst_value="True"/>
+    <include file="$(find harmoni_speaker)/launch/speaker_service.launch"></include>
+    <node pkg="harmoni_pytree" type="speaker_service.py" name="harmoni_pytree_$(arg instance_id)" output="screen"/>
+    
+    <include file="$(find audio_play)/launch/play.launch">
+        <arg name="do_timestamp" value = "false"/> 
+        <arg name="format" value = "wave"/>
+        <arg name="sample_rate" value="22050"/>
+    </include>
+
+</launch>

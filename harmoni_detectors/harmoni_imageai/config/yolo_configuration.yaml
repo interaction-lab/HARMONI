@@ -1,0 +1,8 @@
+imageai_yolo:
+  default_param: #param for detection with plane YOLOv3
+    subscriber_id: "default"
+    frame_per_second: 30
+    output_file_name: "temp_output"
+    log_progress: True
+    minimum_percentage_probability: 50 #minimum percentage for recognizing objects
+    return_detected_frame: False #if true, allows you to obtain the detected video frame as a Numpy array

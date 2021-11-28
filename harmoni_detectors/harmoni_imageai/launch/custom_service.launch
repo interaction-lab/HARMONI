@@ -1,0 +1,8 @@
+<launch>
+
+	<arg name="instance_id" default="default"/>
+	<param name="instance_id" value="$(arg instance_id)"/>
+    <rosparam file="$(find harmoni_imageai)/config/custom_configuration.yaml" subst_value="True"/>
+    <node pkg="harmoni_imageai" type="custom_service.py" name="harmoni_imageai_custom_yolo_$(arg instance_id)" output="screen"/>
+
+</launch>

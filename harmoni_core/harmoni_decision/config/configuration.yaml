@@ -7,7 +7,7 @@ harmoni:
   #face_detect: ["default"]
 hardware:
   microphone: ["default"]
-  #camera: ["default"]
+  camera: ["object","person"]
   face: ["default"]
-  speaker: ["default"]
-  # gesture: ["default"]
+  speaker: ["voice_robot","external_sound"]
+  #gesture: ["default"]

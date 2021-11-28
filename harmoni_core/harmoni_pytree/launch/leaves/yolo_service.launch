@@ -1,0 +1,10 @@
+<launch>
+   
+	<arg name="instance_id" default="default"/>
+	<param name="instance_id" value="$(arg instance_id)"/>
+    <rosparam file="$(find harmoni_pytree)/config/configuration.yaml" subst_value="True"/>
+    <include file="$(find harmoni_camera)/launch/camera_service.launch"></include>
+    <include file="$(find harmoni_imageai)/launch/yolo_service.launch"></include>
+    <node pkg="harmoni_pytree" type="yolo_service.py" name="harmoni_pytree_$(arg instance_id)" output="screen"/>
+
+</launch>

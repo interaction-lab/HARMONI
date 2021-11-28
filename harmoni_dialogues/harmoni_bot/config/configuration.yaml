@@ -6,10 +6,10 @@ bot:
     bot_alias: "qt_robot_test"
     region_name: "eu-west-2"
   default_param:
-    user_id: "chris_testing"
-    bot_name: "GreeterPrototype"
-    bot_alias: "test_bot"
-    region_name: "us-west-2"
+    user_id: "corradopacelli"
+    bot_name: "ActivityBot"
+    bot_alias: "bot"
+    region_name: "eu-west-2"
 
 google:
   default_param:

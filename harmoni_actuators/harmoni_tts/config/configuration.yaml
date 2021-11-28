@@ -2,7 +2,7 @@
 tts:
   default_param:
     region_name: "us-west-2"
-    language: "en-US"
+    language: "it-IT"
     outdir: "$(find harmoni_tts)/temp_data"
     wav_header_length: 24
-    voice: "Ivy"
+    voice: "Bianca"

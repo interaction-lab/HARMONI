@@ -1,0 +1,6 @@
+<launch>
+    <include ns="harmoni_gesture" file="$(find harmoni_gesture)/launch/gesture_service.launch">
+	</include>
+	<param name="test_gesture_input" value="{'gesture':'QT/bye', 'timing': 0.5}"/>
+    <test test-name="test_gesture" pkg="harmoni_pytree" type="rostest_gesture_pytree.py" />
+</launch>
