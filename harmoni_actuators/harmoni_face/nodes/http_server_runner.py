@@ -42,12 +42,12 @@ if __name__ == "__main__":
     if is_int(args[PORT_IDX]):
         port = args[PORT_IDX]
         command += ["-p", port]
-        command += ["-S"]
+        #command += ["-S"]
 
-        cert_path = args[DIR_IDX] + "/server_cert.pem"
-        key_path = args[DIR_IDX] + "/server_key.pem"
-        command += ["-C", cert_path]
-        command += ["-K", key_path]
+        #cert_path = args[DIR_IDX] + "/server_cert.pem"
+        #key_path = args[DIR_IDX] + "/server_key.pem"
+        #command += ["-C", cert_path]
+        #command += ["-K", key_path]
 
     p = subprocess.Popen(command)
     atexit.register(p.terminate)
