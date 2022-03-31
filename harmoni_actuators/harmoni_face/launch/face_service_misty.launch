@@ -8,7 +8,7 @@
 	<rosparam file="$(find harmoni_face)/config/configuration.yaml"/>
 	<rosparam file="$(find harmoni_decision)/config/misty_configuration.yaml"/>
 	<node pkg="harmoni_face" type="http_server_runner.py" name="face_http_server" output="screen" args="$(arg web_directory_path) $(arg port)" />
-	<node pkg="harmoni_face" type="face_service.py" name="harmoni_face_$(arg instance_id)" output="screen"/>
+	<node pkg="harmoni_face" type="misty_face_service.py" name="harmoni_face_$(arg instance_id)" output="screen"/>
 	<node pkg="harmoni_face" type="misty_caller.py" name="misty_caller" output="screen"  args="$(arg web_directory_path) $(arg port)" />
 	<include ns="bridge_face" file="$(find rosbridge_server)/launch/rosbridge_websocket.launch">
 		<arg name="port" value="9000"/>

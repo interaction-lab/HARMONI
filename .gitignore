@@ -121,4 +121,3 @@ harmoni_core/harmoni_decision/launch/harmoni_service.launch
 harmoni_dialogues/harmoni_bot/config/configuration.yaml
 
 doc/_build
-*/configuration.yaml
