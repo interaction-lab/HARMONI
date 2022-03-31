@@ -7,7 +7,7 @@
                     "action_goal": "REQUEST",
                     "resource_type": "service",
                     "wait_for": "new",
-                    "trigger":"Ciao, il mio nome è Misty!"
+                    "trigger":"Hi My name is Misty!"
                 }
             },
             [
@@ -27,7 +27,7 @@
                     }
                 },
                 {
-                    "gesture_misty": {
+                    "gesture_default": {
                         "action_goal": "REQUEST",
                         "resource_type": "actuator",
                         "wait_for": "new",
@@ -41,65 +41,7 @@
                     "action_goal": "REQUEST",
                     "resource_type": "service",
                     "wait_for": "new",
-                    "trigger":"Seleziona la risposta corretta."
-                }
-            },
-            [
-                {
-                    "speaker_default": {
-                        "action_goal": "REQUEST",
-                        "resource_type": "actuator",
-                        "wait_for": "new",
-                        "trigger": "/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/temp_data/tts.wav"
-                    }
-                },
-                {
-                    "face_mouth_default": {
-                        "action_goal": "DO",
-                        "resource_type": "actuator",
-                        "wait_for": "new"
-                    }
-                }
-            ],
-            {
-                "tts_default": {
-                    "action_goal": "REQUEST",
-                    "resource_type": "service",
-                    "wait_for": "new",
-                    "trigger":"Qual è un animale domestico?"
-                }
-            },
-            [
-                {
-                    "speaker_default": {
-                        "action_goal": "REQUEST",
-                        "resource_type": "actuator",
-                        "wait_for": "new",
-                        "trigger": "/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/temp_data/tts.wav"
-                    }
-                },
-                {
-                    "face_mouth_default": {
-                        "action_goal": "DO",
-                        "resource_type": "actuator",
-                        "wait_for": "new"
-                    }
-                }
-            ],
-            {
-                "web_default": {
-                    "action_goal": "DO",
-                    "resource_type": "actuator",
-                    "wait_for": "new",
-                    "trigger": "[{'component_id':'QA_container6', 'set_content':''}]"
-                }
-            },
-            {
-                "tts_default": {
-                    "action_goal": "REQUEST",
-                    "resource_type": "service",
-                    "wait_for": "new",
-                    "trigger":"Bravissimo!"
+                    "trigger":"Start of the interaction"
                 }
             },
             [
@@ -119,229 +61,14 @@
                     }
                 },
                 {
-                    "gesture_misty": {
+                    "gesture_default": {
                         "action_goal": "REQUEST",
                         "resource_type": "actuator",
                         "wait_for": "new",
-                        "trigger":"{'gesture':'Misty/yes', 'timing': 0.5}"
-                    }
-                }
-            ],
-            {
-                "tts_default": {
-                    "action_goal": "REQUEST",
-                    "resource_type": "service",
-                    "wait_for": "new",
-                    "trigger":"Qual è un oggeto che serve a divertire i bambini?"
-                }
-            },
-            [
-                {
-                    "speaker_default": {
-                        "action_goal": "REQUEST",
-                        "resource_type": "actuator",
-                        "wait_for": "new",
-                        "trigger": "/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/temp_data/tts.wav"
-                    }
-                },
-                {
-                    "face_mouth_default": {
-                        "action_goal": "DO",
-                        "resource_type": "actuator",
-                        "wait_for": "new"
-                    }
-                }
-            ],
-            {
-                "web_default": {
-                    "action_goal": "DO",
-                    "resource_type": "actuator",
-                    "wait_for": "new",
-                    "trigger": "[{'component_id':'QA_container', 'set_content':''}]"
-                }
-            },
-            {
-                "tts_default": {
-                    "action_goal": "REQUEST",
-                    "resource_type": "service",
-                    "wait_for": "new",
-                    "trigger":"Riproviamo!"
-                }
-            },
-            [
-                {
-                    "speaker_default": {
-                        "action_goal": "REQUEST",
-                        "resource_type": "actuator",
-                        "wait_for": "new",
-                        "trigger": "/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/temp_data/tts.wav"
-                    }
-                },
-                {
-                    "face_mouth_default": {
-                        "action_goal": "DO",
-                        "resource_type": "actuator",
-                        "wait_for": "new"
-                    }
-                }
-            ],
-            {
-                "tts_default": {
-                    "action_goal": "REQUEST",
-                    "resource_type": "service",
-                    "wait_for": "new",
-                    "trigger":"Qual è un oggeto che serve a divertire i bambini?"
-                }
-            },
-            [
-                {
-                    "speaker_default": {
-                        "action_goal": "REQUEST",
-                        "resource_type": "actuator",
-                        "wait_for": "new",
-                        "trigger": "/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/temp_data/tts.wav"
-                    }
-                },
-                {
-                    "face_mouth_default": {
-                        "action_goal": "DO",
-                        "resource_type": "actuator",
-                        "wait_for": "new"
-                    }
-                }
-            ],
-            {
-                "tts_default": {
-                    "action_goal": "REQUEST",
-                    "resource_type": "service",
-                    "wait_for": "new",
-                    "trigger":"Bravissimo!"
-                }
-            },
-            [
-                {
-                    "speaker_default": {
-                        "action_goal": "REQUEST",
-                        "resource_type": "actuator",
-                        "wait_for": "new",
-                        "trigger": "/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/temp_data/tts.wav"
-                    }
-                },
-                {
-                    "face_mouth_default": {
-                        "action_goal": "DO",
-                        "resource_type": "actuator",
-                        "wait_for": "new"
-                    }
-                },
-                {
-                    "gesture_misty": {
-                        "action_goal": "REQUEST",
-                        "resource_type": "actuator",
-                        "wait_for": "new",
-                        "trigger":"{'gesture':'Misty/yes', 'timing': 0.5}"
-                    }
-                }
-            ],
-            {
-                "tts_default": {
-                    "action_goal": "REQUEST",
-                    "resource_type": "service",
-                    "wait_for": "new",
-                    "trigger":"Si indossano ai piedi..."
-                }
-            },
-            [
-                {
-                    "speaker_default": {
-                        "action_goal": "REQUEST",
-                        "resource_type": "actuator",
-                        "wait_for": "new",
-                        "trigger": "/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/temp_data/tts.wav"
-                    }
-                },
-                {
-                    "face_mouth_default": {
-                        "action_goal": "DO",
-                        "resource_type": "actuator",
-                        "wait_for": "new"
-                    }
-                }
-            ],
-            {
-                "web_default": {
-                    "action_goal": "DO",
-                    "resource_type": "actuator",
-                    "wait_for": "new",
-                    "trigger": "[{'component_id':'QA_container2', 'set_content':''}]"
-                }
-            },
-            {
-                "tts_default": {
-                    "action_goal": "REQUEST",
-                    "resource_type": "service",
-                    "wait_for": "new",
-                    "trigger":"Bravissimo!"
-                }
-            },
-            [
-                {
-                    "speaker_default": {
-                        "action_goal": "REQUEST",
-                        "resource_type": "actuator",
-                        "wait_for": "new",
-                        "trigger": "/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/temp_data/tts.wav"
-                    }
-                },
-                {
-                    "face_mouth_default": {
-                        "action_goal": "DO",
-                        "resource_type": "actuator",
-                        "wait_for": "new"
-                    }
-                },
-                {
-                    "gesture_misty": {
-                        "action_goal": "REQUEST",
-                        "resource_type": "actuator",
-                        "wait_for": "new",
-                        "trigger":"{'gesture':'Misty/yes', 'timing': 0.5}"
-                    }
-                }
-            ],
-            {
-                "tts_default": {
-                    "action_goal": "REQUEST",
-                    "resource_type": "service",
-                    "wait_for": "new",
-                    "trigger":"Grazie per aver giocato con me, alla prossima!"
-                }
-            },
-            [
-                {
-                    "speaker_default": {
-                        "action_goal": "REQUEST",
-                        "resource_type": "actuator",
-                        "wait_for": "new",
-                        "trigger": "/root/harmoni_catkin_ws/src/HARMONI/harmoni_actuators/harmoni_tts/temp_data/tts.wav"
-                    }
-                },
-                {
-                    "face_mouth_default": {
-                        "action_goal": "DO",
-                        "resource_type": "actuator",
-                        "wait_for": "new"
-                    }
-                },
-                {
-                    "gesture_misty": {
-                        "action_goal": "REQUEST",
-                        "resource_type": "actuator",
-                        "wait_for": "new",
-                        "trigger":"{'gesture':'Misty/bye', 'timing': 0.5}"
+                        "trigger":"{'gesture':'Misty/no', 'timing': 0.5}"
                     }
                 }
             ]
-        ]
+       ]
     }
 ]
